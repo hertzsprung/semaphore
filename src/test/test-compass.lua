@@ -11,7 +11,7 @@ require('compass')
 TestCompass = {}
 
 	function TestCompass:testInverse()
-		local inverse = NW:inverse()
+		local inverse = NW.inverse
 		assertEquals(inverse[1], 1)
 		assertEquals(inverse[2], -1)
 	end

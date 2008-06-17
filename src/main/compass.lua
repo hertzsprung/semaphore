@@ -11,10 +11,6 @@ function Compass.__eq(o1, o2)
 	return o1[1] == o2[1] and o1[2] == o2[2]
 end
 
-function Compass:inverse()
-	return Compass:new{self[1]*-1, self[2]*-1}
-end
-
 function Compass:new(o)
 	o = o or {}
 	setmetatable(o, self)
@@ -30,3 +26,12 @@ S  = Compass:new{ 0,-1}
 SW = Compass:new{-1,-1}
 W  = Compass:new{-1, 0}
 NW = Compass:new{-1, 1}
+
+N.inverse  = S
+NE.inverse = SW
+E.inverse  = W
+SE.inverse = NW
+S.inverse  = N
+SW.inverse = NE
+W.inverse  = E
+NW.inverse = SE

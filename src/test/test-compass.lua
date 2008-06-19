@@ -16,13 +16,12 @@ TestCompass = {}
 		assertEquals(inverse[2], -1)
 	end
 
-	function TestCompass:testEqualsSameObject()
-		assert(NW == NW)
-	end
-
-	function TestCompass:testEqualsCompassComponents()
-		local northwest = Compass:new{-1, 1}
-		assert(NW == northwest)
+TestVector = {}
+	
+	function TestVector:testInverse()
+		local inverse = Vector:new{W, E}:inverse()
+		assert(inverse[1] == E)
+		assert(inverse[2] == W)
 	end
 
 LuaUnit:run()

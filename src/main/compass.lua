@@ -15,21 +15,21 @@ function Compass.__tostring(o)
 	return o.name
 end
 
-function Compass:new(o)
-	o = o or {}
+function Compass:new(x, y, name)
+	o = {x, y, name=name}
 	setmetatable(o, self)
 	self.__index = self
 	return o
 end
 
-N  = Compass:new{ 0, 1, name='N'}
-NE = Compass:new{ 1, 1, name='NE'}
-E  = Compass:new{ 1, 0, name='E'}
-SE = Compass:new{ 1,-1, name='SE'}
-S  = Compass:new{ 0,-1, name='S'}
-SW = Compass:new{-1,-1, name='SW'}
-W  = Compass:new{-1, 0, name='W'}
-NW = Compass:new{-1, 1, name='NW'}
+N  = Compass:new( 0, 1, 'N')
+NE = Compass:new( 1, 1, 'NE')
+E  = Compass:new( 1, 0, 'E')
+SE = Compass:new( 1,-1, 'SE')
+S  = Compass:new( 0,-1, 'S')
+SW = Compass:new(-1,-1, 'SW')
+W  = Compass:new(-1, 0, 'W')
+NW = Compass:new(-1, 1, 'NW')
 
 N.inverse  = S
 NE.inverse = SW
@@ -58,5 +58,8 @@ function Vector:new(o)
 end
 
 function Vector:inverse()
-	return Vector:new{self[2], self[1]}
+	local tmp = self[2]
+	self[2] = self[1]
+	self[1] = tmp
+	return self
 end

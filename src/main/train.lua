@@ -9,15 +9,17 @@ STOPPED = 1
 MOVING  = 2
 CRASHED = 3
 
---[[TrainBlock = {}
+TrainBlock = {}
 
-TrainBlock:new(o)
-	o = o or {}
+function TrainBlock:new(position, vector)
+	local o = {
+		position = position,
+		vector = vector
+	}
 	setmetatable(o, self)
 	self.__index = self
 	return o
 end
-]]--
 
 Train = {}
 
@@ -31,11 +33,12 @@ function Train.__tostring(o)
 	return s
 end
 
-function Train:new(o)
-	o = o or {
-		state  = STOPPED,
-		length = 0,
-		blocks = {}
+function Train:new(state, blocks, length)
+	length = length or #blocks
+	local o = {
+		state  = state,
+		length = length,
+		blocks = blocks
 	}
 	setmetatable(o, self)
 	self.__index = self
@@ -47,8 +50,10 @@ function Train:reverse()
 	for i = 1, math.floor(#blocks / 2), 1 do
 		first = blocks[i]
 		last  = blocks[#blocks - i + 1]
-		blocks[i] = last:inverse()
-		blocks[#blocks - i + 1] = first:inverse()
+		first.vector:inverse()
+		last.vector:inverse()
+		blocks[i] = last
+		blocks[#blocks - i + 1] = first
 	end
 end
 

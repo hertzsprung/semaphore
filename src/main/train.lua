@@ -47,7 +47,7 @@ end
 
 function Train:reverse()
 	local blocks = self.blocks
-	for i = 1, math.floor(#blocks / 2), 1 do
+	for i = 1, math.floor(#blocks / 2) do
 		first = blocks[i]
 		last  = blocks[#blocks - i + 1]
 		first.vector:inverse()

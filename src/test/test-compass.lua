@@ -24,4 +24,13 @@ TestVector = {}
 		assert(inverse[2] == W)
 	end
 
+	function TestVector:testAdd()
+		local p = Vector:new{3, 2}
+		p:add(Vector:new{1, -1})
+		assertEquals(p[1], 4)
+		assertEquals(p[2], 1)
+	end
+
 LuaUnit:run()
+
+

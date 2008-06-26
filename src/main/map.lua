@@ -38,6 +38,10 @@ function Map:new(w, h)
 	return o
 end
 
+function Map:get(v)
+	return self[v[2]][v[1]]
+end
+
 function Map:set(x, y, tile)
 	if tonumber(x) == nil or x < 1 or x > self.w then
 		error(x .. ' invalid for map of size ' .. self.w .. 'x' .. self.h)

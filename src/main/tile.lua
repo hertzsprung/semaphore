@@ -19,15 +19,17 @@ function TileType:new(junction, layers)
 	return o
 end
 
+-- FIXME: sort out remaining tiles with active/inactive vectors
+-- probably better to come up with some nicer constructors
 TILES={}
 TILES[0]  = TileType:new(false, {})
 TILES[8]  = TileType:new(false, {Vector:new{SW, NE}, Vector:new{SE, NW}})
-TILES[10] = TileType:new(false, {Vector:new{W, E}})
+TILES[10] = TileType:new(false, {{active = {Vector:new{W, E}}, inactive = {}}})
 TILES[11] = TileType:new(false, {Vector:new{S, N}})
 TILES[12] = TileType:new(false, {Vector:new{SE, NW}})
 TILES[13] = TileType:new(false, {Vector:new{SW, NE}})
 TILES[14] = TileType:new(false, {Vector:new{SE, W}})
-TILES[15] = TileType:new(false, {Vector:new{W, NE}})
+TILES[15] = TileType:new(false, {{active = {Vector:new{W, NE}}, inactive = {}}})
 TILES[16] = TileType:new(false, {Vector:new{NW, E}})
 TILES[17] = TileType:new(false, {Vector:new{SW, E}})
 
@@ -74,17 +76,3 @@ function Tile:new(type)
 	return o
 end
 
--- TODO: move this to Train, and accept a Map as an argument
-function Tile:route(train, tile)
-	local loco = train.blocks[1]
-	for i, layer in ipairs(tile.layers) do
-		for j, route in ipairs(layer.active) do
-			if route[ENTRY] == loco[EXIT].inverse then
-				return layer, route
-			end
-			if route[EXIT]  == loco[EXIT].inverse then
-				return layer, Vector:new{route[EXIT], route[ENTRY]}
-			end
-		end
-	end
-end

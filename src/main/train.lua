@@ -64,3 +64,27 @@ function Train:shift(head)
 	end
 	blocks[1] = head
 end
+
+function Train:move(map)
+	local head = self.blocks[1]
+	local direction = head.vector[EXIT]
+	local position = head.position:add(direction)
+	local layer, route = self:route(direction, map:get(position))
+	-- TODO: decrement ref count on the tail's map tile
+	-- TODO: test for nil return
+	local new_head = TrainBlock:new(position, route)
+	self:shift(new_head)
+end	
+
+function Train:route(direction, tile)
+	for i, layer in ipairs(tile.layers) do
+		for j, route in ipairs(layer.active) do
+			if route[ENTRY] == direction.inverse then
+				return layer, route
+			end
+			if route[EXIT]  == direction.inverse then
+				return layer, Vector:new{route[EXIT], route[ENTRY]}
+			end
+		end
+	end
+end

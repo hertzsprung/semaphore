@@ -63,3 +63,7 @@ function Vector:inverse()
 	self[1] = tmp
 	return self
 end
+
+function Vector:add(v)
+	return Vector:new{self[1] + v[1], self[2] + v[2]}
+end

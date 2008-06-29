@@ -14,7 +14,9 @@ TestTile = {}
 	function TestTile:testNew()
 		local train = Train:new(
 			'test',
-			STOPPED,
+			INTERCITY,
+			TrainType.STOP,
+			Train.STOPPED,
 			{
 				TrainBlock:new({3, 1}, Vector:new{W, E}),
 				TrainBlock:new({2, 1}, Vector:new{W, E}),
@@ -36,7 +38,9 @@ TestTile = {}
 	function TestTile:testOccupied()
 		local train1 = Train:new(
 			'test1',
-			STOPPED,
+			INTERCITY,
+			TrainType.STOP,
+			Train.STOPPED,
 			{
 				TrainBlock:new({3, 1}, Vector:new{W, E}),
 				TrainBlock:new({2, 1}, Vector:new{W, E}),
@@ -46,7 +50,9 @@ TestTile = {}
 
 		local train2 = Train:new(
 			'test2',
-			STOPPED,
+			INTERCITY,
+			TrainType.STOP,
+			Train.STOPPED,
 			{
 				TrainBlock:new({3, 1}, Vector:new{W, E}),
 				TrainBlock:new({2, 1}, Vector:new{W, E}),

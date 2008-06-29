@@ -10,9 +10,40 @@ require 'logging.console'
 
 local logger = logging.console()
 
-STOPPED = 1
-MOVING  = 2
-CRASHED = 3
+TrainType = {
+	STOP = 0,
+	SLOW = 1,
+	FAST = 2,
+	FULL = 3
+}
+	
+	function TrainType:new(prefix, speeds)
+		local o = {
+			prefix = prefix,
+			speeds = speeds
+		}
+		setmetatable(o, self)
+		self.__index = self
+		return o
+	end
+
+INTERCITY = TrainType:new('IC', {
+	[TrainType.FULL] = 1,
+	[TrainType.FAST] = 2,
+	[TrainType.SLOW] = 3
+})
+
+COMMUTER = TrainType:new('LP', {
+	[TrainType.FULL] = 2,
+	[TrainType.FAST] = 3,
+	[TrainType.SLOW] = 4
+})
+
+FREIGHT = TrainType:new('GD', {
+	[TrainType.FULL] = 3,
+	[TrainType.FAST] = 4,
+	[TrainType.SLOW] = 5
+})
 
 TrainBlock = {}
 
@@ -31,21 +62,27 @@ TrainBlock = {}
 		return o
 	end
 
-Train = {}
+Train = {
+	STOPPED = 1,
+	MOVING  = 2,
+	CRASHED = 3
+}
 
 function Train.__tostring(o)
 	s = '{'
 	for i, block in ipairs(o.blocks) do
 		s = s .. tostring(block) .. ' '
 	end
-	s = s .. '} '
+	s = s .. '} type=' .. tostring(o.type.prefix) .. ' speed=' .. ({'STOP', 'SLOW', 'FAST', 'FULL'})[o.speed + 1]
 	return s
 end
 
-function Train:new(name, state, blocks, length)
+function Train:new(name, type, speed, state, blocks, length)
 	length = length or #blocks
 	local o = {
 		name   = name,
+		type   = type,
+		speed  = speed,
 		state  = state,
 		length = length,
 		blocks = blocks

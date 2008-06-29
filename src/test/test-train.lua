@@ -10,6 +10,11 @@ require('compass')
 require('train')
 require('map')
 
+TestTrainType = {}
+	function TestTrainType:testSpeed()
+		assertEquals(INTERCITY.speeds[TrainType.FAST], 2)
+	end
+
 TestTrain = {}
 
 	function TestTrain:testShift()
@@ -17,7 +22,9 @@ TestTrain = {}
 
 		local t = Train:new(
 			'test',
-			MOVING,
+			INTERCITY,
+			TrainType.FULL,
+			Train.MOVING,
 			{
 				TrainBlock:new(Vector:new{3, 1}, Vector:new{W, E}, nil),
 				new_tail,
@@ -35,7 +42,9 @@ TestTrain = {}
 	function TestTrain:testReverse()
 		local t = Train:new(
 			'test',
-			STOPPED,
+			INTERCITY,
+			TrainType.STOP,
+			Train.STOPPED,
 			{
 				TrainBlock:new(Vector:new{3, 1}, Vector:new{W, E}, nil),
 				TrainBlock:new(Vector:new{2, 1}, Vector:new{W, E}, nil),
@@ -57,7 +66,9 @@ TestTrain = {}
 
 		local t = Train:new(
 			'test',
-			MOVING,
+			INTERCITY,
+			TrainType.FULL,
+			Train.MOVING,
 			{
 				TrainBlock:new(Vector:new{3, 1}, Vector:new{W, E}, tile3.layers[1]),
 				TrainBlock:new(Vector:new{2, 1}, Vector:new{W, E}, tile2.layers[1]),

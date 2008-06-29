@@ -25,10 +25,10 @@ TestVector = {}
 	end
 
 	function TestVector:testAdd()
-		local p = Vector:new{3, 2}
-		p:add(Vector:new{1, -1})
-		assertEquals(p[1], 4)
-		assertEquals(p[2], 1)
+		local p1 = Vector:new{3, 2}
+		local p2 = p1:add(Vector:new{1, -1})
+		assertEquals(p2[1], 4)
+		assertEquals(p2[2], 1)
 	end
 
 LuaUnit:run()

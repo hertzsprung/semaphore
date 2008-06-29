@@ -42,12 +42,14 @@ function Map:get(v)
 	return self[v[2]][v[1]]
 end
 
-function Map:set(x, y, tile)
+function Map:set(x, y, type)
 	if tonumber(x) == nil or x < 1 or x > self.w then
 		error(x .. ' invalid for map of size ' .. self.w .. 'x' .. self.h)
 	end
 	if tonumber(y) == nil or y < 1 or y > self.h then
 		error(y .. ' invalid for map of size ' .. self.h .. 'x' .. self.h)
 	end
+	local tile = Tile:new(type)
 	self[y][x] = tile
+	return tile
 end

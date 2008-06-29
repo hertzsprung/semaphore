@@ -9,15 +9,15 @@ require('compass')
 
 TileType = {}
 
-function TileType:new(junction, layers)
-	local o = {
-		junction = junction,
-		layers = layers
-	}
-	setmetatable(o, self)
-	self.__index = self
-	return o
-end
+	function TileType:new(junction, layers)
+		local o = {
+			junction = junction,
+			layers = layers
+		}
+		setmetatable(o, self)
+		self.__index = self
+		return o
+	end
 
 -- FIXME: sort out remaining tiles with active/inactive vectors
 -- probably better to come up with some nicer constructors
@@ -43,36 +43,53 @@ TILES[50].next = TILES[40]
 ENTRY = 1
 EXIT  = 2
 
-Tile = {}
+Layer = {}
 
-function Tile.__index(o, key)
-	return rawget(o, key) or rawget(o.type, key)
-end
-
-function Tile:new(type)
-	local layers = {}
-
-	local o = {
-		type = type,
-		occupied = 0, -- number of trains occupying the tile
-		layers = layers
-	}
-
-	for i=1, #type.layers do
+	function Layer:new(tile, type_layer)
+		local o = {
+			occupier = nil, -- train occupying the layer
+			tile = tile
+		}
 		local mt = {}
 		function mt.__index(o, key)
-			if key == 'occupied' then
-				return rawget(o, key)
+			return rawget(o, key) or rawget(self, key) or rawget(type_layer, key)
+		end	
+		setmetatable(o, mt)
+		return o
+	end
+	
+	function Layer:set_occupier(train)
+		if self.occupier == nil and train ~= nil then
+			self.tile.occupied = self.tile.occupied + 1
+		elseif self.occupier ~= nil then
+			if train == nil then
+				self.tile.occupied = self.tile.occupied - 1
 			else
-				return rawget(type.layers[i], key)
+				self.tile.occupied = self.tile.occupied + 1
 			end
 		end
-
-		o.layers[i] = {}
-		o.layers[i].occupied = nil -- train occupying the layer
-		setmetatable(o.layers[i], mt)
+		self.occupier = train
 	end
-	setmetatable(o, self)
-	return o
-end
+
+Tile = {}
+
+	function Tile.__index(o, key)
+		return rawget(o, key) or rawget(o.type, key)
+	end
+	
+	function Tile:new(type)
+		local layers = {}
+	
+		local o = {
+			type = type,
+			occupied = 0, -- number of trains occupying the tile
+			layers = layers
+		}
+	
+		for i, type_layer in ipairs(type.layers) do
+			o.layers[i] = Layer:new(o, type_layer)
+		end
+		setmetatable(o, self)
+		return o
+	end
 

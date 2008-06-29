@@ -5,37 +5,47 @@ Licensed under the MIT License,
 Copyright 2008 James Shaw <js102@zepler.net>
 ]]--
 
+require 'logging'
+require 'logging.console'
+
+local logger = logging.console()
+
 STOPPED = 1
 MOVING  = 2
 CRASHED = 3
 
 TrainBlock = {}
 
-function TrainBlock:new(position, vector)
-	local o = {
-		position = position,
-		vector = vector
-	}
-	setmetatable(o, self)
-	self.__index = self
-	return o
-end
+	function TrainBlock.__tostring(o)
+		return '[' .. o.position[1] .. ',' .. o.position[2] .. ' ' .. tostring(o.vector) .. ']'
+	end
+
+	function TrainBlock:new(position, vector, layer)
+		local o = {
+			position = position, -- the coordinate position on the map
+			vector = vector,
+			layer = layer -- the tile.layer 
+		}
+		setmetatable(o, self)
+		self.__index = self
+		return o
+	end
 
 Train = {}
 
 function Train.__tostring(o)
 	s = '{'
 	for i, block in ipairs(o.blocks) do
-		s = s .. '[' .. block.position[1] .. ',' .. block.position[2]
-		s = s .. ' ' .. tostring(block.vector) .. '] '
+		s = s .. tostring(block) .. ' '
 	end
 	s = s .. '} '
 	return s
 end
 
-function Train:new(state, blocks, length)
+function Train:new(name, state, blocks, length)
 	length = length or #blocks
 	local o = {
+		name   = name,
 		state  = state,
 		length = length,
 		blocks = blocks
@@ -44,6 +54,10 @@ function Train:new(state, blocks, length)
 	self.__index = self
 	return o
 end
+
+function Train:head() return self.blocks[1] end
+
+function Train:tail() return self.blocks[#self.blocks] end
 
 function Train:reverse()
 	local blocks = self.blocks
@@ -66,13 +80,28 @@ function Train:shift(head)
 end
 
 function Train:move(map)
-	local head = self.blocks[1]
+	local head = self:head()
 	local direction = head.vector[EXIT]
 	local position = head.position:add(direction)
+
+	logger:debug("Train '" .. self.name .. "' travelling " ..
+		tostring(direction) .. " from " .. tostring(head.position)
+		.. " to " .. tostring(position))
+
 	local layer, route = self:route(direction, map:get(position))
-	-- TODO: decrement ref count on the tail's map tile
+
+	logger:debug("Train '" .. self.name .. "' routed " .. tostring(route))
 	-- TODO: test for nil return
-	local new_head = TrainBlock:new(position, route)
+
+	self:tail().layer:set_occupier(nil)
+
+	if layer.occupied then
+		logger:warn("Train '" .. self.name .. "' has crashed: attempt to occupy the same tile layer as train " .. layer.occupied.name)
+		-- TODO: crash
+	else
+		layer.occupied = self
+	end
+	local new_head = TrainBlock:new(position, route, layer)
 	self:shift(new_head)
 end	
 

@@ -27,8 +27,10 @@ TestMap = {}
 	end
 
 	function TestMap:testSet()
-		self.map:set(1, 2, TILES[40])
-		assertEquals(self.map[2][1], TILES[40])
+		local tile = self.map:set(1, 2, TILES[40])
+		assertEquals(self.map[2][1], tile)
+		assertEquals(tile.type, TILES[40])
+		assertEquals(tile.occupied, 0)
 	end
 
 LuaUnit:run()

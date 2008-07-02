@@ -11,7 +11,7 @@ require('train')
 
 TestTile = {}
 
-	function TestTile:testNew()
+	function TestTile:test_new()
 		local train = Train:new(
 			'test',
 			INTERCITY,
@@ -35,7 +35,7 @@ TestTile = {}
 		assertEquals(tile.type.layers[1].occupier, nil)
 	end
 
-	function TestTile:testOccupied()
+	function TestTile:test_occupied()
 		local train1 = Train:new(
 			'test1',
 			INTERCITY,
@@ -79,6 +79,42 @@ TestTile = {}
 
 		tile.layers[1]:set_occupier(nil)
 		assertEquals(tile.occupied, 1)
+	end
+
+	function TestTile:test_switch_points()
+		local train = Train:new(
+			'testtrain',
+			INTERCITY,
+			TrainType.STOP,
+			Train.STOPPED,
+			{
+				TrainBlock:new({3, 1}, Vector:new{W, E}),
+				TrainBlock:new({2, 1}, Vector:new{W, E}),
+				TrainBlock:new({1, 1}, Vector:new{W, E})
+			}
+		)
+
+		local type1 = TileType:new(true, {{active = {Vector:new{W, E}}, inactive = {Vector:new{W, NE}}}})
+		local type2 = TileType:new(true, {{active = {Vector:new{W, NE}}, inactive= {Vector:new{W, E}}}})
+		
+		type1.next = type2
+		type2.next = type1
+
+		local tile1 = Tile:new(type1)
+		local success = tile1:switch_points()
+		assertEquals(success, true)
+		assertEquals(tile1.type, type2)
+
+		tile1.layers[1]:set_occupier(train)
+		success = tile1:switch_points()
+		assertEquals(success, false)
+		assertEquals(tile1.type, type2)
+
+		local type3 = TileType:new(false, {{active = {Vector:new{W, E}}, inactive = {}}})
+		local tile2 = Tile:new(type3)
+		success = tile2:switch_points()
+		assertEquals(success, false)
+		assertEquals(tile2.type, type3)
 	end
 
 LuaUnit:run()

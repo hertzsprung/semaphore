@@ -5,7 +5,12 @@ Licensed under the MIT License,
 Copyright 2008 James Shaw <js102@zepler.net>
 ]]--
 
-require('compass')
+require 'logging'
+require 'logging.console'
+
+local logger = logging.console()
+
+require 'compass'
 
 TileType = {}
 
@@ -74,22 +79,40 @@ Layer = {}
 Tile = {}
 
 	function Tile.__index(o, key)
-		return rawget(o, key) or rawget(o.type, key)
+		return rawget(o, key) or rawget(Tile, key) or rawget(o.type, key)
 	end
 	
 	function Tile:new(type)
-		local layers = {}
-	
 		local o = {
 			type = type,
-			occupied = 0, -- number of trains occupying the tile
-			layers = layers
+			occupied = 0 -- number of trains occupying the tile
 		}
+		o.layers = self:create_layers(o, type)
 	
-		for i, type_layer in ipairs(type.layers) do
-			o.layers[i] = Layer:new(o, type_layer)
-		end
 		setmetatable(o, self)
 		return o
 	end
 
+	function Tile:create_layers(o, type)
+		o = o or self
+		type = type or self.type
+		local layers = {}
+		for i, type_layer in ipairs(type.layers) do
+			layers[i] = Layer:new(o, type_layer)
+		end
+		return layers
+	end
+
+	function Tile:switch_points()
+		if not self.junction then
+			logger:warn("Non-junction tile only has one state")
+			return false
+		elseif self.occupied > 0 then
+			logger:warn("Can't switch points because tile is occupied by one or more trains")
+			return false
+		else
+			self.type = self.type.next
+			self.layers = self:create_layers()
+			return true
+		end
+	end

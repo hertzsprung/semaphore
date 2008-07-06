@@ -63,9 +63,10 @@ TrainBlock = {}
 	end
 
 Train = {
-	STOPPED = 1,
-	MOVING  = 2,
-	CRASHED = 3
+	STOPPED  = 1,
+	MOVING   = 2,
+	DERAILED = 3,
+	CRASHED  = 4
 }
 
 function Train.__tostring(o)

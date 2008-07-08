@@ -7,20 +7,20 @@ Copyright 2008 James Shaw <js102@zepler.net>
 
 local Compass = {}
 
-function Compass.__eq(o1, o2)
-	return o1[1] == o2[1] and o1[2] == o2[2]
-end
-
-function Compass.__tostring(o)
-	return o.name
-end
-
-function Compass:new(x, y, name)
-	o = {x, y, name=name}
-	setmetatable(o, self)
-	self.__index = self
-	return o
-end
+	function Compass.__eq(o1, o2)
+		return o1[1] == o2[1] and o1[2] == o2[2]
+	end
+	
+	function Compass.__tostring(o)
+		return o.name
+	end
+	
+	function Compass:new(x, y, name)
+		o = {x, y, name=name}
+		setmetatable(o, self)
+		self.__index = self
+		return o
+	end
 
 N  = Compass:new( 0, 1, 'N')
 NE = Compass:new( 1, 1, 'NE')
@@ -40,30 +40,36 @@ SW.inverse = NE
 W.inverse  = E
 NW.inverse = SE
 
+-- TODO: consider splitting into two classes: one that holds a pair of compass points,
+-- and another than holds x, y coordinates
 Vector = {}
 
-function Vector.__eq(o1, o2)
-	return o1[1] == o2[1] and o1[2] == o2[2]
-end
-
-function Vector.__tostring(o)
-	return tostring(o[1]) .. '-' .. tostring(o[2])
-end
-
-function Vector:new(o)
-	o = o or {}
-	setmetatable(o, self)
-	self.__index = self
-	return o
-end
-
-function Vector:inverse()
-	local tmp = self[2]
-	self[2] = self[1]
-	self[1] = tmp
-	return self
-end
-
-function Vector:add(v)
-	return Vector:new{self[1] + v[1], self[2] + v[2]}
-end
+	function Vector.__eq(o1, o2)
+		return o1[1] == o2[1] and o1[2] == o2[2]
+	end
+	
+	function Vector.__tostring(o)
+		return tostring(o[1]) .. '-' .. tostring(o[2])
+	end
+	
+	function Vector:new(o)
+		o = o or {}
+		setmetatable(o, self)
+		self.__index = self
+		return o
+	end
+	
+	function Vector:inverse()
+		local tmp = self[2]
+		self[2] = self[1]
+		self[1] = tmp
+		return self
+	end
+	
+	function Vector:add(v)
+		return Vector:new{self[1] + v[1], self[2] + v[2]}
+	end
+	
+	function Vector:is_straight()
+		return self[1].inverse == self[2]
+	end

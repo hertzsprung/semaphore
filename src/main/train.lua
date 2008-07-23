@@ -126,7 +126,8 @@ function Train:move(map)
 		tostring(direction) .. " from " .. tostring(head.position)
 		.. " to " .. tostring(position))
 
-	local layer, route = self:route(direction, map:get(position))
+	local tile = map:get(position)
+	local layer, route = self:route(direction, tile)
 
 	logger:debug("Train '" .. self.name .. "' routed " .. tostring(route))
 	-- TODO: test for nil return

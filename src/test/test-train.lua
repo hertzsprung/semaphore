@@ -12,7 +12,7 @@ require('map')
 
 TestTrainType = {}
 	function TestTrainType:testSpeed()
-		assertEquals(INTERCITY.speeds[TrainType.FAST], 2)
+		assertEquals(Train.INTERCITY.speeds[TrainType.FAST], 2)
 	end
 
 TestTrain = {}
@@ -22,7 +22,7 @@ TestTrain = {}
 
 		local t = Train:new(
 			'test',
-			INTERCITY,
+			Train.INTERCITY,
 			TrainType.FULL,
 			Train.MOVING,
 			{
@@ -42,7 +42,7 @@ TestTrain = {}
 	function TestTrain:testReverse()
 		local t = Train:new(
 			'test',
-			INTERCITY,
+			Train.INTERCITY,
 			TrainType.STOP,
 			Train.STOPPED,
 			{
@@ -66,7 +66,7 @@ TestTrain = {}
 
 		local t = Train:new(
 			'test',
-			INTERCITY,
+			Train.INTERCITY,
 			TrainType.FULL,
 			Train.MOVING,
 			{

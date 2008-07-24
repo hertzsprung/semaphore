@@ -14,7 +14,7 @@ TestTile = {}
 	function TestTile:test_new()
 		local train = Train:new(
 			'test',
-			INTERCITY,
+			Train.INTERCITY,
 			TrainType.STOP,
 			Train.STOPPED,
 			{
@@ -38,7 +38,7 @@ TestTile = {}
 	function TestTile:test_occupied()
 		local train1 = Train:new(
 			'test1',
-			INTERCITY,
+			Train.INTERCITY,
 			TrainType.STOP,
 			Train.STOPPED,
 			{
@@ -50,7 +50,7 @@ TestTile = {}
 
 		local train2 = Train:new(
 			'test2',
-			INTERCITY,
+			Train.INTERCITY,
 			TrainType.STOP,
 			Train.STOPPED,
 			{
@@ -84,7 +84,7 @@ TestTile = {}
 	function TestTile:test_switch_points()
 		local train = Train:new(
 			'testtrain',
-			INTERCITY,
+			Train.INTERCITY,
 			TrainType.STOP,
 			Train.STOPPED,
 			{

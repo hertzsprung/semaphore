@@ -27,24 +27,6 @@ TrainType = {
 		return o
 	end
 
-INTERCITY = TrainType:new('IC', {
-	[TrainType.FULL] = 1,
-	[TrainType.FAST] = 2,
-	[TrainType.SLOW] = 3
-})
-
-COMMUTER = TrainType:new('LP', {
-	[TrainType.FULL] = 2,
-	[TrainType.FAST] = 3,
-	[TrainType.SLOW] = 4
-})
-
-FREIGHT = TrainType:new('GD', {
-	[TrainType.FULL] = 3,
-	[TrainType.FAST] = 4,
-	[TrainType.SLOW] = 5
-})
-
 TrainBlock = {}
 
 	function TrainBlock.__tostring(o)
@@ -63,6 +45,24 @@ TrainBlock = {}
 	end
 
 Train = {
+	INTERCITY = TrainType:new('IC', {
+		[TrainType.FULL] = 1,
+		[TrainType.FAST] = 2,
+		[TrainType.SLOW] = 3
+	}),
+	
+	COMMUTER = TrainType:new('LP', {
+		[TrainType.FULL] = 2,
+		[TrainType.FAST] = 3,
+		[TrainType.SLOW] = 4
+	}),
+	
+	FREIGHT = TrainType:new('GD', {
+		[TrainType.FULL] = 3,
+		[TrainType.FAST] = 4,
+		[TrainType.SLOW] = 5
+	}),
+
 	STOPPED  = 1,
 	MOVING   = 2,
 	DERAILED = 3,

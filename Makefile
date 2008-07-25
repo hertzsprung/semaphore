@@ -6,7 +6,7 @@ CC = gcc
 
 .PHONY: test doc libs
 libs:
-	$(CC) -shared -fPIC lib/main/time.c -o lib/main/time.so `pkg-config --cflags lua5.1`
+	$(CC) -shared -fPIC lib/main/time.c -o lib/main/ltime.so `pkg-config --cflags lua5.1`
 
 test: libs
 	LUA_PATH=$(TEST_PATH) $(LUA) src/test/test-action.lua

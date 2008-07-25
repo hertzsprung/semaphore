@@ -32,9 +32,9 @@ static const struct luaL_Reg reg_gettimeofday[] = {
         { NULL, NULL }
 };
  
-int luaopen_time(lua_State *L)
+int luaopen_ltime(lua_State *L)
 {
-        luaL_register(L, "time", reg_gettimeofday);
+        luaL_register(L, "ltime", reg_gettimeofday);
  
         return 1;
 }

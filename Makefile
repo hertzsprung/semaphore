@@ -16,7 +16,7 @@ test: libs
 	LUA_PATH=$(TEST_PATH) $(LUA) src/test/test-signal.lua
 	LUA_PATH=$(TEST_PATH) $(LUA) src/test/test-station.lua
 	LUA_PATH=$(TEST_PATH) $(LUA) src/test/test-tile.lua
-	LUA_PATH=$(TEST_PATH) LUA_CPATH=$(LIB_PATH) $(LUA) src/test/test-time.lua
+	LUA_PATH=$(TEST_PATH) LUA_CPATH=$(LIB_PATH) $(LUA) src/test/test-timer.lua
 	LUA_PATH=$(TEST_PATH) $(LUA) src/test/test-train.lua
 
 doc:

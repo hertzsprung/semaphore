@@ -46,9 +46,9 @@ TestTrain = {}
 			TrainType.STOP,
 			Train.STOPPED,
 			{
-				TrainBlock:new(Vector:new{3, 1}, Vector:new{W, E}, nil),
-				TrainBlock:new(Vector:new{2, 1}, Vector:new{W, E}, nil),
-				TrainBlock:new(Vector:new{1, 1}, Vector:new{W, E}, nil)
+				TrainBlock:new(Coord:new(3, 1), Vector:new{W, E}, nil),
+				TrainBlock:new(Coord:new(2, 1), Vector:new{W, E}, nil),
+				TrainBlock:new(Coord:new(1, 1), Vector:new{W, E}, nil)
 			}
 		)
 		print(t)
@@ -70,9 +70,9 @@ TestTrain = {}
 			TrainType.FULL,
 			Train.MOVING,
 			{
-				TrainBlock:new(Vector:new{3, 1}, Vector:new{W, E}, tile3.layers[1]),
-				TrainBlock:new(Vector:new{2, 1}, Vector:new{W, E}, tile2.layers[1]),
-				TrainBlock:new(Vector:new{1, 1}, Vector:new{W, E}, tile1.layers[1])
+				TrainBlock:new(Coord:new(3, 1), Vector:new{W, E}, tile3.layers[1]),
+				TrainBlock:new(Coord:new(2, 1), Vector:new{W, E}, tile2.layers[1]),
+				TrainBlock:new(Coord:new(1, 1), Vector:new{W, E}, tile1.layers[1])
 			}
 		)
 

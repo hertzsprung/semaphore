@@ -8,7 +8,7 @@ Copyright 2008 James Shaw <js102@zepler.net>
 local Compass = {}
 
 	function Compass.__eq(o1, o2)
-		return o1[1] == o2[1] and o1[2] == o2[2]
+		return o1.x == o2.x and o1.y == o2.y
 	end
 	
 	function Compass.__tostring(o)
@@ -16,7 +16,11 @@ local Compass = {}
 	end
 	
 	function Compass:new(x, y, name)
-		o = {x, y, name=name}
+		local o = {
+			x = x,
+			y = y,
+			name = name
+		}
 		setmetatable(o, self)
 		self.__index = self
 		return o
@@ -40,8 +44,9 @@ SW.inverse = NE
 W.inverse  = E
 NW.inverse = SE
 
--- TODO: consider splitting into two classes: one that holds a pair of compass points,
--- and another than holds x, y coordinates
+X = 1
+Y = 2
+
 Vector = {}
 
 	function Vector.__eq(o1, o2)
@@ -66,10 +71,46 @@ Vector = {}
 		return self
 	end
 	
-	function Vector:add(v)
-		return Vector:new{self[1] + v[1], self[2] + v[2]}
-	end
-	
 	function Vector:is_straight()
 		return self[1].inverse == self[2]
+	end
+
+Coord = {}
+
+	function Coord.__eq(o1, o2)
+		return o1.x == o2.x and o1.y == o2.y
+	end
+	
+	function Coord.__tostring(o)
+		return '(' .. tostring(o.x) .. ',' .. tostring(o.y) .. ')'
+	end
+	
+	function Coord:new(x, y)
+		local o = {
+			x = x,
+			y = y
+		}
+		setmetatable(o, self)
+		self.__index = self
+		return o
+	end
+
+	function Coord:add(v)
+		return Coord:new(self.x + v.x, self.y + v.y)
+	end
+
+	function Coord.bounding_box(coords)
+		local min, max
+		for k, coord in ipairs(coords) do
+			if min == nil then
+				min = Coord:new(coord.x, coord.y)
+				max = Coord:new(coord.x, coord.y)
+			else 
+				if coord.x < min.x then min.x = coord.x end
+				if coord.y < min.y then min.y = coord.y end
+				if coord.x > max.x then max.x = coord.x end
+				if coord.y > max.y then max.y = coord.y end
+			end
+		end
+		return min, max
 	end

@@ -6,6 +6,7 @@ Copyright 2008 James Shaw <js102@zepler.net>
 ]]--
 
 require('train')
+require('compass')
 
 -- made this a class in its own right so that scheduling can be attached to StationTypes
 StationType = {}
@@ -41,12 +42,22 @@ Station = {
 	end
 
 	function Station:add_platform(platform)
-		self.platforms[#self.platforms+1] = platform
+		table.insert(self.platforms, platform)
+	end
+
+	function Station:bounding_box()
+		local platform_boxes = {}
+		for i, platform in ipairs(self.platforms) do
+			local min, max = platform.bounding_box()
+			table.insert(platform_boxes, min)
+			table.insert(platform_boxes, max)
+		end
+		return Coord.bounding_box(platform_boxes)
 	end
 
 Platform = {}
 
-	function Platform:new(station, name, train_types)
+	function Platform:new(station, name, train_types, tiles)
 		local o = {
 			-- the station to which the platform belongs
 			station = station,
@@ -55,7 +66,8 @@ Platform = {}
 			-- to be occupied by a different set of train types to its station
 			train_types = train_types,
 			-- the train currently occupying the platform
-			occupier = nil
+			occupier = nil,
+			tiles = tiles -- list of Coords, not Tiles
 		}
 		setmetatable(o, self)
 		self.__index = self
@@ -64,4 +76,28 @@ Platform = {}
 
 	function Platform:get_train_types()
 		return self.train_types or self.station.train_types
+	end
+
+	function Platform:bounding_box()
+		return Coord.bounding_box(self.tiles)
+	end
+
+Spawn = {}
+
+	function Spawn:new(code, name, entry_tile, exit_tile, entry_types, exit_types)
+		local o = {
+			code = code,
+			name = name,
+			entry_tile = entry_tile, -- Coords, not Tiles
+			exit_tile = exit_tile,
+			entry_types = entry_types, -- list of TrainTypes
+			exit_types = exit_types
+		}
+		setmetatable(o, self)
+		self.__index = self
+		return o
+	end
+
+	function Spawn:bounding_box()
+		return Coord.bounding_box({self.entry_tile, self.exit_tile})
 	end

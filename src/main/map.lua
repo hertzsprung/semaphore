@@ -39,9 +39,10 @@ function Map:new(w, h)
 end
 
 function Map:get(v)
-	return self[v[2]][v[1]]
+	return self[v.y][v.x]
 end
 
+-- TODO: might need to change this to accept a Tile instead of a TileType.  that way we can preset, for example, a signal's aspect
 function Map:set(x, y, type)
 	if tonumber(x) == nil or x < 1 or x > self.w then
 		error(x .. ' invalid for map of size ' .. self.w .. 'x' .. self.h)

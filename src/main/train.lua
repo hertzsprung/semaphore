@@ -30,7 +30,7 @@ TrainType = {
 TrainBlock = {}
 
 	function TrainBlock.__tostring(o)
-		return '[' .. o.position[1] .. ',' .. o.position[2] .. ' ' .. tostring(o.vector) .. ']'
+		return '[' .. o.position.x .. ',' .. o.position.y .. ' ' .. tostring(o.vector) .. ']'
 	end
 
 	function TrainBlock:new(position, vector, layer)

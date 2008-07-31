@@ -26,6 +26,7 @@ TileType = {}
 
 -- FIXME: sort out remaining tiles with active/inactive vectors
 -- probably better to come up with some nicer constructors
+-- just use [1], [2], [3] etc for layers instead of a named list
 TILES={}
 TILES[0]  = TileType:new(false, {})
 TILES[8]  = TileType:new(false, {Vector:new{SW, NE}, Vector:new{SE, NW}})

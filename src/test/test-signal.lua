@@ -24,4 +24,21 @@ TestSignal = {}
 		assertEquals(self.signal.previous_aspect, Signal.RED)
 	end
 
+	function TestSignal:test_next_speed()
+		local main_amber = Signal:new(Signal.MAIN_AUTO, Signal.AMBER)
+		local main_red   = Signal:new(Signal.MAIN_AUTO, Signal.RED)
+		-- TODO: fix blocks and length
+		local full_train = Train:new("mytrain", Train.COMMUTER, TrainType.FULL, Train.MOVING, {}, 0)
+
+		local speed, emergency = main_amber:next_speed(full_train)
+		assertEquals(speed, TrainType.SLOW)
+		assertEquals(emergency, false)
+		
+		local speed, emergency = main_red:next_speed(full_train)
+		assertEquals(speed, TrainType.STOP)
+		assertEquals(emergency, true)
+
+		-- TODO: a few more permutations
+	end
+
 LuaUnit:run()

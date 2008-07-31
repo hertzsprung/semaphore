@@ -47,7 +47,10 @@ NW.inverse = SE
 X = 1
 Y = 2
 
-Vector = {}
+Vector = {
+	ENTRY = 1,
+	EXIT  = 2
+}
 
 	function Vector.__eq(o1, o2)
 		return o1[1] == o2[1] and o1[2] == o2[2]
@@ -64,11 +67,16 @@ Vector = {}
 		return o
 	end
 	
+	-- TODO: rename to invert()
 	function Vector:inverse()
 		local tmp = self[2]
 		self[2] = self[1]
 		self[1] = tmp
 		return self
+	end
+
+	function Vector:get_inverse()
+		return Vector:new{self[2], self[1]}
 	end
 	
 	function Vector:is_straight()

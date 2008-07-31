@@ -7,6 +7,7 @@ Copyright 2008 James Shaw <js102@zepler.net>
 
 require('luaunit')
 require('map')
+require('tile')
 
 TestMap = {}
 
@@ -15,7 +16,7 @@ TestMap = {}
     end
 
 	function TestMap:testEmptyCell()
-		assertEquals(self.map[2][4], TILES[0])
+		assertEquals(self.map[2][4], BLANK)
 	end
 
 	function TestMap:testOutsideWidth()
@@ -27,10 +28,9 @@ TestMap = {}
 	end
 
 	function TestMap:testSet()
-		local tile = self.map:set(1, 2, TILES[40])
-		assertEquals(self.map[2][1], tile)
-		assertEquals(tile.type, TILES[40])
-		assertEquals(tile.occupied, 0)
+		local tile_in = Track:new(Vector:new{W, E})
+		local tile_out = self.map:set(1, 2, tile_in)
+		assertEquals(self.map[2][1], tile_out)
 	end
 
 LuaUnit:run()

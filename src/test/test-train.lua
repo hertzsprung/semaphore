@@ -59,10 +59,10 @@ TestTrain = {}
 
 	function TestTrain:testMove()
 		local map = Map:new(5, 3)
-		local tile1 = map:set(1, 1, TILES[10])
-		local tile2 = map:set(2, 1, TILES[10])
-		local tile3 = map:set(3, 1, TILES[10])
-		local tile4 = map:set(4, 1, TILES[15])
+		local tile1 = map:set(1, 1, Track:new(Vector:new{W, E}))
+		local tile2 = map:set(2, 1, Track:new(Vector:new{W, E}))
+		local tile3 = map:set(3, 1, Track:new(Vector:new{W, E}))
+		local tile4 = map:set(4, 1, Track:new(Vector:new{W, NE}))
 
 		local t = Train:new(
 			'test',
@@ -70,11 +70,15 @@ TestTrain = {}
 			TrainType.FULL,
 			Train.MOVING,
 			{
-				TrainBlock:new(Coord:new(3, 1), Vector:new{W, E}, tile3.layers[1]),
-				TrainBlock:new(Coord:new(2, 1), Vector:new{W, E}, tile2.layers[1]),
-				TrainBlock:new(Coord:new(1, 1), Vector:new{W, E}, tile1.layers[1])
+				TrainBlock:new(Coord:new(3, 1), Vector:new{W, E}, tile3),
+				TrainBlock:new(Coord:new(2, 1), Vector:new{W, E}, tile2),
+				TrainBlock:new(Coord:new(1, 1), Vector:new{W, E}, tile1)
 			}
 		)
+
+		tile1.occupier = t
+		tile2.occupier = t
+		tile3.occupier = t
 
 		t:move(map)
 		print(t)

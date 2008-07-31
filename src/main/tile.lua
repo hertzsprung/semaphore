@@ -12,108 +12,98 @@ local logger = logging.console()
 
 require 'compass'
 
-TileType = {}
+BLANK = {}
 
-	function TileType:new(junction, layers)
+Track = {}
+
+	function Track.__tostring(o)
+		return tostring(o.vector) .. ' Track'
+	end
+	
+	function Track:new(vector)
 		local o = {
-			junction = junction,
-			layers = layers
+			vector = vector,
+			occupier = nil -- train occupying the tile
 		}
 		setmetatable(o, self)
 		self.__index = self
 		return o
 	end
 
--- FIXME: sort out remaining tiles with active/inactive vectors
--- probably better to come up with some nicer constructors
--- just use [1], [2], [3] etc for layers instead of a named list
-TILES={}
-TILES[0]  = TileType:new(false, {})
-TILES[8]  = TileType:new(false, {Vector:new{SW, NE}, Vector:new{SE, NW}})
-TILES[10] = TileType:new(false, {{active = {Vector:new{W, E}}, inactive = {}}})
-TILES[11] = TileType:new(false, {Vector:new{S, N}})
-TILES[12] = TileType:new(false, {Vector:new{SE, NW}})
-TILES[13] = TileType:new(false, {Vector:new{SW, NE}})
-TILES[14] = TileType:new(false, {Vector:new{SE, W}})
-TILES[15] = TileType:new(false, {{active = {Vector:new{W, NE}}, inactive = {}}})
-TILES[16] = TileType:new(false, {Vector:new{NW, E}})
-TILES[17] = TileType:new(false, {Vector:new{SW, E}})
-
-TILES[40] = TileType:new(true, {{active = {Vector:new{W, E}}, inactive = {Vector:new{W, NE}}}})
-
-TILES[50] = TileType:new(true, {{active = {Vector:new{W, NE}}, inactive= {Vector:new{W, E}}}})
-
-TILES[40].next = TILES[50]
-TILES[50].next = TILES[40]
-
-ENTRY = 1
-EXIT  = 2
-
-Layer = {}
-
-	function Layer:new(tile, type_layer)
-		local o = {
-			occupier = nil, -- train occupying the layer
-			tile = tile
-		}
-		local mt = {}
-		function mt.__index(o, key)
-			return rawget(o, key) or rawget(self, key) or rawget(type_layer, key)
-		end	
-		setmetatable(o, mt)
-		return o
-	end
-	
-	function Layer:set_occupier(train)
-		if self.occupier == nil and train ~= nil then
-			self.tile.occupied = self.tile.occupied + 1
-		elseif self.occupier ~= nil then
-			if train == nil then
-				self.tile.occupied = self.tile.occupied - 1
+	function Track:occupy(train, direction)
+		local vector = Track.calculate_vector(self.vector, direction)
+		if vector then
+			if self.occupier then
+				logger:info("train " .. tostring(train) .. " has crashed into " .. tostring(self.occupier))
+				self.occupier:crash()
+				train:crash()
+				return nil
 			else
-				self.tile.occupied = self.tile.occupied + 1
+				self.occupier = train
 			end
 		end
-		self.occupier = train
+		return vector
 	end
 
-Tile = {}
-
-	function Tile.__index(o, key)
-		return rawget(o, key) or rawget(Tile, key) or rawget(o.type, key)
+	function Track:unoccupy(train)
+		local is_occupied = self.occupier == train
+		if is_occupied then
+			logger:debug("Train '" .. train.name .. "' no longer occupies " .. tostring(self))
+			self.occupier = nil
+		else
+			logger:error("Can't unoccupy " .. tostring(self) .. " because train '" .. train.name .. "' doesn't occupy it")
+		end
+		return is_occupied
 	end
-	
-	function Tile:new(type)
+
+	function Track.calculate_vector(track_vector, train_direction)
+		if track_vector[Vector.ENTRY] == train_direction.inverse then
+			return track_vector
+		end
+		if track_vector[Vector.EXIT]  == train_direction.inverse then
+			return track_vector:get_inverse()
+		end
+	end
+
+JunctionTrack = {}
+
+	function JunctionTrack:new(active, ...)
 		local o = {
-			type = type,
-			occupied = 0 -- number of trains occupying the tile
+			active = active,
+			inactive = {},
+			next = nil
 		}
-		o.layers = self:create_layers(o, type)
-	
+		for i, inactive in ipairs(...) do
+			table.insert(o.inactive, inactive)
+		end
 		setmetatable(o, self)
+		self.__index = self
 		return o
 	end
 
-	function Tile:create_layers(o, type)
-		o = o or self
-		type = type or self.type
-		local layers = {}
-		for i, type_layer in ipairs(type.layers) do
-			layers[i] = Layer:new(o, type_layer)
-		end
-		return layers
+Junction = {}
+
+	function Junction:new(track)
+		local o = {
+			track = track,
+			occupier = nil
+		}
+		setmetatable(o, self)
+		self.__index = self
+		return o
 	end
 
-	function Tile:switch_points()
-		if not self.junction then
-			logger:warn("Non-junction tile only has one state")
-			return false
-		elseif self.occupied > 0 then
-			logger:warn("Can't switch points because tile is occupied by one or more trains")
+	function Junction:switch_points()
+		if self.occupier then
+			logger:warn("Can't switch points because tile is occupied train" .. tostring(self.occupier))
 			return false
 		else
-			self.type = self.type.next
-			self.layers = self:create_layers()
+			self.track = self.track.next
 			return true
 		end
 	end
+
+Flyover = {}
+
+BufferStop = {}
+

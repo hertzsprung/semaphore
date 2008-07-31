@@ -33,11 +33,11 @@ TrainBlock = {}
 		return '[' .. o.position.x .. ',' .. o.position.y .. ' ' .. tostring(o.vector) .. ']'
 	end
 
-	function TrainBlock:new(position, vector, layer)
+	function TrainBlock:new(position, vector, tile)
 		local o = {
 			position = position, -- the coordinate position on the map
 			vector = vector,
-			layer = layer -- the tile.layer 
+			tile = tile
 		}
 		setmetatable(o, self)
 		self.__index = self
@@ -69,90 +69,78 @@ Train = {
 	CRASHED  = 4
 }
 
-function Train.__tostring(o)
-	s = '{'
-	for i, block in ipairs(o.blocks) do
-		s = s .. tostring(block) .. ' '
+	function Train.__tostring(o)
+		s = '{'
+		for i, block in ipairs(o.blocks) do
+			s = s .. tostring(block) .. ' '
+		end
+		s = s .. '} type=' .. tostring(o.type.prefix) .. ' speed=' .. ({'STOP', 'SLOW', 'FAST', 'FULL'})[o.speed + 1]
+		return s
 	end
-	s = s .. '} type=' .. tostring(o.type.prefix) .. ' speed=' .. ({'STOP', 'SLOW', 'FAST', 'FULL'})[o.speed + 1]
-	return s
-end
-
-function Train:new(name, type, speed, state, blocks, length)
-	length = length or #blocks
-	local o = {
-		name   = name,
-		type   = type,
-		speed  = speed,
-		state  = state,
-		length = length,
-		blocks = blocks
-	}
-	setmetatable(o, self)
-	self.__index = self
-	return o
-end
-
-function Train:head() return self.blocks[1] end
-
-function Train:tail() return self.blocks[#self.blocks] end
-
-function Train:reverse()
-	local blocks = self.blocks
-	for i = 1, math.floor(#blocks / 2) do
-		first = blocks[i]
-		last  = blocks[#blocks - i + 1]
-		first.vector:inverse()
-		last.vector:inverse()
-		blocks[i] = last
-		blocks[#blocks - i + 1] = first
+	
+	function Train:new(name, type, speed, state, blocks, length)
+		length = length or #blocks
+		local o = {
+			name   = name,
+			type   = type,
+			speed  = speed,
+			state  = state,
+			length = length,
+			blocks = blocks
+		}
+		setmetatable(o, self)
+		self.__index = self
+		return o
 	end
-end
-
-function Train:shift(head)
-	local blocks = self.blocks
-	for i = #blocks, 2, -1 do
-		blocks[i] = blocks[i-1]
-	end
-	blocks[1] = head
-end
-
-function Train:move(map)
-	local head = self:head()
-	local direction = head.vector[EXIT]
-	local position = head.position:add(direction)
-
-	logger:debug("Train '" .. self.name .. "' travelling " ..
-		tostring(direction) .. " from " .. tostring(head.position)
-		.. " to " .. tostring(position))
-
-	local tile = map:get(position)
-	local layer, route = self:route(direction, tile)
-
-	logger:debug("Train '" .. self.name .. "' routed " .. tostring(route))
-	-- TODO: test for nil return
-
-	self:tail().layer:set_occupier(nil)
-
-	if layer.occupied then
-		logger:warn("Train '" .. self.name .. "' has crashed: attempt to occupy the same tile layer as train " .. layer.occupied.name)
-		-- TODO: crash
-	else
-		layer.occupied = self
-	end
-	local new_head = TrainBlock:new(position, route, layer)
-	self:shift(new_head)
-end	
-
-function Train:route(direction, tile)
-	for i, layer in ipairs(tile.layers) do
-		for j, route in ipairs(layer.active) do
-			if route[ENTRY] == direction.inverse then
-				return layer, route
-			end
-			if route[EXIT]  == direction.inverse then
-				return layer, Vector:new{route[EXIT], route[ENTRY]}
-			end
+	
+	function Train:head() return self.blocks[1] end
+	
+	function Train:tail() return self.blocks[#self.blocks] end
+	
+	function Train:reverse()
+		local blocks = self.blocks
+		for i = 1, math.floor(#blocks / 2) do
+			first = blocks[i]
+			last  = blocks[#blocks - i + 1]
+			first.vector:inverse()
+			last.vector:inverse()
+			blocks[i] = last
+			blocks[#blocks - i + 1] = first
 		end
 	end
-end
+
+	function Train:shift(head)
+		local blocks = self.blocks
+		for i = #blocks, 2, -1 do
+			blocks[i] = blocks[i-1]
+		end
+		blocks[1] = head
+	end
+	
+	function Train:direction()
+		return self:head().vector[Vector.EXIT]
+	end
+
+	function Train:move(map)
+		local head = self:head()
+		local direction = self:direction()
+		local position = head.position:add(direction)
+	
+		logger:debug("Train '" .. self.name .. "' travelling " ..
+			tostring(direction) .. " from " .. tostring(head.position)
+			.. " to " .. tostring(position))
+	
+		local tile = map:get(position)
+		local new_direction = tile:occupy(self, direction)
+		-- TODO: test tile return
+		logger:debug("Train '" .. self.name .. "' routed to " .. tostring(tile) .. " new direction " .. tostring(new_direction))
+	
+		self:tail().tile:unoccupy(self)
+		local new_head = TrainBlock:new(position, new_direction, tile)
+		self:shift(new_head)
+	end	
+
+	function Train:crash()
+		self.speed = TrainType.STOP
+		self.state = Train.CRASHED
+	end

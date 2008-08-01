@@ -30,19 +30,23 @@ Track = {}
 		return o
 	end
 
-	function Track:occupy(train, direction)
-		local vector = Track.calculate_vector(self.vector, direction)
+	function Track:occupy(train)
+		local vector = Track.calculate_vector(self.vector, train:direction())
 		if vector then
 			if self.occupier then
-				logger:info("train " .. tostring(train) .. " has crashed into " .. tostring(self.occupier))
+				-- TODO: move into helper function and reuse in Junction class (using inheritance)
+				logger:info("train '" .. tostring(train) .. "' has crashed into " .. tostring(self.occupier))
 				self.occupier:crash()
 				train:crash()
-				return nil
 			else
 				self.occupier = train
+				return vector
 			end
+		else
+			-- TODO: move into helper function and reuse in Junction class (using inheritance)
+			logger:error("train '" .. tostring(train.name) .. "' has crashed because track wasn't connected")
+			train:crash()
 		end
-		return vector
 	end
 
 	function Track:unoccupy(train)
@@ -65,28 +69,36 @@ Track = {}
 		end
 	end
 
+
 JunctionTrack = {}
 
-	function JunctionTrack:new(active, ...)
+	function JunctionTrack:new(active, inactive)
 		local o = {
 			active = active,
-			inactive = {},
+			inactive = inactive,
 			next = nil
 		}
-		for i, inactive in ipairs(...) do
-			table.insert(o.inactive, inactive)
-		end
 		setmetatable(o, self)
 		self.__index = self
 		return o
 	end
 
+	function JunctionTrack:is_switched()
+		for i, v in ipairs(self.active) do
+			if not v:is_straight() then
+				return true
+			end
+		end
+		return false
+	end
+
 Junction = {}
 
-	function Junction:new(track)
+	function Junction:new(track, derail_protect)
 		local o = {
 			track = track,
-			occupier = nil
+			occupier = nil,
+			derail_protect = derail_protect
 		}
 		setmetatable(o, self)
 		self.__index = self
@@ -95,11 +107,40 @@ Junction = {}
 
 	function Junction:switch_points()
 		if self.occupier then
-			logger:warn("Can't switch points because tile is occupied train" .. tostring(self.occupier))
+			logger:warn("Can't switch points because tile is occupied by train" .. tostring(self.occupier))
 			return false
 		else
 			self.track = self.track.next
 			return true
+		end
+	end
+
+	function Junction:occupy(train)
+		local vector = self:get_track(self.track.active, train:direction())
+		if vector then
+			if self.occupier then
+				logger:info("train '" .. tostring(train) .. "' has crashed into " .. tostring(self.occupier))
+				self.occupier:crash()
+				train:crash()
+			else
+				self.occupier = train
+				return vector
+			end
+		else
+			logger:error("train '" .. tostring(train) .. "' has crashed because track wasn't connected")
+			train:crash()
+		end
+
+		if self.derail_protect and train.speed == TrainType.SLOW then
+			logger:debug("Derail protect is switching points for entering train " .. tostring(train))
+			-- TODO
+		end
+	end
+
+	function Junction:get_track(track_list, direction)
+		for i, track in ipairs(track_list) do
+			local vector = Track.calculate_vector(track, direction)
+			if vector then return vector end
 		end
 	end
 

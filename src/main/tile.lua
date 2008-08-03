@@ -44,7 +44,7 @@ Track = {}
 			end
 		else
 			-- TODO: move into helper function and reuse in Junction class (using inheritance)
-			logger:error("train '" .. tostring(train.name) .. "' has crashed because track wasn't connected")
+			logger:error("train " .. tostring(train) .. " has crashed because track wasn't connected")
 			train:crash()
 		end
 	end
@@ -71,6 +71,19 @@ Track = {}
 
 
 JunctionTrack = {}
+
+	function JunctionTrack.__tostring(o)
+		local s = "<JunctionTrack active={"
+		for i, active in ipairs(o.active) do
+			s = s .. tostring(active) .. " "
+		end
+		s = s .. "} inactive={"
+		for i, inactive in ipairs(o.inactive) do
+			s = s .. tostring(inactive) .. " "
+		end
+		s = s .. "}>"
+		return s
+	end
 
 	function JunctionTrack:new(active, inactive)
 		local o = {
@@ -115,6 +128,20 @@ Junction = {}
 		end
 	end
 
+	-- if track combinations allow, automatically switch points
+	-- so that an inbound train can occupy this tile
+	function Junction:auto_switch_points(direction)
+		local state = self.track.next
+		while state ~= self.track do
+			local vector = self:get_track(state.active, direction)
+			if vector then
+				return state, vector
+			end
+			state = state.next
+		end
+		logger:debug("No suitable track state found for direction " .. tostring(direction))
+	end
+
 	function Junction:occupy(train)
 		local vector = self:get_track(self.track.active, train:direction())
 		if vector then
@@ -126,14 +153,33 @@ Junction = {}
 				self.occupier = train
 				return vector
 			end
+		elseif self.derail_protect and train.speed == TrainType.SLOW then
+			if self.occupier then
+				logger:info("train '" .. tostring(train) .. "' has crashed into " .. tostring(self.occupier))
+				self.occupier:crash()
+				train:crash()
+			else
+				logger:debug("Derail protection is enabled, finding suitable points combination for inbound train " .. tostring(train))
+				local new_track, vector = self:auto_switch_points(train:direction())
+				if new_track then
+					logger:debug("auto-switching points to " .. tostring(new_track))
+					self.track = new_track
+					self.occupier = train
+					return vector
+				else
+					logger:error("train " .. tostring(train) .. " has crashed because track wasn't connected")
+					train:crash()
+				end
+			end
 		else
-			logger:error("train '" .. tostring(train) .. "' has crashed because track wasn't connected")
-			train:crash()
-		end
-
-		if self.derail_protect and train.speed == TrainType.SLOW then
-			logger:debug("Derail protect is switching points for entering train " .. tostring(train))
-			-- TODO
+			logger:debug("No active route and derail protection not applicable to inbound train " .. tostring(train))
+			local inactive_vector = self:get_track(self.track.inactive, train:direction())
+			if inactive_vector then
+				train:derail()
+			else
+				logger:error("train " .. tostring(train) .. " has crashed because track wasn't connected")
+				train:crash()
+			end
 		end
 	end
 

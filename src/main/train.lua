@@ -144,3 +144,8 @@ Train = {
 		self.speed = TrainType.STOP
 		self.state = Train.CRASHED
 	end
+
+	function Train:derail()
+		self.speed = TrainType.STOP
+		self.state = Train.DERAILED
+	end

@@ -86,13 +86,13 @@ TestJunctionTrack = {}
 
 TestJunction = {}
 
-	function TestJunction.test_switch_pointsd()
+	function TestJunction.test_switch_points()
 		local track1 = JunctionTrack:new({Vector:new{W, NE}}, {Vector:new{W, E}})
 		local track2 = JunctionTrack:new({Vector:new{W, E}}, {Vector:new{W, NE}})
 		track1.next = track2
 		track2.next = track1
 
-		local junction = Junction:new(track1)
+		local junction = Junction:new(track1, true)
 		local success = junction:switch_points()
 		assertEquals(success, true)
 		assertEquals(junction.track, track2)
@@ -103,6 +103,64 @@ TestJunction = {}
 		success = junction:switch_points()
 		assertEquals(success, false)
 		assertEquals(junction.track, track2)
+	end
+
+	function TestJunction.test_auto_switch_points()
+		local track1 = JunctionTrack:new({Vector:new{W, NE}}, {Vector:new{W, E}})
+		local track2 = JunctionTrack:new({Vector:new{W, E}}, {Vector:new{W, NE}})
+		track1.next = track2
+		track2.next = track1
+		local junction = Junction:new(track1, true)
+		local state, vector = junction:auto_switch_points(W)
+		assertEquals(state, track2)
+		assertEquals(vector, Vector:new{E, W})
+
+		state, vector = junction:auto_switch_points(N)
+		assertEquals(state, nil)
+		assertEquals(vector, nil)
+	end
+
+	function TestJunction.test_occupy_normal()
+		local train = Train:new("mytrain", Train.INTERCITY, TrainType.FAST, Train.MOVING,
+			{ TrainBlock:new(Coord:new(1, 1), Vector:new{W, E}, track) }, 1)
+
+		local track1 = JunctionTrack:new({Vector:new{W, NE}}, {Vector:new{W, E}})
+		local track2 = JunctionTrack:new({Vector:new{W, E}}, {Vector:new{W, NE}})
+		track1.next = track2
+		track2.next = track1
+		local junction = Junction:new(track1, true)
+		junction:occupy(train)
+		assertEquals(junction.occupier, train)
+		assertEquals(junction.track, track1)
+	end
+
+	function TestJunction.test_occupy_point_switch_slow()
+		local train = Train:new("mytrain", Train.INTERCITY, TrainType.SLOW, Train.MOVING,
+			{ TrainBlock:new(Coord:new(1, 1), Vector:new{SE, W}, track) }, 1)
+
+		local junction, track1, track2 = TestJunction.move_auto_point_switch(train)
+		assertEquals(junction.occupier, train)
+		assertEquals(junction.track, track2)
+		assertEquals(train.state, Train.MOVING)
+	end
+
+	function TestJunction.test_occupy_point_switch_fast()
+		local train = Train:new("mytrain", Train.INTERCITY, TrainType.FAST, Train.MOVING,
+			{ TrainBlock:new(Coord:new(1, 1), Vector:new{SE, W}, track) }, 1)
+		local junction, track1 = TestJunction.move_auto_point_switch(train)
+		assertEquals(junction.occupier, nil)
+		assertEquals(junction.track, track1)
+		assertEquals(train.state, Train.DERAILED)
+	end
+
+	function TestJunction.move_auto_point_switch(train)
+		local track1 = JunctionTrack:new({Vector:new{W, NE}}, {Vector:new{W, E}})
+		local track2 = JunctionTrack:new({Vector:new{W, E}}, {Vector:new{W, NE}})
+		track1.next = track2
+		track2.next = track1
+		local junction = Junction:new(track1, true)
+		junction:occupy(train)
+		return junction, track1, track2
 	end
 
 LuaUnit:run()

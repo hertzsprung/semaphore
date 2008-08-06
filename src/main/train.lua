@@ -74,7 +74,8 @@ Train = {
 		for i, block in ipairs(o.blocks) do
 			s = s .. tostring(block) .. ' '
 		end
-		s = s .. '} type=' .. tostring(o.type.prefix) .. ' speed=' .. ({'STOP', 'SLOW', 'FAST', 'FULL'})[o.speed + 1]
+		s = s .. '} type=' .. tostring(o.type.prefix)
+		s = s .. ' speed=' .. ({'STOP', 'SLOW', 'FAST', 'FULL'})[o:speed() + 1]
 		return s
 	end
 	
@@ -83,13 +84,14 @@ Train = {
 		local o = {
 			name   = name,
 			type   = type,
-			speed  = speed,
+			speeds = {},
 			state  = state,
 			length = length,
 			blocks = blocks
 		}
 		setmetatable(o, self)
 		self.__index = self
+		o:add_speed(speed)
 		return o
 	end
 	
@@ -138,14 +140,29 @@ Train = {
 		self:tail().tile:unoccupy(self)
 		local new_head = TrainBlock:new(position, new_direction, tile)
 		self:shift(new_head)
+	end
+
+	function Train:speed()
+		for i, s in ipairs({TrainType.STOP, TrainType.SLOW, TrainType.FAST, TrainType.FULL}) do
+			if self.speeds[s] and self.speeds[s] ~= 0 then return s end
+		end
+		return TrainType.STOP
+	end
+
+	function Train:add_speed(s)
+		self.speeds[s] = (self.speeds[s] or 0) + 1
+	end
+
+	function Train:remove_speed(s)
+		self.speeds[s] = (self.speeds[s] or 1) - 1
 	end	
 
 	function Train:crash()
-		self.speed = TrainType.STOP
+		self.speed = self:add_speed(TrainType.STOP)
 		self.state = Train.CRASHED
 	end
 
 	function Train:derail()
-		self.speed = TrainType.STOP
+		self.speed = self:add_speed(TrainType.STOP)
 		self.state = Train.DERAILED
 	end

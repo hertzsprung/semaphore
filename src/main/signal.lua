@@ -85,6 +85,6 @@ Signal.SPEEDS = {
 	function Signal:next_speed(train)
 		local type
 		if self.type == Signal.SUB then type = SUB else type = MAIN end
-		local s = Signal.SPEEDS[train.speed][type][self.aspect]
+		local s = Signal.SPEEDS[train:speed()][type][self.aspect]
 		return s.speed, s.emergency or false
 	end

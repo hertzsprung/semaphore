@@ -50,7 +50,7 @@ TestTrack = {}
 		local vector = track:occupy(train, train:direction())
 		assertEquals(vector, nil)
 		assertEquals(train.state, Train.CRASHED)
-		assertEquals(train.speed, TrainType.STOP)
+		assertEquals(train:speed(), TrainType.STOP)
 	end
 
 	function TestTrack.test_occupy_crash()
@@ -64,9 +64,9 @@ TestTrack = {}
 		local vector = track:occupy(train2, train2:direction())
 		assertEquals(vector, nil)
 		assertEquals(train1.state, Train.CRASHED)
-		assertEquals(train1.speed, TrainType.STOP)
+		assertEquals(train1:speed(), TrainType.STOP)
 		assertEquals(train2.state, Train.CRASHED)
-		assertEquals(train2.speed, TrainType.STOP)
+		assertEquals(train2:speed(), TrainType.STOP)
 	end
 
 	function TestTrack.test_unoccupy()

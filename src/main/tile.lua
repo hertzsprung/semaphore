@@ -180,11 +180,11 @@ Junction = {}
 				self.occupier:crash()
 				train:crash()
 			else
-				--self:set_train_properties(train)
+				self:set_train_properties(train)
 				self.occupier = train
 				return vector
 			end
-		elseif self.derail_protect and train.speed == TrainType.SLOW then
+		elseif self.derail_protect and train:speed() == TrainType.SLOW then
 			if self.occupier then
 				logger:info("train '" .. tostring(train) .. "' has crashed into " .. tostring(self.occupier))
 				self.occupier:crash()
@@ -195,7 +195,7 @@ Junction = {}
 				if new_track then
 					logger:debug("auto-switching points to " .. tostring(new_track))
 					self.track = new_track
-					--self:set_train_properties(train)
+					self:set_train_properties(train)
 					self.occupier = train
 					return vector
 				else
@@ -220,10 +220,9 @@ Junction = {}
 	end
 
 	-- set train speed to FAST if moving on to switched points
-	-- FIXME: how to restore full speed after the whole train has moved off the points?
 	function Junction:set_train_properties(train)
-		if self.track:is_switched() and train.speed > TrainType.FAST then
-			train.speed = TrainType.FAST
+		if self.track:is_switched() and train:speed() > TrainType.FAST then
+			train:add_speed(TrainType.FAST)
 		end
 	end
 

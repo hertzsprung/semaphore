@@ -9,6 +9,16 @@ require('luaunit')
 require('tile')
 require('train')
 
+TestBlank = {}
+
+	function TestBlank.test_occupy()
+		local train = Train:new("mytrain", Train.INTERCITY, TrainType.FAST, Train.MOVING,
+			{ TrainBlock:new(Coord:new(1, 1), Vector:new{W, E}, track) }, 1)
+		local vector = BLANK:occupy(train)
+		assertEquals(vector, nil)
+		assertEquals(train.state, Train.CRASHED)
+	end
+
 TestTrack = {}
 
 	function TestTrack.test_calculate_vector()
@@ -24,7 +34,7 @@ TestTrack = {}
 	end
 
 	function TestTrack.test_occupy()
-		local track = Track:new(Vector:new{W, NE})
+		local track = Track:new{vector=Vector:new{W, NE}}
 		local train = Train:new("mytrain", Train.INTERCITY, TrainType.FAST, Train.MOVING,
 			{ TrainBlock:new(Coord:new(1, 1), Vector:new{W, E}, track) }, 1)
 
@@ -36,7 +46,7 @@ TestTrack = {}
 		local train = Train:new("mytrain", Train.INTERCITY, TrainType.FAST, Train.MOVING,
 			{ TrainBlock:new(Coord:new(1, 1), Vector:new{S, N}, track) }, 1)
 
-		local track = Track:new(Vector:new{W, NE})
+		local track = Track:new{vector=Vector:new{W, NE}}
 		local vector = track:occupy(train, train:direction())
 		assertEquals(vector, nil)
 		assertEquals(train.state, Train.CRASHED)
@@ -49,7 +59,7 @@ TestTrack = {}
 		local train2 = Train:new("mytrain2", Train.COMMUTER, TrainType.FAST, Train.MOVING,
 			{ TrainBlock:new(Coord:new(1, 1), Vector:new{W, E}, track) }, 1)
 
-		local track = Track:new(Vector:new{W, NE})
+		local track = Track:new{vector=Vector:new{W, NE}}
 		track:occupy(train1, train1:direction())
 		local vector = track:occupy(train2, train2:direction())
 		assertEquals(vector, nil)
@@ -60,7 +70,7 @@ TestTrack = {}
 	end
 
 	function TestTrack.test_unoccupy()
-		local track = Track:new(Vector:new{W, NE})
+		local track = Track:new{vector=Vector:new{W, NE}}
 
 		local train1 = Train:new("mytrain1", Train.INTERCITY, TrainType.FAST, Train.MOVING,
 			{ TrainBlock:new(Coord:new(1, 1), Vector:new{W, E}, track) }, 1)

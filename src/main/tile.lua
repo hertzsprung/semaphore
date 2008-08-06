@@ -12,44 +12,29 @@ local logger = logging.console()
 
 require 'compass'
 
+local function get_track(track_list, direction)
+	for i, track in ipairs(track_list) do
+		local vector = Track.calculate_vector(track, direction)
+		if vector then return vector end
+	end
+end
+
 BLANK = {}
 
-Track = {}
-
-	function Track.__tostring(o)
-		return tostring(o.vector) .. ' Track'
+	function BLANK:occupy(train)
+		logger:error("train " .. tostring(train) .. " has crashed attempting to occupy blank tile")
+		train:crash()
 	end
-	
-	function Track:new(vector)
-		local o = {
-			vector = vector,
-			occupier = nil -- train occupying the tile
-		}
+
+Tile = {}
+	function Tile:new(o)
+		o = o or {}
 		setmetatable(o, self)
 		self.__index = self
 		return o
 	end
 
-	function Track:occupy(train)
-		local vector = Track.calculate_vector(self.vector, train:direction())
-		if vector then
-			if self.occupier then
-				-- TODO: move into helper function and reuse in Junction class (using inheritance)
-				logger:info("train '" .. tostring(train) .. "' has crashed into " .. tostring(self.occupier))
-				self.occupier:crash()
-				train:crash()
-			else
-				self.occupier = train
-				return vector
-			end
-		else
-			-- TODO: move into helper function and reuse in Junction class (using inheritance)
-			logger:error("train " .. tostring(train) .. " has crashed because track wasn't connected")
-			train:crash()
-		end
-	end
-
-	function Track:unoccupy(train)
+	function Tile:unoccupy(train)
 		local is_occupied = self.occupier == train
 		if is_occupied then
 			logger:debug("Train '" .. train.name .. "' no longer occupies " .. tostring(self))
@@ -58,6 +43,33 @@ Track = {}
 			logger:error("Can't unoccupy " .. tostring(self) .. " because train '" .. train.name .. "' doesn't occupy it")
 		end
 		return is_occupied
+	end
+
+	function Tile:occupy_track(train, vector)
+		if vector then
+			if self.occupier then
+				logger:info("train " .. tostring(train) .. " has crashed into " .. tostring(self.occupier))
+				self.occupier:crash()
+				train:crash()
+			else
+				self.occupier = train
+				return vector
+			end
+		else
+			logger:error("train " .. tostring(train) .. " has crashed because track wasn't connected")
+			train:crash()
+		end
+	end
+
+Track = Tile:new()
+
+	function Track.__tostring(o)
+		return tostring(o.vector) .. ' Track'
+	end
+
+	function Track:occupy(train)
+		local vector = Track.calculate_vector(self.vector, train:direction())
+		return self:occupy_track(train, vector)
 	end
 
 	function Track.calculate_vector(track_vector, train_direction)
@@ -69,6 +81,34 @@ Track = {}
 		end
 	end
 
+Crossover = Tile:new()
+	
+	function Crossover.__tostring(o)
+		s = '<Crossover '
+		for i, vector in ipairs(o.vectors) do
+			s = s .. tostring(vector) .. " "
+		end
+		s = s .. '>'
+		return s
+	end
+	
+	function Crossover:new(vectors)
+		local o = {
+			vectors = vectors,
+			occupier = nil
+		}
+		setmetatable(o, self)
+		self.__index = self
+		return o
+	end
+
+	function Crossover:occupy(train)
+		local vector = get_track(self.vectors, train:direction())
+		return self:occupy_track(train, vector)
+	end
+
+	function Crossover:unoccupy(train)
+	end
 
 JunctionTrack = {}
 
@@ -133,7 +173,7 @@ Junction = {}
 	function Junction:auto_switch_points(direction)
 		local state = self.track.next
 		while state ~= self.track do
-			local vector = self:get_track(state.active, direction)
+			local vector = get_track(state.active, direction)
 			if vector then
 				return state, vector
 			end
@@ -143,13 +183,14 @@ Junction = {}
 	end
 
 	function Junction:occupy(train)
-		local vector = self:get_track(self.track.active, train:direction())
+		local vector = get_track(self.track.active, train:direction())
 		if vector then
 			if self.occupier then
 				logger:info("train '" .. tostring(train) .. "' has crashed into " .. tostring(self.occupier))
 				self.occupier:crash()
 				train:crash()
 			else
+				--self:set_train_properties(train)
 				self.occupier = train
 				return vector
 			end
@@ -164,6 +205,7 @@ Junction = {}
 				if new_track then
 					logger:debug("auto-switching points to " .. tostring(new_track))
 					self.track = new_track
+					--self:set_train_properties(train)
 					self.occupier = train
 					return vector
 				else
@@ -173,7 +215,7 @@ Junction = {}
 			end
 		else
 			logger:debug("No active route and derail protection not applicable to inbound train " .. tostring(train))
-			local inactive_vector = self:get_track(self.track.inactive, train:direction())
+			local inactive_vector = get_track(self.track.inactive, train:direction())
 			if inactive_vector then
 				train:derail()
 			else
@@ -183,10 +225,15 @@ Junction = {}
 		end
 	end
 
-	function Junction:get_track(track_list, direction)
-		for i, track in ipairs(track_list) do
-			local vector = Track.calculate_vector(track, direction)
-			if vector then return vector end
+	function Junction:unoccupy(train)
+		-- TODO: need to decrement speed flag
+	end
+
+	-- set train speed to FAST if moving on to switched points
+	-- FIXME: how to restore full speed after the whole train has moved off the points?
+	function Junction:set_train_properties(train)
+		if self.track:is_switched() and train.speed > TrainType.FAST then
+			train.speed = TrainType.FAST
 		end
 	end
 

@@ -64,7 +64,7 @@ Tile = {}
 Track = Tile:new()
 
 	function Track.__tostring(o)
-		return tostring(o.vector) .. ' Track'
+		return '<Track ' .. tostring(o.vector) .. '>'
 	end
 
 	function Track:occupy(train)
@@ -84,22 +84,12 @@ Track = Tile:new()
 Crossover = Tile:new()
 	
 	function Crossover.__tostring(o)
-		s = '<Crossover '
+		local s = '<Crossover '
 		for i, vector in ipairs(o.vectors) do
-			s = s .. tostring(vector) .. " "
+			s = s .. tostring(vector) .. ','
 		end
 		s = s .. '>'
 		return s
-	end
-	
-	function Crossover:new(vectors)
-		local o = {
-			vectors = vectors,
-			occupier = nil
-		}
-		setmetatable(o, self)
-		self.__index = self
-		return o
 	end
 
 	function Crossover:occupy(train)

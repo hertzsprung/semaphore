@@ -84,6 +84,18 @@ TestTrack = {}
 		assertEquals(track:unoccupy(train2), false)
 	end
 
+TestCrossover = {}
+
+	function TestCrossover.test_occupy()
+		local crossover = Crossover:new{vectors={Vector:new{W, E}, Vector:new{SW, NE}}}
+		local train = Train:new("mytrain", Train.INTERCITY, TrainType.FAST, Train.MOVING,
+			{ TrainBlock:new(Coord:new(1, 1), Vector:new{NE, SW}, track) }, 1)
+
+		local vector = crossover:occupy(train)
+		assertEquals(crossover.occupier, train)
+		assertEquals(vector, Vector:new{NE, SW})
+	end
+
 TestJunctionTrack = {}
 
 	function TestJunctionTrack.test_is_switched()

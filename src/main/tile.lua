@@ -13,9 +13,9 @@ local logger = logging.console()
 require 'compass'
 
 local function get_track(track_list, direction)
-	for i, track in ipairs(track_list) do
+	for key, track in pairs(track_list) do
 		local vector = Track.calculate_vector(track, direction)
-		if vector then return vector end
+		if vector then return vector, key end
 	end
 end
 
@@ -35,11 +35,8 @@ Tile = {}
 	end
 
 	function Tile:unoccupy(train)
-		local is_occupied = self.occupier == train
-		if is_occupied then
-			logger:debug("Train '" .. train.name .. "' no longer occupies " .. tostring(self))
-			self.occupier = nil
-		else
+		local is_occupied = self:unoccupy_track(train)
+		if not is_occupied then
 			logger:error("Can't unoccupy " .. tostring(self) .. " because train '" .. train.name .. "' doesn't occupy it")
 		end
 		return is_occupied
@@ -59,6 +56,15 @@ Tile = {}
 			logger:error("train " .. tostring(train) .. " has crashed because track wasn't connected")
 			train:crash()
 		end
+	end
+
+	function Tile:unoccupy_track(train)
+		local is_occupied = self.occupier == train
+		if is_occupied then
+			logger:debug("Train '" .. train.name .. "' no longer occupies " .. tostring(self))
+			self.occupier = nil
+		end
+		return is_occupied
 	end
 
 Track = Tile:new()
@@ -180,7 +186,7 @@ Junction = {}
 				self.occupier:crash()
 				train:crash()
 			else
-				self:set_train_properties(train)
+				self:set_train_properties(train, train.add_speed)
 				self.occupier = train
 				return vector
 			end
@@ -195,7 +201,7 @@ Junction = {}
 				if new_track then
 					logger:debug("auto-switching points to " .. tostring(new_track))
 					self.track = new_track
-					self:set_train_properties(train)
+					self:set_train_properties(train, train.add_speed)
 					self.occupier = train
 					return vector
 				else
@@ -216,17 +222,45 @@ Junction = {}
 	end
 
 	function Junction:unoccupy(train)
-		-- TODO: need to decrement speed flag
+		-- TODO: occupation checks and state change
+		self:set_train_properties(train, train.remove_speed)
 	end
 
-	-- set train speed to FAST if moving on to switched points
-	function Junction:set_train_properties(train)
+	-- add or remove train speed to FAST if moving on to switched points
+	-- speed_function should be Train.add_speed() or Train.remove_speed()
+	function Junction:set_train_properties(train, speed_function)
 		if self.track:is_switched() and train:speed() > TrainType.FAST then
-			train:add_speed(TrainType.FAST)
+			speed_function(train, TrainType.FAST)
 		end
 	end
 
 Flyover = {}
+
+	function Flyover:new(layers)
+		local o = {
+			layers = layers -- a list of Tracks
+		}
+		setmetatable(o, self)
+		self.__index = self
+		o.vectors = {}
+		for i, track in ipairs(o.layers) do
+			o.vectors[track] = track.vector
+		end
+		return o
+	end
+
+	function Flyover:occupy(train)
+		local vector, track = get_track(self.vectors, train:direction())
+		if track then return track:occupy_track(train, vector) end
+	end
+
+	function Flyover:unoccupy(train)
+		for i, layer in ipairs(self.layers) do
+			if layer:unoccupy_track(train) then return true end
+		end
+		logger:error("Can't unoccupy " .. tostring(self) .. " because train '" .. train.name .. "' doesn't occupy it")
+		return false
+	end
 
 BufferStop = {}
 

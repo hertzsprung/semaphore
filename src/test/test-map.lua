@@ -32,5 +32,3 @@ TestMap = {}
 		local tile_out = self.map:set(1, 2, tile_in)
 		assertEquals(self.map[2][1], tile_out)
 	end
-
-LuaUnit:run()

@@ -23,5 +23,3 @@ TestNormalDist = {}
 	function TestNormalDist:test_random()
 		print(self.normal_dist:random())
 	end
-
-LuaUnit:run()

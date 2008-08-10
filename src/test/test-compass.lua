@@ -52,6 +52,4 @@ TestCoord = {}
 		assertEquals(max, Coord:new(5, 7))
 	end
 
-LuaUnit:run()
-
 

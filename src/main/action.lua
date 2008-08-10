@@ -12,8 +12,8 @@ local logger = logging.console()
 
 ActionList = {}
 
-function ActionList:new()
-	local o = {
+function ActionList:new(o)
+	o = o or {
 		latest_time = 0
 	}
 	setmetatable(o, self)
@@ -23,15 +23,18 @@ end
 
 function ActionList:add(time, action)
 	self[time] = self[time] or {}
-	self[time][#self[time]+1] = action
+	table.insert(self[time], action)
 end
 
 function ActionList:execute(end_time)
 	local start_time = self.latest_time + 1
 	logger:debug("Executing all actions between " .. start_time .. " and " .. end_time .. " inclusive")
 	for t = start_time, end_time do
-		for i, action in ipairs(self[t] or {}) do
-			action()
+		if self[t] then
+			for i, action in ipairs(self[t]) do
+				action(self, t, end_time)
+			end
+			self[t] = nil
 		end
 	end
 	self.latest_time = end_time

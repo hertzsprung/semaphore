@@ -25,5 +25,3 @@ TestActionList = {}
 		assertEquals(action2Run, true)
 		assertEquals(action3Run, false)
 	end
-
-LuaUnit:run()

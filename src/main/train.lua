@@ -79,9 +79,10 @@ Train = {
 		return s
 	end
 	
-	function Train:new(name, type, speed, state, blocks, length)
+	function Train:new(map, name, type, speed, state, blocks, length)
 		length = length or #blocks
 		local o = {
+			map    = map,
 			name   = name,
 			type   = type,
 			speeds = {},
@@ -123,7 +124,7 @@ Train = {
 		return self:head().vector[Vector.EXIT]
 	end
 
-	function Train:move(map)
+	function Train:move(actions, requested_time, actual_time)
 		local head = self:head()
 		local direction = self:direction()
 		local position = head.position:add(direction)
@@ -132,14 +133,26 @@ Train = {
 			tostring(direction) .. " from " .. tostring(head.position)
 			.. " to " .. tostring(position))
 	
-		local tile = map:get(position)
+		local tile = self.map:get(position)
 		local new_direction = tile:occupy(self, direction)
-		-- TODO: test tile return
-		logger:debug("Train '" .. self.name .. "' routed to " .. tostring(tile) .. " new direction " .. tostring(new_direction))
-	
-		self:tail().tile:unoccupy(self)
-		local new_head = TrainBlock:new(position, new_direction, tile)
-		self:shift(new_head)
+		if new_direction then
+			logger:debug("Train '" .. self.name .. "' routed to " .. tostring(tile) .. " new direction " .. tostring(new_direction))
+		
+			self:tail().tile:unoccupy(self)
+			local new_head = TrainBlock:new(position, new_direction, tile)
+			self:shift(new_head)
+
+			local next_move = requested_time + self.type.speeds[self:speed()]
+			logger:debug("Train '" .. self.name .. "' next moving at " .. next_move)
+
+			local move_action = function (actions, requested_time, actual_time)
+				self.move(self, actions, requested_time, actual_time)
+			end
+			actions:add(next_move,move_action)
+		else
+			logger:debug("Train '" .. self.name .. "' stopped moving")
+			if self.state == Train.MOVING then self.state = Train.STOPPED end
+		end
 	end
 
 	function Train:speed()

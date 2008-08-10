@@ -8,6 +8,7 @@ Copyright 2008 James Shaw <js102@zepler.net>
 require('luaunit')
 require('compass')
 require('train')
+require('game')
 require('map')
 
 TestTrainType = {}
@@ -21,6 +22,7 @@ TestTrain = {}
 		local new_tail = TrainBlock:new(Vector:new{2, 1}, Vector:new{W, E}, nil)
 
 		local t = Train:new(
+			nil,
 			'test',
 			Train.INTERCITY,
 			TrainType.FULL,
@@ -41,6 +43,7 @@ TestTrain = {}
 	
 	function TestTrain:testReverse()
 		local t = Train:new(
+			nil,
 			'test',
 			Train.INTERCITY,
 			TrainType.STOP,
@@ -59,12 +62,21 @@ TestTrain = {}
 
 	function TestTrain:testMove()
 		local map = Map:new(5, 3)
+		local actions = ActionList:new()
+		local timer = Timer:new(1)
+		local game = Game:new{
+			map = map,
+			actions = actions,
+			timer = timer
+		}
+		
 		local tile1 = map:set(1, 1, Track:new{vector=Vector:new{W, E}})
 		local tile2 = map:set(2, 1, Track:new{vector=Vector:new{W, E}})
 		local tile3 = map:set(3, 1, Track:new{vector=Vector:new{W, E}})
 		local tile4 = map:set(4, 1, Track:new{vector=Vector:new{W, NE}})
 
 		local t = Train:new(
+			map,
 			'test',
 			Train.INTERCITY,
 			TrainType.FULL,
@@ -80,9 +92,11 @@ TestTrain = {}
 		tile2.occupier = t
 		tile3.occupier = t
 
-		t:move(map)
+		t:move(actions, 1, 1, game)
 		print(t)
-		-- TODO: assert
+		local tick = 0
+		while tick < 10 do
+			game:update()
+			tick = tick + 1
+		end
 	end
-
-LuaUnit:run()

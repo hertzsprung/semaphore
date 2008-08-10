@@ -28,7 +28,7 @@ TestSignal = {}
 		local main_amber = Signal:new(Signal.MAIN_AUTO, Signal.AMBER)
 		local main_red   = Signal:new(Signal.MAIN_AUTO, Signal.RED)
 		-- TODO: fix blocks and length
-		local full_train = Train:new("mytrain", Train.COMMUTER, TrainType.FULL, Train.MOVING, {}, 0)
+		local full_train = Train:new(nil, "mytrain", Train.COMMUTER, TrainType.FULL, Train.MOVING, {}, 0)
 
 		local speed, emergency = main_amber:next_speed(full_train)
 		assertEquals(speed, TrainType.SLOW)
@@ -40,5 +40,3 @@ TestSignal = {}
 
 		-- TODO: a few more permutations
 	end
-
-LuaUnit:run()

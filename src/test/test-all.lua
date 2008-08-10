@@ -1,0 +1,13 @@
+require('luaunit')
+require('test-action')
+require('test-compass')
+require('test-game')
+require('test-map')
+require('test-maths')
+require('test-signal')
+require('test-station')
+require('test-tile')
+require('test-timer')
+require('test-train')
+
+LuaUnit:run()

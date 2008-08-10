@@ -30,5 +30,3 @@ TestPlatform = {}
 		assertEquals(p1:get_train_types(), station_train_types)
 		assertEquals(p2:get_train_types(), p2_train_types)
 	end
-
-LuaUnit:run()

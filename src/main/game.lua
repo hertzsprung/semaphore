@@ -5,16 +5,18 @@ Licensed under the MIT License,
 Copyright 2008 James Shaw <js102@zepler.net>
 ]]--
 
-require('timer')
 require('luaunit')
 
-TestTimer = {}
-
-	function TestTimer:test_millis()
-		print(Timer.millis())
+Game = {}
+	
+	function Game:new(o)
+		o = o or {}
+		setmetatable(o, self)
+		self.__index = self
+		return o
 	end
 
-	function TestTimer:test_time()
-		local timer = Timer:new()
-		print(timer:time())
+	function Game:update()
+		local now = self.timer:time()
+		self.actions:execute(now)
 	end

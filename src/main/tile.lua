@@ -103,9 +103,6 @@ Crossover = Tile:new()
 		return self:occupy_track(train, vector)
 	end
 
-	function Crossover:unoccupy(train)
-	end
-
 JunctionTrack = {}
 
 	function JunctionTrack.__tostring(o)
@@ -222,8 +219,13 @@ Junction = {}
 	end
 
 	function Junction:unoccupy(train)
-		-- TODO: occupation checks and state change
-		self:set_train_properties(train, train.remove_speed)
+		local is_occupied = self:unoccupy_track(train)
+		if not is_occupied then
+			logger:error("Can't unoccupy " .. tostring(self) .. " because train '" .. train.name .. "' doesn't occupy it")
+		else
+			self:set_train_properties(train, train.remove_speed)
+		end
+		return is_occupied
 	end
 
 	-- add or remove train speed to FAST if moving on to switched points

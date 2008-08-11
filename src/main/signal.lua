@@ -6,15 +6,15 @@ Copyright 2008 James Shaw <js102@zepler.net>
 ]]--
 
 require('train')
+require('tile')
 
-Signal = {
-	MAIN_AUTO   = 1,
-	MAIN_MANUAL = 2,
-	SUB         = 3,
-	GREEN       = 1,
-	AMBER       = 2,
-	RED         = 3,
-}
+Signal = Tile:new()
+Signal.MAIN_AUTO   = 1
+Signal.MAIN_MANUAL = 2
+Signal.SUB         = 3
+Signal.GREEN       = 1
+Signal.AMBER       = 2
+Signal.RED         = 3
 
 local MAIN = 1 -- used internally to represent either MAIN_AUTO or MAIN_MANUAL
 local SUB  = 2
@@ -60,15 +60,36 @@ Signal.SPEEDS = {
 	}
 }
 
-	function Signal:new(type, aspect)
-		local o = {
-			type = type,
-			aspect = aspect,
-			previous_aspect = aspect
-		}
-		setmetatable(o, self)
-		self.__index = self
-		return o
+	function Signal.__tostring(o)
+		return '<Signal ' .. ({'MAIN_AUTO', 'MAIN_MANUAL', 'SUB'})[o.type] .. ' ' .. ({'GREEN', 'AMBER', 'RED'})[o.aspect] .. '>'
+	end
+
+	function Signal:occupy(train)
+		-- TODO
+	end
+
+	-- when train head actually occupies this tile
+	function Signal:update_state(train)
+		if self.type == Signal.SUB then
+			if self.aspect == Signal.GREEN then
+				self:set_aspect(Signal.AMBER)
+			end
+			if train.most_recent_sub_signal and train.most_recent_sub_signal.aspect == Signal.AMBER then
+				train.most_recent_sub_signal:set_aspect(Signal.GREEN)
+			end
+			train.most_recent_sub_signal = self
+		else
+			self:set_aspect(Signal.RED)
+			if train.most_recent_main_signal and train.most_recent_main_signal.type == Signal.MAIN_AUTO then
+				train.most_recent_main_signal:set_to_previous_aspect()
+				if train.sub_signal_behind_most_recent_main.aspect == Signal.AMBER then
+					train.sub_signal_behind_most_recent_main:set_aspect(Signal.GREEN)
+				end
+			end
+			train.most_recent_main_signal = self
+			train.sub_signal_behind_most_recent_main = train.most_recent_sub_signal
+			train.most_recent_sub_signal = nil
+		end
 	end
 
 	function Signal:set_aspect(aspect)

@@ -7,6 +7,8 @@ Copyright 2008 James Shaw <js102@zepler.net>
 
 require('luaunit')
 require('signal')
+require('train')
+require('compass')
 
 TestSignal = {}
 
@@ -70,6 +72,50 @@ TestSignal = {}
 				str = str .. '...'
 			end
 			print(str)
-			--print('most_recent_sub_signal ', tostring(train.most_recent_sub_signal), 'most_recent_main_signal ', tostring(train.most_recent_main_signal), 'sub_signal_behind_most_recent_main', tostring(train.sub_signal_behind_most_recent_main))
 		end
+	end
+
+	function TestSignal:test_occupy_amber_sub()
+		local train = Train:new(
+			nil,
+			'test',
+			Train.INTERCITY,
+			TrainType.FULL,
+			Train.MOVING,
+			{
+				TrainBlock:new(Coord:new(3, 1), Vector:new{W, E}, nil),
+				TrainBlock:new(Coord:new(2, 1), Vector:new{W, E}, nil),
+				TrainBlock:new(Coord:new(1, 1), Vector:new{W, E}, nil)
+			}
+		)
+
+		local signal = Signal:new{type=Signal.SUB, aspect=Signal.AMBER, vector=Vector:new{W, E}}
+		local vector = signal:occupy(train)
+		assertEquals(vector, Vector:new{W, E})
+		assertEquals(signal.occupier, train)
+		assertEquals(train.most_recent_sub_signal, signal)
+		assertEquals(signal.aspect, Signal.AMBER)
+		assertEquals(train.signal_speed, TrainType.FAST)
+		assertEquals(train:speed(), TrainType.FAST)
+	end
+
+	function TestSignal:test_occupy_main_red()
+		local train = Train:new(
+			nil,
+			'test',
+			Train.INTERCITY,
+			TrainType.FULL,
+			Train.MOVING,
+			{
+				TrainBlock:new(Coord:new(3, 1), Vector:new{W, E}, nil),
+				TrainBlock:new(Coord:new(2, 1), Vector:new{W, E}, nil),
+				TrainBlock:new(Coord:new(1, 1), Vector:new{W, E}, nil)
+			}
+		)
+
+		local signal = Signal:new{type=Signal.MAIN_AUTO, aspect=Signal.RED, vector=Vector:new{W, E}}
+		local vector = signal:occupy(train)
+		assertEquals(vector, nil)
+		assertEquals(signal.occupier, nil)
+		assertEquals(train:speed(), TrainType.STOP)
 	end

@@ -8,6 +8,11 @@ Copyright 2008 James Shaw <js102@zepler.net>
 require('train')
 require('tile')
 
+require 'logging'
+require 'logging.console'
+
+local logger = logging.console()
+
 Signal = Tile:new()
 Signal.MAIN_AUTO   = 1
 Signal.MAIN_MANUAL = 2
@@ -65,7 +70,22 @@ Signal.SPEEDS = {
 	end
 
 	function Signal:occupy(train)
-		-- TODO
+		local can_occupy = true
+		local vector = Track.calculate_vector(self.vector, train:direction())
+		if vector then
+			local speed, emergency = self:next_speed(train)
+			if speed == TrainType.STOP then
+				can_occupy = false
+				if emergency then
+					logger:info("Train " .. tostring(train) .. " performed an emergency stop at signal " .. tostring(self))
+					-- TODO
+				end
+			else
+				self:update_state(train)
+			end
+			train.signal_speed = speed
+		end
+		if can_occupy then return self:occupy_track(train, vector) end
 	end
 
 	-- when train head actually occupies this tile

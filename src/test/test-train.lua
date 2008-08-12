@@ -19,7 +19,7 @@ TestTrainType = {}
 TestTrain = {}
 
 	function TestTrain:testShift()
-		local new_tail = TrainBlock:new(Vector:new{2, 1}, Vector:new{W, E}, nil)
+		local new_tail = TrainBlock:new(Coord:new(2, 1), Vector:new{W, E}, nil)
 
 		local t = Train:new(
 			nil,
@@ -28,9 +28,9 @@ TestTrain = {}
 			TrainType.FULL,
 			Train.MOVING,
 			{
-				TrainBlock:new(Vector:new{3, 1}, Vector:new{W, E}, nil),
+				TrainBlock:new(Coord:new(3, 1), Vector:new{W, E}, nil),
 				new_tail,
-				TrainBlock:new(Vector:new{1, 1}, Vector:new{W, E}, nil)
+				TrainBlock:new(Coord:new(1, 1), Vector:new{W, E}, nil)
 			}
 		)
 

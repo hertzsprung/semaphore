@@ -85,6 +85,7 @@ Train = {
 			map    = map,
 			name   = name,
 			type   = type,
+			signal_speed = speed,
 			speeds = {},
 			state  = state,
 			length = length,
@@ -92,7 +93,7 @@ Train = {
 		}
 		setmetatable(o, self)
 		self.__index = self
-		o:add_speed(speed)
+		o.signal_speed = speed
 		return o
 	end
 	
@@ -157,7 +158,7 @@ Train = {
 
 	function Train:speed()
 		for i, s in ipairs({TrainType.STOP, TrainType.SLOW, TrainType.FAST, TrainType.FULL}) do
-			if self.speeds[s] and self.speeds[s] ~= 0 then return s end
+			if self.signal_speed == s or (self.speeds[s] and self.speeds[s] ~= 0) then return s end
 		end
 		return TrainType.STOP
 	end
@@ -168,7 +169,7 @@ Train = {
 
 	function Train:remove_speed(s)
 		self.speeds[s] = (self.speeds[s] or 1) - 1
-	end	
+	end
 
 	function Train:crash()
 		self.speed = self:add_speed(TrainType.STOP)

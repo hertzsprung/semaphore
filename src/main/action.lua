@@ -10,6 +10,8 @@ require 'logging.console'
 
 local logger = logging.console()
 
+-- FIXME: alternative structure would be to have an chronologically ordered queue and keep pulling things off it until you the head of the queue is an action in the future (or you run out of actions)
+-- this is a heap/priority queue - see 6.3 of DS&A textbook
 ActionList = {}
 
 function ActionList:new(o)

@@ -11,17 +11,13 @@ require 'action'
 TestActionList = {}
 
 	function TestActionList:testExecute()
-		local action1Run = false
-		local action2Run = false
-		local action3Run = false
+		local run = 1
 		local al = ActionList:new()
-		al:add(1, function () action1Run = true end)
-		al:add(2, function () action2Run = true end)
-		al:add(4, function () action3Run = true end)
+		al:add(1, function () run = run * 3 end)
+		al:add(2, function () run = run + 1 end)
+		al:add(4, function () run = run * 100 end)
 
 		al:execute(3)
 
-		assertEquals(action1Run, true)
-		assertEquals(action2Run, true)
-		assertEquals(action3Run, false)
+		assertEquals(run, 4)
 	end

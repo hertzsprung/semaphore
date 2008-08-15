@@ -8,36 +8,31 @@ Copyright 2008 James Shaw <js102@zepler.net>
 require 'logging'
 require 'logging.console'
 
+require 'heap'
+
 local logger = logging.console()
 
--- FIXME: alternative structure would be to have an chronologically ordered queue and keep pulling things off it until you the head of the queue is an action in the future (or you run out of actions)
--- this is a heap/priority queue - see 6.3 of DS&A textbook
 ActionList = {}
 
-function ActionList:new(o)
-	o = o or {
-		latest_time = 0
-	}
-	setmetatable(o, self)
-	self.__index = self
-	return o
-end
-
-function ActionList:add(time, action)
-	self[time] = self[time] or {}
-	table.insert(self[time], action)
-end
-
-function ActionList:execute(end_time)
-	local start_time = self.latest_time + 1
-	logger:debug("Executing all actions between " .. start_time .. " and " .. end_time .. " inclusive")
-	for t = start_time, end_time do
-		if self[t] then
-			for i, action in ipairs(self[t]) do
-				action(self, t, end_time)
-			end
-			self[t] = nil
-		end
+	function ActionList:new(o)
+		o = o or {
+			latest_time = 0,
+			heap = Heap:new()
+		}
+		setmetatable(o, self)
+		self.__index = self
+		return o
 	end
-	self.latest_time = end_time
-end
+
+	function ActionList:add(time, action)
+		self.heap:insert{key=time, action=action}
+	end
+
+	function ActionList:execute(end_time)
+		local start_time = self.latest_time + 1
+		logger:debug("Executing all actions between " .. start_time .. " and " .. end_time .. " inclusive")
+		while self.heap[1] and self.heap[1].key <= end_time do
+			self.heap:delete_min().action(self, t, end_time)
+		end
+		self.latest_time = end_time
+	end

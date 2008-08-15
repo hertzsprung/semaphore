@@ -18,11 +18,11 @@ Heap = {}
 
 	function Heap:insert(x)
 		local hole = #self + 1
-		local half = math.floor(hole/2)
+		local half = floor(hole/2)
 		while hole > 1 and x.key < self[half].key do
 			self[hole] = self[half]
 			hole = half
-			half = math.floor(hole/2)
+			half = floor(hole/2)
 		end
 		self[hole] = x
 	end

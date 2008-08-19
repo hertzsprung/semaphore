@@ -28,7 +28,7 @@ TestMap = {}
 	end
 
 	function TestMap:testSet()
-		local tile_in = Track:new(Vector:new{W, E})
+		local tile_in = Track:new{vector=Vector:new{W, E}}
 		local tile_out = self.map:set(1, 2, tile_in)
 		assertEquals(self.map[2][1], tile_out)
 	end

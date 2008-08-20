@@ -16,10 +16,10 @@ TestCairoRender = {}
 
 	function TestCairoRender:testSet()
 		local map = Map:new(5, 3)
-		map:set(1, 2, Track:new{vector=Vector:new{W, E}})
-		map:set(2, 2, Track:new{vector=Vector:new{W, NE}})
-		map:set(3, 3, Track:new{vector=Vector:new{SW, E}})
-		map:set(4, 3, Track:new{vector=Vector:new{W, E}})
+		map:set(1, 2, Track:new{vector=Vector:new(W, E)})
+		map:set(2, 2, Track:new{vector=Vector:new(W, NE)})
+		map:set(3, 3, Track:new{vector=Vector:new(SW, E)})
+		map:set(4, 3, Track:new{vector=Vector:new(W, E)})
 
 		local scale=128
 

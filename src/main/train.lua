@@ -33,11 +33,16 @@ TrainBlock = {}
 		return '[' .. o.position.x .. ',' .. o.position.y .. ' ' .. tostring(o.vector) .. ']'
 	end
 
+	function TrainBlock.__eq(o1, o2)
+		return o1.position == o2.position and o1.vector == o2.vector and o1.tile == o2.tile and o1.visible == o2.visible
+	end
+
 	function TrainBlock:new(position, vector, tile)
 		local o = {
 			position = position, -- the coordinate position on the map
 			vector = vector,
-			tile = tile
+			tile = tile,
+			visible = true
 		}
 		setmetatable(o, self)
 		self.__index = self
@@ -103,19 +108,27 @@ Train = {
 	
 	function Train:reverse()
 		local blocks = self.blocks
-		for i = 1, math.floor(#blocks / 2) do
-			first = blocks[i]
-			last  = blocks[#blocks - i + 1]
+		for i = 1, math.ceil(#blocks / 2) do
+			local first = blocks[i]
+			local last  = blocks[#blocks - i + 1]
 			first.vector:inverse()
-			last.vector:inverse()
-			blocks[i] = last
-			blocks[#blocks - i + 1] = first
+			if first ~= last then
+				last.vector:inverse()
+				blocks[i] = last
+				blocks[#blocks - i + 1] = first
+			end
 		end
 	end
 
 	function Train:shift(head)
 		local blocks = self.blocks
-		for i = #blocks, 2, -1 do
+		local shifts
+		if #blocks < self.length then
+			shifts = #blocks + 1
+		else
+			shifts = #blocks
+		end
+		for i = shifts, 2, -1 do
 			blocks[i] = blocks[i-1]
 		end
 		blocks[1] = head
@@ -139,7 +152,7 @@ Train = {
 		if new_direction then
 			logger:debug("Train '" .. self.name .. "' routed to " .. tostring(tile) .. " new direction " .. tostring(new_direction))
 		
-			self:tail().tile:unoccupy(self)
+			if #self.blocks == length then self:tail().tile:unoccupy(self) end
 			local new_head = TrainBlock:new(position, new_direction, tile)
 			self:shift(new_head)
 

@@ -52,6 +52,9 @@ Vector = {
 	EXIT  = 2
 }
 
+	local vector_cache = {}
+	setmetatable(vector_cache, {__mode = "kv"})
+
 	function Vector.__eq(o1, o2)
 		return o1[1] == o2[1] and o1[2] == o2[2]
 	end
@@ -60,11 +63,18 @@ Vector = {
 		return tostring(o[1]) .. '-' .. tostring(o[2])
 	end
 	
-	function Vector:new(o)
-		o = o or {}
-		setmetatable(o, self)
-		self.__index = self
-		return o
+	function Vector:new(from, to)
+		local key = from.name .. '-' .. to.name
+		local cache = vector_cache[key]
+		if cache_item then
+			return cache_item
+		else
+			local o = {from, to}
+			setmetatable(o, self)
+			self.__index = self
+			vector_cache[key] = o
+			return o
+		end
 	end
 	
 	-- TODO: rename to invert()
@@ -76,7 +86,7 @@ Vector = {
 	end
 
 	function Vector:get_inverse()
-		return Vector:new{self[2], self[1]}
+		return Vector:new(self[2], self[1])
 	end
 	
 	function Vector:is_straight()

@@ -19,16 +19,16 @@ TestCompass = {}
 TestVector = {}
 	
 	function TestVector:test_inverse()
-		local inverse = Vector:new{W, E}:inverse()
+		local inverse = Vector:new(W, E):inverse()
 		assert(inverse[1] == E)
 		assert(inverse[2] == W)
 	end
 
 	function TestVector:test_is_straight()
-		local p1 = Vector:new{W, E}
+		local p1 = Vector:new(W, E)
 		assert(p1:is_straight())
 		
-		local p2 = Vector:new{W, NE}
+		local p2 = Vector:new(W, NE)
 		assertEquals(p2:is_straight(), false)
 	end
 

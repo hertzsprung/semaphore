@@ -19,7 +19,7 @@ TestTrainType = {}
 TestTrain = {}
 
 	function TestTrain:testShift()
-		local new_tail = TrainBlock:new(Coord:new(2, 1), Vector:new{W, E}, nil)
+		local new_tail = TrainBlock:new(Coord:new(2, 1), Vector:new(W, E), nil)
 
 		local t = Train:new(
 			nil,
@@ -28,13 +28,13 @@ TestTrain = {}
 			TrainType.FULL,
 			Train.MOVING,
 			{
-				TrainBlock:new(Coord:new(3, 1), Vector:new{W, E}, nil),
+				TrainBlock:new(Coord:new(3, 1), Vector:new(W, E), nil),
 				new_tail,
-				TrainBlock:new(Coord:new(1, 1), Vector:new{W, E}, nil)
+				TrainBlock:new(Coord:new(1, 1), Vector:new(W, E), nil)
 			}
 		)
 
-		local new_head = TrainBlock:new(Vector:new{4, 1}, Vector:new{W, NE}, nil)
+		local new_head = TrainBlock:new(Coord:new(4, 1), Vector:new(W, NE), nil)
 
 		t:shift(new_head)
 		assertEquals(t:head(), new_head)
@@ -49,15 +49,15 @@ TestTrain = {}
 			TrainType.STOP,
 			Train.STOPPED,
 			{
-				TrainBlock:new(Coord:new(3, 1), Vector:new{W, E}, nil),
-				TrainBlock:new(Coord:new(2, 1), Vector:new{W, E}, nil),
-				TrainBlock:new(Coord:new(1, 1), Vector:new{W, E}, nil)
+				TrainBlock:new(Coord:new(3, 1), Vector:new(W, E), nil),
+				TrainBlock:new(Coord:new(2, 1), Vector:new(W, E), nil),
+				TrainBlock:new(Coord:new(1, 1), Vector:new(W, E), nil)
 			}
 		)
-		print(t)
 		t:reverse()
-		print(t)
-		-- TODO: assert
+		assertEquals(t.blocks[1], TrainBlock:new(Coord:new(1, 1), Vector:new(E, W), nil))
+		assertEquals(t.blocks[2], TrainBlock:new(Coord:new(2, 1), Vector:new(E, W), nil))
+		assertEquals(t.blocks[3], TrainBlock:new(Coord:new(3, 1), Vector:new(E, W), nil))
 	end
 
 	function TestTrain:testMove()
@@ -70,10 +70,10 @@ TestTrain = {}
 			timer = timer
 		}
 		
-		local tile1 = map:set(1, 1, Track:new{vector=Vector:new{W, E}})
-		local tile2 = map:set(2, 1, Track:new{vector=Vector:new{W, E}})
-		local tile3 = map:set(3, 1, Track:new{vector=Vector:new{W, E}})
-		local tile4 = map:set(4, 1, Track:new{vector=Vector:new{W, NE}})
+		local tile1 = map:set(1, 1, Track:new{vector=Vector:new(W, E)})
+		local tile2 = map:set(2, 1, Track:new{vector=Vector:new(W, E)})
+		local tile3 = map:set(3, 1, Track:new{vector=Vector:new(W, E)})
+		local tile4 = map:set(4, 1, Track:new{vector=Vector:new(W, NE)})
 
 		local t = Train:new(
 			map,
@@ -82,9 +82,9 @@ TestTrain = {}
 			TrainType.FULL,
 			Train.MOVING,
 			{
-				TrainBlock:new(Coord:new(3, 1), Vector:new{W, E}, tile3),
-				TrainBlock:new(Coord:new(2, 1), Vector:new{W, E}, tile2),
-				TrainBlock:new(Coord:new(1, 1), Vector:new{W, E}, tile1)
+				TrainBlock:new(Coord:new(3, 1), Vector:new(W, E), tile3),
+				TrainBlock:new(Coord:new(2, 1), Vector:new(W, E), tile2),
+				TrainBlock:new(Coord:new(1, 1), Vector:new(W, E), tile1)
 			}
 		)
 

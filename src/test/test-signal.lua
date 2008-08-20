@@ -83,15 +83,15 @@ TestSignal = {}
 			TrainType.FULL,
 			Train.MOVING,
 			{
-				TrainBlock:new(Coord:new(3, 1), Vector:new{W, E}, nil),
-				TrainBlock:new(Coord:new(2, 1), Vector:new{W, E}, nil),
-				TrainBlock:new(Coord:new(1, 1), Vector:new{W, E}, nil)
+				TrainBlock:new(Coord:new(3, 1), Vector:new(W, E), nil),
+				TrainBlock:new(Coord:new(2, 1), Vector:new(W, E), nil),
+				TrainBlock:new(Coord:new(1, 1), Vector:new(W, E), nil)
 			}
 		)
 
-		local signal = Signal:new{type=Signal.SUB, aspect=Signal.AMBER, vector=Vector:new{W, E}}
+		local signal = Signal:new{type=Signal.SUB, aspect=Signal.AMBER, vector=Vector:new(W, E)}
 		local vector = signal:occupy(train)
-		assertEquals(vector, Vector:new{W, E})
+		assertEquals(vector, Vector:new(W, E))
 		assertEquals(signal.occupier, train)
 		assertEquals(train.most_recent_sub_signal, signal)
 		assertEquals(signal.aspect, Signal.AMBER)
@@ -107,13 +107,13 @@ TestSignal = {}
 			TrainType.FULL,
 			Train.MOVING,
 			{
-				TrainBlock:new(Coord:new(3, 1), Vector:new{W, E}, nil),
-				TrainBlock:new(Coord:new(2, 1), Vector:new{W, E}, nil),
-				TrainBlock:new(Coord:new(1, 1), Vector:new{W, E}, nil)
+				TrainBlock:new(Coord:new(3, 1), Vector:new(W, E), nil),
+				TrainBlock:new(Coord:new(2, 1), Vector:new(W, E), nil),
+				TrainBlock:new(Coord:new(1, 1), Vector:new(W, E), nil)
 			}
 		)
 
-		local signal = Signal:new{type=Signal.MAIN_AUTO, aspect=Signal.RED, vector=Vector:new{W, E}}
+		local signal = Signal:new{type=Signal.MAIN_AUTO, aspect=Signal.RED, vector=Vector:new(W, E)}
 		local vector = signal:occupy(train)
 		assertEquals(vector, nil)
 		assertEquals(signal.occupier, nil)

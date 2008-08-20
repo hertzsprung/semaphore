@@ -26,20 +26,24 @@ CairoRender = {}
 		local track_back = self.style.track_back
 		local track_front = self.style.track_front
 
+		local function position(x, y, compass)
+			return x + 0.5 + (compass.x * 0.5), self.map.h - y - 0.5 - (compass.y * 0.5)
+		end
+
 		local function draw_tile(x, y, tile)
 			local entry = tile.vector[Vector.ENTRY]
 			local exit = tile.vector[Vector.EXIT]
 			
 			cairo.set_line_width(ctx, self.style.track_back_width)
 			cairo.set_source_rgb(ctx, track_back.r, track_back.g, track_back.b)
-			cairo.move_to(ctx, x + 0.5 + (entry.x * 0.5), y + 0.5 + (entry.y * 0.5))
-			cairo.line_to(ctx, x + 0.5 + (exit.x * 0.5), y + 0.5 + (exit.y * 0.5))
+			cairo.move_to(ctx, position(x, y, entry))
+			cairo.line_to(ctx, position(x, y, exit))
 			cairo.stroke(ctx)
 
 			cairo.set_line_width(ctx, self.style.track_front_width)
 			cairo.set_source_rgb(ctx, track_front.r, track_front.g, track_front.b)
-			cairo.move_to(ctx, x + 0.5 + (entry.x * 0.5), y + 0.5 + (entry.y * 0.5))
-			cairo.line_to(ctx, x + 0.5 + (exit.x * 0.5), y + 0.5 + (exit.y * 0.5))
+			cairo.move_to(ctx, position(x, y, entry))
+			cairo.line_to(ctx, position(x, y, exit))
 			cairo.stroke(ctx)
 		end
 

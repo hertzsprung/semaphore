@@ -33,8 +33,14 @@ TestSignal = {}
 	function TestSignal:test_next_speed()
 		local main_amber = Signal:new{type=Signal.MAIN_AUTO, aspect=Signal.AMBER}
 		local main_red   = Signal:new{type=Signal.MAIN_AUTO, aspect=Signal.RED}
-		-- TODO: fix blocks and length
-		local full_train = Train:new(nil, "mytrain", Train.COMMUTER, TrainType.FULL, Train.PRESENT, Train.MOVING, {}, 0)
+		-- TODO: fix absence blocks
+		local full_train = Train:new{
+			name = "mytrain",
+			type = Train.COMMUTER,
+			signal_speed = TrainType.FULL,
+			presence = Train.PRESENT,
+			state = Train.MOVING,
+		}
 
 		local speed, emergency = main_amber:next_speed(full_train)
 		assertEquals(speed, TrainType.SLOW)
@@ -76,19 +82,17 @@ TestSignal = {}
 	end
 
 	function TestSignal:test_occupy_amber_sub()
-		local train = Train:new(
-			nil,
-			'test',
-			Train.INTERCITY,
-			TrainType.FULL,
-			Train.PRESENT,
-			Train.MOVING,
-			{
-				TrainBlock:new(Coord:new(3, 1), Vector:new(W, E), nil),
-				TrainBlock:new(Coord:new(2, 1), Vector:new(W, E), nil),
-				TrainBlock:new(Coord:new(1, 1), Vector:new(W, E), nil)
-			}
-		)
+		local train = Train:new{
+			TrainBlock:new(Coord:new(3, 1), Vector:new(W, E), nil),
+			TrainBlock:new(Coord:new(2, 1), Vector:new(W, E), nil),
+			TrainBlock:new(Coord:new(1, 1), Vector:new(W, E), nil),
+
+			name = 'test',
+			type = Train.INTERCITY,
+			signal_speed = TrainType.FULL,
+			presence = Train.PRESENT,
+			state =Train.MOVING
+		}
 
 		local signal = Signal:new{type=Signal.SUB, aspect=Signal.AMBER, vector=Vector:new(W, E)}
 		local vector = signal:occupy(train)
@@ -101,19 +105,17 @@ TestSignal = {}
 	end
 
 	function TestSignal:test_occupy_main_red()
-		local train = Train:new(
-			nil,
-			'test',
-			Train.INTERCITY,
-			TrainType.FULL,
-			Train.PRESENT,
-			Train.MOVING,
-			{
-				TrainBlock:new(Coord:new(3, 1), Vector:new(W, E), nil),
-				TrainBlock:new(Coord:new(2, 1), Vector:new(W, E), nil),
-				TrainBlock:new(Coord:new(1, 1), Vector:new(W, E), nil)
-			}
-		)
+		local train = Train:new{
+			TrainBlock:new(Coord:new(3, 1), Vector:new(W, E), nil),
+			TrainBlock:new(Coord:new(2, 1), Vector:new(W, E), nil),
+			TrainBlock:new(Coord:new(1, 1), Vector:new(W, E), nil),
+
+			name = 'test',
+			type = Train.INTERCITY,
+			signal_speed = TrainType.FULL,
+			presence = Train.PRESENT,
+			state = Train.MOVING
+		}
 
 		local signal = Signal:new{type=Signal.MAIN_AUTO, aspect=Signal.RED, vector=Vector:new(W, E)}
 		local vector = signal:occupy(train)

@@ -81,7 +81,7 @@ Train = {
 
 	function Train.__tostring(o)
 		s = '{'
-		for i, block in ipairs(o.blocks) do
+		for i, block in ipairs(o) do
 			s = s .. tostring(block) .. ' '
 		end
 		s = s .. '} type=' .. tostring(o.type.prefix)
@@ -89,49 +89,44 @@ Train = {
 		return s
 	end
 	
-	function Train:new(map, name, type, speed, presence, state, blocks, length)
-		length = length or #blocks
-		local o = {
-			map          = map,
-			name         = name,
-			type         = type,
-			signal_speed = speed,
-			speeds       = {},
-			presence     = presence,
-			state        = state,
-			length       = length,
-			blocks       = blocks
-		}
+	-- Accepts a table containing
+	-- 1..n:TrainBlock
+	-- map:Map
+	-- name:String
+	-- type:TrainType
+	-- signal_speed:TrainType.FULL/FAST/SLOW/STOP
+	-- presence:Train.ABSENT/ENTERING/PRESENT/EXITING
+	-- state:Train.STOPPED/MOVING/DERAILED/CRASHED
+	function Train:new(o)
+		o = o or {}
 		setmetatable(o, self)
 		self.__index = self
-		o.signal_speed = speed
+		o.speeds = {}
 		return o
 	end
 	
-	function Train:head() return self.blocks[1] end
+	function Train:head() return self[1] end
 	
-	function Train:tail() return self.blocks[#self.blocks] end
+	function Train:tail() return self[#self] end
 	
 	function Train:reverse()
-		local blocks = self.blocks
-		for i = 1, math.ceil(#blocks / 2) do
-			local first = blocks[i]
-			local last  = blocks[#blocks - i + 1]
+		for i = 1, math.ceil(#self / 2) do
+			local first = self[i]
+			local last  = self[#self - i + 1]
 			first.vector:inverse()
 			if first ~= last then
 				last.vector:inverse()
-				blocks[i] = last
-				blocks[#blocks - i + 1] = first
+				self[i] = last
+				self[#self - i + 1] = first
 			end
 		end
 	end
 
 	function Train:shift(head)
-		local blocks = self.blocks
-		for i = #blocks, 2, -1 do
-			blocks[i] = blocks[i-1]
+		for i = #self, 2, -1 do
+			self[i] = self[i-1]
 		end
-		blocks[1] = head
+		self[1] = head
 	end
 	
 	function Train:direction()

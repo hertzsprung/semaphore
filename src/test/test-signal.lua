@@ -34,7 +34,7 @@ TestSignal = {}
 		local main_amber = Signal:new{type=Signal.MAIN_AUTO, aspect=Signal.AMBER}
 		local main_red   = Signal:new{type=Signal.MAIN_AUTO, aspect=Signal.RED}
 		-- TODO: fix blocks and length
-		local full_train = Train:new(nil, "mytrain", Train.COMMUTER, TrainType.FULL, Train.MOVING, {}, 0)
+		local full_train = Train:new(nil, "mytrain", Train.COMMUTER, TrainType.FULL, Train.PRESENT, Train.MOVING, {}, 0)
 
 		local speed, emergency = main_amber:next_speed(full_train)
 		assertEquals(speed, TrainType.SLOW)
@@ -81,6 +81,7 @@ TestSignal = {}
 			'test',
 			Train.INTERCITY,
 			TrainType.FULL,
+			Train.PRESENT,
 			Train.MOVING,
 			{
 				TrainBlock:new(Coord:new(3, 1), Vector:new(W, E), nil),
@@ -105,6 +106,7 @@ TestSignal = {}
 			'test',
 			Train.INTERCITY,
 			TrainType.FULL,
+			Train.PRESENT,
 			Train.MOVING,
 			{
 				TrainBlock:new(Coord:new(3, 1), Vector:new(W, E), nil),

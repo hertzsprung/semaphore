@@ -26,6 +26,7 @@ TestTrain = {}
 			'test',
 			Train.INTERCITY,
 			TrainType.FULL,
+			Train.PRESENT,
 			Train.MOVING,
 			{
 				TrainBlock:new(Coord:new(3, 1), Vector:new(W, E), nil),
@@ -47,6 +48,7 @@ TestTrain = {}
 			'test',
 			Train.INTERCITY,
 			TrainType.STOP,
+			Train.PRESENT,
 			Train.STOPPED,
 			{
 				TrainBlock:new(Coord:new(3, 1), Vector:new(W, E), nil),
@@ -80,6 +82,7 @@ TestTrain = {}
 			'test',
 			Train.INTERCITY,
 			TrainType.FULL,
+			Train.PRESENT,
 			Train.MOVING,
 			{
 				TrainBlock:new(Coord:new(3, 1), Vector:new(W, E), tile3),

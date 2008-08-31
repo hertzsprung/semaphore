@@ -12,7 +12,7 @@ require('train')
 TestBlank = {}
 
 	function TestBlank.test_occupy()
-		local train = Train:new(nil, "mytrain", Train.INTERCITY, TrainType.FAST, Train.MOVING,
+		local train = Train:new(nil, "mytrain", Train.INTERCITY, TrainType.FAST, Train.PRESENT, Train.MOVING,
 			{ TrainBlock:new(Coord:new(1, 1), Vector:new(W, E), track) }, 1)
 		local vector = BLANK:occupy(train)
 		assertEquals(vector, nil)
@@ -35,7 +35,7 @@ TestTrack = {}
 
 	function TestTrack.test_occupy()
 		local track = Track:new{vector=Vector:new(W, NE)}
-		local train = Train:new(nil, "mytrain", Train.INTERCITY, TrainType.FAST, Train.MOVING,
+		local train = Train:new(nil, "mytrain", Train.INTERCITY, TrainType.FAST, Train.PRESENT, Train.MOVING,
 			{ TrainBlock:new(Coord:new(1, 1), Vector:new(W, E), track) }, 1)
 
 		local vector = track:occupy(train, train:direction())
@@ -43,7 +43,7 @@ TestTrack = {}
 	end
 
 	function TestTrack.test_occupy_bad_track()
-		local train = Train:new(nil, "mytrain", Train.INTERCITY, TrainType.FAST, Train.MOVING,
+		local train = Train:new(nil, "mytrain", Train.INTERCITY, TrainType.FAST, Train.PRESENT, Train.MOVING,
 			{ TrainBlock:new(Coord:new(1, 1), Vector:new(S, N), track) }, 1)
 
 		local track = Track:new{vector=Vector:new(W, NE)}
@@ -54,9 +54,9 @@ TestTrack = {}
 	end
 
 	function TestTrack.test_occupy_crash()
-		local train1 = Train:new(nil, "mytrain1", Train.INTERCITY, TrainType.FAST, Train.MOVING,
+		local train1 = Train:new(nil, "mytrain1", Train.INTERCITY, TrainType.FAST, Train.PRESENT, Train.MOVING,
 			{ TrainBlock:new(Coord:new(1, 1), Vector:new(W, E), track) }, 1)
-		local train2 = Train:new(nil, "mytrain2", Train.COMMUTER, TrainType.FAST, Train.MOVING,
+		local train2 = Train:new(nil, "mytrain2", Train.COMMUTER, TrainType.FAST, Train.PRESENT, Train.MOVING,
 			{ TrainBlock:new(Coord:new(1, 1), Vector:new(W, E), track) }, 1)
 
 		local track = Track:new{vector=Vector:new(W, NE)}
@@ -72,10 +72,10 @@ TestTrack = {}
 	function TestTrack.test_unoccupy()
 		local track = Track:new{vector=Vector:new(W, NE)}
 
-		local train1 = Train:new(nil, "mytrain1", Train.INTERCITY, TrainType.FAST, Train.MOVING,
+		local train1 = Train:new(nil, "mytrain1", Train.INTERCITY, TrainType.FAST, Train.PRESENT, Train.MOVING,
 			{ TrainBlock:new(Coord:new(1, 1), Vector:new(W, E), track) }, 1)
 
-		local train2 = Train:new(nil, "mytrain2", Train.INTERCITY, TrainType.FAST, Train.MOVING,
+		local train2 = Train:new(nil, "mytrain2", Train.INTERCITY, TrainType.FAST, Train.PRESENT,  Train.MOVING,
 			{ TrainBlock:new(Coord:new(2, 2), Vector:new(W, E), track) }, 1)
 
 		track:occupy(train1, train1:direction())
@@ -88,7 +88,7 @@ TestCrossover = {}
 
 	function TestCrossover.test_occupy()
 		local crossover = Crossover:new{vectors={Vector:new(W, E), Vector:new(SW, NE)}}
-		local train = Train:new(nil, "mytrain", Train.INTERCITY, TrainType.FAST, Train.MOVING,
+		local train = Train:new(nil, "mytrain", Train.INTERCITY, TrainType.FAST, Train.PRESENT, Train.MOVING,
 			{ TrainBlock:new(Coord:new(1, 1), Vector:new(NE, SW), track) }, 1)
 
 		local vector = crossover:occupy(train)
@@ -119,7 +119,7 @@ TestJunction = {}
 		assertEquals(success, true)
 		assertEquals(junction.track, track2)
 
-		local train = Train:new(nil, "mytrain", Train.INTERCITY, TrainType.FULL, Train.MOVING,
+		local train = Train:new(nil, "mytrain", Train.INTERCITY, TrainType.FULL, Train.PRESENT, Train.MOVING,
 			{ TrainBlock:new(Coord:new(1, 1), Vector:new(SE, W), track) }, 1)
 		junction:occupy(train)
 		success = junction:switch_points()
@@ -143,7 +143,7 @@ TestJunction = {}
 	end
 
 	function TestJunction.test_occupy_normal()
-		local train = Train:new(nil, "mytrain", Train.INTERCITY, TrainType.FULL, Train.MOVING,
+		local train = Train:new(nil, "mytrain", Train.INTERCITY, TrainType.FULL, Train.PRESENT, Train.MOVING,
 			{ TrainBlock:new(Coord:new(1, 1), Vector:new(W, E), track) }, 1)
 
 		local track1 = JunctionTrack:new({Vector:new(W, NE)}, {Vector:new(W, E)})
@@ -158,7 +158,7 @@ TestJunction = {}
 	end
 
 	function TestJunction.test_occupy_point_switch_slow()
-		local train = Train:new(nil, "mytrain", Train.INTERCITY, TrainType.SLOW, Train.MOVING,
+		local train = Train:new(nil, "mytrain", Train.INTERCITY, TrainType.SLOW, Train.PRESENT, Train.MOVING,
 			{ TrainBlock:new(Coord:new(1, 1), Vector:new(E, W), track) }, 1)
 
 		local junction, track1, track2 = TestJunction.move_auto_point_switch(train)
@@ -168,7 +168,7 @@ TestJunction = {}
 	end
 
 	function TestJunction.test_occupy_point_switch_fast()
-		local train = Train:new(nil, "mytrain", Train.INTERCITY, TrainType.FAST, Train.MOVING,
+		local train = Train:new(nil, "mytrain", Train.INTERCITY, TrainType.FAST, Train.PRESENT, Train.MOVING,
 			{ TrainBlock:new(Coord:new(1, 1), Vector:new(SE, W), track) }, 1)
 		local junction, track1 = TestJunction.move_auto_point_switch(train)
 		assertEquals(junction.occupier, nil)
@@ -193,7 +193,7 @@ TestJunction = {}
 TestFlyover = {}
 
 	function TestFlyover.test_occupy()
-		local train = Train:new(nil, "mytrain", Train.INTERCITY, TrainType.SLOW, Train.MOVING,
+		local train = Train:new(nil, "mytrain", Train.INTERCITY, TrainType.SLOW, Train.PRESENT, Train.MOVING,
 			{ TrainBlock:new(Coord:new(1, 1), Vector:new(S, NE), track) }, 1)
 
 		local track1 = Track:new{vector=Vector:new(SE, NW)}

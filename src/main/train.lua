@@ -71,7 +71,12 @@ Train = {
 	STOPPED  = 1,
 	MOVING   = 2,
 	DERAILED = 3,
-	CRASHED  = 4
+	CRASHED  = 4,
+
+	ABSENT   = 1,
+	ENTERING = 2,
+	PRESENT  = 3,
+	EXITING  = 4
 }
 
 	function Train.__tostring(o)
@@ -84,17 +89,18 @@ Train = {
 		return s
 	end
 	
-	function Train:new(map, name, type, speed, state, blocks, length)
+	function Train:new(map, name, type, speed, presence, state, blocks, length)
 		length = length or #blocks
 		local o = {
-			map    = map,
-			name   = name,
-			type   = type,
+			map          = map,
+			name         = name,
+			type         = type,
 			signal_speed = speed,
-			speeds = {},
-			state  = state,
-			length = length,
-			blocks = blocks
+			speeds       = {},
+			presence     = presence,
+			state        = state,
+			length       = length,
+			blocks       = blocks
 		}
 		setmetatable(o, self)
 		self.__index = self
@@ -122,13 +128,7 @@ Train = {
 
 	function Train:shift(head)
 		local blocks = self.blocks
-		local shifts
-		if #blocks < self.length then
-			shifts = #blocks + 1
-		else
-			shifts = #blocks
-		end
-		for i = shifts, 2, -1 do
+		for i = #blocks, 2, -1 do
 			blocks[i] = blocks[i-1]
 		end
 		blocks[1] = head
@@ -152,7 +152,7 @@ Train = {
 		if new_direction then
 			logger:debug("Train '" .. self.name .. "' routed to " .. tostring(tile) .. " new direction " .. tostring(new_direction))
 		
-			if #self.blocks == length then self:tail().tile:unoccupy(self) end
+			self:tail().tile:unoccupy(self)
 			local new_head = TrainBlock:new(position, new_direction, tile)
 			self:shift(new_head)
 

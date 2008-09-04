@@ -17,7 +17,7 @@ TestSignal = {}
     end
 
 	function TestSignal:test_tostring()
-		print(self.signal)
+		assertEquals(tostring(self.signal), '<Signal MAIN_AUTO AMBER>')
 	end
 
 	function TestSignal:test_set_aspect()
@@ -39,7 +39,7 @@ TestSignal = {}
 			type = Train.COMMUTER,
 			signal_speed = TrainType.FULL,
 			presence = Train.PRESENT,
-			state = Train.MOVING,
+			state = Train.MOVING
 		}
 
 		local speed, emergency = main_amber:next_speed(full_train)

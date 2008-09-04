@@ -41,8 +41,7 @@ TrainBlock = {}
 		local o = {
 			position = position, -- the coordinate position on the map
 			vector = vector,
-			tile = tile,
-			visible = true
+			tile = tile
 		}
 		setmetatable(o, self)
 		self.__index = self
@@ -89,23 +88,30 @@ Train = {
 		return s
 	end
 	
-	-- Accepts a table containing
-	-- 1..n:TrainBlock
-	-- map:Map
-	-- name:String
-	-- type:TrainType
-	-- signal_speed:TrainType.FULL/FAST/SLOW/STOP
-	-- presence:Train.ABSENT/ENTERING/PRESENT/EXITING
-	-- state:Train.STOPPED/MOVING/DERAILED/CRASHED
+	--[[
+		Accepts a table containing
+		1..n:TrainBlock 1 is the head of the train, n the tail
+		map:Map
+		name:String
+		type:TrainType
+		signal_speed:TrainType.FULL/FAST/SLOW/STOP
+		presence:Train.ABSENT/ENTERING/PRESENT/EXITING
+		state:Train.STOPPED/MOVING/DERAILED/CRASHED
+		visible_head:int (optional)
+		visible_tail:int (optional)
+	]]--
 	function Train:new(o)
 		o = o or {}
 		setmetatable(o, self)
 		self.__index = self
 		o.speeds = {}
+		-- TODO: should these fields be optional?
+		o.visible_head = o.visible_head or 1
+		o.visible_tail = o.visible_tail or 0
 		return o
 	end
 	
-	function Train:head() return self[1] end
+	function Train:head() return self[self.visible_head] end
 	
 	function Train:tail() return self[#self] end
 	
@@ -123,7 +129,7 @@ Train = {
 	end
 
 	function Train:shift(head)
-		for i = #self, 2, -1 do
+		for i = self.visible_tail, self.visible_head + 1, -1 do
 			self[i] = self[i-1]
 		end
 		self[1] = head
@@ -147,7 +153,16 @@ Train = {
 		if new_direction then
 			logger:debug("Train '" .. self.name .. "' routed to " .. tostring(tile) .. " new direction " .. tostring(new_direction))
 		
-			self:tail().tile:unoccupy(self)
+			if self.presence == Train.ENTERING then
+				self.visible_tail = self.visible_tail + 1
+				if self.visible_tail == #self then
+					logger:debug("Train '" .. self.name .. "' has completed ENTERING, becoming PRESENT")
+					self.presence = Train.PRESENT
+				end
+			end
+			if presence == Train.EXITING or presence == Train.PRESENT then
+				self:tail().tile:unoccupy(self)
+			end
 			local new_head = TrainBlock:new(position, new_direction, tile)
 			self:shift(new_head)
 

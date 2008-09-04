@@ -7,6 +7,7 @@ Copyright 2008 James Shaw <js102@zepler.net>
 
 require('train')
 require('compass')
+require('tile')
 
 -- made this a class in its own right so that scheduling can be attached to StationTypes
 StationType = {}
@@ -101,3 +102,7 @@ Spawn = {}
 	function Spawn:bounding_box()
 		return Coord.bounding_box({self.entry_tile, self.exit_tile})
 	end
+
+SpawnEntry = {}
+
+SpawnExit = {}

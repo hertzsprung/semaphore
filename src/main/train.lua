@@ -132,7 +132,7 @@ Train = {
 		for i = self.visible_tail, self.visible_head + 1, -1 do
 			self[i] = self[i-1]
 		end
-		self[1] = head
+		self[self.visible_head] = head
 	end
 	
 	function Train:direction()
@@ -153,18 +153,13 @@ Train = {
 		if new_direction then
 			logger:debug("Train '" .. self.name .. "' routed to " .. tostring(tile) .. " new direction " .. tostring(new_direction))
 		
-			if self.presence == Train.ENTERING then
-				self.visible_tail = self.visible_tail + 1
-				if self.visible_tail == #self then
-					logger:debug("Train '" .. self.name .. "' has completed ENTERING, becoming PRESENT")
-					self.presence = Train.PRESENT
-				end
-			end
-			if presence == Train.EXITING or presence == Train.PRESENT then
+			self:update_entering_state()
+			if self.presence == Train.EXITING or self.presence == Train.PRESENT then
 				self:tail().tile:unoccupy(self)
 			end
 			local new_head = TrainBlock:new(position, new_direction, tile)
 			self:shift(new_head)
+			self:update_exiting_state()
 
 			local next_move = requested_time + self.type.speeds[self:speed()]
 			logger:debug("Train '" .. self.name .. "' next moving at " .. next_move)
@@ -176,6 +171,26 @@ Train = {
 		else
 			logger:debug("Train '" .. self.name .. "' stopped moving")
 			if self.state == Train.MOVING then self.state = Train.STOPPED end
+		end
+	end
+
+	function Train:update_entering_state()
+		if self.presence == Train.ENTERING then
+			self.visible_tail = self.visible_tail + 1
+			if self.visible_tail == #self then
+				logger:debug("Train '" .. self.name .. "' has completed ENTERING, becoming PRESENT")
+				self.presence = Train.PRESENT
+			end
+		end
+	end
+
+	function Train:update_exiting_state()
+		if self.presence == Train.EXITING then
+			self.visible_head = self.visible_head + 1
+			if self.visible_head > #self then
+				logger:debug("Train '" .. self.name .. "' has completed EXITING, becoming ABSENT")
+				self.presence = Train.ABSENT
+			end
 		end
 	end
 

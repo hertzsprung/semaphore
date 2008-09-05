@@ -106,3 +106,20 @@ Spawn = {}
 SpawnEntry = {}
 
 SpawnExit = {}
+
+	--[[
+		compass:Compass the direction from which the exit tile accepts trains
+	]]--
+	function SpawnExit:new(o)
+		o = o or {}
+		setmetatable(o, self)
+		self.__index = self
+		return o
+	end
+
+	function SpawnExit:occupy(train)
+		if train.presence ~= Train.EXITING then
+			train.presence = Train.EXITING
+		end
+		return Vector:new(self.compass,CENTRE)
+	end

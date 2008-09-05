@@ -34,6 +34,7 @@ S  = Compass:new( 0,-1, 'S')
 SW = Compass:new(-1,-1, 'SW')
 W  = Compass:new(-1, 0, 'W')
 NW = Compass:new(-1, 1, 'NW')
+CENTRE = Compass:new(0, 0, 'CENTRE')
 
 N.inverse  = S
 NE.inverse = SW

@@ -5,6 +5,11 @@ Licensed under the MIT License,
 Copyright 2008 James Shaw <js102@zepler.net>
 ]]--
 
+require 'logging'
+require 'logging.console'
+
+local logger = logging.console()
+
 require('train')
 require('compass')
 require('tile')
@@ -122,8 +127,13 @@ SpawnExit = {}
 	end
 
 	function SpawnExit:occupy(train)
-		if train.presence ~= Train.EXITING then
-			train.presence = Train.EXITING
+		if self.compass == train:direction().inverse then
+			if train.presence ~= Train.EXITING then
+				train.presence = Train.EXITING
+			end
+			return Vector:new(self.compass,CENTRE)
+		else
+			logger:error("train " .. tostring(train) .. " has crashed because track wasn't connected")
+			train:crash()
 		end
-		return Vector:new(self.compass,CENTRE)
 	end

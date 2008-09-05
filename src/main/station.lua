@@ -107,6 +107,10 @@ SpawnEntry = {}
 
 SpawnExit = {}
 
+	function SpawnExit.__tostring(o)
+		return '<SpawnExit ' .. tostring(o.compass) .. '>'
+	end
+
 	--[[
 		compass:Compass the direction from which the exit tile accepts trains
 	]]--

@@ -15,7 +15,6 @@ local logger = logging.console()
 
 --[[
 	blocking:Train nil or a train that wanted to occupy the signal tile, but couldn't because the aspect stopped it
-	actions:ActionList
 ]]--
 Signal = Tile:new()
 
@@ -124,14 +123,7 @@ Signal.SPEEDS = {
 		self.aspect = aspect
 		local train = self.blocking
 		if aspect ~= Signal.RED and train then
-			logger:debug("Train " .. tostring(train) .. " has been unblocked by signal " .. tostring(self))
-			train.state = Train.MOVING
-			train.signal_speed = TrainType.FULL
-
-			local move_action = function (actions, requested_time, actual_time)
-				train:move(actions, requested_time, actual_time)
-			end
-			self.actions:add(move_action)
+			train:unblock_signal(self)
 		end
 	end
 

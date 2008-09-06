@@ -121,8 +121,7 @@ TestSignal = {}
 		local signal = map:set(4, 2, Signal:new{
 			vector=Vector:new(W, E),
 			type=Signal.MAIN_AUTO,
-			aspect=Signal.RED, vector=Vector:new(W, E),
-			actions=actions
+			aspect=Signal.RED, vector=Vector:new(W, E)
 		})
 
 		local train = Train:new{
@@ -135,7 +134,8 @@ TestSignal = {}
 			signal_speed = TrainType.FAST,
 			presence = Train.PRESENT,
 			state = Train.MOVING,
-			map = map
+			map = map,
+			actions = actions
 		}
 
 		tile1.occupier = train

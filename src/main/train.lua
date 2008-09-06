@@ -91,7 +91,8 @@ Train = {
 	--[[
 		Accepts a table containing
 		1..n:TrainBlock 1 is the head of the train, n the tail
-		map:Map
+		map:Map  -- TODO: might want to just have Game instead of Map and ActionList
+		actions:ActionList
 		name:String
 		type:TrainType
 		signal_speed:TrainType.FULL/FAST/SLOW/STOP
@@ -139,7 +140,7 @@ Train = {
 		return self:head().vector[Vector.EXIT]
 	end
 
-	function Train:move(actions, requested_time, actual_time)
+	function Train:move(requested_time, actual_time)
 		local head = self:head()
 		local direction = self:direction()
 		local position = head.position:add(direction)
@@ -165,9 +166,9 @@ Train = {
 			logger:debug("Train '" .. self.name .. "' next moving at " .. next_move)
 
 			local move_action = function (actions, requested_time, actual_time)
-				self.move(self, actions, requested_time, actual_time)
+				self:move(requested_time, actual_time)
 			end
-			actions:add(move_action, next_move)
+			self.actions:add(move_action, next_move)
 		else
 			logger:debug("Train '" .. self.name .. "' stopped moving")
 			if self.state == Train.MOVING then self.state = Train.STOPPED end
@@ -219,4 +220,16 @@ Train = {
 	function Train:derail()
 		self.speed = self:add_speed(TrainType.STOP)
 		self.state = Train.DERAILED
+	end
+
+	function Train:unblock_signal(signal)
+		-- TODO: won't want to unblock when you're sat in a station, for example
+		logger:debug("Train " .. tostring(train) .. " has been unblocked by signal " .. tostring(self))
+		self.state = Train.MOVING
+		self.signal_speed = TrainType.FULL
+
+		local move_action = function (actions, requested_time, actual_time)
+			self:move(requested_time, actual_time)
+		end
+		self.actions:add(move_action)
 	end

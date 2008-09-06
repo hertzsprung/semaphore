@@ -82,6 +82,7 @@ TestTrain = {}
 			TrainBlock:new(Coord:new(1, 1), Vector:new(W, E), tile1),
 
 			map = map,
+			actions = actions,
 			name = 'test',
 			type = Train.INTERCITY,
 			signal_speed = TrainType.FULL,
@@ -93,7 +94,7 @@ TestTrain = {}
 		tile2.occupier = t
 		tile3.occupier = t
 
-		t:move(actions, 1, 1)
+		t:move(1, 1)
 		print(t)
 		-- TODO: asserts
 		local tick = 0
@@ -121,6 +122,7 @@ TestTrain = {}
 			TrainBlock:new(Coord:new(1, 1), Vector:new(W, E), tile1),
 
 			map = map,
+			actions = actions,
 			name = 'test',
 			type = Train.INTERCITY,
 			signal_speed = TrainType.FULL,
@@ -132,7 +134,7 @@ TestTrain = {}
 
 		local second_block = TrainBlock:new(Coord:new(2, 1), Vector:new(W, E), tile2)
 
-		t:move(actions, 1, 1)
+		t:move(1, 1)
 		assertEquals(t[1], second_block)
 		assertEquals(t[2], start_block)
 		assertEquals(t[3], start_block)
@@ -140,14 +142,14 @@ TestTrain = {}
 
 		local third_block = TrainBlock:new(Coord:new(3, 1), Vector:new(W, E), tile3)
 
-		t:move(actions, 2, 2)
+		t:move(2, 2)
 		assertEquals(t[1], third_block)
 		assertEquals(t[2], second_block)
 		assertEquals(t[3], start_block)
 		assertEquals(t.visible_tail, 2)
 		assertEquals(t.presence, Train.ENTERING)
 
-		t:move(actions, 3, 3)
+		t:move(3, 3)
 
 		local fourth_block = TrainBlock:new(Coord:new(4, 1), Vector:new(W, NE), tile4)
 		assertEquals(t[1], fourth_block)
@@ -156,7 +158,7 @@ TestTrain = {}
 		assertEquals(t.visible_tail, 3)
 		assertEquals(t.presence, Train.PRESENT)
 
-		t:move(actions, 4, 4)
+		t:move(4, 4)
 
 		assertEquals(t[1], TrainBlock:new(Coord:new(5, 2), Vector:new(SW, N), tile5))
 		assertEquals(t[2], fourth_block)
@@ -182,6 +184,7 @@ TestTrain = {}
 			first_tile,
 
 			map = map,
+			actions = actions,
 			name = 'test',
 			type = Train.INTERCITY,
 			signal_speed = TrainType.FULL,
@@ -197,7 +200,7 @@ TestTrain = {}
 
 		local fourth_tile = TrainBlock:new(Coord:new(4, 1), Vector:new(W, CENTRE), tile4)
 
-		t:move(actions, 1, 1)
+		t:move(1, 1)
 		assertEquals(t.presence, Train.EXITING)
 		assertEquals(t.visible_head, 2)
 		assertEquals(t[1], fourth_tile)
@@ -205,7 +208,7 @@ TestTrain = {}
 		assertEquals(t[3], second_tile)
 		assertEquals(first_tile.occupier, nil)
 
-		t:move(actions, 2, 2)
+		t:move(2, 2)
 		assertEquals(t.presence, Train.EXITING)
 		assertEquals(t.visible_head, 3)
 		assertEquals(t[1], fourth_tile)
@@ -213,7 +216,7 @@ TestTrain = {}
 		assertEquals(t[3], third_tile)
 		assertEquals(second_tile.occupier, nil)
 
-		t:move(actions, 3, 3)
+		t:move(3, 3)
 		assertEquals(t.presence, Train.ABSENT)
 		assertEquals(t.visible_head, 4) -- nothing is visible
 		assertEquals(t[1], fourth_tile)

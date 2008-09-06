@@ -118,6 +118,7 @@ SpawnExit = {}
 
 	--[[
 		compass:Compass the direction from which the exit tile accepts trains
+		spawn:Spawn
 	]]--
 	function SpawnExit:new(o)
 		o = o or {}

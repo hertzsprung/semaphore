@@ -13,9 +13,9 @@ TestActionList = {}
 	function TestActionList:testExecute()
 		local run = 1
 		local al = ActionList:new()
-		al:add(1, function () run = run * 3 end)
-		al:add(2, function () run = run + 1 end)
-		al:add(4, function () run = run * 100 end)
+		al:add(function () run = run * 3 end, 1)
+		al:add(function () run = run + 1 end, 2)
+		al:add(function () run = run * 100 end, 4)
 
 		al:execute(3)
 

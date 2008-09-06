@@ -13,7 +13,12 @@ require 'logging.console'
 
 local logger = logging.console()
 
+--[[
+	blocking:Train nil or a train that wanted to occupy the signal tile, but couldn't because the aspect stopped it
+	actions:ActionList
+]]--
 Signal = Tile:new()
+
 Signal.MAIN_AUTO   = 1
 Signal.MAIN_MANUAL = 2
 Signal.SUB         = 3
@@ -76,6 +81,7 @@ Signal.SPEEDS = {
 			local speed, emergency = self:next_speed(train)
 			if speed == TrainType.STOP then
 				can_occupy = false
+				self.blocking = train
 				if emergency then
 					logger:info("Train " .. tostring(train) .. " performed an emergency stop at signal " .. tostring(self))
 					-- TODO
@@ -99,6 +105,7 @@ Signal.SPEEDS = {
 			end
 			train.most_recent_sub_signal = self
 		else
+			logger:debug("Train " .. tostring(train) .. " passing through MAIN signal, aspect changing to RED")
 			self:set_aspect(Signal.RED)
 			if train.most_recent_main_signal and train.most_recent_main_signal.type == Signal.MAIN_AUTO then
 				train.most_recent_main_signal:set_to_previous_aspect()
@@ -115,6 +122,17 @@ Signal.SPEEDS = {
 	function Signal:set_aspect(aspect)
 		self.previous_aspect = self.aspect
 		self.aspect = aspect
+		local train = self.blocking
+		if aspect ~= Signal.RED and train then
+			logger:debug("Train " .. tostring(train) .. " has been unblocked by signal " .. tostring(self))
+			train.state = Train.MOVING
+			train.signal_speed = TrainType.FULL
+
+			local move_action = function (actions, requested_time, actual_time)
+				train:move(actions, requested_time, actual_time)
+			end
+			self.actions:add(move_action)
+		end
 	end
 
 	function Signal:set_to_previous_aspect()

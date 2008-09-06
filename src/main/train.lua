@@ -167,13 +167,14 @@ Train = {
 			local move_action = function (actions, requested_time, actual_time)
 				self.move(self, actions, requested_time, actual_time)
 			end
-			actions:add(next_move,move_action)
+			actions:add(move_action, next_move)
 		else
 			logger:debug("Train '" .. self.name .. "' stopped moving")
 			if self.state == Train.MOVING then self.state = Train.STOPPED end
 		end
 	end
 
+	-- private
 	function Train:update_entering_state()
 		if self.presence == Train.ENTERING then
 			self.visible_tail = self.visible_tail + 1
@@ -184,6 +185,7 @@ Train = {
 		end
 	end
 
+	--private
 	function Train:update_exiting_state()
 		if self.presence == Train.EXITING then
 			self.visible_head = self.visible_head + 1

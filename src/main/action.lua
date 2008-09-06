@@ -24,15 +24,17 @@ ActionList = {}
 		return o
 	end
 
-	function ActionList:add(time, action)
-		self.heap:insert{key=time, action=action}
+	-- If time isn't specified, add action for immediate execution
+	function ActionList:add(action, time)
+		self.heap:insert{key=time or self.latest_time, action=action}
 	end
 
 	function ActionList:execute(end_time)
 		local start_time = self.latest_time + 1
 		logger:debug("Executing all actions between " .. start_time .. " and " .. end_time .. " inclusive")
 		while self.heap[1] and self.heap[1].key <= end_time do
-			self.heap:delete_min().action(self, t, end_time)
+			local heap_item = self.heap:delete_min()
+			heap_item.action(self, heap_item.key, end_time)
 		end
 		self.latest_time = end_time
 	end

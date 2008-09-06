@@ -6,9 +6,12 @@ Copyright 2008 James Shaw <js102@zepler.net>
 ]]--
 
 require('luaunit')
+
+require('action')
+require('compass')
+require('map')
 require('signal')
 require('train')
-require('compass')
 
 TestSignal = {}
 
@@ -49,12 +52,16 @@ TestSignal = {}
 		local speed, emergency = main_red:next_speed(full_train)
 		assertEquals(speed, TrainType.STOP)
 		assertEquals(emergency, true)
-
-		-- TODO: a few more permutations
 	end
 
 	function TestSignal:test_update_state()
-		local train = {}
+		local train = Train:new{
+			name = 'test',
+			type= Train.COMMUTER,
+			signal_speed = TrainType.FULL,
+			presence = Train.PRESENT,
+			state =Train.MOVING
+		}
 		
 		local signals = {
 			Signal:new{type=Signal.SUB, aspect=Signal.GREEN},
@@ -105,21 +112,43 @@ TestSignal = {}
 	end
 
 	function TestSignal:test_occupy_main_red()
+		local actions = ActionList:new();
+		local map = Map:new(5, 3)
+
+		local tile1 = map:set(1, 1, Track:new{vector=Vector:new(W, E)})
+		local tile2 = map:set(2, 1, Track:new{vector=Vector:new(W, NE)})
+		local tile3 = map:set(3, 2, Track:new{vector=Vector:new(SW, E)})
+		local signal = map:set(4, 2, Signal:new{
+			vector=Vector:new(W, E),
+			type=Signal.MAIN_AUTO,
+			aspect=Signal.RED, vector=Vector:new(W, E),
+			actions=actions
+		})
+
 		local train = Train:new{
-			TrainBlock:new(Coord:new(3, 1), Vector:new(W, E), nil),
-			TrainBlock:new(Coord:new(2, 1), Vector:new(W, E), nil),
-			TrainBlock:new(Coord:new(1, 1), Vector:new(W, E), nil),
+			TrainBlock:new(Coord:new(3, 2), Vector:new(W, E), tile3),
+			TrainBlock:new(Coord:new(2, 1), Vector:new(W, E), tile2),
+			TrainBlock:new(Coord:new(1, 1), Vector:new(W, E), tile1),
 
 			name = 'test',
 			type = Train.INTERCITY,
-			signal_speed = TrainType.FULL,
+			signal_speed = TrainType.FAST,
 			presence = Train.PRESENT,
-			state = Train.MOVING
+			state = Train.MOVING,
+			map = map
 		}
 
-		local signal = Signal:new{type=Signal.MAIN_AUTO, aspect=Signal.RED, vector=Vector:new(W, E)}
+		tile1.occupier = train
+		tile2.occupier = train
+		tile3.occupier = train
+
 		local vector = signal:occupy(train)
 		assertEquals(vector, nil)
 		assertEquals(signal.occupier, nil)
 		assertEquals(train:speed(), TrainType.STOP)
+
+		signal:set_aspect(Signal.AMBER)
+		actions:execute(1)
+		assertEquals(train.state, Train.MOVING)
+		assertEquals(train:speed(), TrainType.SLOW)
 	end

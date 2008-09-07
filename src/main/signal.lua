@@ -14,6 +14,8 @@ require 'logging.console'
 local logger = logging.console()
 
 --[[
+	aspect:Signal.GREEN/AMBER/RED
+	type=Signal.MAIN_AUTO/MAIN_MANUAL/SUB
 	blocking:Train nil or a train that wanted to occupy the signal tile, but couldn't because the aspect stopped it
 ]]--
 Signal = Tile:new()

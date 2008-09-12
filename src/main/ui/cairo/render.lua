@@ -103,7 +103,7 @@ CairoRender = {}
 	end
 
 	-- TODO: not sure how we're going to lay out the functions ultimately
-	function CairoRender:draw_main_signal(ctx, x, y, signal)
+	function CairoRender:draw_signal(ctx, x, y, signal)
 		local style = self.style
 		local rotate_table = {
 			[N]  = 0.5,
@@ -148,20 +148,65 @@ CairoRender = {}
 			cairo.fill(ctx)
 		end
 
-		local function draw_circle(x, y)
-			circle(ctx, x, y, style.signal_main_radius)
-			set_color(ctx, aspect_color)
+		local function stroke_and_fill(fill_color, stroke_color)
+			stroke_color = stroke_color or Color.BLACK
+			set_color(ctx, fill_color)
 			cairo.fill_preserve(ctx)
-			set_color(ctx, Color.BLACK)
+			set_color(ctx, stroke_color)
 			cairo.stroke(ctx)
 		end
-
-		draw_circle(0, style.signal_offset) -- upper circle
-		draw_circle(0, -style.signal_offset) -- lower circle
 
 		-- connecting line
 		cairo.move_to(ctx, 0, -style.stroke_width)
 		cairo.line_to(ctx, 0, style.stroke_width)
+		set_color(ctx, Color.BLACK)
 		cairo.stroke(ctx)
+
+		if signal.type == Signal.SUB then
+			local w, h
+			if signal.aspect == Signal.GREEN then
+				w = style.signal_sub_minor_width
+				h = style.signal_sub_minor_height
+			else
+				w = style.signal_sub_major_width
+				h = style.signal_sub_major_height
+			end
+
+			cairo.rectangle(
+				ctx,
+				-w/2,
+				-h - style.track_back_width/2 + style.stroke_width/2,
+				w,
+				h
+			)
+			stroke_and_fill(aspect_color)
+
+			cairo.rectangle(
+				ctx,
+				-w/2,
+				style.track_back_width/2 - style.stroke_width/2,
+				w,
+				h
+			)
+			local lower_aspect_color
+			if signal.aspect == Signal.RED then
+				lower_aspect_color = color_table[Signal.AMBER]
+			else
+				lower_aspect_color = aspect_color
+			end
+			stroke_and_fill(lower_aspect_color)
+		else
+			local function draw_circle(x, y)
+				circle(ctx, x, y, style.signal_main_radius)
+				set_color(ctx, aspect_color)
+				cairo.fill_preserve(ctx)
+				set_color(ctx, Color.BLACK)
+				cairo.stroke(ctx)
+			end
+	
+			draw_circle(0, style.signal_main_offset) -- upper circle
+			draw_circle(0, -style.signal_main_offset) -- lower circle
+		end
+
 		cairo.restore(ctx)
 	end

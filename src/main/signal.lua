@@ -8,10 +8,8 @@ Copyright 2008 James Shaw <js102@zepler.net>
 require('train')
 require('tile')
 
-require 'logging'
-require 'logging.console'
-
-local logger = logging.console()
+require 'log'
+local logger = log.logger
 
 --[[
 	aspect:Signal.GREEN/AMBER/RED

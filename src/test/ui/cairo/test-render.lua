@@ -23,7 +23,7 @@ TestCairoRender = {}
 		map:set(4, 3, Track:new{vector=Vector:new(SW, E)})
 		map:set(5, 3, Track:new{vector=Vector:new(W, E)})
 
-		local scale=256
+		local scale=128
 
 		local sfc = cairo.image_surface_create(cairo.FORMAT_RGB24, map.w*scale, map.h*scale)
 		local ctx = cairo.create(sfc)

@@ -5,10 +5,8 @@ Licensed under the MIT License,
 Copyright 2008 James Shaw <js102@zepler.net>
 ]]--
 
-require 'logging'
-require 'logging.console'
-
-local logger = logging.console()
+require 'log'
+local logger = log.logger
 
 TrainType = {
 	STOP = 0,

@@ -14,6 +14,10 @@ local function set_color(ctx, color)
 	cairo.set_source_rgb(ctx, color.r, color.g, color.b)
 end
 
+local function circle(ctx, x, y, r)
+	cairo.arc(ctx, x, y, r, 0, 2 * PI)
+end
+
 local function rounded_rect(ctx,x,y,w,h,r)
     --[[
 		 A****BQ
@@ -59,28 +63,40 @@ CairoRender = {}
 			return x + 0.5 + (compass.x * 0.5), self:v_midpoint(y) - (compass.y * 0.5)
 		end
 
-		local function draw_tile(x, y, tile)
-			local entry = tile.vector[Vector.ENTRY]
-			local exit = tile.vector[Vector.EXIT]
+		local function draw_track(x, y, tile)
+			local vector = tile.vector
+			local entry = vector[Vector.ENTRY]
+			local exit = vector[Vector.EXIT]
+
+			local function stroke()
+				cairo.move_to(ctx, position(x, y, entry))
+				if vector:is_straight() then
+					cairo.line_to(ctx, position(x, y, exit))
+				else
+					cairo.curve_to(
+						ctx,
+						x + 0.5, self:v_midpoint(y), -- c1
+						x + 0.5 + (exit.x * 0.25), self:v_midpoint(y) - (exit.y * 0.25), -- c2
+						position(x, y, exit) -- endpoint
+					)
+				end
+				cairo.stroke(ctx)
+			end
 			
 			cairo.set_line_width(ctx, self.style.track_back_width)
 			set_color(ctx, track_back)
-			cairo.move_to(ctx, position(x, y, entry))
-			cairo.line_to(ctx, position(x, y, exit))
-			cairo.stroke(ctx)
+			stroke()
 
 			cairo.set_line_width(ctx, self.style.track_front_width)
 			set_color(ctx, track_front)
-			cairo.move_to(ctx, position(x, y, entry))
-			cairo.line_to(ctx, position(x, y, exit))
-			cairo.stroke(ctx)
+			stroke()
 		end
 
 		for i=1,self.map.w do
 			for j=1,self.map.h do
 				local tile = self.map[j][i]
 				if tile ~= BLANK then
-					draw_tile(i-1, j-1, tile)
+					draw_track(i-1, j-1, tile)
 				end
 			end
 		end
@@ -122,18 +138,18 @@ CairoRender = {}
 			local offset = style.signal_main_manual_extra_offset
 			local radius = style.signal_main_manual_extra_radius
 			set_color(ctx, aspect_color)
-			cairo.arc(ctx, -offset.x, -offset.y, radius, 0, 2 * PI)
+			circle(ctx, -offset.x, -offset.y, radius)
 			cairo.fill(ctx)
-			cairo.arc(ctx, offset.x, -offset.y, radius, 0, 2 * PI)
+			circle(ctx, offset.x, -offset.y, radius)
 			cairo.fill(ctx)
-			cairo.arc(ctx, -offset.x, offset.y, radius, 0, 2 * PI)
+			circle(ctx, -offset.x, offset.y, radius)
 			cairo.fill(ctx)
-			cairo.arc(ctx, offset.x, offset.y, radius, 0, 2 * PI)
+			circle(ctx, offset.x, offset.y, radius)
 			cairo.fill(ctx)
 		end
 
 		local function draw_circle(x, y)
-			cairo.arc(ctx, x, y, style.signal_main_radius, 0, 2 * PI)
+			circle(ctx, x, y, style.signal_main_radius)
 			set_color(ctx, aspect_color)
 			cairo.fill_preserve(ctx)
 			set_color(ctx, Color.BLACK)

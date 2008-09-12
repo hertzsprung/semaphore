@@ -17,6 +17,11 @@ RenderStyle = {
 	track_front = Color:new{r=0.53125, g=0.796875, b=0.796875},
 	track_front_width = 0.1,
 
+	points = Color:new{r=0.2, g=1, b=1},
+
+	intersection_stroke_width = 0.025,
+	intersection_length = 0.1,
+
 	signal_main_radius = 0.18,
 	signal_main_manual_extra_radius = 0.0625,
 	signal_main_manual_extra_offset = Coord:new(0.35, 0.26),
@@ -25,5 +30,8 @@ RenderStyle = {
 	signal_offset = 0.26,
 	signal_red = Color:new{r=1, g=0.2, b=0.2},
 	signal_amber = Color:new{r=1, g=0.75, b=0},
-	signal_green = Color:new{r=0, g=1, b=0}
+	signal_green = Color:new{r=0, g=1, b=0},
+
+	underpass = Color:new{r=0.0664, g=0.332, b=0.0064},
+	overpass = Color:new{r=0.2, g=0.73, b=0.465}
 }

@@ -5,12 +5,10 @@ Licensed under the MIT License,
 Copyright 2008 James Shaw <js102@zepler.net>
 ]]--
 
-require 'logging'
-require 'logging.console'
+require 'log'
+local logger = log.logger
 
 require 'heap'
-
-local logger = logging.console()
 
 ActionList = {}
 

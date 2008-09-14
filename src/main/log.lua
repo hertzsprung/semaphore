@@ -12,4 +12,4 @@ require 'logging.console'
 log = {}
 log.logger = logging.console()
 
-log.logger:setLevel(logging.WARN)
+log.logger:setLevel(logging.DEBUG)

@@ -15,11 +15,8 @@ TrainType = {
 	FULL = 3
 }
 	
-	function TrainType:new(prefix, speeds)
-		local o = {
-			prefix = prefix,
-			speeds = speeds
-		}
+	function TrainType:new(o)
+		o = o or {}
 		setmetatable(o, self)
 		self.__index = self
 		return o
@@ -47,23 +44,23 @@ TrainBlock = {}
 	end
 
 Train = {
-	INTERCITY = TrainType:new('IC', {
+	INTERCITY = TrainType:new{prefix='IC', speeds={
 		[TrainType.FULL] = 1,
 		[TrainType.FAST] = 2,
 		[TrainType.SLOW] = 3
-	}),
+	}},
 	
-	COMMUTER = TrainType:new('LP', {
+	COMMUTER = TrainType:new{prefix='LP', speeds={
 		[TrainType.FULL] = 2,
 		[TrainType.FAST] = 3,
 		[TrainType.SLOW] = 4
-	}),
+	}},
 	
-	FREIGHT = TrainType:new('GD', {
+	FREIGHT = TrainType:new{prefix='GD', speeds={
 		[TrainType.FULL] = 3,
 		[TrainType.FAST] = 4,
 		[TrainType.SLOW] = 5
-	}),
+	}},
 
 	STOPPED  = 1,
 	MOVING   = 2,
@@ -148,7 +145,7 @@ Train = {
 			.. " to " .. tostring(position))
 	
 		local tile = self.map:get(position)
-		local new_direction = tile:occupy(self, direction)
+		local new_direction = tile:occupy(self, position)
 		if new_direction then
 			logger:debug("Train '" .. self.name .. "' routed to " .. tostring(tile) .. " new direction " .. tostring(new_direction))
 		
@@ -160,15 +157,19 @@ Train = {
 			self:shift(new_head)
 			self:update_exiting_state()
 
-			local next_move = requested_time + self.type.speeds[self:speed()]
-			logger:debug("Train '" .. self.name .. "' next moving at " .. next_move)
-
-			local move_action = function (actions, requested_time, actual_time)
-				self:move(requested_time, actual_time)
+			if self:speed() ~= TrainType.STOP then
+				local next_move = requested_time + self.type.speeds[self:speed()]
+				logger:debug("Train '" .. self.name .. "' next moving at " .. next_move)
+	
+				local move_action = function (actions, requested_time, actual_time)
+					self:move(requested_time, actual_time)
+				end
+				self.actions:add(move_action, next_move)
+			else
+				logger:debug("Train '" .. self.name .. "' allowed to occupy tile " .. tostring(tile) .. ", but tile stopped it moving again")
 			end
-			self.actions:add(move_action, next_move)
 		else
-			logger:debug("Train '" .. self.name .. "' stopped moving")
+			logger:debug("Train '" .. self.name .. "' not allowed to occupy tile " .. tostring(tile) .. ", stopped moving")
 			if self.state == Train.MOVING then self.state = Train.STOPPED end
 		end
 	end
@@ -210,13 +211,18 @@ Train = {
 		self.speeds[s] = (self.speeds[s] or 1) - 1
 	end
 
+	function Train:stop()
+		self:add_speed(TrainType.STOP)
+		self.state = Train.STOPPED
+	end
+
 	function Train:crash()
-		self.speed = self:add_speed(TrainType.STOP)
+		self:add_speed(TrainType.STOP)
 		self.state = Train.CRASHED
 	end
 
 	function Train:derail()
-		self.speed = self:add_speed(TrainType.STOP)
+		self:add_speed(TrainType.STOP)
 		self.state = Train.DERAILED
 	end
 

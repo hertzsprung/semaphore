@@ -29,6 +29,10 @@ Station = {
 	SIDING = StationType:new(),
 	DEPOT = StationType:new()
 }
+
+	function Station.__tostring(o)
+		return '<Station ' .. tostring(o.code) .. '>'
+	end
 	
 	function Station:new(code, name, type, train_types)
 		local o = {
@@ -61,6 +65,10 @@ Station = {
 
 Platform = {}
 
+	function Platform.__tostring(o)
+		return '<Platform ' .. tostring(o.name) .. ' belongs-to ' .. tostring(o.station) .. '>'
+	end
+
 	function Platform:new(station, name, train_types, tiles)
 		local o = {
 			-- the station to which the platform belongs
@@ -69,8 +77,10 @@ Platform = {}
 			-- train_types is an optional override to allow a platform
 			-- to be occupied by a different set of train types to its station
 			train_types = train_types,
-			-- the train currently occupying the platform
-			occupier = nil,
+			-- the train(s) currently occupying the platform
+			-- wouldn't expect more than one train, though it is conceivable
+			-- without them crashing immediately
+			occupation = {},
 			tiles = tiles -- list of Coords, not Tiles
 		}
 		setmetatable(o, self)
@@ -84,6 +94,37 @@ Platform = {}
 
 	function Platform:bounding_box()
 		return Coord.bounding_box(self.tiles)
+	end
+
+-- in addition to properties required by Track
+-- platform:Platform
+-- map:Map
+PlatformTile = Track:new()
+
+	function PlatformTile.__tostring(o)
+		return '<PlatformTile ' .. tostring(o.vector) .. ' ' .. tostring(o.platform) .. '>'
+	end
+
+	function PlatformTile:occupy(train, position)
+		local occupy = Track.occupy(self, train)
+		if occupy then
+			train:add_speed(TrainType.SLOW)
+			local next_tile = self.map:get(position:add(occupy[Vector.EXIT]))
+			if getmetatable(next_tile) ~= PlatformTile then
+				logger:debug('Next tile after this PlatformTile is a non-PlatformTile ' .. tostring(next_tile))
+				train:stop() -- TODO: remove this speed in the action that wakes train up
+				-- TODO: add action to wake it up
+			end
+		end
+		return occupy
+	end
+
+	function PlatformTile:unoccupy(train)
+		local occupy = Track.occupy(self, train)
+		if occupy then
+			train:remove_speed(TrainType.SLOW)
+		end
+		return occupy
 	end
 
 Spawn = {}

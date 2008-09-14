@@ -18,6 +18,10 @@ local function get_track(track_list, direction)
 end
 
 BLANK = {}
+setmetatable(BLANK, BLANK)
+	function BLANK.__tostring(o)
+		return "<BLANK>"
+	end
 
 	function BLANK:occupy(train)
 		logger:error("train " .. tostring(train) .. " has crashed attempting to occupy blank tile")
@@ -229,7 +233,7 @@ Junction = {}
 	-- add or remove train speed to FAST if moving on to switched points
 	-- speed_function should be Train.add_speed() or Train.remove_speed()
 	function Junction:set_train_properties(train, speed_function)
-		if self.track:is_switched() and train:speed() > TrainType.FAST then
+		if self.track:is_switched() then
 			speed_function(train, TrainType.FAST)
 		end
 	end

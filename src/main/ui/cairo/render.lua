@@ -157,8 +157,8 @@ CairoRender = {}
 		end
 
 		-- connecting line
-		cairo.move_to(ctx, 0, -style.stroke_width)
-		cairo.line_to(ctx, 0, style.stroke_width)
+		cairo.move_to(ctx, 0, -style.track_back_width/2)
+		cairo.line_to(ctx, 0, style.track_back_width/2)
 		set_color(ctx, Color.BLACK)
 		cairo.stroke(ctx)
 

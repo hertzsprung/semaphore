@@ -99,28 +99,36 @@ Platform = {}
 -- in addition to properties required by Track
 -- platform:Platform
 -- map:Map
+-- actions:ActionList
+-- TODO: this class is currently implementing a suburban station
 PlatformTile = Track:new()
 
 	function PlatformTile.__tostring(o)
 		return '<PlatformTile ' .. tostring(o.vector) .. ' ' .. tostring(o.platform) .. '>'
 	end
 
-	function PlatformTile:occupy(train, position)
+	function PlatformTile:occupy(train, position, requested_time)
 		local occupy = Track.occupy(self, train)
 		if occupy then
 			train:add_speed(TrainType.SLOW)
 			local next_tile = self.map:get(position:add(occupy[Vector.EXIT]))
 			if getmetatable(next_tile) ~= PlatformTile then
 				logger:debug('Next tile after this PlatformTile is a non-PlatformTile ' .. tostring(next_tile))
-				train:stop() -- TODO: remove this speed in the action that wakes train up
-				-- TODO: add action to wake it up
+				train:stop()
+				local next_move = requested_time + 10000 -- FIXME: hardwired dwell time
+	
+				local move_action = function (actions, requested_time, actual_time)
+					train:resume()
+					train:move(requested_time, actual_time)
+				end
+				self.actions:add(move_action, next_move)
 			end
 		end
 		return occupy
 	end
 
 	function PlatformTile:unoccupy(train)
-		local occupy = Track.occupy(self, train)
+		local occupy = Track.unoccupy(self, train)
 		if occupy then
 			train:remove_speed(TrainType.SLOW)
 		end

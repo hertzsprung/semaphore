@@ -42,12 +42,14 @@ TestPlatformTile = {}
 		local platform_tile1 = PlatformTile:new{
 			vector=Vector:new(W, E),
 			platform = platform,
-			map = map
+			map = map,
+			actions = actions
 		}
 		local platform_tile2 = PlatformTile:new{
 			vector=Vector:new(W, E),
 			platform = platform,
-			map = map
+			map = map,
+			actions = actions
 		}
 		local signal = Signal:new{type=Signal.MAIN_AUTO, aspect=Signal.GREEN, vector=Vector:new(W, E)}
 
@@ -77,7 +79,17 @@ TestPlatformTile = {}
 		train:move(1, 1)
 		assertEquals(train:speed(), TrainType.SLOW)
 		assertEquals(tile1.occupier, nil)
+		assertEquals(platform_tile1.occupier, train)
 
-		train:move(2, 2)
+		actions:execute(10)
 		assertEquals(tile2.occupier, nil)
+		assertEquals(platform_tile1.occupier, train)
+		assertEquals(platform_tile2.occupier, train)
+		assertEquals(signal.occupier, nil)
+		assertEquals(#actions.heap, 1)
+		
+		actions:execute(10005) -- TODO: timing seems pretty finicky -- is this ok or is it a bug?
+		assertEquals(signal.aspect, Signal.RED)
+		assertEquals(signal.occupier, train)
+		assertEquals(platform_tile1.occupier, nil)
 	end

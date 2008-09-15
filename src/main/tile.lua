@@ -47,9 +47,14 @@ Tile = {}
 	function Tile:occupy_track(train, vector)
 		if vector then
 			if self.occupier then
-				logger:info("train " .. tostring(train) .. " has crashed into " .. tostring(self.occupier))
-				self.occupier:crash()
-				train:crash()
+				if self.occupier == train then
+					logger:error("train " .. tostring(train) .. " has tried to occupy a tile " .. tostring(self) .. " which it already occupies")
+					train:crash()
+				else
+					logger:info("train " .. tostring(train) .. " has crashed into " .. tostring(self.occupier))
+					self.occupier:crash()
+					train:crash()
+				end
 			else
 				self.occupier = train
 				return vector

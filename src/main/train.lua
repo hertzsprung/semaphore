@@ -135,7 +135,7 @@ Train = {
 		return self:head().vector[Vector.EXIT]
 	end
 
-	function Train:move(requested_time, actual_time)
+	function Train:move(requested_time)
 		local head = self:head()
 		local direction = self:direction()
 		local position = head.position:add(direction)
@@ -145,13 +145,15 @@ Train = {
 			.. " to " .. tostring(position))
 	
 		local tile = self.map:get(position)
-		local new_direction = tile:occupy(self, position)
+		local new_direction = tile:occupy(self, position, requested_time)
 		if new_direction then
 			logger:debug("Train '" .. self.name .. "' routed to " .. tostring(tile) .. " new direction " .. tostring(new_direction))
 		
 			self:update_entering_state()
 			if self.presence == Train.EXITING or self.presence == Train.PRESENT then
-				self:tail().tile:unoccupy(self)
+				local tail = self:tail().tile
+				logger:debug("Train '" .. self.name .. "' unoccupying " .. tostring(tail))
+				tail:unoccupy(self)
 			end
 			local new_head = TrainBlock:new(position, new_direction, tile)
 			self:shift(new_head)
@@ -209,6 +211,11 @@ Train = {
 
 	function Train:remove_speed(s)
 		self.speeds[s] = (self.speeds[s] or 1) - 1
+	end
+
+	function Train:resume()
+		self:remove_speed(TrainType.STOP)
+		self.state = Train.MOVING
 	end
 
 	function Train:stop()

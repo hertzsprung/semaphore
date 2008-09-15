@@ -12,6 +12,10 @@ require 'heap'
 
 ActionList = {}
 
+	function ActionList.__tostring(o)
+		return '<ActionList latest_time=' .. o.latest_time .. ', heapsize=' .. #o.heap ..'>'
+	end
+
 	function ActionList:new(o)
 		o = o or {
 			latest_time = 0,

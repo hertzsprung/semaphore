@@ -107,7 +107,7 @@ PlatformTile = Track:new()
 		return '<PlatformTile ' .. tostring(o.vector) .. ' ' .. tostring(o.platform) .. '>'
 	end
 
-	function PlatformTile:occupy(train, position, requested_time)
+	function PlatformTile:occupy(train, requested_time, position)
 		local occupy = Track.occupy(self, train)
 		if occupy then
 			train:add_speed(TrainType.SLOW)

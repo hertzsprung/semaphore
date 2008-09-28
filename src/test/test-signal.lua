@@ -111,7 +111,7 @@ TestSignal = {}
 		assertEquals(train:speed(), TrainType.FAST)
 	end
 
-	function TestSignal:test_occupy_main_red()
+	function TestSignal:test_occupy_main_red_unblocking()
 		local actions = ActionList:new();
 		local map = Map:new(5, 3)
 
@@ -142,8 +142,7 @@ TestSignal = {}
 		tile2.occupier = train
 		tile3.occupier = train
 
-		local vector = signal:occupy(train)
-		assertEquals(vector, nil)
+		train:move(1, 1)
 		assertEquals(signal.occupier, nil)
 		assertEquals(train:speed(), TrainType.STOP)
 
@@ -151,4 +150,48 @@ TestSignal = {}
 		actions:execute(1)
 		assertEquals(train.state, Train.MOVING)
 		assertEquals(train:speed(), TrainType.SLOW)
+	end
+
+	function TestSignal:test_emergency_stop()
+		local actions = ActionList:new();
+		local map = Map:new(5, 3)
+
+		local tile1 = map:set(1, 1, Track:new{vector=Vector:new(W, E)})
+		local tile2 = map:set(2, 1, Track:new{vector=Vector:new(W, NE)})
+		local tile3 = map:set(3, 2, Track:new{vector=Vector:new(SW, E)})
+		local signal = map:set(4, 2, Signal:new{
+			vector=Vector:new(W, E),
+			type=Signal.MAIN_AUTO,
+			aspect=Signal.RED, vector=Vector:new(W, E)
+		})
+
+		local train = Train:new{
+			TrainBlock:new(Coord:new(3, 2), Vector:new(W, E), tile3),
+			TrainBlock:new(Coord:new(2, 1), Vector:new(W, E), tile2),
+			TrainBlock:new(Coord:new(1, 1), Vector:new(W, E), tile1),
+
+			name = 'test',
+			type = Train.INTERCITY,
+			signal_speed = TrainType.FULL,
+			presence = Train.PRESENT,
+			state = Train.MOVING,
+			map = map,
+			actions = actions
+		}
+
+		tile1.occupier = train
+		tile2.occupier = train
+		tile3.occupier = train
+
+		train:move(1, 1)
+		assertEquals(train:speed(), TrainType.STOP)
+		signal:set_aspect(Signal.RED)
+		assertEquals(train:speed(), TrainType.STOP)
+		assertEquals(#actions.heap, 1)
+		assertEquals(signal.blocking, nil)
+
+		actions:execute(10001)
+		assertEquals(train:speed(), TrainType.STOP)
+		assertEquals(signal.blocking, train)
+		assertEquals(#actions.heap, 0)
 	end

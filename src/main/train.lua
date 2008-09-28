@@ -145,7 +145,7 @@ Train = {
 			.. " to " .. tostring(position))
 	
 		local tile = self.map:get(position)
-		local new_direction = tile:occupy(self, position, requested_time)
+		local new_direction = tile:occupy(self, requested_time, position)
 		if new_direction then
 			logger:debug("Train '" .. self.name .. "' routed to " .. tostring(tile) .. " new direction " .. tostring(new_direction))
 		
@@ -223,6 +223,18 @@ Train = {
 		self.state = Train.STOPPED
 	end
 
+	function Train:emergency_stop(requested_time)
+		self:stop()
+
+		local move_action = function (actions, requested_time, actual_time)
+			self:resume()
+			self:add_speed(TrainType.FAST)
+			self:move(requested_time, actual_time)
+			self:remove_speed(TrainType.FAST)
+		end
+		self.actions:add(move_action, requested_time + 10000) -- FIXME: hardwired emergency stop delay
+	end
+
 	function Train:crash()
 		self:add_speed(TrainType.STOP)
 		self.state = Train.CRASHED
@@ -234,11 +246,11 @@ Train = {
 	end
 
 	function Train:unblock_signal(signal)
-		-- TODO: won't want to unblock when you're sat in a station, for example
-		logger:debug("Train " .. tostring(train) .. " has been unblocked by signal " .. tostring(self))
+		logger:debug("Train " .. tostring(self) .. " has been unblocked by signal " .. tostring(signal))
 		self.state = Train.MOVING
-		self.signal_speed = TrainType.FULL
+		self:remove_speed(TrainType.STOP)
 
+		-- TODO: can all these move_actions be consolidated?
 		local move_action = function (actions, requested_time, actual_time)
 			self:move(requested_time, actual_time)
 		end

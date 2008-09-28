@@ -73,22 +73,25 @@ Signal.SPEEDS = {
 		return '<Signal ' .. ({'MAIN_AUTO', 'MAIN_MANUAL', 'SUB'})[o.type] .. ' ' .. ({'GREEN', 'AMBER', 'RED'})[o.aspect] .. '>'
 	end
 
-	function Signal:occupy(train)
+	function Signal:occupy(train, requested_time)
 		local can_occupy = true
 		local vector = Track.calculate_vector(self.vector, train:direction())
 		if vector then
 			local speed, emergency = self:next_speed(train)
 			if speed == TrainType.STOP then
 				can_occupy = false
-				self.blocking = train
 				if emergency then
 					logger:info("Train " .. tostring(train) .. " performed an emergency stop at signal " .. tostring(self))
-					-- TODO
+					train:emergency_stop(requested_time, self)
+					-- train doesn't block when it's an emergency stop, since changing the aspect can't unblock it
+				else
+					self.blocking = train
+					train:stop()
 				end
 			else
 				self:update_state(train)
+				train.signal_speed = speed
 			end
-			train.signal_speed = speed
 		end
 		if can_occupy then return self:occupy_track(train, vector) end
 	end

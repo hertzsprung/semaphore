@@ -1,6 +1,6 @@
 Semaphore Blueprint: Track
 ==========================
-James Shaw <js102@zpler.net>
+James Shaw <js102@zepler.net>
 
 Simple track is a straight or curved line that starts at one edge midpoint or corner, and ends at another.  Track is defined by a pair of compass points: {from, to}.  A compass point is one of {N, NE, E, SE, S, SW, W, NE}.
 

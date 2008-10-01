@@ -7,3 +7,5 @@ Simple track is a straight or curved line that starts at one edge midpoint or co
 Track is straight if 'from' and 'to' are 180 degrees apart, e.g. {NW, SE}.  Track is curved if 'from' and 'to' are 135 degrees apart, e.g. {S, NE}.  If 'from' and 'to' are at any other angle, the track is invalid and behaviour is undefined.
 
 Multiple pieces of track can be combined in a single tile to form points, crossovers and tunnels.
+
+// vim: set syntax=asciidoc:

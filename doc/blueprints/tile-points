@@ -1,0 +1,17 @@
+Semaphore Blueprint: Points
+===========================
+James Shaw <js102@zepler.net>
+
+Where multiple pieces of track meet at a single tile, they may be combined to make a 'junction' (or 'points').  A junction has multiple 'states'--each state has different 'active' tracks.  If the tile is unoccupied, the player can cycle through junction states by clicking on it.  When a train occupies a junction tile, the train will move in the direction of the current state's active track.
+
+There are three types of points: two-way, three-way and diamond.  TODO: more detail on types.
+
+Switched points
+---------------
+Points are 'switched' when any active track is curved.  Switched points reduce an occupying train's speed to FAST.
+
+Derail protection
+-----------------
+Two-way points have derail protection enabled.  If a train is travelling at SLOW speed and attempts to enter a tile on an 'inactive' track, the junction automatically changes state.  The new state is the first found with an active track that will accomodate the train.
+
+// vim: set syntax=asciidoc:

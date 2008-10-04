@@ -1,0 +1,9 @@
+Semaphore Blueprint: Timer
+==========================
+James Shaw <js102@zepler.net>
+
+The timer maintains a list of future actions that need to occur at a specified time.  Game time is measured in 'ticks'.  A 'multiplier' is used to convert from real time to game time.  A multiplier value of one means one tick is equivalent to one millisecond.  Game time may also start at any specified offset.
+
+Every time the timer is invoked, it performs, in chronological order, all unexecuted actions since the last time it was invoked.  If multiple actions occur at exactly the same time, the order in which they are invoked is undefined.
+
+// vim: set syntax=asciidoc:

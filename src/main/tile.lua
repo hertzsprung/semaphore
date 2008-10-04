@@ -271,5 +271,5 @@ Flyover = {}
 		return false
 	end
 
-BufferStop = {}
+BufferStop = Track:new()
 

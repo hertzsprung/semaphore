@@ -112,9 +112,13 @@ PlatformTile = Track:new()
 		if occupy then
 			train:add_speed(TrainType.SLOW)
 			local next_tile = self.map:get(position:add(occupy[Vector.EXIT]))
-			if getmetatable(next_tile) ~= PlatformTile then
+			local tileType = getmetatable(next_tile)
+			if tileType ~= PlatformTile then
 				logger:debug('Next tile after this PlatformTile is a non-PlatformTile ' .. tostring(next_tile))
 				train:stop()
+				if tileType == BufferStop then train:reverse() end
+				-- notify the scheduler that train's arrived at station
+				-- this logic is specific to suburban station and should be in the scheduler
 				local next_move = requested_time + 10000 -- FIXME: hardwired dwell time
 	
 				local move_action = function (actions, requested_time, actual_time)
@@ -122,6 +126,7 @@ PlatformTile = Track:new()
 					train:move(requested_time, actual_time)
 				end
 				self.actions:add(move_action, next_move)
+				-- end notify
 			end
 		end
 		return occupy

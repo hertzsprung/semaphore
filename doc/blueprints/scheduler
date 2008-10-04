@@ -4,17 +4,33 @@ James Shaw <js102@zepler.net>
 
 The scheduler plans ahead by a certain amount of time, and maintains a table of 'platform occupation'.  A train spends some duration occupying the platform before attempting to move to its next goal.  This time is called a 'dwell time'.
 
+The mean dwell time is configurable globally, per-station type, per-station and per-platform.  The 'global average dwell time' is measured in ticks (see timer blueprint).  The per-station type, per-station and per-platform parameters are a multiplier greater than zero.
+
+The average dwell time for any given platform is therefore: 'global average dwell time' \* 'station type dwell time multiplier' \* 'station dwell time multiplier' \* 'platform dwell time multiplier'.  This is called the 'platform average dwell time'.
+
+Game difficulty parameters
+--------------------------
 There are two parameters that a player may vary to change the difficulty of the
 game: 'occupation density' and 'adaptiveness'.
 
 Occupation density
-------------------
-The scheduler allocation fills the schedule to achieve a specified 'occupation density'.  This is a number between 0 and 1--0 means that all platforms are always unoccupied, and 1 means that all platforms are always occupied.
+~~~~~~~~~~~~~~~~~~
+The schedule is filled to achieve a specified 'occupation density'.  This is a number between 0 and 1--0 means that all platforms are always unoccupied, and 1 means that all platforms are always occupied.
 
 Adaptiveness
-------------
+~~~~~~~~~~~~
 When the player is unable to keep up, trains will fall behind schedule.  When this happens, the scheduler is able to adjust its schedule to a certain degree.  'Adaptiveness' is a number between 0 and 1.  0 is the most difficult setting because the schedule will never change once it has been made.
 
 Consider a scenario in which a train arrives at a platform 5 minutes late.  With an adaptiveness of zero, no adjustments are made: subsequent trains scheduled to occupy the same platform keep to their existing schedule.  With an adaptiveness of 1, all subsequent trains are also adjusted by 5 minutes.  An adapativeness of 0.5 would cause trains to be adjusted by 2.5 minutes. 
+
+Calculating a schedule
+----------------------
+The times when platforms are unoccupied by trains is called 'vacant time'.  For a given platform, the 'platform average vacant time' is a function of the 'platform average dwell time' and the 'occupation density':
+
+'platform average vacant time' = ('platform average dwell time' / 'occupation density') \* (1 - 'occupation density')
+
+e.g. if a platform average dwell time is 6.66 minutes and occupancy density is 0.666, the platform average vacancy time is 3.33 minutes.
+
+A platform's schedule alternates between dwell and vacant times.  When a dwell time is calculated, it is based on a normal distribution with the average being the 'platform average vacant time'.  A vacant time is calculated in the same way.  The standard deviation is a parameter configurable globally.
 
 // vim: set syntax=asciidoc:

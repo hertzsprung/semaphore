@@ -33,4 +33,13 @@ e.g. if a platform average dwell time is 6.66 minutes and occupancy density is 0
 
 A platform's schedule alternates between dwell and vacant times.  When a dwell time is calculated, it is based on a normal distribution with the average being the 'platform average vacant time'.  A vacant time is calculated in the same way.  The standard deviation is a parameter configurable globally.
 
+Notes
+-----
+- The scheduler maintains a schedule far enough in advance such that each platform has at least one train allocated to it
+- On game start, vacant times are generated first, followed by dwell times.  Once the schedule is filled, the whole schedule is brought forward so that the first train spawns at the game's start time.
+- Schedule siding occupation first, then allocate those trains to station platform.
+- Where platforms are still unoccupied (including those that are not occupied by trains from sidings until later), fill them with trains coming directly from spawn points
+
+- adjustForPlatformChanges:boolean -- if a player directs a train into a station platform other than the one that was intended, the scheduler can reallocate other trains to different platforms
+
 // vim: set syntax=asciidoc:

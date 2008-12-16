@@ -12,6 +12,6 @@ Points are 'switched' when any active track is curved.  Switched points reduce a
 
 Derail protection
 -----------------
-Two-way points have derail protection enabled.  If a train is travelling at 'slow' Speed and attempts to enter a tile on an 'inactive' track, the junction automatically changes state.  The new state is the first found with an active track that will accomodate the train.
+Two-way points have derail protection enabled.  If a train is travelling at 'slow' speed and attempts to enter a tile on an 'inactive' track, the junction automatically changes state.  The new state is the first state found with an active track that will accomodate the train.
 
 // vim: set syntax=asciidoc:

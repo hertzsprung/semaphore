@@ -4,7 +4,7 @@ SDL_CFLAGS = $(shell sdl-config --cflags)
 SDL_LDFLAGS = $(shell sdl-config --libs)
 CAIRO_CFLAGS = $(shell pkg-config cairo --cflags)
 CAIRO_LDFLAGS = $(shell pkg-config cairo --libs)
-LDFLAGS = $(SDL_LDFLAGS) $(CAIRO_LDFLAGS)
+LDFLAGS = $(SDL_LDFLAGS) $(CAIRO_LDFLAGS) -lreadline
 WARNINGS = -pedantic-errors -Werror -Weverything
 CFLAGS = -std=c99 $(WARNINGS) -O0 -g $(SDL_CFLAGS) $(CAIRO_CFLAGS)
 

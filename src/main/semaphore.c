@@ -3,8 +3,6 @@
 #include <SDL.h>
 #include <cairo.h>
 
- static cairo_status_t stream_to(void* const closure, const unsigned char* const data, const unsigned int length); 
-
 int main() {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		return EXIT_FAILURE;
@@ -20,16 +18,21 @@ int main() {
 	cairo_move_to(cr, 0, 0);
 	cairo_line_to(cr, 127, 127);
 	cairo_stroke(cr);
-	cairo_surface_write_to_png_stream(surface, stream_to, stdout);
-	/* TODO: check == CAIRO_STATUS_SUCCESS */
+
+	char* line = NULL;
+	size_t len = 0;
+	while (getline(&line, &len, stdin) != -1) {
+		if (strstr(line, "SCREENSHOT") == line) {
+			char* filename = strchr(line, ' ') + 1;
+			filename[strlen(filename)-1] = '\0'; // nukes trailing newline
+			cairo_surface_write_to_png(surface, filename);
+			/* TODO: check == CAIRO_STATUS_SUCCESS */
+		}
+	}
+
+	free(line); /* TODO: are we not leaking lines here? */
 	cairo_destroy(cr);
 	cairo_surface_destroy(surface);
 
 	return EXIT_SUCCESS;
-}
-
-static cairo_status_t stream_to(void* const closure, const unsigned char* const data, const unsigned int length) {
-	fwrite(data, sizeof(unsigned char), length, (FILE*) closure);
-	/* TODO: check fwrite wrote all the data */
-	return CAIRO_STATUS_SUCCESS;
 }

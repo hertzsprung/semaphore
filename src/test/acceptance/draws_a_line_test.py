@@ -9,4 +9,5 @@ def test_draws_a_line():
         process.kill()
         out, err = process.communicate()
 
-    print(out)
+    with open("test.png", "w+b") as png:
+        png.write(out)

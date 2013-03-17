@@ -1,6 +1,13 @@
 CC = clang
 PYTEST = python3.3 -m pytest -s
-CFLAGS = -std=c99 -pedantic-errors -Werror -Weverything
+SDL_CFLAGS = $(shell sdl-config --cflags)
+SDL_LDFLAGS = $(shell sdl-config --libs)
+CAIRO_CFLAGS = $(shell pkg-config cairo --cflags)
+CAIRO_LDFLAGS = $(shell pkg-config cairo --libs)
+LDFLAGS = $(SDL_LDFLAGS) $(CAIRO_LDFLAGS)
+WARNINGS = -pedantic-errors -Werror -Weverything
+CFLAGS = -std=c99 $(WARNINGS) -O0 -g $(SDL_CFLAGS) $(CAIRO_CFLAGS)
+
 BIN = bin
 
 all: check
@@ -13,4 +20,4 @@ check: compile
 
 compile:
 	mkdir -p $(BIN)
-	$(CC) $(CFLAGS) src/main/semaphore.c -o $(BIN)/semaphore
+	$(CC) $(CFLAGS) src/main/semaphore.c -o $(BIN)/semaphore $(LDFLAGS)

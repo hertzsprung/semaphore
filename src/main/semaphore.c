@@ -11,6 +11,35 @@ int main() {
 		SDL_Quit();
 		return EXIT_FAILURE;
 	}
+
+	SDL_Event event;
+	int running = 1;
+	
+	while (running) {
+		SDL_Event e;
+		e.type = SDL_KEYDOWN;
+		e.key.state = SDL_PRESSED;
+		e.key.keysym.sym = SDLK_F12;	
+		/* TODO: scancode? */
+		SDL_PushEvent(&e);
+		/* TODO: check success */
+		printf("event pushed");
+		while (SDL_PollEvent(&event)) {
+			switch (event.type) {
+			case SDL_KEYDOWN:
+				if (event.key.keysym.sym == SDLK_F12) {
+					printf("a key!");
+					goto mainloop;
+				}
+				break;
+			case SDL_QUIT:
+				running = 0;
+				break;
+			}
+		}
+	}
+	mainloop: printf("break");
+
 	cairo_surface_t* const surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 128, 128);
 	/* TODO: check valid */
 	cairo_t* const cr = cairo_create(surface);
@@ -27,6 +56,14 @@ int main() {
 			filename[strlen(filename)-1] = '\0'; // nukes trailing newline
 			cairo_surface_write_to_png(surface, filename);
 			/* TODO: check == CAIRO_STATUS_SUCCESS */
+		} else if (strstr(line, "KEY") == line) {
+			SDL_Event e;
+			e.type = SDL_KEYDOWN;
+			e.key.state = SDL_PRESSED;
+			e.key.keysym.sym = SDLK_F12;	
+			/* TODO: scancode? */
+			SDL_PushEvent(&e);
+			/* TODO: check success */
 		}
 	}
 

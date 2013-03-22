@@ -1,8 +1,22 @@
+#include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <SDL.h>
 #include <cairo.h>
+#include <argp.h>
 
+#include "command.h"
+
+int main(/*int argc, char* argv[]*/) {
+	const Command* command;
+	while ((command = command_read_from(stdin))) {
+
+	}
+
+	return EXIT_SUCCESS;
+}
+
+#if 0
 int main() {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		return EXIT_FAILURE;
@@ -73,3 +87,4 @@ int main() {
 
 	return EXIT_SUCCESS;
 }
+#endif

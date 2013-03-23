@@ -4,13 +4,14 @@
 #include <stdio.h>
 #include <stdint.h>
 
-typedef struct ScreenshotCommand {
-	const char* const filename;
-} ScreenshotCommand;
-
 typedef enum CommandType {
 	SCREENSHOT
 } CommandType;
+
+typedef struct ScreenshotCommand {
+	CommandType type;
+	const char* filename;
+} ScreenshotCommand;
 
 typedef union Command {
 	CommandType type;

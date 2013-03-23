@@ -2,12 +2,13 @@
 #include <stdlib.h>
 #include "strings.h"
 
+static char* strip_newline(char* string);
+
 char* read_line(const FILE* const in) {
 	char* line = NULL;
 	size_t len = 0;
 	if (getline(&line, &len, (FILE*) in) != -1) {
-		line[strlen(line)-1] = '\0';
-		return line;
+		return strip_newline(line);
 	} else {
 		return NULL;
 	}
@@ -25,4 +26,9 @@ char* next_token(Tokenization* const tokenization) {
 	char* const token = strtok_r(tokenization->string, delimiter, &tokenization->state);
 	tokenization->string = NULL;
 	return token;
+}
+
+static char* strip_newline(char* string) {
+	if (string[strlen(string)-1] == '\n') string[strlen(string)-1] = '\0';
+	return string;
 }

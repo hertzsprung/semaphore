@@ -2,18 +2,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include "strings.h"
+#include "strings_test.h"
 
 static void next_token_returns_null_for_empty_string();
 static void next_token_returns_whole_string_with_no_delimiters();
 static void second_next_token();
 static void next_token_ignores_multiple_spaces();
 
-int main() {
+void strings_tests(void) {
 	next_token_returns_null_for_empty_string();
 	next_token_returns_whole_string_with_no_delimiters();
 	second_next_token();
 	next_token_ignores_multiple_spaces();
-	return EXIT_SUCCESS;
 }
 
 static void next_token_returns_null_for_empty_string() {

@@ -39,7 +39,7 @@ SDL_CFLAGS := $(shell sdl-config --cflags)
 SDL_LDFLAGS := $(shell sdl-config --libs)
 CAIRO_CFLAGS := $(shell pkg-config cairo --cflags)
 CAIRO_LDFLAGS := $(shell pkg-config cairo --libs)
-WARNINGS := -pedantic-errors -Werror -Weverything
+WARNINGS := -pedantic-errors -Werror -Weverything -Wno-error=padded
 CFLAGS := $(WARNINGS) -O0 -g $(SDL_CFLAGS) $(CAIRO_CFLAGS)
 LDFLAGS := $(SDL_LDFLAGS) $(CAIRO_LDFLAGS)
 
@@ -73,6 +73,7 @@ acceptance-test: $(EXECUTABLE)
 	$(PYTEST) $(SRCACCEPTANCETESTDIR)
 
 $(EXECUTABLE): $(OBJ_EXECUTABLE)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -o $@ $< $(OBJ_MAIN) $(LDFLAGS)
 
 $(OBJMAINDIR) $(OBJUNITTESTDIR) $(DEPUNITTESTDIR) $(DEPMAINDIR):
 	mkdir -p $@

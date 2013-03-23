@@ -9,11 +9,13 @@ uint8_t command_read_from(const FILE* const in, Command* const command) {
 
 	if (line) {
 		Tokenization* const tokenization = tokenize(line);
-		char* token;
-		while ((token = next_token(tokenization))) {
-			printf("%s", token);
+		const char* token = next_token(tokenization);
+		if (strcmp(token, "SCREENSHOT") == 0) {
+			command->type = SCREENSHOT;
+			if ((token = next_token(tokenization))) {
+				command->screenshot.filename = token;
+			}
 		}
-		command->type = SCREENSHOT;
 		free(tokenization);
 		free(line);
 		return 1;

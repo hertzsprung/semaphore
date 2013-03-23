@@ -8,11 +8,15 @@ typedef struct ScreenshotCommand {
 	const char* const filename;
 } ScreenshotCommand;
 
+typedef enum CommandType {
+	SCREENSHOT
+} CommandType;
+
 typedef union Command {
-	const uint8_t type;
-	const ScreenshotCommand screenshot;
+	CommandType type;
+	ScreenshotCommand screenshot;
 } Command;
 
-Command* command_read_from(const FILE* const in);
+uint8_t command_read_from(const FILE* const in, Command* const command);
 
 #endif

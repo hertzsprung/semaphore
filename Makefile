@@ -1,3 +1,7 @@
+# TODO
+# documentation
+# valgrind
+
 CC := clang
 PYTEST := python3.3 -m pytest -s
 SDL_CFLAGS := $(shell sdl-config --cflags)
@@ -13,7 +17,6 @@ EXECUTABLE := $(OBJDIR)/semaphore
 OBJECTS := $(addprefix $(OBJDIR)/,semaphore.o command.o)
 
 vpath %.c src/main
-vpath %.o $(OBJDIR)
 
 .PHONY: clean all check
 .DEFAULT_GOAL := all
@@ -29,7 +32,8 @@ check: $(EXECUTABLE)
 $(EXECUTABLE): $(OBJECTS) | $(OBJDIR)
 	$(CC) $(CFLAGS) -o $(EXECUTABLE) $(OBJECTS) $(LDFLAGS)
 
-$(OBJDIR)/semaphore.o: semaphore.c command.o | $(OBJDIR)
+# should be command.h, not command.c
+$(OBJDIR)/semaphore.o: semaphore.c command.c | $(OBJDIR)
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
 
 $(OBJDIR)/command.o: command.c | $(OBJDIR)

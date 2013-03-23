@@ -8,8 +8,8 @@
 #include "command.h"
 
 int main(/*int argc, char* argv[]*/) {
-	const Command* command;
-	while ((command = command_read_from(stdin))) {
+	Command command;
+	while (command_read_from(stdin, &command)) {
 
 	}
 

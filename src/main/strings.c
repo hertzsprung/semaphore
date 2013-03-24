@@ -10,6 +10,7 @@ char* read_line(const FILE* const in) {
 	if (getline(&line, &len, (FILE*) in) != -1) {
 		return strip_newline(line);
 	} else {
+		free(line);
 		return NULL;
 	}
 }

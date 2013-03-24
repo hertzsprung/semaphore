@@ -2,9 +2,9 @@
 #define _SEMAPHORE_COMMAND_H
 
 #include <stdio.h>
-#include <stdint.h>
 
 typedef enum CommandType {
+	INVALID,
 	SCREENSHOT
 } CommandType;
 
@@ -18,6 +18,7 @@ typedef union Command {
 	ScreenshotCommand screenshot;
 } Command;
 
-uint8_t command_read_from(const FILE* const in, Command* const command);
+Command* command_read_from(const FILE* const in);
+void command_destroy(Command* command);
 
 #endif

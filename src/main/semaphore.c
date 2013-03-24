@@ -6,18 +6,24 @@
 #include <argp.h>
 
 #include "command.h"
+#include "graphics.h"
 
 int main(/*int argc, char* argv[]*/) {
-	Command command;
-	while (command_read_from(stdin, &command)) {
+	Graphics* graphics = graphics_initialise();
 
+	Command* command;
+	while ((command = command_read_from(stdin))) {
+		if (command->type == SCREENSHOT) {
+			graphics_screenshot(graphics, command->screenshot.filename);
+		}
+		command_destroy(command);
 	}
 
+	graphics_destroy(graphics);
 	return EXIT_SUCCESS;
 }
 
 #if 0
-int main() {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		return EXIT_FAILURE;
 	}
@@ -54,10 +60,6 @@ int main() {
 	}
 	mainloop: printf("break");
 
-	cairo_surface_t* const surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 128, 128);
-	/* TODO: check valid */
-	cairo_t* const cr = cairo_create(surface);
-	/* TODO: check with cairo_status() */
 	cairo_move_to(cr, 0, 0);
 	cairo_line_to(cr, 127, 127);
 	cairo_stroke(cr);
@@ -65,11 +67,6 @@ int main() {
 	char* line = NULL;
 	size_t len = 0;
 	while (getline(&line, &len, stdin) != -1) {
-		if (strstr(line, "SCREENSHOT") == line) {
-			char* filename = strchr(line, ' ') + 1;
-			filename[strlen(filename)-1] = '\0'; // nukes trailing newline
-			cairo_surface_write_to_png(surface, filename);
-			/* TODO: check == CAIRO_STATUS_SUCCESS */
 		} else if (strstr(line, "KEY") == line) {
 			SDL_Event e;
 			e.type = SDL_KEYDOWN;
@@ -80,11 +77,5 @@ int main() {
 			/* TODO: check success */
 		}
 	}
-
-	free(line); /* TODO: are we not leaking lines here? */
-	cairo_destroy(cr);
-	cairo_surface_destroy(surface);
-
-	return EXIT_SUCCESS;
 }
 #endif

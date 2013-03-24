@@ -7,18 +7,30 @@
 
 #include "command.h"
 #include "graphics.h"
+#include "input.h"
+#include "render.h"
+#include "world.h"
 
 int main(/*int argc, char* argv[]*/) {
 	Graphics* graphics = graphics_initialise();
+	World* world = world_initialise();
 
 	Command* command;
 	while ((command = command_read_from(stdin))) {
+		if (command->type == KEY) {
+			Input* input = command_to_input(command);
+			input_simulate(input);
+			free(input);
+		}
+		render_render(world, graphics);
+		/*world_update(world);*/
 		if (command->type == SCREENSHOT) {
 			graphics_screenshot(graphics, command->screenshot.filename);
 		}
 		command_destroy(command);
 	}
 
+	free(world);
 	graphics_destroy(graphics);
 	return EXIT_SUCCESS;
 }
@@ -60,15 +72,12 @@ int main(/*int argc, char* argv[]*/) {
 	}
 	mainloop: printf("break");
 
-	cairo_move_to(cr, 0, 0);
-	cairo_line_to(cr, 127, 127);
-	cairo_stroke(cr);
-
 	char* line = NULL;
 	size_t len = 0;
 	while (getline(&line, &len, stdin) != -1) {
 		} else if (strstr(line, "KEY") == line) {
 			SDL_Event e;
+
 			e.type = SDL_KEYDOWN;
 			e.key.state = SDL_PRESSED;
 			e.key.keysym.sym = SDLK_F12;	

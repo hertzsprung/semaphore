@@ -13,9 +13,15 @@ Command* command_read_from(const FILE* const in) {
 	Command* command = malloc(sizeof(Command));
 	Tokenization* const tokenization = tokenize(line);
 	const char* token = next_token(tokenization);
-	if (strcmp(token, "SCREENSHOT") == 0 && (token = next_token(tokenization))) {
-		command->type = SCREENSHOT;
-		command->screenshot.filename = strdup(token);
+	if (strcmp(token, "SCREENSHOT") == 0) {
+		if ((token = next_token(tokenization))) {
+			command->type = SCREENSHOT;
+			command->screenshot.filename = strdup(token);
+		} else {
+			command->type = INVALID;
+		}
+	} else if (strcmp(token, "KEY") == 0) {
+		command->type = KEY;
 	} else {
 		command->type = INVALID;
 	}
@@ -23,6 +29,12 @@ Command* command_read_from(const FILE* const in) {
 	free(tokenization);
 	free(line);
 	return command;
+}
+
+Input* command_to_input(Command* command) {
+	Input* input = malloc(sizeof(Input));
+	printf("%u", command->type);
+	return input;
 }
 
 void command_destroy(Command* command) {

@@ -2,6 +2,8 @@ CC := clang
 PYTEST := python3.3 -m pytest -s
 FIND := find
 GDB := gdb
+VALGRIND := valgrind
+VALGRINDFLAGS := --leak-check=full --track-origins=yes --error-exitcode=1
 
 MAINDIR := main
 TESTDIR := test
@@ -70,7 +72,7 @@ $(OBJ_MAIN) $(OBJ_EXECUTABLE): $(OBJMAINDIR)/%.o: $(SRCMAINDIR)/%.c | $(OBJMAIND
 	$(CC) -MMD -MF $(DEP_MAIN) -c $(CPPFLAGS) $(CFLAGS) $< -o $@
 
 acceptance-test: $(EXECUTABLE)
-	$(PYTEST) $(SRCACCEPTANCETESTDIR)
+	EXECUTABLE="$(VALGRIND) $(VALGRINDFLAGS) ./$(EXECUTABLE)" $(PYTEST) $(SRCACCEPTANCETESTDIR)
 
 $(EXECUTABLE): $(OBJ_EXECUTABLE) $(OBJ_MAIN)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -o $@ $< $(OBJ_MAIN) $(LDFLAGS)

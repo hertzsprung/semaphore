@@ -8,4 +8,4 @@ Semaphore is still in the early stages of development. The game inherits all fea
 - An adaptive train scheduler that responds to delays
 - No limits on map size, the number of trains, or stations
 
-Semaphore is written with lua, C, cairo and SDL.
+Semaphore is written with C, cairo and SDL.

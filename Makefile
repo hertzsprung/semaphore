@@ -4,17 +4,28 @@ MAKEFLAGS += --no-builtin-rules
 
 CC := clang
 LD := ld
+SDL_CONFIG := sdl2-config
+PKG_CONFIG := pkg-config
 
-.DEFAULT: build/semaphore
+SDL_CFLAGS := $(shell $(SDL_CONFIG) --cflags)
+SDL_LDFLAGS := $(shell $(SDL_CONFIG) --libs)
+CAIRO_CFLAGS := $(shell $(PKG_CONFIG) cairo --cflags)
+CAIRO_LDFLAGS := $(shell $(PKG_CONFIG) cairo --libs)
+WARNINGS := -pedantic-errors -Werror -Weverything \
+-Wno-error=padded -Wno-error=documentation -Wno-error=documentation-unknown-command
+CFLAGS := $(WARNINGS) -O0 -g $(SDL_CFLAGS) $(CAIRO_CFLAGS)
+LDFLAGS := $(SDL_LDFLAGS) $(CAIRO_LDFLAGS)
+
+.DEFAULT: build/main/semaphore
 .PHONY: clean
 
-build/semaphore: build/semaphore.o | build
-	$(CC) -o $@ $<
+build/main/semaphore: build/main/semaphore.o | build/main
+	$(CC) -o $@ $< $(LDFLAGS)
 
-build/semaphore.o: src/semaphore.c | build
-	$(CC) -o $@ -c $<
+build/main/semaphore.o: src/main/semaphore.c | build/main
+	$(CC) -o $@ -c $< $(CFLAGS)
 
-build:
+build/main:
 	mkdir -p $@
 
 clean:

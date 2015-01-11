@@ -22,6 +22,8 @@ int benchmark_cairo_line(void* context);
 
 int benchmark_cairo_circle(void* context);
 
+double rand_01(void);
+
 struct benchmark_cairo_line_context {
 	cairo_t *cr;
 	int width, height;
@@ -146,11 +148,15 @@ long time_millis(struct timespec *ts) {
 	return ts->tv_sec*1000 + ts->tv_nsec/1000000;
 }
 
+double rand_01(void) {
+	return rand() / (double)RAND_MAX;
+}
+
 int benchmark_cairo_line(void* void_ctx) {
 	struct benchmark_cairo_line_context* ctx = (struct benchmark_cairo_line_context*) void_ctx;
 
-	cairo_set_source_rgb(ctx->cr, rand()/(double)RAND_MAX, rand()/(double)RAND_MAX, rand()/(double)RAND_MAX);
-	cairo_set_line_width(ctx->cr, 5.0 * (rand()/(double)RAND_MAX));
+	cairo_set_source_rgb(ctx->cr, rand_01(), rand_01(), rand_01());
+	cairo_set_line_width(ctx->cr, 5.0 * rand_01());
 	cairo_move_to(ctx->cr, rand() % (ctx->width+1), rand() % (ctx->height+1));
 	cairo_line_to(ctx->cr, rand() % (ctx->width+1), rand() % (ctx->height+1));
 	cairo_stroke(ctx->cr);
@@ -161,8 +167,8 @@ int benchmark_cairo_line(void* void_ctx) {
 int benchmark_cairo_circle(void* void_ctx) {
 	struct benchmark_cairo_line_context* ctx = (struct benchmark_cairo_line_context*) void_ctx;
 
-	cairo_set_source_rgb(ctx->cr, rand()/(double)RAND_MAX, rand()/(double)RAND_MAX, rand()/(double)RAND_MAX);
-	cairo_arc(ctx->cr, rand() % (ctx->width+1), rand() % (ctx->height+1), 32.0 * rand()/(double)RAND_MAX, 0, 2 * M_PI);
+	cairo_set_source_rgb(ctx->cr, rand_01(), rand_01(), rand_01());
+	cairo_arc(ctx->cr, rand() % (ctx->width+1), rand() % (ctx->height+1), 32.0 * rand_01(), 0, 2 * M_PI);
 	cairo_fill(ctx->cr);
 
 	return SEM_OK;

@@ -18,7 +18,14 @@ void time_delta(struct timespec start, struct timespec end, struct timespec* del
 
 long time_millis(struct timespec *ts);
 
-int hello(void* context);
+int benchmark_cairo_line(void* context);
+
+int benchmark_cairo_circle(void* context);
+
+struct benchmark_cairo_line_context {
+	cairo_t *cr;
+	int width, height;
+};
 
 int main(/*int argc, char **argv*/) {
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -69,33 +76,26 @@ int main(/*int argc, char **argv*/) {
 
 	cairo_t *cr = cairo_create(cairo_surface);
 
-	//char buf[32] = "";
+	char buf[32] = "";
 
-	/* random lines */
-	for (int i = 0; i < 10000; i++) {
-		cairo_set_source_rgb(cr, rand()/(double)RAND_MAX, rand()/(double)RAND_MAX, rand()/(double)RAND_MAX);
-		cairo_set_line_width(cr, 5.0 * (rand()/(double)RAND_MAX));
-		cairo_move_to(cr, rand() % (width+1), rand() % (height+1));
-		cairo_line_to(cr, rand() % (width+1), rand() % (height+1));
-		cairo_stroke(cr);
-	}
-
-	/* random circles */
-	for (int i = 0; i < 10000; i++) {
-		cairo_set_source_rgb(cr, rand()/(double)RAND_MAX, rand()/(double)RAND_MAX, rand()/(double)RAND_MAX);
-		cairo_arc(cr, rand() % (width+1), rand() % (height+1), 32.0 * rand()/(double)RAND_MAX, 0, 2 * M_PI);
-		cairo_fill(cr);
-	}
-
-
-	/*snprintf(buf, sizeof(buf), "%ldms",
-		time_diff(time1, time2).tv_sec * 1000 +
-		time_diff(time1, time2).tv_nsec / 1000000);
+	struct timespec t;
+	struct benchmark_cairo_line_context ctx;
+	ctx.cr = cr;
+	ctx.width = width;
+	ctx.height = height;
+	benchmark(&benchmark_cairo_line, &ctx, 10000, &t);
+	snprintf(buf, sizeof(buf), "%ldms", time_millis(&t));
 
 	cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
+	cairo_rectangle(cr, 0, height-64, width, 64);
+	cairo_fill(cr);
+
+	cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
 	cairo_move_to(cr, 0, height);
 	cairo_set_font_size(cr, 64);
-	cairo_show_text(cr, buf);*/
+	cairo_show_text(cr, buf);
+
+	benchmark(&benchmark_cairo_circle, &ctx, 10000, &t);
 
 	SDL_UnlockTexture(texture);
 
@@ -103,11 +103,7 @@ int main(/*int argc, char **argv*/) {
 	SDL_RenderCopy(renderer, texture, NULL, NULL);
 	SDL_RenderPresent(renderer);
 
-	SDL_Delay(1000);
-
-	struct timespec t;
-	benchmark(&hello, NULL, 10, &t);
-	printf("%ld", time_millis(&t));
+	SDL_Delay(3000);
 
 	cairo_destroy(cr);
 	SDL_DestroyTexture(texture);
@@ -150,7 +146,24 @@ long time_millis(struct timespec *ts) {
 	return ts->tv_sec*1000 + ts->tv_nsec/1000000;
 }
 
-int hello(void* context) {
-	printf("hello %s", (char*) context);
+int benchmark_cairo_line(void* void_ctx) {
+	struct benchmark_cairo_line_context* ctx = (struct benchmark_cairo_line_context*) void_ctx;
+
+	cairo_set_source_rgb(ctx->cr, rand()/(double)RAND_MAX, rand()/(double)RAND_MAX, rand()/(double)RAND_MAX);
+	cairo_set_line_width(ctx->cr, 5.0 * (rand()/(double)RAND_MAX));
+	cairo_move_to(ctx->cr, rand() % (ctx->width+1), rand() % (ctx->height+1));
+	cairo_line_to(ctx->cr, rand() % (ctx->width+1), rand() % (ctx->height+1));
+	cairo_stroke(ctx->cr);
+
+	return SEM_OK;
+}
+
+int benchmark_cairo_circle(void* void_ctx) {
+	struct benchmark_cairo_line_context* ctx = (struct benchmark_cairo_line_context*) void_ctx;
+
+	cairo_set_source_rgb(ctx->cr, rand()/(double)RAND_MAX, rand()/(double)RAND_MAX, rand()/(double)RAND_MAX);
+	cairo_arc(ctx->cr, rand() % (ctx->width+1), rand() % (ctx->height+1), 32.0 * rand()/(double)RAND_MAX, 0, 2 * M_PI);
+	cairo_fill(ctx->cr);
+
 	return SEM_OK;
 }

@@ -15,10 +15,10 @@ CAIRO_LDFLAGS := $(shell $(PKG_CONFIG) cairo --libs)
 WARNINGS := -pedantic-errors -Werror -Weverything \
 -Wno-error=padded -Wno-error=documentation -Wno-error=documentation-unknown-command \
 -Wno-format-nonliteral
-CFLAGS := $(WARNINGS) -O0 -g $(SDL_CFLAGS) $(CAIRO_CFLAGS)
-LDFLAGS := $(SDL_LDFLAGS) $(CAIRO_LDFLAGS)
+CFLAGS := $(WARNINGS) -O0 -g -std=gnu99 $(SDL_CFLAGS) $(CAIRO_CFLAGS)
+LDFLAGS := $(SDL_LDFLAGS) $(CAIRO_LDFLAGS) -lrt
 
-COMPONENTS := semaphore sem_error
+COMPONENTS := semaphore sem_error sem_render
 SOURCES := $(addsuffix .c,$(addprefix src/main/,$(COMPONENTS)))
 OBJECTS := $(addsuffix .o,$(addprefix build/main/,$(COMPONENTS)))
 
@@ -28,8 +28,11 @@ OBJECTS := $(addsuffix .o,$(addprefix build/main/,$(COMPONENTS)))
 include make/Makefile-c
 
 $(eval $(call OBJ,sem_error))
-$(eval $(call OBJ,semaphore))
-$(eval $(call DEP,semaphore,sem_error))
+$(eval $(call OBJ,sem_render))
+$(eval $(call EXE,semaphore))
+$(eval $(call DEP_OBJ,semaphore,sem_error sem_render))
+$(eval $(call DEP_HEADER,semaphore,sem_train))
+$(eval $(call DEP_HEADER,sem_render,sem_train))
 
 build/main/semaphore: $(OBJECTS) | build/main
 	$(CC) -o $@ $^ $(LDFLAGS)

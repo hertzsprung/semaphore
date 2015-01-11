@@ -1,15 +1,32 @@
 # $1 -- filename (without .c suffix)
-define OBJ
+define EXE
 
 build/main/$1.o: src/main/$1.c | build/main
 	$(CC) -o $$@ -c $$< $(CFLAGS)
 
 endef
 
+# $1 -- filename (without .c suffix)
+define OBJ
+
+$(eval $(call EXE,$1))
+
+build/main/$1.o: src/main/$1.h
+
+endef
+
 # $1 -- target (without .c suffix)
 # $2 -- prerequisites (space-separated list without suffixes)
-define DEP
+define DEP_OBJ
 
 build/main/$1.o: $(addsuffix .o,$(addprefix build/main/,$2))
+
+endef
+
+# $1 -- target (without .c suffix)
+# $2 -- prerequisites (space-separated list without suffixes)
+define DEP_HEADER
+
+build/main/$1.o: $(addsuffix .h,$(addprefix src/main/,$2))
 
 endef

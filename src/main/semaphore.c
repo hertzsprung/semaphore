@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -5,11 +6,13 @@
 #include <cairo.h>
 
 #include <SDL.h>
+#include <SDL_events.h>
 #include <SDL_render.h>
-#include <SDL_timer.h>
 #include <SDL_video.h>
 
 #include "sem_error.h"
+#include "sem_render.h"
+#include "sem_train.h"
 
 int benchmark(int (*function)(void*), void* context, unsigned int iterations, struct timespec* delta);
 
@@ -55,56 +58,53 @@ int main(/*int argc, char **argv*/) {
 		return sem_fatal_error();
 	}
 
-	void *pixels;
-	int pitch;
+	SDL_Event e;
+	bool quit = false;	
+	while (!quit) {
+		while (SDL_PollEvent(&e)){
+			if (e.type == SDL_QUIT) {
+				quit = true;
+			}
+			if (e.type == SDL_KEYDOWN) {
+				quit = true;
+			}
+		}
 
-	if (SDL_LockTexture(texture, NULL, &pixels, &pitch) != 0) {
-		sem_set_error("Failed to lock texture: %s", SDL_GetError());
-		return sem_fatal_error();
+		void *pixels;
+		int pitch;
+
+		if (SDL_LockTexture(texture, NULL, &pixels, &pitch) != 0) {
+			sem_set_error("Failed to lock texture: %s", SDL_GetError());
+			return sem_fatal_error();
+		}
+
+		cairo_surface_t *cairo_surface = cairo_image_surface_create_for_data(
+			pixels,
+			CAIRO_FORMAT_ARGB32,
+			width, height, pitch);
+
+		cairo_t *cr = cairo_create(cairo_surface);
+		cairo_scale(cr, 32.0, 32.0);
+		cairo_set_line_width(cr, 0.1);
+
+		sem_render_context render_ctx;
+		render_ctx.cr = cr;	
+
+		sem_train train;
+		train.x = 0;
+		train.y = 0;
+
+		sem_render_train(&render_ctx, &train);
+
+		SDL_UnlockTexture(texture);
+
+		SDL_RenderClear(renderer);
+		SDL_RenderCopy(renderer, texture, NULL, NULL);
+		SDL_RenderPresent(renderer);
+
+		cairo_destroy(cr);
 	}
 
-	cairo_surface_t *cairo_surface = cairo_image_surface_create_for_data(
-		pixels,
-		CAIRO_FORMAT_ARGB32,
-		width, height, pitch);
-
-	cairo_t *cr = cairo_create(cairo_surface);
-
-	char buf[32] = "";
-
-	struct timespec t;
-	struct benchmark_cairo_line_context ctx;
-	ctx.cr = cr;
-	ctx.width = width;
-	ctx.height = height;
-
-	cairo_translate(ctx.cr, -ctx.width, -ctx.height);
-	cairo_scale(ctx.cr, 2.0, 2.0);
-	if (benchmark(&benchmark_cairo_line, &ctx, 10000, &t) != 0) {
-		return sem_fatal_error();
-	}
-	snprintf(buf, sizeof(buf), "%ldms", time_millis(&t));
-
-	cairo_identity_matrix(ctx.cr);
-
-	cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
-	cairo_rectangle(cr, 0, height-64, width/4, 64);
-	cairo_fill(cr);
-
-	cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
-	cairo_move_to(cr, 0, height);
-	cairo_set_font_size(cr, 64);
-	cairo_show_text(cr, buf);
-
-	SDL_UnlockTexture(texture);
-
-	SDL_RenderClear(renderer);
-	SDL_RenderCopy(renderer, texture, NULL, NULL);
-	SDL_RenderPresent(renderer);
-
-	SDL_Delay(5000);
-
-	cairo_destroy(cr);
 	SDL_DestroyTexture(texture);
 	return EXIT_SUCCESS;
 }

@@ -12,13 +12,13 @@
 #define SEM_OK 0
 #define SEM_ERROR -1
 
-int benchmark(void (*function)(), unsigned int iterations, struct timespec* delta);
+int benchmark(int (*function)(void*), void* context, unsigned int iterations, struct timespec* delta);
 
 void time_delta(struct timespec start, struct timespec end, struct timespec* delta);
 
 long time_millis(struct timespec *ts);
 
-void hello(void);
+int hello(void* context);
 
 int main(/*int argc, char **argv*/) {
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -106,7 +106,7 @@ int main(/*int argc, char **argv*/) {
 	SDL_Delay(1000);
 
 	struct timespec t;
-	benchmark(&hello, 10, &t);
+	benchmark(&hello, NULL, 10, &t);
 	printf("%ld", time_millis(&t));
 
 	cairo_destroy(cr);
@@ -114,8 +114,7 @@ int main(/*int argc, char **argv*/) {
 	return EXIT_SUCCESS;
 }
 
-/* TODO: pass a void* context along to the function, too */
-int benchmark(void (*function)(), unsigned int iterations, struct timespec* delta) {
+int benchmark(int (*function)(void*), void* context, unsigned int iterations, struct timespec* delta) {
 	struct timespec start, end;
 
 	if (clock_gettime(CLOCK_REALTIME, &start) != 0) {
@@ -123,7 +122,9 @@ int benchmark(void (*function)(), unsigned int iterations, struct timespec* delt
 	}
 
 	for (unsigned int i = 0; i < iterations; i++) {
-		(*function)();
+		if ((*function)(context) != 0) {
+			return SEM_ERROR;
+		}
 	}
 
 	if (clock_gettime(CLOCK_REALTIME, &end) != 0) {
@@ -149,6 +150,7 @@ long time_millis(struct timespec *ts) {
 	return ts->tv_sec*1000 + ts->tv_nsec/1000000;
 }
 
-void hello(void) {
-	printf("hello");
+int hello(void* context) {
+	printf("hello %s", (char*) context);
+	return SEM_OK;
 }

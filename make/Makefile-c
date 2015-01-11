@@ -1,0 +1,15 @@
+# $1 -- filename (without .c suffix)
+define OBJ
+
+build/main/$1.o: src/main/$1.c | build/main
+	$(CC) -o $$@ -c $$< $(CFLAGS)
+
+endef
+
+# $1 -- target (without .c suffix)
+# $2 -- prerequisites (space-separated list without suffixes)
+define DEP
+
+build/main/$1.o: $(addsuffix .o,$(addprefix build/main/,$2))
+
+endef

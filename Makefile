@@ -18,16 +18,23 @@ WARNINGS := -pedantic-errors -Werror -Weverything \
 CFLAGS := $(WARNINGS) -O0 -g $(SDL_CFLAGS) $(CAIRO_CFLAGS)
 LDFLAGS := $(SDL_LDFLAGS) $(CAIRO_LDFLAGS)
 
-.DEFAULT: build/main/semaphore
+COMPONENTS := semaphore sem_error
+SOURCES := $(addsuffix .c,$(addprefix src/main/,$(COMPONENTS)))
+OBJECTS := $(addsuffix .o,$(addprefix build/main/,$(COMPONENTS)))
+
+.DEFAULT_GOAL := build/main/semaphore
 .PHONY: clean doc
 
-build/main/semaphore: build/main/semaphore.o | build/main
-	$(CC) -o $@ $< $(LDFLAGS)
+include make/Makefile-c
 
-build/main/semaphore.o: src/main/semaphore.c | build/main
-	$(CC) -o $@ -c $< $(CFLAGS)
+$(eval $(call OBJ,sem_error))
+$(eval $(call OBJ,semaphore))
+$(eval $(call DEP,semaphore,sem_error))
 
-doc: Doxyfile src/main/semaphore.c | build
+build/main/semaphore: $(OBJECTS) | build/main
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+doc: Doxyfile $(SOURCES) | build
 	$(DOXYGEN)
 
 clean:

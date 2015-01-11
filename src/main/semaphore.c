@@ -85,11 +85,16 @@ int main(/*int argc, char **argv*/) {
 	ctx.cr = cr;
 	ctx.width = width;
 	ctx.height = height;
+
+	cairo_translate(ctx.cr, -ctx.width, -ctx.height);
+	cairo_scale(ctx.cr, 2.0, 2.0);
 	benchmark(&benchmark_cairo_line, &ctx, 10000, &t);
 	snprintf(buf, sizeof(buf), "%ldms", time_millis(&t));
 
+	cairo_identity_matrix(ctx.cr);
+
 	cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
-	cairo_rectangle(cr, 0, height-64, width, 64);
+	cairo_rectangle(cr, 0, height-64, width/4, 64);
 	cairo_fill(cr);
 
 	cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
@@ -97,7 +102,7 @@ int main(/*int argc, char **argv*/) {
 	cairo_set_font_size(cr, 64);
 	cairo_show_text(cr, buf);
 
-	benchmark(&benchmark_cairo_circle, &ctx, 10000, &t);
+//	benchmark(&benchmark_cairo_circle, &ctx, 10000, &t);
 
 	SDL_UnlockTexture(texture);
 
@@ -105,7 +110,7 @@ int main(/*int argc, char **argv*/) {
 	SDL_RenderCopy(renderer, texture, NULL, NULL);
 	SDL_RenderPresent(renderer);
 
-	SDL_Delay(3000);
+	SDL_Delay(5000);
 
 	cairo_destroy(cr);
 	SDL_DestroyTexture(texture);
@@ -157,8 +162,8 @@ int benchmark_cairo_line(void* void_ctx) {
 
 	cairo_set_source_rgb(ctx->cr, rand_01(), rand_01(), rand_01());
 	cairo_set_line_width(ctx->cr, 5.0 * rand_01());
-	cairo_move_to(ctx->cr, rand() % (ctx->width+1), rand() % (ctx->height+1));
-	cairo_line_to(ctx->cr, rand() % (ctx->width+1), rand() % (ctx->height+1));
+	cairo_move_to(ctx->cr, rand() % ctx->width, rand() % ctx->height);
+	cairo_line_to(ctx->cr, rand() % ctx->width, rand() % ctx->height);
 	cairo_stroke(ctx->cr);
 
 	return SEM_OK;
@@ -168,7 +173,7 @@ int benchmark_cairo_circle(void* void_ctx) {
 	struct benchmark_cairo_line_context* ctx = (struct benchmark_cairo_line_context*) void_ctx;
 
 	cairo_set_source_rgb(ctx->cr, rand_01(), rand_01(), rand_01());
-	cairo_arc(ctx->cr, rand() % (ctx->width+1), rand() % (ctx->height+1), 32.0 * rand_01(), 0, 2 * M_PI);
+	cairo_arc(ctx->cr, rand() % ctx->width, rand() % ctx->height, 32.0 * rand_01(), 0, 2 * M_PI);
 	cairo_fill(ctx->cr);
 
 	return SEM_OK;

@@ -3,6 +3,7 @@ MAKEFLAGS += --no-builtin-rules
 .SUFFIXES:
 
 CC := clang
+DOXYGEN := doxygen
 LD := ld
 SDL_CONFIG := sdl2-config
 PKG_CONFIG := pkg-config
@@ -17,7 +18,7 @@ CFLAGS := $(WARNINGS) -O0 -g $(SDL_CFLAGS) $(CAIRO_CFLAGS)
 LDFLAGS := $(SDL_LDFLAGS) $(CAIRO_LDFLAGS)
 
 .DEFAULT: build/main/semaphore
-.PHONY: clean
+.PHONY: clean doc
 
 build/main/semaphore: build/main/semaphore.o | build/main
 	$(CC) -o $@ $< $(LDFLAGS)
@@ -25,8 +26,14 @@ build/main/semaphore: build/main/semaphore.o | build/main
 build/main/semaphore.o: src/main/semaphore.c | build/main
 	$(CC) -o $@ -c $< $(CFLAGS)
 
-build/main:
-	mkdir -p $@
+doc: Doxyfile src/main/semaphore.c | build
+	$(DOXYGEN)
 
 clean:
 	rm -rf build
+
+build/main:
+	mkdir -p $@
+
+build:
+	mkdir -p $@

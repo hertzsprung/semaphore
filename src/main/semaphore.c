@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include <cairo.h>
 
@@ -7,6 +8,8 @@
 #include <SDL_render.h>
 #include <SDL_timer.h>
 #include <SDL_video.h>
+
+struct timespec diff(struct timespec start, struct timespec end);
 
 int main(/*int argc, char **argv*/) {
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -56,21 +59,68 @@ int main(/*int argc, char **argv*/) {
 		width, height, pitch);
 
 	cairo_t *cr = cairo_create(cairo_surface);
-	cairo_move_to(cr, 0, 0);
-	cairo_line_to(cr, width, height);
-	cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
-	cairo_set_line_width(cr, 1.0);
-	cairo_stroke(cr);
 
-	SDL_UnlockTexture(texture);
+	struct timespec time1, time2;
 
-	SDL_RenderClear(renderer);
-	SDL_RenderCopy(renderer, texture, NULL, NULL);
-	SDL_RenderPresent(renderer);
+	while (1) {
+		char buf[32] = "";
+		if (clock_gettime(CLOCK_REALTIME, &time1) != 0) {
+			fprintf(stderr, "Failed to get time");
+			return EXIT_FAILURE;
+		}
 
-	SDL_Delay(5000);
+		/* random lines */
+		for (int i = 0; i < 10000; i++) {
+			cairo_set_source_rgb(cr, rand()/(double)RAND_MAX, rand()/(double)RAND_MAX, rand()/(double)RAND_MAX);
+			cairo_set_line_width(cr, 5.0 * (rand()/(double)RAND_MAX));
+			cairo_move_to(cr, rand() % (width+1), rand() % (height+1));
+			cairo_line_to(cr, rand() % (width+1), rand() % (height+1));
+			cairo_stroke(cr);
+		}
 
-	cairo_destroy(cr);
-	SDL_DestroyTexture(texture);
+		/* random circles */
+		for (int i = 0; i < 10000; i++) {
+			cairo_set_source_rgb(cr, rand()/(double)RAND_MAX, rand()/(double)RAND_MAX, rand()/(double)RAND_MAX);
+			cairo_arc(cr, rand() % (width+1), rand() % (height+1), 32.0 * rand()/(double)RAND_MAX, 0, 2 * M_PI);
+			cairo_fill(cr);
+		}
+
+		if (clock_gettime(CLOCK_REALTIME, &time2) != 0) {
+			fprintf(stderr, "Failed to get time");
+			return EXIT_FAILURE;
+		}
+
+		snprintf(buf, sizeof(buf), "%ldms",
+			diff(time1, time2).tv_sec * 1000 +
+			diff(time1, time2).tv_nsec / 1000000);
+
+		cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
+		cairo_move_to(cr, 0, height);
+		cairo_set_font_size(cr, 64);
+		cairo_show_text(cr, buf);
+
+		SDL_UnlockTexture(texture);
+
+		SDL_RenderClear(renderer);
+		SDL_RenderCopy(renderer, texture, NULL, NULL);
+		SDL_RenderPresent(renderer);
+
+		SDL_Delay(1000);
+	}
+
+	//cairo_destroy(cr);
+	//SDL_DestroyTexture(texture);
 	return EXIT_SUCCESS;
+}
+
+struct timespec diff(struct timespec start, struct timespec end) {
+	struct timespec temp;
+	if ((end.tv_nsec-start.tv_nsec)<0) {
+		temp.tv_sec = end.tv_sec-start.tv_sec-1;
+		temp.tv_nsec = 1000000000+end.tv_nsec-start.tv_nsec;
+	} else {
+		temp.tv_sec = end.tv_sec-start.tv_sec;
+		temp.tv_nsec = end.tv_nsec-start.tv_nsec;
+	}
+	return temp;
 }

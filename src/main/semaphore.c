@@ -1,3 +1,4 @@
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -11,6 +12,12 @@
 
 #define SEM_OK 0
 #define SEM_ERROR -1
+
+#define SEM_ERROR_BUF_SIZE 1024
+
+char* sem_get_error(void);
+void sem_set_error(const char* format, ...);
+int sem_fatal_error(void);
 
 int benchmark(int (*function)(void*), void* context, unsigned int iterations, struct timespec* delta);
 
@@ -29,22 +36,36 @@ struct benchmark_cairo_line_context {
 	int width, height;
 };
 
+char* sem_get_error(void) {
+	static char message[SEM_ERROR_BUF_SIZE] = "";
+	return message;
+}
+
+void sem_set_error(const char* format, ...) {
+	va_list arglist;
+	char* error = sem_get_error();
+	va_start(arglist, format);
+	vsnprintf(error, SEM_ERROR_BUF_SIZE * sizeof(char), format, arglist);
+	va_end(arglist);
+}
+
+int sem_fatal_error(void) {
+	fprintf(stderr, "FATAL: %s", sem_get_error());
+	return EXIT_FAILURE;
+}
+
 int main(/*int argc, char **argv*/) {
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-		fprintf(stderr,
-			"Unable to initialize SDL: %s\n",
-			SDL_GetError());
-		return EXIT_FAILURE;
+		sem_set_error("Unable to initialize SDL: %s", SDL_GetError());
+		return sem_fatal_error();
 	}
 	atexit(SDL_Quit);
 
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 	if (SDL_CreateWindowAndRenderer(0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP, &window, &renderer) != 0) {
-		fprintf(stderr,
-			"Unable to create window: %s\n",
-			SDL_GetError());
-		return EXIT_FAILURE;
+		sem_set_error("Unable to create window: %s", SDL_GetError());
+		return sem_fatal_error();
 	}
 
 	int width, height;
@@ -55,20 +76,16 @@ int main(/*int argc, char **argv*/) {
 		SDL_TEXTUREACCESS_STREAMING,
 		width, height);
 	if (texture == 0) {
-		fprintf(stderr,
-			"Unable to create texture: %s\n",
-			SDL_GetError());
-		return EXIT_FAILURE;
+		sem_set_error("Unable to create texture: %s", SDL_GetError());
+		return sem_fatal_error();
 	}
 
 	void *pixels;
 	int pitch;
 
 	if (SDL_LockTexture(texture, NULL, &pixels, &pitch) != 0) {
-		fprintf(stderr,
-			"Failed to lock texture: %s\n",
-			SDL_GetError());
-		return EXIT_FAILURE;
+		sem_set_error("Failed to lock texture: %s", SDL_GetError());
+		return sem_fatal_error();
 	}
 
 	cairo_surface_t *cairo_surface = cairo_image_surface_create_for_data(
@@ -88,7 +105,9 @@ int main(/*int argc, char **argv*/) {
 
 	cairo_translate(ctx.cr, -ctx.width, -ctx.height);
 	cairo_scale(ctx.cr, 2.0, 2.0);
-	benchmark(&benchmark_cairo_line, &ctx, 10000, &t);
+	if (benchmark(&benchmark_cairo_line, &ctx, 10000, &t) != 0) {
+		return sem_fatal_error();
+	}
 	snprintf(buf, sizeof(buf), "%ldms", time_millis(&t));
 
 	cairo_identity_matrix(ctx.cr);
@@ -101,8 +120,6 @@ int main(/*int argc, char **argv*/) {
 	cairo_move_to(cr, 0, height);
 	cairo_set_font_size(cr, 64);
 	cairo_show_text(cr, buf);
-
-//	benchmark(&benchmark_cairo_circle, &ctx, 10000, &t);
 
 	SDL_UnlockTexture(texture);
 
@@ -121,6 +138,7 @@ int benchmark(int (*function)(void*), void* context, unsigned int iterations, st
 	struct timespec start, end;
 
 	if (clock_gettime(CLOCK_REALTIME, &start) != 0) {
+		sem_set_error("Could not get system clock");
 		return SEM_ERROR;
 	}
 
@@ -131,6 +149,7 @@ int benchmark(int (*function)(void*), void* context, unsigned int iterations, st
 	}
 
 	if (clock_gettime(CLOCK_REALTIME, &end) != 0) {
+		sem_set_error("Could not get system clock");
 		return SEM_ERROR;
 	}
 

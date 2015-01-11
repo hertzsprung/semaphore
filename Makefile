@@ -13,7 +13,8 @@ SDL_LDFLAGS := $(shell $(SDL_CONFIG) --libs)
 CAIRO_CFLAGS := $(shell $(PKG_CONFIG) cairo --cflags)
 CAIRO_LDFLAGS := $(shell $(PKG_CONFIG) cairo --libs)
 WARNINGS := -pedantic-errors -Werror -Weverything \
--Wno-error=padded -Wno-error=documentation -Wno-error=documentation-unknown-command
+-Wno-error=padded -Wno-error=documentation -Wno-error=documentation-unknown-command \
+-Wno-format-nonliteral
 CFLAGS := $(WARNINGS) -O0 -g $(SDL_CFLAGS) $(CAIRO_CFLAGS)
 LDFLAGS := $(SDL_LDFLAGS) $(CAIRO_LDFLAGS)
 

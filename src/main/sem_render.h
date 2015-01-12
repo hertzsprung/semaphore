@@ -7,6 +7,7 @@
 
 typedef struct {
 	cairo_t* cr;
+	double scale;
 } sem_render_context;
 
 void sem_render_train(sem_render_context* ctx, sem_train* train);

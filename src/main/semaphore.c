@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -14,24 +15,6 @@
 #include "sem_render.h"
 #include "sem_train.h"
 
-int benchmark(int (*function)(void*), void* context, unsigned int iterations, struct timespec* delta);
-
-void time_delta(struct timespec start, struct timespec end, struct timespec* delta);
-
-long time_millis(struct timespec *ts);
-
-int benchmark_cairo_line(void* context);
-
-int benchmark_cairo_circle(void* context);
-
-double rand_01(void);
-
-struct benchmark_cairo_line_context {
-	cairo_t *cr;
-	int width, height;
-};
-
-
 int main(/*int argc, char **argv*/) {
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
 		sem_set_error("Unable to initialize SDL: %s", SDL_GetError());
@@ -40,9 +23,16 @@ int main(/*int argc, char **argv*/) {
 	atexit(SDL_Quit);
 
 	SDL_Window* window;
-	SDL_Renderer* renderer;
-	if (SDL_CreateWindowAndRenderer(0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP, &window, &renderer) != 0) {
+	window = SDL_CreateWindow("semaphore", 0, 0, 0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP);
+	if (window == NULL) {
 		sem_set_error("Unable to create window: %s", SDL_GetError());
+		return sem_fatal_error();
+	}
+
+	SDL_Renderer* renderer;
+	renderer = SDL_CreateRenderer(window, -1, 0);
+	if (renderer == NULL) {
+		sem_set_error("Unable to create renderer: %s", SDL_GetError());
 		return sem_fatal_error();
 	}
 
@@ -53,13 +43,37 @@ int main(/*int argc, char **argv*/) {
 	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
 		SDL_TEXTUREACCESS_STREAMING,
 		width, height);
-	if (texture == 0) {
+	if (texture == NULL) {
 		sem_set_error("Unable to create texture: %s", SDL_GetError());
 		return sem_fatal_error();
 	}
 
+	void *pixels;
+	int pitch;
+
+	if (SDL_LockTexture(texture, NULL, &pixels, &pitch) != 0) {
+		sem_set_error("Failed to lock texture: %s", SDL_GetError());
+		return sem_fatal_error();
+	}
+
+	cairo_surface_t *cairo_surface = cairo_image_surface_create_for_data(
+		pixels,
+		CAIRO_FORMAT_ARGB32,
+		width, height, pitch);
+
+	cairo_t *cr = cairo_create(cairo_surface);
+
+	SDL_UnlockTexture(texture);
+
+	sem_render_context render_ctx;
+	render_ctx.cr = cr;	
+	render_ctx.scale = 32.0;
+
+	cairo_scale(cr, render_ctx.scale, render_ctx.scale);
+
 	SDL_Event e;
 	bool quit = false;	
+	uint64_t frames = 0;
 	while (!quit) {
 		while (SDL_PollEvent(&e)){
 			if (e.type == SDL_QUIT) {
@@ -68,27 +82,20 @@ int main(/*int argc, char **argv*/) {
 			if (e.type == SDL_KEYDOWN) {
 				quit = true;
 			}
+			if (e.type == SDL_MOUSEWHEEL) {
+				if (e.wheel.y > 0) {
+					cairo_scale(cr, 1.1 * e.wheel.y, 1.1 * e.wheel.y);
+				} else if (e.wheel.y < 0) {
+					cairo_scale(cr, 1.0 / (1.1 * -e.wheel.y), 1.0 / (1.1 * -e.wheel.y));
+				}
+			}
 		}
 
-		void *pixels;
-		int pitch;
+		cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
+		cairo_rectangle(cr, 0, 0, width-1, height-1);
+		cairo_fill(cr);
 
-		if (SDL_LockTexture(texture, NULL, &pixels, &pitch) != 0) {
-			sem_set_error("Failed to lock texture: %s", SDL_GetError());
-			return sem_fatal_error();
-		}
-
-		cairo_surface_t *cairo_surface = cairo_image_surface_create_for_data(
-			pixels,
-			CAIRO_FORMAT_ARGB32,
-			width, height, pitch);
-
-		cairo_t *cr = cairo_create(cairo_surface);
-		cairo_scale(cr, 32.0, 32.0);
 		cairo_set_line_width(cr, 0.1);
-
-		sem_render_context render_ctx;
-		render_ctx.cr = cr;	
 
 		sem_train train;
 		train.x = 0;
@@ -96,79 +103,22 @@ int main(/*int argc, char **argv*/) {
 
 		sem_render_train(&render_ctx, &train);
 
+		char buf[32] = "";
+		snprintf(buf, sizeof(buf), "%ld", frames);
+		cairo_move_to(cr, 0, 4);
+		cairo_set_font_size(cr, 1);
+		cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
+		cairo_show_text(cr, buf);
+
 		SDL_UnlockTexture(texture);
 
-		SDL_RenderClear(renderer);
 		SDL_RenderCopy(renderer, texture, NULL, NULL);
 		SDL_RenderPresent(renderer);
 
-		cairo_destroy(cr);
+		frames++;
 	}
 
+	cairo_destroy(cr);
 	SDL_DestroyTexture(texture);
 	return EXIT_SUCCESS;
-}
-
-int benchmark(int (*function)(void*), void* context, unsigned int iterations, struct timespec* delta) {
-	struct timespec start, end;
-
-	if (clock_gettime(CLOCK_REALTIME, &start) != 0) {
-		sem_set_error("Could not get system clock");
-		return SEM_ERROR;
-	}
-
-	for (unsigned int i = 0; i < iterations; i++) {
-		if ((*function)(context) != 0) {
-			return SEM_ERROR;
-		}
-	}
-
-	if (clock_gettime(CLOCK_REALTIME, &end) != 0) {
-		sem_set_error("Could not get system clock");
-		return SEM_ERROR;
-	}
-
-	time_delta(start, end, delta);
-
-	return SEM_OK;
-}
-
-void time_delta(struct timespec start, struct timespec end, struct timespec* delta) {
-	if (end.tv_nsec - start.tv_nsec < 0) {
-		delta->tv_sec = end.tv_sec - start.tv_sec - 1;
-		delta->tv_nsec = 1000000000 + end.tv_nsec - start.tv_nsec;
-	} else {
-		delta->tv_sec = end.tv_sec - start.tv_sec;
-		delta->tv_nsec = end.tv_nsec - start.tv_nsec;
-	}
-}
-
-long time_millis(struct timespec *ts) {
-	return ts->tv_sec*1000 + ts->tv_nsec/1000000;
-}
-
-double rand_01(void) {
-	return rand() / (double)RAND_MAX;
-}
-
-int benchmark_cairo_line(void* void_ctx) {
-	struct benchmark_cairo_line_context* ctx = (struct benchmark_cairo_line_context*) void_ctx;
-
-	cairo_set_source_rgb(ctx->cr, rand_01(), rand_01(), rand_01());
-	cairo_set_line_width(ctx->cr, 5.0 * rand_01());
-	cairo_move_to(ctx->cr, rand() % ctx->width, rand() % ctx->height);
-	cairo_line_to(ctx->cr, rand() % ctx->width, rand() % ctx->height);
-	cairo_stroke(ctx->cr);
-
-	return SEM_OK;
-}
-
-int benchmark_cairo_circle(void* void_ctx) {
-	struct benchmark_cairo_line_context* ctx = (struct benchmark_cairo_line_context*) void_ctx;
-
-	cairo_set_source_rgb(ctx->cr, rand_01(), rand_01(), rand_01());
-	cairo_arc(ctx->cr, rand() % ctx->width, rand() % ctx->height, 32.0 * rand_01(), 0, 2 * M_PI);
-	cairo_fill(ctx->cr);
-
-	return SEM_OK;
 }

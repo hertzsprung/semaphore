@@ -1,0 +1,10 @@
+$(eval $(call EXE,semaphore,$(COMPONENTS)))
+$(eval $(call OBJ_H,sem_error))
+$(eval $(call OBJ_H,sem_render))
+$(eval $(call OBJ,semaphore))
+$(eval $(call DEP_OBJ,semaphore,sem_error sem_render))
+$(eval $(call DEP_HEADER,semaphore,sem_train))
+$(eval $(call DEP_HEADER,sem_render,sem_train))
+
+build/main:
+	mkdir -p $@

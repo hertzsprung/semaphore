@@ -1,17 +1,69 @@
-# $1 -- filename (without .c suffix)
 define EXE
 
-build/main/$1.o: src/main/$1.c | build/main
-	$(CC) -o $$@ -c $$< $(CFLAGS)
+$(eval $(call _EXE,$1,main,$2,$(LDFLAGS)))
 
 endef
 
-# $1 -- filename (without .c suffix)
+define TEST_EXE
+
+$(eval $(call _EXE,$1,test,$2,$(TEST_LDFLAGS)))
+
+endef
+
 define OBJ
 
-$(eval $(call EXE,$1))
+$(eval $(call _OBJ,$1,main,$(CFLAGS)))
 
-build/main/$1.o: src/main/$1.h
+endef
+
+define TEST_OBJ
+
+$(eval $(call _OBJ,$1,test,$(TEST_CFLAGS)))
+
+endef
+
+define OBJ_H
+
+$(eval $(call _OBJ_H,$1,main))
+
+endef
+
+# private templates
+
+# $1 -- filename (without .c suffix)
+# $2 -- directory (main or test)
+# $3 -- component list
+# $4 -- ldflags
+define _EXE
+
+build/$2/$1: $(addsuffix .o,$(addprefix build/$2/,$3)) | build/$2
+	$(CC) -o $$@ $$^ $4
+
+endef
+
+# Compile .c to .o (without any header file).
+# This is mostly applicable to objects with a main() function
+# since they have no associated header file.
+#
+# $1 -- filename (without .c suffix)
+# $2 -- directory (main or test)
+# $3 -- cflags
+define _OBJ
+
+build/$2/$1.o: src/$2/$1.c | build/$2
+	$(CC) -o $$@ -c $$< $3
+
+endef
+
+# Compile .c to .o with dependency on .h
+#
+# $1 -- filename (without .c suffix)
+# $2 -- directory (main or test)
+define _OBJ_H
+
+$(eval $(call OBJ,$1))
+
+build/$2/$1.o: src/$2/$1.h
 
 endef
 

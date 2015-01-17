@@ -1,0 +1,8 @@
+test: build/test/test_all
+	$<
+
+$(eval $(call TEST_EXE,test_all,test_all))
+$(eval $(call TEST_OBJ,test_all))
+
+build/test:
+	mkdir -p $@

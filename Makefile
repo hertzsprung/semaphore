@@ -20,7 +20,7 @@ WARNINGS := -pedantic-errors -Werror -Weverything \
 COMMON_CFLAGS := $(WARNINGS) -O0 -g -std=gnu99
 CFLAGS := $(COMMON_CFLAGS) $(SDL_CFLAGS) $(CAIRO_CFLAGS)
 LDFLAGS := $(SDL_LDFLAGS) $(CAIRO_LDFLAGS) -lrt
-TEST_CFLAGS := $(COMMON_CFLAGS) $(GLIB_CFLAGS)
+TEST_CFLAGS := -Isrc/main $(COMMON_CFLAGS) $(GLIB_CFLAGS)
 TEST_LDFLAGS := $(GLIB_LDFLAGS)
 
 COMPONENTS := semaphore sem_error sem_render

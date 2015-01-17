@@ -30,7 +30,7 @@ int main(/*int argc, char **argv*/) {
 	}
 
 	SDL_Renderer* renderer;
-	renderer = SDL_CreateRenderer(window, -1, 0);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
 	if (renderer == NULL) {
 		sem_set_error("Unable to create renderer: %s", SDL_GetError());
 		return sem_fatal_error();
@@ -71,6 +71,9 @@ int main(/*int argc, char **argv*/) {
 
 	cairo_scale(cr, render_ctx.scale, render_ctx.scale);
 
+	bool mousing = false;
+	Sint32 mouse_x = 0, mouse_y = 0;
+
 	SDL_Event e;
 	bool quit = false;	
 	uint64_t frames = 0;
@@ -89,11 +92,28 @@ int main(/*int argc, char **argv*/) {
 					cairo_scale(cr, 1.0 / (1.1 * -e.wheel.y), 1.0 / (1.1 * -e.wheel.y));
 				}
 			}
+			if (e.type == SDL_MOUSEBUTTONDOWN) {
+				mouse_x = e.button.x;
+				mouse_y = e.button.y;
+				mousing = true;
+			}
+			if (e.type == SDL_MOUSEBUTTONUP) {
+				mousing = false;
+			}
 		}
 
 		cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
 		cairo_rectangle(cr, 0, 0, width-1, height-1);
 		cairo_fill(cr);
+
+		if (mousing) {
+			cairo_set_source_rgb(cr, 1.0, 0.0, 0.0);
+			double x = mouse_x;
+			double y = mouse_y;
+			cairo_device_to_user(cr, &x, &y);
+			cairo_arc(cr, x, y, 0.5, 0.0, 2.0 * M_PI);
+			cairo_stroke(cr);
+		}
 
 		cairo_set_line_width(cr, 0.1);
 

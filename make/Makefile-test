@@ -1,9 +1,10 @@
 test: build/test/test_all
 	$<
 
-$(eval $(call TEST_EXE,test_all,test/test_all main/sem_timer))
+$(eval $(call TEST_EXE,test_all,test/test_all test/test_timer main/sem_timer))
 $(eval $(call TEST_OBJ,test_all))
-$(eval $(call TEST_DEP_OBJ,test_all,main/sem_timer))
+$(eval $(call TEST_OBJ_H,test_timer))
+$(eval $(call TEST_DEP_OBJ,test_all,test/test_timer main/sem_timer))
 
 build/test:
 	mkdir -p $@

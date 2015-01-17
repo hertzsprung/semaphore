@@ -24,7 +24,13 @@ endef
 
 define OBJ_H
 
-$(eval $(call _OBJ_H,$1,main))
+$(eval $(call _OBJ_H,$1,main,$(CFLAGS)))
+
+endef
+
+define TEST_OBJ_H
+
+$(eval $(call _OBJ_H,$1,test,$(TEST_CFLAGS)))
 
 endef
 
@@ -73,9 +79,10 @@ endef
 #
 # $1 -- filename (without .c suffix)
 # $2 -- directory (main or test)
+# $3 -- cflags
 define _OBJ_H
 
-$(eval $(call OBJ,$1))
+$(eval $(call _OBJ,$1,$2,$3))
 
 build/$2/$1.o: src/$2/$1.h
 

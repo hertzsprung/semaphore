@@ -34,18 +34,6 @@ void sem_heap_destroy(sem_heap* array);
 
 int sem_heap_insert(sem_heap* heap, sem_heap_entry* entry);
 
-/** \brief Add an entry to the tail of the array.
- *
- * This function does not guarantee the natural ordering of the array.
- * Clients should use sem_heap_insert() to preserve ordering.
- */
-int sem_heap_add_tail(sem_heap* array, sem_heap_entry* entry);
-
-/** \brief Remove an entry from the tail of the array.
- *
- * This function does not guarantee the natural ordering of the array.
- * Clients should use sem_heap_remove_min() to preserve ordering.
- */
-int sem_heap_remove_tail(sem_heap* array);
+sem_heap_entry* sem_heap_remove_min(sem_heap* heap);
 
 #endif

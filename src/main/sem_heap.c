@@ -5,11 +5,11 @@
 #include "sem_heap.h"
 #include "sem_error.h"
 
-int sem_heap_extend_tail(sem_heap* heap);
+sem_success sem_heap_extend_tail(sem_heap* heap);
 
 void sem_heap_percolate_down(sem_heap* heap, uint32_t hole);
 
-int sem_heap_init(sem_heap* heap) {
+sem_success sem_heap_init(sem_heap* heap) {
 	heap->size = 1;
 	heap->tail_idx = 1;
 	heap->entries = malloc(sizeof(sem_heap_entry*)); // TODO: check return
@@ -20,7 +20,7 @@ void sem_heap_destroy(sem_heap* heap) {
 	free(heap->entries);
 }
 
-int sem_heap_extend_tail(sem_heap* heap) {
+sem_success sem_heap_extend_tail(sem_heap* heap) {
 	if (heap->tail_idx == heap->size) {
 		heap->size *= 2;
 		heap->entries = realloc(heap->entries, sizeof(sem_heap_entry*) * heap->size); // TODO: check return
@@ -30,7 +30,7 @@ int sem_heap_extend_tail(sem_heap* heap) {
 	return SEM_OK;
 }
 
-int sem_heap_insert(sem_heap* heap, sem_heap_entry* e) {
+sem_success sem_heap_insert(sem_heap* heap, sem_heap_entry* e) {
 	uint32_t hole = heap->tail_idx;
 	sem_heap_extend_tail(heap); // TODO: check return
 	for (; hole > 1 && e->time < heap->entries[hole/2]->time; hole /= 2) {
@@ -40,7 +40,7 @@ int sem_heap_insert(sem_heap* heap, sem_heap_entry* e) {
 	return SEM_OK;
 }
 
-sem_heap_entry* sem_heap_remove_min(sem_heap* heap) {
+sem_heap_entry* sem_heap_remove_earliest(sem_heap* heap) {
 	if (heap->tail_idx == 1) {
 		return NULL;
 	}

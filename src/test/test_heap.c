@@ -6,11 +6,6 @@
 #include "sem_error.h"
 #include "sem_heap.h"
 
-void add_test_heap(const char *test_name, void (*test)(sem_heap* heap, const void* data));
-
-void test_heap_setup(sem_heap* heap, const void* data);
-void test_heap_teardown(sem_heap* heap, const void* data);
-
 void test_heap_removes_earliest(sem_heap* heap, const void* data);
 void test_heap_removes_nothing_in_empty_heap(sem_heap* heap, const void* data);
 
@@ -45,13 +40,13 @@ void test_heap_removes_earliest(sem_heap* heap, const void* data) {
 	sem_heap_insert(heap, &e2);
 	sem_heap_insert(heap, &e3);
 	
-	g_assert_true(sem_heap_remove_min(heap) == &e3);
-	g_assert_true(sem_heap_remove_min(heap) == &e1);
-	g_assert_true(sem_heap_remove_min(heap) == &e2);
+	g_assert_true(sem_heap_remove_earliest(heap) == &e3);
+	g_assert_true(sem_heap_remove_earliest(heap) == &e1);
+	g_assert_true(sem_heap_remove_earliest(heap) == &e2);
 }
 
 void test_heap_removes_nothing_in_empty_heap(sem_heap* heap, const void* data) {
 	#pragma unused(data)
 
-	g_assert_null(sem_heap_remove_min(heap));
+	g_assert_null(sem_heap_remove_earliest(heap));
 }

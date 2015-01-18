@@ -10,8 +10,7 @@
 int main(int argc, char **argv) {
 	g_test_init(&argc, &argv, NULL);
 
-	g_test_add_func("/action_list/one_old_action_executed", test_action_list_one_old_action_executed);
-
+	add_tests_action_list();
 	add_tests_heap();
 
 	g_test_add_func("/timer/increments_by_one_second", test_timer_increments_by_one_second);

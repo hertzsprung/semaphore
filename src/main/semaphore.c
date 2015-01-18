@@ -13,6 +13,7 @@
 
 #include "sem_error.h"
 #include "sem_render.h"
+#include "sem_timer.h"
 #include "sem_train.h"
 
 int main(/*int argc, char **argv*/) {
@@ -69,6 +70,12 @@ int main(/*int argc, char **argv*/) {
 	render_ctx.cr = cr;	
 	render_ctx.scale = 32.0;
 
+	sem_timer_context timer_ctx;
+	timer_ctx.now = 0L;
+	timer_ctx.multiplier = 1.0;
+	timer_ctx.clock = sem_clock_monotonic;
+	sem_timer_init(&timer_ctx);
+
 	cairo_scale(cr, render_ctx.scale, render_ctx.scale);
 
 	bool mousing = false;
@@ -78,6 +85,8 @@ int main(/*int argc, char **argv*/) {
 	bool quit = false;	
 	uint64_t frames = 0;
 	while (!quit) {
+		sem_timer_now(&timer_ctx);
+
 		while (SDL_PollEvent(&e)){
 			if (e.type == SDL_QUIT) {
 				quit = true;
@@ -123,10 +132,10 @@ int main(/*int argc, char **argv*/) {
 
 		sem_render_train(&render_ctx, &train);
 
-		char buf[32] = "";
-		snprintf(buf, sizeof(buf), "%ld", frames);
+		char buf[128] = "";
+		snprintf(buf, sizeof(buf), "frame: %ld, game time: %ld, monotonic time: %ld", frames, timer_ctx.now, timer_ctx.clock_now);
 		cairo_move_to(cr, 0, 4);
-		cairo_set_font_size(cr, 1);
+		cairo_set_font_size(cr, 0.7);
 		cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
 		cairo_show_text(cr, buf);
 

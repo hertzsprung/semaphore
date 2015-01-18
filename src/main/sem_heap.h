@@ -9,18 +9,43 @@ typedef struct sem_heap_entry {
 	//int (*action)(sem_heap* heap, void* context);
 } sem_heap_entry;
 
+/** \brief A dynamic array of sem_heap_entry pointers
+ */
 typedef struct {
-	uint32_t size; /**< Size of array (which may be larger than the number of entries) */
-	uint32_t tail_idx; /**< Index into entries of next element.  This can also be treated as the logical size of the array. */
+	/** \brief Physical size of the array.
+	 *
+	 * This may be larger than the number of entries
+	 */
+	uint32_t size;
+
+	/** \brief Index into entries of next element.
+	 *
+	 * This can also be treated as the logical size of the array.
+	 */
+	uint32_t tail_idx;
+
 	sem_heap_entry** entries;
-} sem_heap_entry_array;
+} sem_heap;
 
-int sem_heap_entry_array_init(sem_heap_entry_array* array);
 
-void sem_heap_entry_array_destroy(sem_heap_entry_array* array);
+int sem_heap_init(sem_heap* array);
 
-int sem_heap_entry_array_add(sem_heap_entry_array* array, sem_heap_entry* entry);
+void sem_heap_destroy(sem_heap* array);
 
-int sem_heap_entry_array_remove_last(sem_heap_entry_array* array);
+int sem_heap_insert(sem_heap* heap, sem_heap_entry* entry);
+
+/** \brief Add an entry to the tail of the array.
+ *
+ * This function does not guarantee the natural ordering of the array.
+ * Clients should use sem_heap_insert() to preserve ordering.
+ */
+int sem_heap_add_tail(sem_heap* array, sem_heap_entry* entry);
+
+/** \brief Remove an entry from the tail of the array.
+ *
+ * This function does not guarantee the natural ordering of the array.
+ * Clients should use sem_heap_remove_min() to preserve ordering.
+ */
+int sem_heap_remove_tail(sem_heap* array);
 
 #endif

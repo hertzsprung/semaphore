@@ -1,6 +1,5 @@
 #include <inttypes.h>
 #include <stdlib.h>
-#include <stdio.h>
 
 #include "sem_heap.h"
 #include "sem_error.h"

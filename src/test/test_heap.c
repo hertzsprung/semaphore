@@ -1,5 +1,4 @@
 #include <glib.h>
-#include <stdio.h>
 
 #include "test_heap.h"
 

@@ -4,6 +4,8 @@ MAKEFLAGS += --no-builtin-rules
 
 CC := clang
 DOXYGEN := doxygen
+GTESTER := gtester
+GTESTER_REPORT := gtester-report
 LD := ld
 SDL_CONFIG := sdl2-config
 PKG_CONFIG := pkg-config

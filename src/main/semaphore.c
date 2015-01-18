@@ -12,9 +12,29 @@
 #include <SDL_video.h>
 
 #include "sem_error.h"
+#include "sem_action_list.h"
+#include "sem_heap.h"
 #include "sem_render.h"
 #include "sem_timer.h"
 #include "sem_train.h"
+
+sem_success train_action(sem_heap* heap, void* context);
+
+sem_success train_action(sem_heap* heap, void* context) {
+	static uint64_t time = 2000L;
+
+	sem_heap_entry* action = malloc(sizeof(sem_heap_entry));
+	action->time = time;
+	action->context = context;
+	action->action = train_action;
+
+	((sem_train*) context)->x++;
+
+	sem_heap_insert(heap, action);
+	time += 1000L;
+
+	return SEM_OK;
+}
 
 int main(/*int argc, char **argv*/) {
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -70,11 +90,25 @@ int main(/*int argc, char **argv*/) {
 	render_ctx.cr = cr;	
 	render_ctx.scale = 32.0;
 
+	sem_train train;
+	train.x = 0;
+	train.y = 0;
+
 	sem_timer_context timer_ctx;
 	timer_ctx.now = 0L;
 	timer_ctx.multiplier = 1.0;
 	timer_ctx.clock = sem_clock_monotonic;
 	sem_timer_init(&timer_ctx);
+
+	sem_heap actions;
+	sem_heap_init(&actions);
+
+	sem_heap_entry action;
+	action.time = 1000L;
+	action.context = &train;
+	action.action = train_action;
+
+	sem_heap_insert(&actions, &action);
 
 	cairo_scale(cr, render_ctx.scale, render_ctx.scale);
 
@@ -124,11 +158,9 @@ int main(/*int argc, char **argv*/) {
 			cairo_stroke(cr);
 		}
 
-		cairo_set_line_width(cr, 0.1);
+		sem_action_list_execute(&actions, timer_ctx.now);
 
-		sem_train train;
-		train.x = 0;
-		train.y = 0;
+		cairo_set_line_width(cr, 0.1);
 
 		sem_render_train(&render_ctx, &train);
 
@@ -147,6 +179,7 @@ int main(/*int argc, char **argv*/) {
 		frames++;
 	}
 
+	sem_heap_destroy(&actions);
 	cairo_destroy(cr);
 	SDL_DestroyTexture(texture);
 	return EXIT_SUCCESS;

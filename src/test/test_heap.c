@@ -1,7 +1,7 @@
-#include "test_heap_entry_array.h"
-
 #include <glib.h>
 #include <stdio.h>
+
+#include "test_heap.h"
 
 #include "sem_error.h"
 #include "sem_heap.h"

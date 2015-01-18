@@ -37,6 +37,17 @@ int sem_heap_remove_tail(sem_heap* heap) {
 }
 
 int sem_heap_insert(sem_heap* heap, sem_heap_entry* e) {
-	printf("%d %ld\n", heap->size, e->time);
-	return SEM_OK;
+	uint32_t hole = heap->tail_idx + 1;
+	uint32_t half = hole / 2;
+	while (hole > 1 && e->time < heap->entries[half-1]->time) {
+		heap->entries[hole-1] = heap->entries[half-1];
+		hole = half;
+		half = hole / 2;
+	}
+	if (hole-1 == heap->tail_idx) {
+		return sem_heap_add_tail(heap, e);
+	} else {
+		heap->entries[hole-1] = e;
+		return SEM_OK;
+	}
 }

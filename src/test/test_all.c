@@ -4,7 +4,7 @@
 #include <glib.h>
 
 #include "test_action_list.h"
-#include "test_heap_entry_array.h"
+#include "test_heap.h"
 #include "test_timer.h"
 
 int main(int argc, char **argv) {

@@ -13,7 +13,7 @@ void test_action_list_two_old_actions_executed(sem_heap* heap, const void* data)
 void test_action_list_does_not_execute_future_action(sem_heap* heap, const void* data);
 void test_action_list_does_nothing_for_empty_list(sem_heap* heap, const void* data);
 
-int test_action(sem_heap* heap, void* context);
+int test_action(sem_heap* heap, sem_action* action);
 
 void add_tests_action_list() {
 	add_test_heap("/action_list/two_old_action_executed", test_action_list_two_old_actions_executed);
@@ -21,9 +21,9 @@ void add_tests_action_list() {
 	add_test_heap("/action_list/does_nothing_for_empty_list", test_action_list_does_nothing_for_empty_list);
 }
 
-int test_action(sem_heap* heap, void* context) {
+int test_action(sem_heap* heap, sem_action* action) {
 	#pragma unused(heap)
-	(*((uint32_t*) context))++;
+	(*((uint32_t*) action->context))++;
 
 	return SEM_OK;
 }
@@ -33,14 +33,14 @@ void test_action_list_two_old_actions_executed(sem_heap* heap, const void* data)
 
 	uint32_t action_called = 0;
 
-	sem_heap_entry a1, a2;
+	sem_action a1, a2;
 	a1.time = 1000L;
 	a1.context = &action_called;
-	a1.action = test_action;
+	a1.function = test_action;
 
 	a2.time = 2000L;
 	a2.context = &action_called;
-	a2.action = test_action;
+	a2.function = test_action;
 
 	sem_heap_insert(heap, &a1);
 	sem_heap_insert(heap, &a2);
@@ -54,10 +54,10 @@ void test_action_list_does_not_execute_future_action(sem_heap* heap, const void*
 
 	uint32_t action_called = 0;
 
-	sem_heap_entry action;
+	sem_action action;
 	action.time = 2050L;
 	action.context = &action_called;
-	action.action = test_action;
+	action.function= test_action;
 
 	sem_heap_insert(heap, &action);
 	sem_action_list_execute(heap, 2000L); // TODO: check return

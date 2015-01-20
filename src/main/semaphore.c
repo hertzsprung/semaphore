@@ -18,20 +18,15 @@
 #include "sem_timer.h"
 #include "sem_train.h"
 
-sem_success train_action(sem_heap* heap, void* context);
+sem_success train_action(sem_heap* heap, sem_action* action);
 
-sem_success train_action(sem_heap* heap, void* context) {
-	static uint64_t time = 2000L;
+sem_success train_action(sem_heap* heap, sem_action* action) {
+	action->time += 1000L;
+	action->function = train_action;
 
-	sem_action* action = malloc(sizeof(sem_action));
-	action->time = time;
-	action->context = context;
-	action->action = train_action;
-
-	((sem_train*) context)->x++;
+	((sem_train*) action->context)->x++;
 
 	sem_heap_insert(heap, action);
-	time += 1000L;
 
 	return SEM_OK;
 }
@@ -106,7 +101,7 @@ int main(/*int argc, char **argv*/) {
 	sem_action action;
 	action.time = 1000L;
 	action.context = &train;
-	action.action = train_action;
+	action.function = train_action;
 
 	sem_heap_insert(&actions, &action);
 
@@ -126,13 +121,25 @@ int main(/*int argc, char **argv*/) {
 				quit = true;
 			}
 			if (e.type == SDL_KEYDOWN) {
-				quit = true;
+				if (e.key.keysym.sym == SDLK_LCTRL || e.key.keysym.sym == SDLK_RCTRL) {
+					// ignore
+				} else {
+					quit = true;
+				}
 			}
 			if (e.type == SDL_MOUSEWHEEL) {
-				if (e.wheel.y > 0) {
-					cairo_scale(cr, 1.1 * e.wheel.y, 1.1 * e.wheel.y);
-				} else if (e.wheel.y < 0) {
-					cairo_scale(cr, 1.0 / (1.1 * -e.wheel.y), 1.0 / (1.1 * -e.wheel.y));
+				if (SDL_GetModState() & KMOD_CTRL) {
+					if (e.wheel.y > 0) {
+						timer_ctx.multiplier *= 1.1 * e.wheel.y;
+					} else if (e.wheel.y < 0) {
+						timer_ctx.multiplier /= -1.1 * e.wheel.y;
+					}
+				} else {
+					if (e.wheel.y > 0) {
+						cairo_scale(cr, 1.1 * e.wheel.y, 1.1 * e.wheel.y);
+					} else if (e.wheel.y < 0) {
+						cairo_scale(cr, 1.0 / (1.1 * -e.wheel.y), 1.0 / (1.1 * -e.wheel.y));
+					}
 				}
 			}
 			if (e.type == SDL_MOUSEBUTTONDOWN) {
@@ -165,7 +172,7 @@ int main(/*int argc, char **argv*/) {
 		sem_render_train(&render_ctx, &train);
 
 		char buf[128] = "";
-		snprintf(buf, sizeof(buf), "frame: %ld, game time: %ld, monotonic time: %ld", frames, timer_ctx.now, timer_ctx.clock_now);
+		snprintf(buf, sizeof(buf), "frame: %ld, game time: %ld, multiplier: %f", frames, timer_ctx.now, timer_ctx.multiplier);
 		cairo_move_to(cr, 0, 4);
 		cairo_set_font_size(cr, 0.7);
 		cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);

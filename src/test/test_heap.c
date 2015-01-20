@@ -30,18 +30,18 @@ void add_test_heap(const char *test_name, void (*test)(sem_heap*, const void* da
 void test_heap_removes_earliest(sem_heap* heap, const void* data) {
 	#pragma unused(data)
 
-	sem_heap_entry e1, e2, e3;
-	e1.time = 2000L;
-	e2.time = 3000L;
-	e3.time = 1000L;
+	sem_action a1, a2, a3;
+	a1.time = 2000L;
+	a2.time = 3000L;
+	a3.time = 1000L;
 
-	sem_heap_insert(heap, &e1);
-	sem_heap_insert(heap, &e2);
-	sem_heap_insert(heap, &e3);
+	sem_heap_insert(heap, &a1);
+	sem_heap_insert(heap, &a2);
+	sem_heap_insert(heap, &a3);
 	
-	g_assert_true(sem_heap_remove_earliest(heap) == &e3);
-	g_assert_true(sem_heap_remove_earliest(heap) == &e1);
-	g_assert_true(sem_heap_remove_earliest(heap) == &e2);
+	g_assert_true(sem_heap_remove_earliest(heap) == &a3);
+	g_assert_true(sem_heap_remove_earliest(heap) == &a1);
+	g_assert_true(sem_heap_remove_earliest(heap) == &a2);
 }
 
 void test_heap_removes_nothing_in_empty_heap(sem_heap* heap, const void* data) {

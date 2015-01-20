@@ -9,7 +9,7 @@ $(eval $(call TEST_OBJ_H,test_action_list))
 $(eval $(call TEST_OBJ_H,test_heap))
 $(eval $(call TEST_OBJ_H,test_timer))
 
-$(eval $(call TEST_DEP_OBJ,test_all,test/test_timer))
+$(eval $(call TEST_DEP_OBJ,test_all,test/test_action_list test/test_heap test/test_timer))
 $(eval $(call TEST_DEP_OBJ,test_action_list,test/test_action_list main/sem_action_list main/sem_error main/sem_heap))
 $(eval $(call TEST_DEP_OBJ,test_heap,main/sem_error main/sem_heap))
 $(eval $(call TEST_DEP_OBJ,test_timer,main/sem_timer))

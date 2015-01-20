@@ -5,15 +5,15 @@
 #include "sem_error.h"
 #include "sem_timer.h"
 
-int test_fixed_clock(uint64_t* now);
-int test_fixed_increment_clock(uint64_t* now);
+sem_success test_fixed_clock(uint64_t* now);
+sem_success test_fixed_increment_clock(uint64_t* now);
 
-int test_fixed_clock(uint64_t* now) {
+sem_success test_fixed_clock(uint64_t* now) {
 	*now = 9876543L;
 	return SEM_OK;
 }
 
-int test_fixed_increment_clock(uint64_t* now) {
+sem_success test_fixed_increment_clock(uint64_t* now) {
 	static uint64_t next = 100000L;
 	next += 1000L;
 	*now = next;

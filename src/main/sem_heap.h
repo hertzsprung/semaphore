@@ -7,13 +7,13 @@
 
 typedef struct sem_heap sem_heap;
 
-typedef struct sem_heap_entry {
+typedef struct sem_action {
 	uint64_t time;
 	void* context;
 	sem_success (*action)(sem_heap* heap, void* context);
-} sem_heap_entry;
+} sem_action;
 
-/** \brief A dynamic array of sem_heap_entry pointers
+/** \brief A dynamic array of sem_action pointers
  */
 struct sem_heap {
 	/** \brief Physical size of the array.
@@ -28,7 +28,7 @@ struct sem_heap {
 	 */
 	uint32_t tail_idx;
 
-	sem_heap_entry** entries;
+	sem_action** entries;
 };
 
 
@@ -36,8 +36,8 @@ sem_success sem_heap_init(sem_heap* array);
 
 void sem_heap_destroy(sem_heap* array);
 
-sem_success sem_heap_insert(sem_heap* heap, sem_heap_entry* entry);
+sem_success sem_heap_insert(sem_heap* heap, sem_action* entry);
 
-sem_heap_entry* sem_heap_remove_earliest(sem_heap* heap);
+sem_action* sem_heap_remove_earliest(sem_heap* heap);
 
 #endif

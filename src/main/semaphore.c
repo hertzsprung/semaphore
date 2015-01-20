@@ -23,7 +23,7 @@ sem_success train_action(sem_heap* heap, void* context);
 sem_success train_action(sem_heap* heap, void* context) {
 	static uint64_t time = 2000L;
 
-	sem_heap_entry* action = malloc(sizeof(sem_heap_entry));
+	sem_action* action = malloc(sizeof(sem_action));
 	action->time = time;
 	action->context = context;
 	action->action = train_action;
@@ -103,7 +103,7 @@ int main(/*int argc, char **argv*/) {
 	sem_heap actions;
 	sem_heap_init(&actions);
 
-	sem_heap_entry action;
+	sem_action action;
 	action.time = 1000L;
 	action.context = &train;
 	action.action = train_action;

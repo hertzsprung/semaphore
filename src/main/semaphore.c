@@ -170,7 +170,9 @@ int main(/*int argc, char **argv*/) {
 				sem_action* a = NULL;
 
 				sem_train_input_act_upon(&input, &world, &a);
+
 				if (a != NULL) {
+					// TODO: should just chuck this onto the action list with "immediate" flag set
 					a->function(&actions, a);
 				}
 			}

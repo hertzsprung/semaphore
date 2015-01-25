@@ -2,6 +2,7 @@
 #define _SEM_HEAP_H
 
 #include <inttypes.h>
+#include <stdbool.h>
 
 #include "sem_error.h"
 
@@ -15,6 +16,7 @@ struct sem_action {
 	uint64_t time;
 	void* context;
 	sem_action_func function;
+	bool dynamically_allocated; /**< If true, the action will be freed by sem_action_list_execute() after it is executed */
 };
 
 /** \brief A dynamic array of sem_action pointers

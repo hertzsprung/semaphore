@@ -9,10 +9,12 @@ typedef struct sem_heap sem_heap;
 
 typedef struct sem_action sem_action;
 
+typedef sem_success (*sem_action_func)(sem_heap* heap, sem_action* action);
+
 struct sem_action {
 	uint64_t time;
 	void* context;
-	sem_success (*function)(sem_heap* heap, sem_action* action);
+	sem_action_func function;
 };
 
 /** \brief A dynamic array of sem_action pointers

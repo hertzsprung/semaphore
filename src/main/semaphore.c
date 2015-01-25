@@ -27,9 +27,11 @@ sem_success train_action(sem_heap* heap, sem_action* action) {
 	action->time += 1000L;
 	action->function = train_action;
 
-	((sem_train*) action->context)->x++;
-
-	sem_heap_insert(heap, action);
+	sem_train* train = (sem_train*) action->context;
+	if (train->moving) {
+		train->x++;
+		sem_heap_insert(heap, action);
+	}
 
 	return SEM_OK;
 }
@@ -89,6 +91,7 @@ int main(/*int argc, char **argv*/) {
 	render_ctx.scale = 32.0;
 
 	sem_train train;
+	train.moving = true;
 	train.x = 0;
 	train.y = 0;
 
@@ -167,6 +170,9 @@ int main(/*int argc, char **argv*/) {
 				sem_action* a = NULL;
 
 				sem_train_input_act_upon(&input, &world, &a);
+				if (a != NULL) {
+					a->function(&actions, a);
+				}
 			}
 		}
 

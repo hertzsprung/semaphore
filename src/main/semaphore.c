@@ -95,6 +95,9 @@ int main(/*int argc, char **argv*/) {
 	train.y = 0;
 
 	sem_world world;
+	world.max_x = 64;
+	world.max_y = 64;
+	sem_world_init_blank(&world);
 	world.train = &train;
 
 	sem_timer_context timer_ctx;
@@ -213,6 +216,7 @@ int main(/*int argc, char **argv*/) {
 	}
 
 	sem_heap_destroy(&actions);
+	sem_world_destroy(&world);
 	cairo_destroy(cr);
 	SDL_DestroyTexture(texture);
 	return EXIT_SUCCESS;

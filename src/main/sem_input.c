@@ -37,6 +37,7 @@ sem_success change_train_state(sem_heap* heap, sem_action* change_state) {
 }
 
 sem_success move_train_action(sem_heap* heap, sem_action* action) {
+	// TODO: don't mutate existing actions
 	action->time += 1000L;
 
 	sem_train* train = (sem_train*) action->context;

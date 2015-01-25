@@ -2,17 +2,19 @@ $(eval $(call EXE,semaphore,$(COMPONENTS)))
 $(eval $(call OBJ_H,sem_action_list))
 $(eval $(call OBJ_H,sem_error))
 $(eval $(call OBJ_H,sem_heap))
+$(eval $(call OBJ_H,sem_input))
 $(eval $(call OBJ_H,sem_render))
 $(eval $(call OBJ_H,sem_timer))
 $(eval $(call OBJ,semaphore))
 
-$(eval $(call DEP_OBJ,semaphore,sem_action_list sem_error sem_render sem_timer))
+$(eval $(call DEP_OBJ,semaphore,sem_action_list sem_error sem_input sem_render sem_timer))
 $(eval $(call DEP_OBJ,sem_action_list,sem_error sem_heap))
 $(eval $(call DEP_OBJ,sem_heap,sem_error))
+$(eval $(call DEP_OBJ,sem_input,sem_error sem_heap))
 $(eval $(call DEP_OBJ,sem_timer,sem_error))
 $(eval $(call DEP_HEADER,semaphore,sem_train))
 $(eval $(call DEP_HEADER,sem_render,sem_train))
-
+$(eval $(call DEP_HEADER,sem_input,sem_input sem_world))
 
 build/main:
 	mkdir -p $@

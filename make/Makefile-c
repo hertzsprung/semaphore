@@ -48,6 +48,18 @@ $(eval $(call _DEP_OBJ,$1,main,$2))
 
 endef
 
+define DEP_HEADER
+
+$(eval $(call _DEP_HEADER,build/main/$1,$(addprefix src/main/,$2)))
+
+endef
+
+define TEST_DEP_HEADER
+
+$(eval $(call _DEP_HEADER,build/test/$1,$(addprefix src/,$2)))
+
+endef
+
 # private templates
 
 # $1 -- filename (without .c suffix)
@@ -99,8 +111,8 @@ endef
 
 # $1 -- target (without .c suffix)
 # $2 -- prerequisites (space-separated list without suffixes)
-define DEP_HEADER
+define _DEP_HEADER
 
-build/main/$1.o: $(addsuffix .h,$(addprefix src/main/,$2))
+$1.o: $(addsuffix .h,$2)
 
 endef

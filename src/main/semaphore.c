@@ -25,7 +25,6 @@ sem_success train_action(sem_heap* heap, sem_action* action);
 
 sem_success train_action(sem_heap* heap, sem_action* action) {
 	action->time += 1000L;
-	action->function = train_action;
 
 	sem_train* train = (sem_train*) action->context;
 	if (train->moving) {
@@ -164,6 +163,7 @@ int main(/*int argc, char **argv*/) {
 				cairo_device_to_user(cr, &x, &y);
 
 				sem_input_event input;
+				input.time = timer_ctx.now;
 				input.x = (uint32_t) (floor(x));
 				input.y = (uint32_t) (floor(y));
 

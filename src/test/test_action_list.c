@@ -3,8 +3,8 @@
 #include <glib.h>
 
 #include "test_action_list.h"
-
 #include "test_heap.h"
+
 #include "sem_action_list.h"
 #include "sem_error.h"
 #include "sem_heap.h"

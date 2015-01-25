@@ -36,9 +36,9 @@ struct sem_heap {
 };
 
 
-sem_success sem_heap_init(sem_heap* array);
+sem_success sem_heap_init(sem_heap* heap);
 
-void sem_heap_destroy(sem_heap* array);
+void sem_heap_destroy(sem_heap* heap);
 
 sem_success sem_heap_insert(sem_heap* heap, sem_action* entry);
 

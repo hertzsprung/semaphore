@@ -8,6 +8,7 @@
 #include "sem_world.h"
 
 typedef struct {
+	uint64_t time; /**< game time */
 	uint32_t x, y; /**< tile coordinate */
 } sem_input_event;
 

@@ -1,3 +1,4 @@
+#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -14,9 +15,11 @@
 #include "sem_error.h"
 #include "sem_action_list.h"
 #include "sem_heap.h"
+#include "sem_input.h"
 #include "sem_render.h"
 #include "sem_timer.h"
 #include "sem_train.h"
+#include "sem_world.h"
 
 sem_success train_action(sem_heap* heap, sem_action* action);
 
@@ -89,6 +92,9 @@ int main(/*int argc, char **argv*/) {
 	train.x = 0;
 	train.y = 0;
 
+	sem_world world;
+	world.train = &train;
+
 	sem_timer_context timer_ctx;
 	timer_ctx.now = 0L;
 	timer_ctx.multiplier = 1.0;
@@ -149,6 +155,18 @@ int main(/*int argc, char **argv*/) {
 			}
 			if (e.type == SDL_MOUSEBUTTONUP) {
 				mousing = false;
+				
+				double x = e.button.x;
+				double y = e.button.y;
+				cairo_device_to_user(cr, &x, &y);
+
+				sem_input_event input;
+				input.x = (uint32_t) (floor(x));
+				input.y = (uint32_t) (floor(y));
+
+				sem_action* a = NULL;
+
+				sem_train_input_act_upon(&input, &world, &a);
 			}
 		}
 

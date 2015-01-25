@@ -21,7 +21,7 @@ WARNINGS := -pedantic-errors -Werror -Weverything \
 -Wno-format-nonliteral
 COMMON_CFLAGS := $(WARNINGS) -O0 -g -std=gnu99
 CFLAGS := $(COMMON_CFLAGS) $(SDL_CFLAGS) $(CAIRO_CFLAGS)
-LDFLAGS := $(SDL_LDFLAGS) $(CAIRO_LDFLAGS) -lrt
+LDFLAGS := $(SDL_LDFLAGS) $(CAIRO_LDFLAGS) -lrt -lm
 TEST_CFLAGS := -Isrc/main $(COMMON_CFLAGS) $(GLIB_CFLAGS)
 TEST_LDFLAGS := $(GLIB_LDFLAGS)
 

@@ -13,7 +13,6 @@ typedef struct {
 
 typedef sem_success (*sem_input_handler)(sem_input_event* input, sem_world* world, sem_action** action);
 
-// TODO: split this function into sem_train_input.h otherwise creating a circular dependency between sem_train.h and sem_world.h
 sem_success sem_train_input_act_upon(sem_input_event* input, sem_world* world, sem_action** action);
 
 #endif

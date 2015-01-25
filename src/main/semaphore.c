@@ -195,7 +195,7 @@ int main(/*int argc, char **argv*/) {
 
 		cairo_set_line_width(cr, 0.1);
 
-		sem_render_train(&render_ctx, &train);
+		sem_render_world(&render_ctx, &world);
 
 		char buf[128] = "";
 		snprintf(buf, sizeof(buf), "frame: %ld, game time: %ld, multiplier: %f", frames, timer_ctx.now, timer_ctx.multiplier);

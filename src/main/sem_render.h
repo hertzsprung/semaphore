@@ -3,13 +3,13 @@
 
 #include <cairo.h>
 
-#include "sem_train.h"
+#include "sem_world.h"
 
 typedef struct {
 	cairo_t* cr;
 	double scale;
 } sem_render_context;
 
-void sem_render_train(sem_render_context* ctx, sem_train* train);
+void sem_render_world(sem_render_context* ctx, sem_world* world);
 
 #endif

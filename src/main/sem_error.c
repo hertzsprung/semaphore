@@ -9,12 +9,13 @@ char* sem_get_error(void) {
 	return message;
 }
 
-void sem_set_error(const char* format, ...) {
+sem_success sem_set_error(const char* format, ...) {
 	va_list arglist;
 	char* error = sem_get_error();
 	va_start(arglist, format);
 	vsnprintf(error, SEM_ERROR_BUF_SIZE * sizeof(char), format, arglist);
 	va_end(arglist);
+	return SEM_ERROR;
 }
 
 int sem_fatal_error(void) {

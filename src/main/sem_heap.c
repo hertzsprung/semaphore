@@ -11,7 +11,10 @@ void sem_heap_percolate_down(sem_heap* heap, uint32_t hole);
 sem_success sem_heap_init(sem_heap* heap) {
 	heap->size = 1;
 	heap->tail_idx = 1;
-	heap->entries = malloc(sizeof(sem_action*)); // TODO: check return
+	heap->entries = malloc(sizeof(sem_action*));
+	if (heap->entries == NULL) {
+		return sem_set_error("Failed to malloc heap entries");
+	}
 	return SEM_OK;
 }
 
@@ -22,7 +25,10 @@ void sem_heap_destroy(sem_heap* heap) {
 sem_success sem_heap_extend_tail(sem_heap* heap) {
 	if (heap->tail_idx == heap->size) {
 		heap->size *= 2;
-		heap->entries = realloc(heap->entries, sizeof(sem_action*) * heap->size); // TODO: check return
+		heap->entries = realloc(heap->entries, sizeof(sem_action*) * heap->size);
+		if (heap->entries == NULL) {
+			return sem_set_error("Failed to increase size of heap");
+		}
 	}
 
 	heap->tail_idx++;
@@ -31,7 +37,7 @@ sem_success sem_heap_extend_tail(sem_heap* heap) {
 
 sem_success sem_heap_insert(sem_heap* heap, sem_action* e) {
 	uint32_t hole = heap->tail_idx;
-	sem_heap_extend_tail(heap); // TODO: check return
+	if (sem_heap_extend_tail(heap) == SEM_ERROR) return SEM_ERROR;
 	for (; hole > 1 && e->time < heap->entries[hole/2]->time; hole /= 2) {
 		heap->entries[hole] = heap->entries[hole/2];
 	}

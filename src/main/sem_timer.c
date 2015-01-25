@@ -21,8 +21,7 @@ sem_success sem_timer_now(sem_timer_context* ctx) {
 sem_success sem_clock_monotonic(uint64_t* now) {
 	struct timespec monotime;
 	if (clock_gettime(CLOCK_MONOTONIC, &monotime) != 0) {
-		sem_set_error("Could not get monotonic time");
-		return SEM_ERROR;
+		return sem_set_error("Could not get monotonic time");
 	}
 	*now = sem_time_millis(&monotime);
 	return SEM_OK;

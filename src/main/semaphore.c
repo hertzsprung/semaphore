@@ -102,6 +102,56 @@ int main(/*int argc, char **argv*/) {
 	sem_world_init_blank(&world);
 	world.train = &train;
 
+	sem_tile* t = sem_tile_at(&world, 0, 0);
+	t->class = TRACK;
+	sem_track trackSE;
+	trackSE.start = SEM_SOUTH;
+	trackSE.end = SEM_EAST;
+	t->track = &trackSE;
+
+	t = sem_tile_at(&world, 2, 0);
+	t->class = TRACK;
+	sem_track trackSW;
+	trackSW.start = SEM_SOUTH;
+	trackSW.end = SEM_WEST;
+	t->track = &trackSW;
+
+	t = sem_tile_at(&world, 2, 2);
+	t->class = TRACK;
+	sem_track trackNW;
+	trackNW.start = SEM_NORTH;
+	trackNW.end = SEM_WEST;
+	t->track = &trackNW;
+
+	t = sem_tile_at(&world, 0, 2);
+	t->class = TRACK;
+	sem_track trackNE;
+	trackNE.start = SEM_NORTH;
+	trackNE.end = SEM_EAST;
+	t->track = &trackNE;
+
+	t = sem_tile_at(&world, 1, 0);
+	t->class = TRACK;
+	sem_track trackEW;
+	trackEW.start = SEM_EAST;
+	trackEW.end = SEM_WEST;
+	t->track = &trackEW;
+
+	t = sem_tile_at(&world, 1, 2);
+	t->class = TRACK;
+	t->track = &trackEW;
+
+	t = sem_tile_at(&world, 0, 1);
+	t->class = TRACK;
+	sem_track trackNS;
+	trackNS.start = SEM_NORTH;
+	trackNS.end = SEM_SOUTH;
+	t->track = &trackNS;
+
+	t = sem_tile_at(&world, 2, 1);
+	t->class = TRACK;
+	t->track = &trackNS;
+
 	sem_timer_context timer_ctx;
 	timer_ctx.now = 0L;
 	timer_ctx.multiplier = 1.0;
@@ -112,6 +162,7 @@ int main(/*int argc, char **argv*/) {
 	sem_heap_init(&actions);
 
 	sem_action action;
+	action.dynamically_allocated = false;
 	action.time = 1000L;
 	action.context = &train;
 	action.function = train_action;
@@ -183,7 +234,7 @@ int main(/*int argc, char **argv*/) {
 			}
 		}
 
-		cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
+		cairo_set_source_rgb(cr, 0.0, 0.53125, 0.26525);
 		cairo_rectangle(cr, 0, 0, width-1, height-1);
 		cairo_fill(cr);
 
@@ -199,6 +250,7 @@ int main(/*int argc, char **argv*/) {
 		sem_action_list_execute(&actions, timer_ctx.now);
 
 		cairo_set_line_width(cr, 0.1);
+		cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
 
 		sem_render_world(&render_ctx, &world);
 

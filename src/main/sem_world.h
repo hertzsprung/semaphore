@@ -1,15 +1,22 @@
 #ifndef _SEM_WORLD_H
 #define _SEM_WORLD_H
 
+#include "sem_compass.h"
 #include "sem_error.h"
 #include "sem_train.h"
 
 typedef enum {
-	BLANK
+	BLANK, TRACK
 } sem_tile_class;
 
 typedef struct {
+	unit_vector start;
+	unit_vector end;	
+} sem_track;
+
+typedef struct {
 	sem_tile_class class;	
+	sem_track* track;
 } sem_tile;
 
 typedef struct {

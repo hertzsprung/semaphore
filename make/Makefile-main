@@ -13,12 +13,14 @@ $(eval $(call DEP_OBJ,semaphore,sem_action_list sem_error sem_input sem_render s
 $(eval $(call DEP_OBJ,sem_action_list,sem_error sem_heap))
 $(eval $(call DEP_OBJ,sem_heap,sem_error))
 $(eval $(call DEP_OBJ,sem_input,sem_error sem_train sem_heap))
+$(eval $(call DEP_OBJ,sem_render,sem_error sem_world))
 $(eval $(call DEP_OBJ,sem_timer,sem_error))
 $(eval $(call DEP_OBJ,sem_train,sem_error))
 $(eval $(call DEP_OBJ,sem_world,sem_error))
-$(eval $(call DEP_HEADER,semaphore,sem_compass))
-$(eval $(call DEP_HEADER,sem_render,sem_train))
 $(eval $(call DEP_HEADER,sem_input,sem_input sem_world))
+$(eval $(call DEP_HEADER,sem_render,sem_compass sem_train))
+$(eval $(call DEP_HEADER,sem_train,sem_compass))
+$(eval $(call DEP_HEADER,sem_world,sem_compass))
 
 build/main:
 	mkdir -p $@

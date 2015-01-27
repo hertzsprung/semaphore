@@ -12,6 +12,7 @@
 #include <SDL_render.h>
 #include <SDL_video.h>
 
+#include "sem_compass.h"
 #include "sem_error.h"
 #include "sem_action_list.h"
 #include "sem_heap.h"
@@ -28,7 +29,7 @@ sem_success train_action(sem_heap* heap, sem_action* action) {
 
 	sem_train* train = (sem_train*) action->context;
 	if (train->moving) {
-		train->x++;
+		sem_train_move(train);
 		sem_heap_insert(heap, action);
 	}
 
@@ -93,6 +94,7 @@ int main(/*int argc, char **argv*/) {
 	train.moving = true;
 	train.x = 0;
 	train.y = 0;
+	train.velocity = SEM_SOUTH;
 
 	sem_world world;
 	world.max_x = 64;

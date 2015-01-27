@@ -5,6 +5,7 @@
 
 #include "sem_error.h"
 #include "sem_heap.h"
+#include "sem_train.h"
 #include "sem_world.h"
 
 sem_success change_train_state(sem_heap* heap, sem_action* action);
@@ -48,7 +49,7 @@ sem_success change_train_state(sem_heap* heap, sem_action* change_state) {
 sem_success move_train_action(sem_heap* heap, sem_action* action) {
 	sem_train* train = (sem_train*) action->context;
 	if (train->moving) {
-		train->x++;
+		sem_train_move(train); // TODO: check return
 
 		sem_action* next_move = malloc(sizeof(sem_action));
 		if (next_move == NULL) {

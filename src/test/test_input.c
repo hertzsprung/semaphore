@@ -7,6 +7,7 @@
 #include "test_heap.h"
 
 #include "sem_action_list.h"
+#include "sem_compass.h"
 #include "sem_input.h"
 #include "sem_heap.h"
 #include "sem_train.h"
@@ -45,6 +46,7 @@ void test_input_toggles_train_state(sem_heap* heap, const void* data) {
 	sem_train train;
 	train.x = 1;
 	train.y = 4;
+	train.velocity = SEM_EAST;
 	train.moving = false;
 
 	sem_world world;
@@ -70,4 +72,5 @@ void test_input_toggles_train_state(sem_heap* heap, const void* data) {
 
 	g_assert_true(train.moving == true);
 	g_assert_true(train.x == 2);
+	g_assert_true(train.y == 4);
 }

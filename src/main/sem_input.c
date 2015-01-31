@@ -43,7 +43,7 @@ sem_success change_train_state(sem_heap* heap, sem_action* action) {
 sem_success move_train_action(sem_heap* heap, sem_action* action) {
 	sem_train* train = (sem_train*) action->context;
 	if (train->moving) {
-		sem_train_move(train); // TODO: check return
+		if (sem_train_move(train) != SEM_OK) return SEM_ERROR;
 
 		action->time = action->time + 1000L;
 		sem_heap_insert(heap, action);

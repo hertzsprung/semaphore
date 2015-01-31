@@ -1,5 +1,5 @@
 test: build/test/test_all
-	$(GTESTER) -o build/test/test_report.xml $<
+	$(GTESTER) --verbose -o build/test/test_report.xml $<
 	sed -i 's#<gtester>#<gtester>\n<info>\n<package>semaphore</package><version>0</version><revision>0</revision>\n</info>#' build/test/test_report.xml
 	$(GTESTER_REPORT) build/test/test_report.xml > build/test/test_report.html
 
@@ -17,7 +17,7 @@ $(eval $(call TEST_DEP_OBJ,test_action_list,test/test_action_list main/sem_actio
 $(eval $(call TEST_DEP_OBJ,test_heap,main/sem_error main/sem_heap))
 $(eval $(call TEST_DEP_OBJ,test_input,test/test_heap main/sem_action_list main/sem_error main/sem_input))
 $(eval $(call TEST_DEP_OBJ,test_timer,main/sem_timer))
-$(eval $(call TEST_DEP_OBJ,test_train,main/sem_train))
+$(eval $(call TEST_DEP_OBJ,test_train,main/sem_train main/sem_world))
 $(eval $(call TEST_DEP_OBJ,test_world,main/sem_world))
 
 $(eval $(call TEST_DEP_HEADER,test_input,main/sem_compass main/sem_heap main/sem_train main/sem_world))

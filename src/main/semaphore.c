@@ -22,20 +22,6 @@
 #include "sem_train.h"
 #include "sem_world.h"
 
-sem_success train_action(sem_heap* heap, sem_action* action);
-
-sem_success train_action(sem_heap* heap, sem_action* action) {
-	action->time += 1000L;
-
-	sem_train* train = (sem_train*) action->context;
-	if (train->moving) {
-		sem_train_move(train);
-		sem_heap_insert(heap, action);
-	}
-
-	return SEM_OK;
-}
-
 int main(/*int argc, char **argv*/) {
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
 		sem_set_error("Unable to initialize SDL: %s", SDL_GetError());
@@ -91,10 +77,10 @@ int main(/*int argc, char **argv*/) {
 	render_ctx.scale = 32.0;
 
 	sem_train train;
-	train.moving = true;
+	train.moving = false;
 	train.x = 0;
 	train.y = 0;
-	train.velocity = SEM_SOUTH;
+	train.direction = SEM_EAST;
 
 	sem_world world;
 	world.max_x = 64;
@@ -152,6 +138,8 @@ int main(/*int argc, char **argv*/) {
 	t->class = TRACK;
 	t->track = &trackNS;
 
+	train.world = &world;
+
 	sem_timer_context timer_ctx;
 	timer_ctx.now = 0L;
 	timer_ctx.multiplier = 1.0;
@@ -160,14 +148,6 @@ int main(/*int argc, char **argv*/) {
 
 	sem_heap actions;
 	sem_heap_init(&actions);
-
-	sem_action action;
-	action.dynamically_allocated = false;
-	action.time = 1000L;
-	action.context = &train;
-	action.function = train_action;
-
-	sem_heap_insert(&actions, &action);
 
 	cairo_scale(cr, render_ctx.scale, render_ctx.scale);
 
@@ -247,7 +227,9 @@ int main(/*int argc, char **argv*/) {
 			cairo_stroke(cr);
 		}
 
-		sem_action_list_execute(&actions, timer_ctx.now);
+		if (sem_action_list_execute(&actions, timer_ctx.now) != SEM_OK) {
+			return sem_fatal_error();
+		}
 
 		cairo_set_line_width(cr, 0.1);
 		cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);

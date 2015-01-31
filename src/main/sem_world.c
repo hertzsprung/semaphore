@@ -4,6 +4,8 @@
 #include "sem_error.h"
 #include "sem_world.h"
 
+sem_success sem_track_redirect(sem_train* train, sem_track* track);
+
 sem_success sem_world_init_blank(sem_world* world) {
 	world->tiles = malloc(world->max_x * world->max_y * sizeof(sem_tile));
 	if (world->tiles == NULL) {
@@ -27,4 +29,19 @@ sem_tile* sem_tile_at(sem_world* world, uint32_t x, uint32_t y) {
 	assert(y < world->max_y);
 
 	return &(world->tiles[y*world->max_x + x]);
+}
+
+sem_success sem_tile_redirect(sem_train* train, sem_tile* tile) {
+	switch (tile->class) {
+	case BLANK:
+		return sem_set_error("Train ran onto blank tile");
+	case TRACK:
+		return sem_track_redirect(train, tile->track);
+	}
+}
+
+sem_success sem_track_redirect(sem_train* train, sem_track* track) {
+	#pragma unused(train)
+	#pragma unused(track)
+	return SEM_ERROR;
 }

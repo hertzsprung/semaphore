@@ -8,8 +8,9 @@
 sem_success sem_action_list_execute(sem_heap* heap, uint64_t end_time) {
 	while (heap->tail_idx > 1 && heap->entries[1]->time <= end_time) {
 		sem_action* action = sem_heap_remove_earliest(heap);
+		action->destroyable = true;
 		sem_success success = action->function(heap, action);
-		if (action->dynamically_allocated) {
+		if (action->dynamically_allocated && action->destroyable) {
 			free(action);
 		}
 		if (success != SEM_OK) {

@@ -27,18 +27,14 @@ sem_success sem_train_input_act_upon(sem_input_event* input, sem_world* world, s
 	return SEM_OK;
 }
 
-sem_success change_train_state(sem_heap* heap, sem_action* change_state) {
-	sem_train* train = (sem_train*) change_state->context;
+sem_success change_train_state(sem_heap* heap, sem_action* action) {
+	sem_train* train = (sem_train*) action->context;
 
 	train->moving ^= true;
 	if (train->moving) {
-		sem_action* move = sem_action_new();
-		if (move == NULL) return SEM_ERROR;
-		move->time = change_state->time;
-		move->context = change_state->context;
-		move->function = move_train_action;
+		action->function = move_train_action;
 
-		sem_heap_insert(heap, move);
+		sem_heap_insert(heap, action);
 	}
 
 	return SEM_OK;
@@ -49,12 +45,8 @@ sem_success move_train_action(sem_heap* heap, sem_action* action) {
 	if (train->moving) {
 		sem_train_move(train); // TODO: check return
 
-		sem_action* next_move = sem_action_new();
-		if (next_move == NULL) return SEM_ERROR;
-		next_move->time = action->time + 1000L;
-		next_move->context = train;
-		next_move->function = move_train_action;
-		sem_heap_insert(heap, next_move);
+		action->time = action->time + 1000L;
+		sem_heap_insert(heap, action);
 	}
 
 	return SEM_OK;

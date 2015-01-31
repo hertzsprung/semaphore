@@ -17,6 +17,7 @@ struct sem_action {
 	void* context;
 	sem_action_func function;
 	bool dynamically_allocated; /**< If true, the action will be freed by sem_action_list_execute() after it is executed */
+	bool destroyable; /**< If true, the action will be destroyed after its function has been executed.  If false, the action will be reinserted onto the heap. */
 };
 
 /** \brief A dynamic array of sem_action pointers

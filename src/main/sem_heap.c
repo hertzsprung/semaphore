@@ -35,13 +35,14 @@ sem_success sem_heap_extend_tail(sem_heap* heap) {
 	return SEM_OK;
 }
 
-sem_success sem_heap_insert(sem_heap* heap, sem_action* e) {
+sem_success sem_heap_insert(sem_heap* heap, sem_action* a) {
+	a->destroyable = false;	
 	uint32_t hole = heap->tail_idx;
 	if (sem_heap_extend_tail(heap) == SEM_ERROR) return SEM_ERROR;
-	for (; hole > 1 && e->time < heap->entries[hole/2]->time; hole /= 2) {
+	for (; hole > 1 && a->time < heap->entries[hole/2]->time; hole /= 2) {
 		heap->entries[hole] = heap->entries[hole/2];
 	}
-	heap->entries[hole] = e;
+	heap->entries[hole] = a;
 	return SEM_OK;
 }
 

@@ -57,18 +57,16 @@ void test_input_toggles_train_state(sem_heap* heap, const void* data) {
 	input.x = 1;
 	input.y = 4;
 
-	sem_action* change_state = NULL;
+	sem_action* action = NULL;
 
-	sem_train_input_act_upon(&input, &world, &change_state);
-	change_state->function(heap, change_state);
+	sem_train_input_act_upon(&input, &world, &action);
+	action->function(heap, action);
 
-	free(change_state);
+	action = sem_heap_remove_earliest(heap);
+	g_assert_cmpuint(action->time, ==, 3000L);
 
-	sem_action* move = sem_heap_remove_earliest(heap);
-	g_assert_cmpuint(move->time, ==, 3000L);
-
-	move->function(heap, move);
-	free(move);
+	action->function(heap, action);
+	free(action);
 
 	g_assert_true(train.moving == true);
 	g_assert_true(train.x == 2);

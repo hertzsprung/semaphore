@@ -13,4 +13,6 @@ typedef uint8_t unit_vector;
 #define SEM_COMPASS_X(v) (((v & 3) ^ 2) - 2)
 #define SEM_COMPASS_Y(v) (((v >> 2) ^ 2) - 2)
 
+unit_vector sem_compass_opposite_of(unit_vector v);
+
 #endif

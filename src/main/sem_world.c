@@ -41,7 +41,12 @@ sem_success sem_tile_redirect(sem_train* train, sem_tile* tile) {
 }
 
 sem_success sem_track_redirect(sem_train* train, sem_track* track) {
-	#pragma unused(train)
-	#pragma unused(track)
-	return SEM_ERROR;
+	if (train->direction == sem_compass_opposite_of(track->start)) {
+		train->direction = track->end;
+	} else if (train->direction == sem_compass_opposite_of(track->end)) {
+		train->direction = track->start;
+	} else {
+		return sem_set_error("Train ran onto disconnected track");
+	}
+	return SEM_OK;
 }

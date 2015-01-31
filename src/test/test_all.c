@@ -3,6 +3,7 @@
 #include <glib.h>
 
 #include "test_action_list.h"
+#include "test_compass.h"
 #include "test_heap.h"
 #include "test_input.h"
 #include "test_timer.h"
@@ -13,6 +14,7 @@ int main(int argc, char **argv) {
 	g_test_init(&argc, &argv, NULL);
 
 	add_tests_action_list();
+	add_tests_compass();
 	add_tests_heap();
 	add_tests_input();
 

@@ -3,17 +3,19 @@ test: build/test/test_all
 	sed -i 's#<gtester>#<gtester>\n<info>\n<package>semaphore</package><version>0</version><revision>0</revision>\n</info>#' build/test/test_report.xml
 	$(GTESTER_REPORT) build/test/test_report.xml > build/test/test_report.html
 
-$(eval $(call TEST_EXE,test_all,test/test_all test/test_action_list test/test_heap test/test_input test/test_timer test/test_train test/test_world main/sem_action main/sem_action_list main/sem_error main/sem_input main/sem_heap main/sem_timer main/sem_train main/sem_world))
+$(eval $(call TEST_EXE,test_all,test/test_all test/test_action_list test/test_compass test/test_heap test/test_input test/test_timer test/test_train test/test_world main/sem_action main/sem_action_list main/sem_compass main/sem_error main/sem_input main/sem_heap main/sem_timer main/sem_train main/sem_world))
 $(eval $(call TEST_OBJ,test_all))
 $(eval $(call TEST_OBJ_H,test_action_list))
+$(eval $(call TEST_OBJ_H,test_compass))
 $(eval $(call TEST_OBJ_H,test_heap))
 $(eval $(call TEST_OBJ_H,test_input))
 $(eval $(call TEST_OBJ_H,test_timer))
 $(eval $(call TEST_OBJ_H,test_train))
 $(eval $(call TEST_OBJ_H,test_world))
 
-$(eval $(call TEST_DEP_OBJ,test_all,test/test_action_list test/test_heap test/test_input test/test_timer test/test_train test/test_world))
+$(eval $(call TEST_DEP_OBJ,test_all,test/test_action_list test/compass test/test_heap test/test_input test/test_timer test/test_train test/test_world))
 $(eval $(call TEST_DEP_OBJ,test_action_list,test/test_action_list main/sem_action_list main/sem_error main/sem_heap))
+$(eval $(call TEST_DEP_OBJ,test_compass,main/sem_compass))
 $(eval $(call TEST_DEP_OBJ,test_heap,main/sem_error main/sem_heap))
 $(eval $(call TEST_DEP_OBJ,test_input,test/test_heap main/sem_action_list main/sem_error main/sem_input))
 $(eval $(call TEST_DEP_OBJ,test_timer,main/sem_timer))

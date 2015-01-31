@@ -7,10 +7,10 @@
 
 sem_success sem_action_list_execute(sem_heap* heap, uint64_t end_time) {
 	while (heap->tail_idx > 1 && heap->entries[1]->time <= end_time) {
-		sem_action* entry = sem_heap_remove_earliest(heap);
-		sem_success success = entry->function(heap, entry);
-		if (entry->dynamically_allocated) {
-			free(entry);
+		sem_action* action = sem_heap_remove_earliest(heap);
+		sem_success success = action->function(heap, action);
+		if (action->dynamically_allocated) {
+			free(action);
 		}
 		if (success != SEM_OK) {
 			return SEM_ERROR;
@@ -18,3 +18,4 @@ sem_success sem_action_list_execute(sem_heap* heap, uint64_t end_time) {
 	}
 	return SEM_OK;
 }
+

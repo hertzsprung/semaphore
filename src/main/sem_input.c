@@ -3,6 +3,7 @@
 
 #include "sem_input.h"
 
+#include "sem_action.h"
 #include "sem_error.h"
 #include "sem_heap.h"
 #include "sem_train.h"
@@ -31,14 +32,11 @@ sem_success change_train_state(sem_heap* heap, sem_action* change_state) {
 
 	train->moving ^= true;
 	if (train->moving) {
-		sem_action* move = malloc(sizeof(sem_action));
-		if (move == NULL) {
-			return sem_set_error("Could not create action");
-		}
+		sem_action* move = sem_action_new();
+		if (move == NULL) return SEM_ERROR;
 		move->time = change_state->time;
 		move->context = change_state->context;
 		move->function = move_train_action;
-		move->dynamically_allocated = true;
 
 		sem_heap_insert(heap, move);
 	}
@@ -51,14 +49,11 @@ sem_success move_train_action(sem_heap* heap, sem_action* action) {
 	if (train->moving) {
 		sem_train_move(train); // TODO: check return
 
-		sem_action* next_move = malloc(sizeof(sem_action));
-		if (next_move == NULL) {
-			return sem_set_error("Could not create action");
-		}
+		sem_action* next_move = sem_action_new();
+		if (next_move == NULL) return SEM_ERROR;
 		next_move->time = action->time + 1000L;
 		next_move->context = train;
 		next_move->function = move_train_action;
-		next_move->dynamically_allocated = true;
 		sem_heap_insert(heap, next_move);
 	}
 

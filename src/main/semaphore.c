@@ -77,10 +77,10 @@ int main(/*int argc, char **argv*/) {
 	render_ctx.scale = 32.0;
 
 	sem_train train;
-	train.moving = false;
+	sem_train_init(&train);
 	sem_coordinate position;
 	sem_coordinate_set(&position, 2, 0);
-	train.position = &position;
+	sem_train_add_car(&train, &position);
 	train.direction = SEM_EAST;
 
 	sem_world world;
@@ -284,6 +284,7 @@ int main(/*int argc, char **argv*/) {
 
 	sem_heap_destroy(&actions);
 	sem_world_destroy(&world);
+	sem_train_destroy(&train);
 	cairo_destroy(cr);
 	SDL_DestroyTexture(texture);
 	return EXIT_SUCCESS;

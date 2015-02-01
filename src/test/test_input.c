@@ -18,14 +18,17 @@ void test_input_toggles_train_state(sem_heap* heap, const void* data);
 
 void add_tests_input(void) {
 	g_test_add_func("/input/null_action_for_unoccupied_coordinate", test_input_null_action_for_unoccupied_coordinate);
-//	add_test_heap("/input/toggles_train_state", test_input_toggles_train_state);
+	add_test_heap("/input/toggles_train_state", test_input_toggles_train_state);
 }
 
+// TODO: use glib to handle train init/destroy
 void test_input_null_action_for_unoccupied_coordinate() {
 	sem_train train;
+	sem_train_init(&train);
+
 	sem_coordinate position;
 	sem_coordinate_set(&position, 1, 4);
-	train.position = &position;
+	sem_train_add_car(&train, &position);
 
 	sem_world world;
 	world.train = &train;
@@ -41,25 +44,32 @@ void test_input_null_action_for_unoccupied_coordinate() {
 	g_assert_null(action);
 }
 
-// TODO: reenable and get glib to init/destroy the world
+// TODO: get glib to init/destroy the world and train!
 void test_input_toggles_train_state(sem_heap* heap, const void* data) {
 	#pragma unused(data)
 
 	sem_train train;
+	sem_train_init(&train);
+
 	sem_coordinate position;
-	sem_coordinate_set(&position, 1, 4);
-	train.position = &position;
+	sem_coordinate_set(&position, 0, 0);
+	sem_train_add_car(&train, &position);
 	train.direction = SEM_EAST;
 	train.moving = false;
 
 	sem_world world;
+	world.max_x = 2;
+	world.max_y = 1;
+	sem_world_init_blank(&world);
+	// TODO: should really define the track here
+
 	world.train = &train;
 	train.world = &world;
 
 	sem_input_event input;
 	input.time = 3000L;
-	input.x = 1;
-	input.y = 4;
+	input.x = 0;
+	input.y = 0;
 
 	sem_action* action = NULL;
 
@@ -73,6 +83,6 @@ void test_input_toggles_train_state(sem_heap* heap, const void* data) {
 	free(action);
 
 	g_assert_true(train.moving == true);
-	g_assert_true(train.position->x == 2);
-	g_assert_true(train.position->y == 4);
+	g_assert_true(train.position->x == 1);
+	g_assert_true(train.position->y == 0);
 }

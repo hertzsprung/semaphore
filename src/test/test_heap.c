@@ -5,10 +5,6 @@
 #include "sem_error.h"
 #include "sem_heap.h"
 
-void add_test_heap(const char *test_name, void (*test)(sem_heap* heap, const void* data));
-void test_heap_setup(sem_heap* heap, const void* data);
-void test_heap_teardown(sem_heap* heap, const void* data);
-
 void test_heap_removes_earliest(sem_heap* heap, const void* data);
 void test_heap_removes_nothing_in_empty_heap(sem_heap* heap, const void* data);
 

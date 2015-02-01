@@ -38,13 +38,16 @@ void test_world_teardown(sem_world* world, const void* data) {
 	sem_world_destroy(world);
 }
 
+// TODO: get glib to handle train init/destroy
 void test_train_moves_given_velocity(sem_world* world, const void* data) {
 	#pragma unused(data)
 
 	sem_train train;
+	sem_train_init(&train);
+
 	sem_coordinate position;
 	sem_coordinate_set(&position, 0, 1);
-	train.position = &position;	
+	sem_train_add_car(&train, &position);
 
 	train.direction = SEM_NORTH | SEM_EAST;
 
@@ -68,9 +71,11 @@ void test_train_error_moves_onto_blank_tile(sem_world* world, const void* data) 
 	#pragma unused(data)
 
 	sem_train train;
+	sem_train_init(&train);
+
 	sem_coordinate position;
 	sem_coordinate_set(&position, 0, 0);
-	train.position = &position;	
+	sem_train_add_car(&train, &position);
 	train.direction = SEM_EAST;
 
 	sem_track track_E_W;
@@ -90,9 +95,11 @@ void test_train_follows_track(sem_world* world, const void* data) {
 	#pragma unused(data)
 
 	sem_train train;
+	sem_train_init(&train);
+
 	sem_coordinate position;
 	sem_coordinate_set(&position, 0, 0);
-	train.position = &position;	
+	sem_train_add_car(&train, &position);
 	train.direction = SEM_EAST;
 
 	sem_track track_E_W;

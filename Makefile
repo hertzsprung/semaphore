@@ -25,7 +25,7 @@ LDFLAGS := $(SDL_LDFLAGS) $(CAIRO_LDFLAGS) -lrt -lm
 TEST_CFLAGS := -Isrc/main $(COMMON_CFLAGS) $(GLIB_CFLAGS)
 TEST_LDFLAGS := $(GLIB_LDFLAGS)
 
-COMPONENTS := semaphore sem_action sem_action_list sem_compass sem_error sem_heap sem_input sem_render sem_timer sem_train sem_world
+COMPONENTS := semaphore sem_action sem_action_list sem_compass sem_dynamic_array sem_error sem_heap sem_input sem_render sem_timer sem_train sem_world
 SOURCES := $(addsuffix .c,$(addprefix src/main/,$(COMPONENTS)))
 
 .DEFAULT_GOAL := all

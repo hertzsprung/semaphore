@@ -37,10 +37,12 @@ void test_action_list_two_old_actions_executed(sem_heap* heap, const void* data)
 	a1.time = 1000L;
 	a1.context = &action_called;
 	a1.function = test_action;
+	a1.dynamically_allocated = false;
 
 	a2.time = 2000L;
 	a2.context = &action_called;
 	a2.function = test_action;
+	a2.dynamically_allocated = false;
 
 	sem_heap_insert(heap, &a1);
 	sem_heap_insert(heap, &a2);

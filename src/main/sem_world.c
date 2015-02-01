@@ -24,6 +24,10 @@ void sem_world_destroy(sem_world* world) {
 	free(world->tiles);
 }
 
+sem_tile* sem_tile_at_coord(sem_world* world, sem_coordinate* c) {
+	return sem_tile_at(world, c->x, c->y);
+}
+
 sem_tile* sem_tile_at(sem_world* world, uint32_t x, uint32_t y) {
 	assert(x < world->max_x);
 	assert(y < world->max_y);

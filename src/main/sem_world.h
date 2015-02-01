@@ -32,6 +32,8 @@ sem_success sem_world_init_blank(sem_world* world);
 
 void sem_world_destroy(sem_world* world);
 
+sem_tile* sem_tile_at_coord(sem_world* world, sem_coordinate* c);
+
 sem_tile* sem_tile_at(sem_world* world, uint32_t x, uint32_t y);
 
 sem_success sem_tile_redirect(sem_train* train, sem_tile* tile);

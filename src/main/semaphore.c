@@ -78,8 +78,9 @@ int main(/*int argc, char **argv*/) {
 
 	sem_train train;
 	train.moving = false;
-	train.x = 2;
-	train.y = 0;
+	sem_coordinate position;
+	sem_coordinate_set(&position, 2, 0);
+	train.position = &position;
 	train.direction = SEM_EAST;
 
 	sem_world world;

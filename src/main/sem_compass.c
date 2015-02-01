@@ -1,5 +1,10 @@
 #include "sem_compass.h"
 
+void sem_coordinate_set(sem_coordinate* coord, uint32_t x, uint32_t y) {
+	coord->x = x;
+	coord->y = y;
+}
+
 unit_vector sem_compass_opposite_of(unit_vector v) {
 	unit_vector opposite = 0;
 	if (SEM_COMPASS_X(v) > 0) {

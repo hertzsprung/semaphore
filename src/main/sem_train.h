@@ -13,7 +13,7 @@ typedef struct sem_train sem_train;
 struct sem_train {
 	sem_world* world;
 	bool moving;
-	uint32_t x, y;
+	sem_coordinate* position;
 	unit_vector direction;
 };
 

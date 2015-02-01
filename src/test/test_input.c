@@ -23,8 +23,9 @@ void add_tests_input(void) {
 
 void test_input_null_action_for_unoccupied_coordinate() {
 	sem_train train;
-	train.x = 1;
-	train.y = 4;
+	sem_coordinate position;
+	sem_coordinate_set(&position, 1, 4);
+	train.position = &position;
 
 	sem_world world;
 	world.train = &train;
@@ -45,8 +46,9 @@ void test_input_toggles_train_state(sem_heap* heap, const void* data) {
 	#pragma unused(data)
 
 	sem_train train;
-	train.x = 1;
-	train.y = 4;
+	sem_coordinate position;
+	sem_coordinate_set(&position, 1, 4);
+	train.position = &position;
 	train.direction = SEM_EAST;
 	train.moving = false;
 
@@ -71,6 +73,6 @@ void test_input_toggles_train_state(sem_heap* heap, const void* data) {
 	free(action);
 
 	g_assert_true(train.moving == true);
-	g_assert_true(train.x == 2);
-	g_assert_true(train.y == 4);
+	g_assert_true(train.position->x == 2);
+	g_assert_true(train.position->y == 4);
 }

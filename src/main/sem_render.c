@@ -57,7 +57,7 @@ void render_tile_track(sem_render_context* ctx, uint32_t x, uint32_t y, sem_tile
 }
 
 void render_train(sem_render_context* ctx, sem_train* train) {
-	cairo_rectangle(ctx->cr, train->x, train->y, 1.0, 1.0);	
+	cairo_rectangle(ctx->cr, train->position->x, train->position->y, 1.0, 1.0);	
 	cairo_set_source_rgb(ctx->cr, 1.0, 0.0, 1.0);
 	cairo_fill(ctx->cr);
 }

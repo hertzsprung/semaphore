@@ -42,8 +42,10 @@ void test_train_moves_given_velocity(sem_world* world, const void* data) {
 	#pragma unused(data)
 
 	sem_train train;
-	train.x = 0;
-	train.y = 1;
+	sem_coordinate position;
+	sem_coordinate_set(&position, 0, 1);
+	train.position = &position;	
+
 	train.direction = SEM_NORTH | SEM_EAST;
 
 	sem_track track_SW_NE;
@@ -58,16 +60,17 @@ void test_train_moves_given_velocity(sem_world* world, const void* data) {
 
 	sem_train_move(&train);
 
-	g_assert_cmpuint(train.x, ==, 1);
-	g_assert_cmpuint(train.y, ==, 0);
+	g_assert_cmpuint(train.position->x, ==, 1);
+	g_assert_cmpuint(train.position->y, ==, 0);
 }
 
 void test_train_error_moves_onto_blank_tile(sem_world* world, const void* data) {
 	#pragma unused(data)
 
 	sem_train train;
-	train.x = 0;
-	train.y = 0;
+	sem_coordinate position;
+	sem_coordinate_set(&position, 0, 0);
+	train.position = &position;	
 	train.direction = SEM_EAST;
 
 	sem_track track_E_W;
@@ -87,8 +90,9 @@ void test_train_follows_track(sem_world* world, const void* data) {
 	#pragma unused(data)
 
 	sem_train train;
-	train.x = 0;
-	train.y = 0;
+	sem_coordinate position;
+	sem_coordinate_set(&position, 0, 0);
+	train.position = &position;	
 	train.direction = SEM_EAST;
 
 	sem_track track_E_W;

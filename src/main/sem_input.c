@@ -13,7 +13,7 @@ sem_success change_train_state(sem_heap* heap, sem_action* action);
 sem_success move_train_action(sem_heap* heap, sem_action* action);
 
 sem_success sem_train_input_act_upon(sem_input_event* input, sem_world* world, sem_action** action) {
-	if (input->x == world->train->x && input->y == world->train->y) {
+	if (input->x == world->train->position->x && input->y == world->train->position->y) {
 		*action = malloc(sizeof(sem_action));
 		if (*action == NULL) {
 			return sem_set_error("Could not create action");

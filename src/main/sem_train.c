@@ -7,6 +7,8 @@
 #include "sem_error.h"
 #include "sem_world.h"
 
+void train_move_trailing(sem_dynamic_array* cars);
+
 sem_success sem_train_init(sem_train* train) {
 	train->moving = false;	
 	train->direction = 0;
@@ -18,6 +20,7 @@ sem_success sem_train_init(sem_train* train) {
 }
 
 sem_success sem_train_move(sem_train* train) {
+	train_move_trailing(train->cars);
 	train->position->x += SEM_COMPASS_X(train->direction);
 	train->position->y += SEM_COMPASS_Y(train->direction);
 
@@ -26,7 +29,9 @@ sem_success sem_train_move(sem_train* train) {
 }
 
 sem_success sem_train_add_car(sem_train* train, sem_coordinate* car) {
-	train->position = car; // TODO: only for the first car
+	if (train->cars->tail_idx == 0) {
+		train->position = car;
+	}
 	sem_dynamic_array_add(train->cars, car);
 	return SEM_OK;
 }
@@ -35,3 +40,12 @@ void sem_train_destroy(sem_train* train) {
 	sem_dynamic_array_destroy(train->cars);
 	free(train->cars);
 }	
+
+void train_move_trailing(sem_dynamic_array* cars) {
+	for (uint32_t i=cars->tail_idx-1; i > 0; i--) {
+		sem_coordinate* car_behind = (sem_coordinate*) cars->items[i];
+		sem_coordinate* car_in_front = (sem_coordinate*) cars->items[i-1];
+		car_behind->x = car_in_front->x;
+		car_behind->y = car_in_front->y;
+	}
+}

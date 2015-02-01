@@ -78,9 +78,18 @@ int main(/*int argc, char **argv*/) {
 
 	sem_train train;
 	sem_train_init(&train);
-	sem_coordinate position;
-	sem_coordinate_set(&position, 2, 0);
-	sem_train_add_car(&train, &position);
+	sem_coordinate car1;
+	sem_coordinate_set(&car1, 2, 0);
+	sem_train_add_car(&train, &car1);
+
+	sem_coordinate car2;
+	sem_coordinate_set(&car2, 1, 0);
+	sem_train_add_car(&train, &car2);
+
+	sem_coordinate car3;
+	sem_coordinate_set(&car3, 0, 1);
+	sem_train_add_car(&train, &car3);
+
 	train.direction = SEM_EAST;
 
 	sem_world world;

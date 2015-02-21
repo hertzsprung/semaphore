@@ -306,9 +306,6 @@ int main(/*int argc, char **argv*/) {
 
 	cairo_scale(cr, render_ctx.scale, render_ctx.scale);
 
-	bool mousing = false;
-	Sint32 mouse_x = 0, mouse_y = 0;
-
 	SDL_Event e;
 	bool quit = false;	
 	uint64_t frames = 0;
@@ -341,14 +338,7 @@ int main(/*int argc, char **argv*/) {
 					}
 				}
 			}
-			if (e.type == SDL_MOUSEBUTTONDOWN) {
-				mouse_x = e.button.x;
-				mouse_y = e.button.y;
-				mousing = true;
-			}
 			if (e.type == SDL_MOUSEBUTTONUP) {
-				mousing = false;
-				
 				double x = e.button.x;
 				double y = e.button.y;
 				cairo_device_to_user(cr, &x, &y);
@@ -361,11 +351,15 @@ int main(/*int argc, char **argv*/) {
 
 				sem_action* a = NULL;
 
+				// TODO: wrap up train/tile input handlers into one big input routine
 				sem_train_input_act_upon(&input, &world, &a);
 
 				if (a != NULL) {
 					// TODO: should just chuck this onto the action list with "immediate" flag set
 					a->function(&actions, a);
+				} else {
+					sem_tile_input_act_upon(&input, &world, &a);
+					if (a != NULL) a->function(&actions, a);
 				}
 			}
 		}
@@ -373,15 +367,6 @@ int main(/*int argc, char **argv*/) {
 		cairo_set_source_rgb(cr, 0.0, 0.53125, 0.26525);
 		cairo_rectangle(cr, 0, 0, width-1, height-1);
 		cairo_fill(cr);
-
-		if (mousing) {
-			cairo_set_source_rgb(cr, 1.0, 0.0, 0.0);
-			double x = mouse_x;
-			double y = mouse_y;
-			cairo_device_to_user(cr, &x, &y);
-			cairo_arc(cr, x, y, 0.5, 0.0, 2.0 * M_PI);
-			cairo_stroke(cr);
-		}
 
 		if (sem_action_list_execute(&actions, timer_ctx.now) != SEM_OK) {
 			return sem_fatal_error();

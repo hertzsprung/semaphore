@@ -21,6 +21,8 @@ typedef struct {
 
 void test_input_null_action_for_unoccupied_coordinate(test_input_context* test_ctx, const void* data);
 void test_input_toggles_train_state(test_input_context* test_ctx, const void* data);
+void test_input_null_action_on_blank_tile(test_input_context* test_ctx, const void* data);
+void test_input_switches_points(test_input_context* test_ctx, const void* data);
 
 void add_test_input(const char *test_name, void (*test)(test_input_context*, const void* data));
 void test_input_setup(test_input_context* test_ctx, const void* data);
@@ -29,6 +31,8 @@ void test_input_teardown(test_input_context* test_ctx, const void* data);
 void add_tests_input(void) {
 	add_test_input("/input/null_action_for_unoccupied_coordinate", test_input_null_action_for_unoccupied_coordinate);
 	add_test_input("/input/toggles_train_state", test_input_toggles_train_state);
+	add_test_input("/input/null_action_on_blank_tile", test_input_null_action_on_blank_tile);
+	add_test_input("/input/switches_points", test_input_switches_points);
 }
 
 void add_test_input(const char *test_name, void (*test)(test_input_context*, const void* data)) {
@@ -111,4 +115,56 @@ void test_input_toggles_train_state(test_input_context* test_ctx, const void* da
 	g_assert_true(train->state == MOVING);
 	g_assert_true(train->position->x == 1);
 	g_assert_true(train->position->y == 0);
+}
+
+void test_input_null_action_on_blank_tile(test_input_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	sem_world* world = &(test_ctx->world);
+
+	sem_tile* tile = sem_tile_at(world, 0, 0);
+	tile->class = BLANK;
+
+	sem_coordinate coord;
+	sem_coordinate_set(&coord, 0, 0);
+	sem_input_event input;
+	input.time = 3000L;
+	input.tile = &coord;
+
+	sem_action* action = NULL;
+	sem_tile_input_act_upon(&input, world, &action);
+	g_assert_null(action);
+}
+
+void test_input_switches_points(test_input_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	sem_world* world = &(test_ctx->world);
+	sem_dynamic_array* heap = &(test_ctx->heap);
+
+	sem_track trackW_NE;
+	trackW_NE.start = SEM_WEST;
+	trackW_NE.end = SEM_NORTH | SEM_EAST;
+
+	sem_track trackW_E;
+	trackW_E.start = SEM_WEST;
+	trackW_E.end = SEM_EAST;
+
+	sem_tile* tile = sem_tile_at(world, 0, 0);
+	tile->class = POINTS;
+	tile->track = &trackW_NE;
+	tile->points[0] = &trackW_E;
+	tile->points[1] = &trackW_NE;
+	tile->points[2] = NULL;
+
+	sem_coordinate coord;
+	sem_coordinate_set(&coord, 0, 0);
+	sem_input_event input;
+	input.time = 3000L;
+	input.tile = &coord;
+
+	sem_action* action = NULL;
+	sem_tile_input_act_upon(&input, world, &action);
+	action->function(heap, action);
+	free(action);
+
+	g_assert_true(tile->track == &trackW_E);
 }

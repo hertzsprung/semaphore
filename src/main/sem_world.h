@@ -42,4 +42,6 @@ sem_tile* sem_tile_at(sem_world* world, uint32_t x, uint32_t y);
 
 sem_success sem_tile_redirect(sem_train* train, sem_tile* tile);
 
+void sem_tile_switch_points(sem_tile* tile);
+
 #endif

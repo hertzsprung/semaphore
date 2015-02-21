@@ -71,3 +71,7 @@ sem_success sem_track_redirect(sem_train* train, sem_track* track) {
 	}
 	return SEM_OK;
 }
+
+void sem_tile_switch_points(sem_tile* tile) {
+	#pragma unused(tile)
+}

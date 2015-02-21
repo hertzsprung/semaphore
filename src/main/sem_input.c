@@ -10,20 +10,40 @@
 #include "sem_train.h"
 #include "sem_world.h"
 
+sem_success switch_points_action(sem_dynamic_array* heap, sem_action* action);
 sem_success change_train_state(sem_dynamic_array* heap, sem_action* action);
 sem_success move_train_action(sem_dynamic_array* heap, sem_action* action);
 
+sem_success sem_tile_input_act_upon(sem_input_event* input, sem_world* world, sem_action** action) {
+	sem_tile* tile = sem_tile_at_coord(world, input->tile);
+
+	if (tile->class == POINTS) {
+		*action = sem_action_new();
+		if (*action == NULL) return SEM_ERROR;
+		(*action)->time = input->time;
+		(*action)->context = tile;
+		(*action)->function = switch_points_action;
+	}
+	return SEM_OK;
+}
+
+sem_success switch_points_action(sem_dynamic_array* heap, sem_action* action) {
+	#pragma unused(heap)
+	sem_tile* tile = (sem_tile*) action->context;
+	tile->track = tile->points[0];
+	return SEM_OK;
+}
+
 sem_success sem_train_input_act_upon(sem_input_event* input, sem_world* world, sem_action** action) {
 	for (uint32_t i=0; i < world->trains->tail_idx; i++) {
+		// TODO: if it's legitimate for mulitple trains to occupy the same tile then this input will act upon all of them
+		// TODO: not an issue until we introduce layers
 		if (sem_train_occupies(world->trains->items[i], input->tile)) {
-			*action = malloc(sizeof(sem_action));
-			if (*action == NULL) {
-				return sem_set_error("Could not create action");
-			}
+			*action = sem_action_new();
+			if (*action == NULL) return SEM_ERROR;
 			(*action)->time = input->time;
 			(*action)->context = world->trains->items[i];
 			(*action)->function = change_train_state;
-			(*action)->dynamically_allocated = true;
 		}
 	}
 

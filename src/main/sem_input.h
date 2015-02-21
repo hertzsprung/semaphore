@@ -15,6 +15,8 @@ typedef struct {
 
 typedef sem_success (*sem_input_handler)(sem_input_event* input, sem_world* world, sem_action** action);
 
+sem_success sem_tile_input_act_upon(sem_input_event* input, sem_world* world, sem_action** action);
+
 sem_success sem_train_input_act_upon(sem_input_event* input, sem_world* world, sem_action** action);
 
 #endif

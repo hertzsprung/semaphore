@@ -238,10 +238,11 @@ int main(/*int argc, char **argv*/) {
 				double y = e.button.y;
 				cairo_device_to_user(cr, &x, &y);
 
+				sem_coordinate coord;
+				sem_coordinate_set(&coord, (uint32_t) (floor(x)), (uint32_t) (floor(y)));
 				sem_input_event input;
 				input.time = timer_ctx.now;
-				input.x = (uint32_t) (floor(x));
-				input.y = (uint32_t) (floor(y));
+				input.tile = &coord;
 
 				sem_action* a = NULL;
 

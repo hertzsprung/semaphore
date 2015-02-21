@@ -65,9 +65,10 @@ void test_input_null_action_for_unoccupied_coordinate(test_input_context* test_c
 	sem_coordinate_set(&position, 1, 4);
 	sem_train_add_car(train, &position);
 
+	sem_coordinate coord;
+	sem_coordinate_set(&coord, 3, 2);
 	sem_input_event input;
-	input.x = 3;
-	input.y = 2;
+	input.tile = &coord;
 
 	sem_action* action = NULL;
 
@@ -90,10 +91,11 @@ void test_input_toggles_train_state(test_input_context* test_ctx, const void* da
 
 	// TODO: should really define the track here
 
+	sem_coordinate coord;
+	sem_coordinate_set(&coord, 0, 0);
 	sem_input_event input;
 	input.time = 3000L;
-	input.x = 0;
-	input.y = 0;
+	input.tile = &coord;
 
 	sem_action* action = NULL;
 

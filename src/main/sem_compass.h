@@ -7,6 +7,7 @@
 #define SEM_SOUTH (1 << 2)
 
 #include <inttypes.h>
+#include <stdbool.h>
 
 typedef uint8_t unit_vector;
 
@@ -18,6 +19,8 @@ typedef struct {
 } sem_coordinate;
 
 void sem_coordinate_set(sem_coordinate* coord, uint32_t x, uint32_t y);
+
+bool sem_coordinate_equal(sem_coordinate* a, sem_coordinate* b);
 
 unit_vector sem_compass_opposite_of(unit_vector v);
 

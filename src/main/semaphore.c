@@ -111,17 +111,13 @@ int main(/*int argc, char **argv*/) {
 
 	train2.direction = SEM_WEST;
 
-
 	sem_world world;
 	world.max_x = 64;
 	world.max_y = 64;
 	sem_world_init_blank(&world);
 
-	sem_dynamic_array_add(world.trains, &train1);
-	train1.world = &world;
-
-	sem_dynamic_array_add(world.trains, &train2);
-	train2.world = &world;
+	sem_world_add_train(&world, &train1);
+	sem_world_add_train(&world, &train2);
 
 	for (uint32_t i=0; i<=1; i++) {
 		sem_tile* t = sem_tile_at(&world, i*8 + 1, 0);

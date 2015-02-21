@@ -12,7 +12,7 @@ sem_success sem_world_init_blank(sem_world* world) {
 	if (world->trains == NULL) {
 		return sem_set_error("Could not allocate memory for trains");
 	}
-	sem_dynamic_array_init(world->trains);
+	if (sem_dynamic_array_init(world->trains) != SEM_OK) return SEM_ERROR;
 
 	world->tiles = malloc(world->max_x * world->max_y * sizeof(sem_tile));
 	if (world->tiles == NULL) {
@@ -31,6 +31,13 @@ void sem_world_destroy(sem_world* world) {
 	sem_dynamic_array_destroy(world->trains);
 	free(world->trains);
 	free(world->tiles);
+}
+
+sem_success sem_world_add_train(sem_world* world, sem_train* train) {
+	if (sem_dynamic_array_add(world->trains, train) != SEM_OK) return SEM_ERROR;
+	train->world = world;
+
+	return SEM_OK;
 }
 
 sem_tile* sem_tile_at_coord(sem_world* world, sem_coordinate* c) {

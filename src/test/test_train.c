@@ -6,15 +6,20 @@
 #include "sem_train.h"
 #include "sem_world.h"
 
-void test_train_moves_given_velocity(sem_world* world, const void* data);
-void test_train_error_moves_onto_blank_tile(sem_world* world, const void* data);
-void test_train_follows_track(sem_world* world, const void* data);
-void test_train_moves_head_car(sem_world* world, const void* data);
-void test_train_moves_trailing_cars(sem_world* world, const void* data);
+typedef struct {
+	sem_world world;
+	sem_train train;
+} test_train_context;
 
-void add_test_train(const char *test_name, void (*test)(sem_world*, const void* data));
-void test_train_setup(sem_world* world, const void* data);
-void test_train_teardown(sem_world* world, const void* data);
+void test_train_moves_given_velocity(test_train_context* test_ctx, const void* data);
+void test_train_error_moves_onto_blank_tile(test_train_context* test_ctx, const void* data);
+void test_train_follows_track(test_train_context* test_ctx, const void* data);
+void test_train_moves_head_car(test_train_context* test_ctx, const void* data);
+void test_train_moves_trailing_cars(test_train_context* test_ctx, const void* data);
+
+void add_test_train(const char *test_name, void (*test)(test_train_context*, const void* data));
+void test_train_setup(test_train_context* test_ctx, const void* data);
+void test_train_teardown(test_train_context* test_ctx, const void* data);
 
 void add_tests_train() {
 	add_test_train("/train/moves_given_velocity", test_train_moves_given_velocity);
@@ -24,36 +29,38 @@ void add_tests_train() {
 	add_test_train("/train/moves_trailing_cars", test_train_moves_trailing_cars);
 }
 
-void add_test_train(const char *test_name, void (*test)(sem_world*, const void* data)) {
-	g_test_add(test_name, sem_world, NULL, test_train_setup, test, test_train_teardown);
+void add_test_train(const char *test_name, void (*test)(test_train_context*, const void* data)) {
+	g_test_add(test_name, test_train_context, NULL, test_train_setup, test, test_train_teardown);
 }
 
-void test_train_setup(sem_world* world, const void* data) {
+void test_train_setup(test_train_context* test_ctx, const void* data) {
 	#pragma unused(data)
 
-	world->max_x = 4;
-	world->max_y = 4;
-	sem_world_init_blank(world);
+	test_ctx->world.max_x = 4;
+	test_ctx->world.max_y = 4;
+	sem_world_init_blank(&(test_ctx->world));
+
+	sem_train_init(&(test_ctx->train));
+	test_ctx->train.world = &(test_ctx->world);
 }
 
-void test_train_teardown(sem_world* world, const void* data) {
+void test_train_teardown(test_train_context* test_ctx, const void* data) {
 	#pragma unused(data)
 
-	sem_world_destroy(world);
+	sem_world_destroy(&(test_ctx->world));
+	sem_train_destroy(&(test_ctx->train));
 }
 
-// TODO: get glib to handle train init/destroy
-void test_train_moves_given_velocity(sem_world* world, const void* data) {
+void test_train_moves_given_velocity(test_train_context* test_ctx, const void* data) {
 	#pragma unused(data)
-
-	sem_train train;
-	sem_train_init(&train);
+	sem_world* world = &(test_ctx->world);
+	sem_train* train = &(test_ctx->train);
 
 	sem_coordinate position;
 	sem_coordinate_set(&position, 0, 1);
-	sem_train_add_car(&train, &position);
+	sem_train_add_car(train, &position);
 
-	train.direction = SEM_NORTH | SEM_EAST;
+	train->direction = SEM_NORTH | SEM_EAST;
 
 	sem_track track_SW_NE;
 	track_SW_NE.start = SEM_SOUTH | SEM_WEST;
@@ -63,24 +70,21 @@ void test_train_moves_given_velocity(sem_world* world, const void* data) {
 	tile->class = TRACK;
 	tile->track = &track_SW_NE;
 
-	train.world = world;
+	sem_train_move(train);
 
-	sem_train_move(&train);
-
-	g_assert_cmpuint(train.position->x, ==, 1);
-	g_assert_cmpuint(train.position->y, ==, 0);
+	g_assert_cmpuint(train->position->x, ==, 1);
+	g_assert_cmpuint(train->position->y, ==, 0);
 }
 
-void test_train_error_moves_onto_blank_tile(sem_world* world, const void* data) {
+void test_train_error_moves_onto_blank_tile(test_train_context* test_ctx, const void* data) {
 	#pragma unused(data)
-
-	sem_train train;
-	sem_train_init(&train);
+	sem_world* world = &(test_ctx->world);
+	sem_train* train = &(test_ctx->train);
 
 	sem_coordinate position;
 	sem_coordinate_set(&position, 0, 0);
-	sem_train_add_car(&train, &position);
-	train.direction = SEM_EAST;
+	sem_train_add_car(train, &position);
+	train->direction = SEM_EAST;
 
 	sem_track track_E_W;
 	track_E_W.start = SEM_EAST;
@@ -90,21 +94,18 @@ void test_train_error_moves_onto_blank_tile(sem_world* world, const void* data) 
 	tile->class = TRACK;
 	tile->track = &track_E_W;
 	
-	train.world = world;
-
-	g_assert_cmpint(sem_train_move(&train), ==, SEM_ERROR);
+	g_assert_cmpint(sem_train_move(train), ==, SEM_ERROR);
 }
 
-void test_train_follows_track(sem_world* world, const void* data) {
+void test_train_follows_track(test_train_context* test_ctx, const void* data) {
 	#pragma unused(data)
-
-	sem_train train;
-	sem_train_init(&train);
+	sem_world* world = &(test_ctx->world);
+	sem_train* train = &(test_ctx->train);
 
 	sem_coordinate position;
 	sem_coordinate_set(&position, 0, 0);
-	sem_train_add_car(&train, &position);
-	train.direction = SEM_EAST;
+	sem_train_add_car(train, &position);
+	train->direction = SEM_EAST;
 
 	sem_track track_E_W;
 	track_E_W.start = SEM_EAST;
@@ -122,28 +123,25 @@ void test_train_follows_track(sem_world* world, const void* data) {
 	tile->class = TRACK;
 	tile->track = &track_SE_W;
 
-	train.world = world;
-	
-	sem_train_move(&train);
+	sem_train_move(train);
 
-	g_assert_true(train.direction == (SEM_SOUTH | SEM_EAST));
+	g_assert_true(train->direction == (SEM_SOUTH | SEM_EAST));
 }
 
-void test_train_moves_head_car(sem_world* world, const void* data) {
+void test_train_moves_head_car(test_train_context* test_ctx, const void* data) {
 	#pragma unused(data)
-
-	sem_train train;
-	sem_train_init(&train);
+	sem_world* world = &(test_ctx->world);
+	sem_train* train = &(test_ctx->train);
 
 	sem_coordinate head_car;
 	sem_coordinate_set(&head_car, 1, 0);
-	sem_train_add_car(&train, &head_car);
+	sem_train_add_car(train, &head_car);
 
 	sem_coordinate car2;
 	sem_coordinate_set(&car2, 0, 0);
-	sem_train_add_car(&train, &car2);
+	sem_train_add_car(train, &car2);
 
-	train.direction = SEM_EAST;
+	train->direction = SEM_EAST;
 
 	sem_track track_E_W;
 	track_E_W.start = SEM_EAST;
@@ -161,34 +159,31 @@ void test_train_moves_head_car(sem_world* world, const void* data) {
 	tile->class = TRACK;
 	tile->track = &track_E_W;
 	
-	train.world = world;
+	sem_train_move(train);
 
-	sem_train_move(&train);
-
-	g_assert_cmpuint(train.position->x, ==, 2);
-	g_assert_cmpuint(train.position->y, ==, 0);
+	g_assert_cmpuint(train->position->x, ==, 2);
+	g_assert_cmpuint(train->position->y, ==, 0);
 }
 
 // TODO: lots of C&P from test_train_moves_head_car
-void test_train_moves_trailing_cars(sem_world* world, const void* data) {
+void test_train_moves_trailing_cars(test_train_context* test_ctx, const void* data) {
 	#pragma unused(data)
-
-	sem_train train;
-	sem_train_init(&train);
+	sem_world* world = &(test_ctx->world);
+	sem_train* train = &(test_ctx->train);
 
 	sem_coordinate head_car;
 	sem_coordinate_set(&head_car, 2, 0);
-	sem_train_add_car(&train, &head_car);
+	sem_train_add_car(train, &head_car);
 
 	sem_coordinate car2;
 	sem_coordinate_set(&car2, 1, 0);
-	sem_train_add_car(&train, &car2);
+	sem_train_add_car(train, &car2);
 
 	sem_coordinate car3;
 	sem_coordinate_set(&car3, 0, 0);
-	sem_train_add_car(&train, &car3);
+	sem_train_add_car(train, &car3);
 
-	train.direction = SEM_EAST;
+	train->direction = SEM_EAST;
 
 	sem_track track_E_W;
 	track_E_W.start = SEM_EAST;
@@ -210,9 +205,7 @@ void test_train_moves_trailing_cars(sem_world* world, const void* data) {
 	tile->class = TRACK;
 	tile->track = &track_E_W;
 	
-	train.world = world;
-
-	sem_train_move(&train);
+	sem_train_move(train);
 
 	g_assert_cmpuint(car2.x, ==, 2);
 	g_assert_cmpuint(car2.y, ==, 0);

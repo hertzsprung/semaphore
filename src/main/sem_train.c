@@ -38,7 +38,12 @@ sem_success sem_train_add_car(sem_train* train, sem_coordinate* car) {
 }
 
 bool sem_train_occupies(sem_train* train, sem_coordinate* tile) {
-	return sem_coordinate_equal(train->position, tile);
+	for (uint32_t i=0; i < train->cars->tail_idx; i++) {
+		sem_coordinate* car = (sem_coordinate*) train->cars->items[i];
+		if (sem_coordinate_equal(car, tile)) return true;
+	}
+
+	return false;
 }
 
 void sem_train_destroy(sem_train* train) {

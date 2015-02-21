@@ -17,6 +17,7 @@ void test_train_follows_track(test_train_context* test_ctx, const void* data);
 void test_train_moves_head_car(test_train_context* test_ctx, const void* data);
 void test_train_moves_trailing_cars(test_train_context* test_ctx, const void* data);
 void test_train_head_car_occupies_tile(test_train_context* test_ctx, const void* data);
+void test_train_second_car_occupies_tile(test_train_context* test_ctx, const void* data);
 void test_train_not_occupies_tile(test_train_context* test_ctx, const void* data);
 
 void add_test_train(const char *test_name, void (*test)(test_train_context*, const void* data));
@@ -30,6 +31,7 @@ void add_tests_train() {
 	add_test_train("/train/moves_head_car", test_train_moves_head_car);
 	add_test_train("/train/moves_trailing_cars", test_train_moves_trailing_cars);
 	add_test_train("/train/head_car_occupies_tile", test_train_head_car_occupies_tile);
+	add_test_train("/train/second_car_occupies_tile", test_train_second_car_occupies_tile);
 	add_test_train("/train/not_occupies_tile", test_train_not_occupies_tile);
 }
 
@@ -227,6 +229,21 @@ void test_train_head_car_occupies_tile(test_train_context* test_ctx, const void*
 	sem_train_add_car(train, &head_car);
 
 	g_assert_true(sem_train_occupies(train, &head_car));
+}
+
+void test_train_second_car_occupies_tile(test_train_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	sem_train* train = &(test_ctx->train);
+
+	sem_coordinate head_car;
+	sem_coordinate_set(&head_car, 2, 0);
+	sem_train_add_car(train, &head_car);
+
+	sem_coordinate second_car;
+	sem_coordinate_set(&second_car, 1, 0);
+	sem_train_add_car(train, &second_car);
+
+	g_assert_true(sem_train_occupies(train, &second_car));
 }
 
 void test_train_not_occupies_tile(test_train_context* test_ctx, const void* data) {

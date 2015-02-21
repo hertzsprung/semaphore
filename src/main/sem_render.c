@@ -56,13 +56,18 @@ void render_tile_blank(sem_render_context* ctx, sem_coordinate* coord, sem_tile*
 }
 
 void render_track(sem_render_context* ctx, sem_coordinate* coord, sem_track* track) {
-	render_track_path(ctx, coord, track);
-	cairo_set_source_rgb(ctx->cr, 0.0, 0.0, 0.0);
-	cairo_set_line_width(ctx->cr, 0.2);
-	cairo_stroke_preserve(ctx->cr);
-	cairo_set_source_rgb(ctx->cr, 0.53125, 0.796875, 0.796875);
-	cairo_set_line_width(ctx->cr, 0.1);
-	cairo_stroke(ctx->cr);
+	sem_track* t = track;
+	do {
+		render_track_path(ctx, coord, t);
+		cairo_set_source_rgb(ctx->cr, 0.0, 0.0, 0.0);
+		cairo_set_line_width(ctx->cr, 0.2);
+		cairo_stroke_preserve(ctx->cr);
+		cairo_set_source_rgb(ctx->cr, 0.53125, 0.796875, 0.796875);
+		cairo_set_line_width(ctx->cr, 0.1);
+		cairo_stroke(ctx->cr);
+
+		t = t->next;
+	} while (t != NULL);
 }
 
 void render_tile_points(sem_render_context* ctx, sem_coordinate* coord, sem_tile* tile) {

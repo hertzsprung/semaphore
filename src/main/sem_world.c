@@ -61,6 +61,14 @@ sem_success sem_tile_redirect(sem_train* train, sem_tile* tile) {
 	}
 }
 
+void sem_track_set(sem_track* track, unit_vector start, unit_vector end) {
+	track->start = start;
+	track->end = end;
+	track->next = NULL;
+}
+
+// private functions
+
 sem_success sem_track_redirect(sem_train* train, sem_track* track) {
 	if (train->direction == sem_compass_opposite_of(track->start)) {
 		train->direction = track->end;

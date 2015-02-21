@@ -30,7 +30,7 @@ sem_success sem_tile_input_act_upon(sem_input_event* input, sem_world* world, se
 sem_success switch_points_action(sem_dynamic_array* heap, sem_action* action) {
 	#pragma unused(heap)
 	sem_tile* tile = (sem_tile*) action->context;
-	tile->track = tile->points[0];
+	sem_tile_switch_points(tile);
 	return SEM_OK;
 }
 

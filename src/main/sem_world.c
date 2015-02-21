@@ -73,5 +73,14 @@ sem_success sem_track_redirect(sem_train* train, sem_track* track) {
 }
 
 void sem_tile_switch_points(sem_tile* tile) {
-	#pragma unused(tile)
+	for (uint8_t i=0; i<3; i++) {
+		if (tile->points[i] == tile->track) {
+			do {
+				i = (i+1) % 3;
+			} while (tile->points[i] == NULL);
+			tile->track = tile->points[i];
+			return;
+		}
+	}
+	assert(false && "Track is not one of the points settings");
 }

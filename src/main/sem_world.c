@@ -1,12 +1,19 @@
 #include <assert.h>
 #include <stdlib.h>
 
+#include "sem_dynamic_array.h"
 #include "sem_error.h"
 #include "sem_world.h"
 
 sem_success sem_track_redirect(sem_train* train, sem_track* track);
 
 sem_success sem_world_init_blank(sem_world* world) {
+	world->trains = malloc(sizeof(sem_dynamic_array));
+	if (world->trains == NULL) {
+		return sem_set_error("Could not allocate memory for trains");
+	}
+	sem_dynamic_array_init(world->trains);
+
 	world->tiles = malloc(world->max_x * world->max_y * sizeof(sem_tile));
 	if (world->tiles == NULL) {
 		return sem_set_error("Could not allocate memory for tiles");
@@ -21,6 +28,8 @@ sem_success sem_world_init_blank(sem_world* world) {
 }
 
 void sem_world_destroy(sem_world* world) {
+	sem_dynamic_array_destroy(world->trains);
+	free(world->trains);
 	free(world->tiles);
 }
 

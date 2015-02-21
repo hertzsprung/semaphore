@@ -44,7 +44,7 @@ void test_input_setup(test_input_context* test_ctx, const void* data) {
 
 	sem_train_init(&(test_ctx->train));
 	test_ctx->train.world = &(test_ctx->world);
-	test_ctx->world.train = &(test_ctx->train);
+	sem_dynamic_array_add(test_ctx->world.trains, &(test_ctx->train));
 
 	sem_heap_init(&(test_ctx->heap));
 }

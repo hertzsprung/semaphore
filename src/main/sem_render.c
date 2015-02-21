@@ -15,7 +15,9 @@ void render_track_path(sem_render_context* ctx, sem_coordinate* coord, sem_track
 
 void sem_render_world(sem_render_context* ctx, sem_world* world) {
 	render_tiles(ctx, world);
-	render_train(ctx, world->train);
+	for (uint32_t i=0; i < world->trains->tail_idx; i++) {
+		render_train(ctx, world->trains->items[i]);
+	}
 }
 
 void render_tiles(sem_render_context* ctx, sem_world* world) {

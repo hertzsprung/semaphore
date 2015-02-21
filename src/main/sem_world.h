@@ -4,6 +4,7 @@
 typedef struct sem_world sem_world;
 
 #include "sem_compass.h"
+#include "sem_dynamic_array.h"
 #include "sem_error.h"
 #include "sem_train.h"
 
@@ -22,7 +23,7 @@ typedef struct {
 } sem_tile;
 
 struct sem_world {
-	sem_train* train;
+	sem_dynamic_array* trains;
 	uint32_t max_x;
 	uint32_t max_y;
 	sem_tile* tiles;

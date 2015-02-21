@@ -14,15 +14,17 @@ sem_success change_train_state(sem_dynamic_array* heap, sem_action* action);
 sem_success move_train_action(sem_dynamic_array* heap, sem_action* action);
 
 sem_success sem_train_input_act_upon(sem_input_event* input, sem_world* world, sem_action** action) {
-	if (sem_train_occupies(world->train, input->tile)) {
-		*action = malloc(sizeof(sem_action));
-		if (*action == NULL) {
-			return sem_set_error("Could not create action");
+	for (uint32_t i=0; i < world->trains->tail_idx; i++) {
+		if (sem_train_occupies(world->trains->items[i], input->tile)) {
+			*action = malloc(sizeof(sem_action));
+			if (*action == NULL) {
+				return sem_set_error("Could not create action");
+			}
+			(*action)->time = input->time;
+			(*action)->context = world->trains->items[i];
+			(*action)->function = change_train_state;
+			(*action)->dynamically_allocated = true;
 		}
-		(*action)->time = input->time;
-		(*action)->context = world->train;
-		(*action)->function = change_train_state;
-		(*action)->dynamically_allocated = true;
 	}
 
 	return SEM_OK;

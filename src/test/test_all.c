@@ -19,10 +19,7 @@ int main(int argc, char **argv) {
 	add_tests_dynamic_array();
 	add_tests_heap();
 	add_tests_input();
-
-	g_test_add_func("/timer/increments_by_one_second", test_timer_increments_by_one_second);
-	g_test_add_func("/timer/increments_twice_clock_with_multiple_of_two", test_timer_increments_twice_clock_with_multiple_of_two);
-
+	add_tests_timer();
 	add_tests_train();
 	add_tests_world();
 

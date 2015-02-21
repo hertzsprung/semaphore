@@ -5,6 +5,9 @@
 #include "sem_error.h"
 #include "sem_timer.h"
 
+void test_timer_increments_by_one_second(void);
+void test_timer_increments_twice_clock_with_multiple_of_two(void);
+
 sem_success test_fixed_clock(uint64_t* now);
 sem_success test_fixed_increment_clock(uint64_t* now);
 
@@ -18,6 +21,11 @@ sem_success test_fixed_increment_clock(uint64_t* now) {
 	next += 1000L;
 	*now = next;
 	return SEM_OK;
+}
+
+void add_tests_timer() {
+	g_test_add_func("/timer/increments_by_one_second", test_timer_increments_by_one_second);
+	g_test_add_func("/timer/increments_twice_clock_with_multiple_of_two", test_timer_increments_twice_clock_with_multiple_of_two);
 }
 
 void test_timer_increments_by_one_second() {

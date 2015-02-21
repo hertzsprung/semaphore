@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "sem_train.h"
 
@@ -34,6 +35,10 @@ sem_success sem_train_add_car(sem_train* train, sem_coordinate* car) {
 	}
 	sem_dynamic_array_add(train->cars, car);
 	return SEM_OK;
+}
+
+bool sem_train_occupies(sem_train* train, sem_coordinate* tile) {
+	return sem_coordinate_equal(train->position, tile);
 }
 
 void sem_train_destroy(sem_train* train) {

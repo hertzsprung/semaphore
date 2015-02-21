@@ -25,7 +25,7 @@ sem_success sem_train_move(sem_train* train);
 
 sem_success sem_train_add_car(sem_train* train, sem_coordinate* car);
 
-//bool sem_train_occupies(sem_train* train, sem_coordinate* coord);
+bool sem_train_occupies(sem_train* train, sem_coordinate* tile);
 
 void sem_train_destroy(sem_train* train);
 

@@ -11,7 +11,7 @@
 void train_move_trailing(sem_dynamic_array* cars);
 
 sem_success sem_train_init(sem_train* train) {
-	train->moving = false;	
+	train->state = STOPPED;
 	train->direction = 0;
 	train->cars = malloc(sizeof(sem_dynamic_array));
 	if (train->cars == NULL) {
@@ -26,7 +26,7 @@ sem_success sem_train_move(sem_train* train) {
 	train->position->y += SEM_COMPASS_Y(train->direction);
 
 	sem_tile* tile = sem_tile_at_coord(train->world, train->position);
-	return sem_tile_redirect(train, tile); // TODO: check return
+	return sem_tile_redirect(train, tile);
 }
 
 sem_success sem_train_add_car(sem_train* train, sem_coordinate* car) {

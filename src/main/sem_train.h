@@ -11,9 +11,13 @@ typedef struct sem_train sem_train;
 #include "sem_error.h"
 #include "sem_world.h"
 
+typedef enum {
+	STOPPED, MOVING
+} sem_train_state;
+
 struct sem_train {
 	sem_world* world;
-	bool moving;
+	sem_train_state state;
 	sem_coordinate* position; /**< position of the train's head car */
 	sem_dynamic_array* cars;
 	unit_vector direction;

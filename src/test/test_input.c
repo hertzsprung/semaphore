@@ -87,7 +87,7 @@ void test_input_toggles_train_state(test_input_context* test_ctx, const void* da
 	sem_coordinate_set(&position, 0, 0);
 	sem_train_add_car(train, &position);
 	train->direction = SEM_EAST;
-	train->moving = false;
+	train->state = STOPPED;
 
 	// TODO: should really define the track here
 
@@ -108,7 +108,7 @@ void test_input_toggles_train_state(test_input_context* test_ctx, const void* da
 	action->function(heap, action);
 	free(action);
 
-	g_assert_true(train->moving == true);
+	g_assert_true(train->state == MOVING);
 	g_assert_true(train->position->x == 1);
 	g_assert_true(train->position->y == 0);
 }

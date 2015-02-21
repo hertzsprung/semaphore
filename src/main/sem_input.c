@@ -33,8 +33,13 @@ sem_success sem_train_input_act_upon(sem_input_event* input, sem_world* world, s
 sem_success change_train_state(sem_dynamic_array* heap, sem_action* action) {
 	sem_train* train = (sem_train*) action->context;
 
-	train->moving ^= true;
-	if (train->moving) {
+	if (train->state == STOPPED) {
+		train->state = MOVING;
+	} else {
+		train->state = STOPPED;
+	}
+
+	if (train->state == MOVING) {
 		action->function = move_train_action;
 
 		sem_heap_insert(heap, action);
@@ -45,7 +50,7 @@ sem_success change_train_state(sem_dynamic_array* heap, sem_action* action) {
 
 sem_success move_train_action(sem_dynamic_array* heap, sem_action* action) {
 	sem_train* train = (sem_train*) action->context;
-	if (train->moving) {
+	if (train->state == MOVING) {
 		if (sem_train_move(train) != SEM_OK) return SEM_ERROR;
 
 		action->time = action->time + 1000L;

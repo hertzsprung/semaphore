@@ -9,7 +9,8 @@
 void render_tiles(sem_render_context* ctx, sem_world* world);
 void render_tile(sem_render_context* ctx, sem_coordinate* coord, sem_tile* tile);
 void render_tile_blank(sem_render_context* ctx, sem_coordinate* coord, sem_tile* tile);
-void render_tile_track(sem_render_context* ctx, sem_coordinate* coord, sem_tile* tile);
+void render_track(sem_render_context* ctx, sem_coordinate* coord, sem_track* track);
+void render_tile_points(sem_render_context* ctx, sem_coordinate* coord, sem_tile* tile);
 void render_train(sem_render_context* ctx, sem_train* train);
 void render_track_path(sem_render_context* ctx, sem_coordinate* coord, sem_track* track);
 
@@ -38,7 +39,10 @@ void render_tile(sem_render_context* ctx, sem_coordinate* coord, sem_tile* tile)
 		render_tile_blank(ctx, coord, tile);
 		return;
 	case TRACK:
-		render_tile_track(ctx, coord, tile);
+		render_track(ctx, coord, tile->track);
+		return;
+	case POINTS:
+		render_tile_points(ctx, coord, tile);
 		return;
 	}
 }
@@ -51,14 +55,24 @@ void render_tile_blank(sem_render_context* ctx, sem_coordinate* coord, sem_tile*
 	cairo_stroke(ctx->cr);
 }
 
-void render_tile_track(sem_render_context* ctx, sem_coordinate* coord, sem_tile* tile) {
-	render_track_path(ctx, coord, tile->track);
+void render_track(sem_render_context* ctx, sem_coordinate* coord, sem_track* track) {
+	render_track_path(ctx, coord, track);
 	cairo_set_source_rgb(ctx->cr, 0.0, 0.0, 0.0);
 	cairo_set_line_width(ctx->cr, 0.2);
 	cairo_stroke_preserve(ctx->cr);
 	cairo_set_source_rgb(ctx->cr, 0.53125, 0.796875, 0.796875);
 	cairo_set_line_width(ctx->cr, 0.1);
 	cairo_stroke(ctx->cr);
+}
+
+void render_tile_points(sem_render_context* ctx, sem_coordinate* coord, sem_tile* tile) {
+	for (uint8_t i=0; i<3; i++) {
+		sem_track* track = tile->points[i];
+		if (track != NULL && track != tile->track) {
+			render_track(ctx, coord, track);
+		}
+	}
+	render_track(ctx, coord, tile->track);
 }
 
 void render_train(sem_render_context* ctx, sem_train* train) {

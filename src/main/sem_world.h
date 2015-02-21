@@ -9,7 +9,7 @@ typedef struct sem_world sem_world;
 #include "sem_train.h"
 
 typedef enum {
-	BLANK, TRACK
+	BLANK, TRACK, POINTS
 } sem_tile_class;
 
 typedef struct {
@@ -20,6 +20,7 @@ typedef struct {
 typedef struct {
 	sem_tile_class class;	
 	sem_track* track;
+	sem_track* points[3];		
 } sem_tile;
 
 struct sem_world {

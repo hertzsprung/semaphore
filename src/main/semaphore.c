@@ -237,14 +237,62 @@ int main(/*int argc, char **argv*/) {
 		t->track = &trackNS;
 	}
 
+	sem_track trackNW_SE;
+	trackNW_SE.start = SEM_NORTH | SEM_WEST;
+	trackNW_SE.end = SEM_SOUTH | SEM_EAST;
+
+	sem_tile* t = sem_tile_at(&world, 6, 2);
+	t->class = TRACK;
+	t->track = &trackNW_SE;
+
+	sem_track trackW_SE;
+	trackW_SE.start = SEM_WEST;
+	trackW_SE.end = SEM_SOUTH | SEM_EAST;
+
+	t = sem_tile_at(&world, 5, 1);
+	t->class = TRACK;
+	t->track = &trackW_SE;
+
+	sem_track trackNW_E;
+	trackNW_E.start = SEM_NORTH | SEM_WEST;
+	trackNW_E.end = SEM_EAST;
+
+	t = sem_tile_at(&world, 7, 3);
+	t->class = TRACK;
+	t->track = &trackNW_E;
+
+	sem_track trackNW_S;
+	trackNW_S.start = SEM_NORTH | SEM_WEST;
+	trackNW_S.end = SEM_SOUTH;
+
+	t = sem_tile_at(&world, 4, 1);
+	t->class = POINTS;
+	t->track = &trackNW_S;
+	t->points[0] = &trackNW_S;
+	t->points[1] = &trackNW_E;
+	t->points[2] = NULL;
+
+	sem_track trackN_SE;
+	trackN_SE.start = SEM_NORTH;
+	trackN_SE.end = SEM_SOUTH | SEM_EAST;
+
+	t = sem_tile_at(&world, 8, 3);
+	t->class = POINTS;
+	t->track = &trackN_SE;
+	t->points[0] = &trackN_SE;
+	t->points[1] = &trackW_SE;
+	t->points[2] = NULL;
+
+	// straight collision track
+
 	sem_track trackEW;
 	trackEW.start = SEM_EAST;
 	trackEW.end = SEM_WEST;
 
 	for (uint32_t i=0; i<16; i++) {
-		sem_tile* t = sem_tile_at(&world, i, 8);
-		t->class = TRACK;
-		t->track = &trackEW;
+		sem_tile* ts = sem_tile_at(&world, i, 8);
+		ts->class = TRACK;
+		ts->track = &trackEW;
 	}
 
 	sem_timer_context timer_ctx;

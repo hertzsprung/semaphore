@@ -56,6 +56,7 @@ sem_success sem_tile_redirect(sem_train* train, sem_tile* tile) {
 	case BLANK:
 		return sem_set_error("Train ran onto blank tile");
 	case TRACK:
+	case POINTS:
 		return sem_track_redirect(train, tile->track);
 	}
 }

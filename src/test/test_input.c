@@ -4,7 +4,6 @@
 #include <glib.h>
 
 #include "test_input.h"
-#include "test_heap.h"
 
 #include "sem_action_list.h"
 #include "sem_compass.h"
@@ -13,25 +12,58 @@
 #include "sem_train.h"
 #include "sem_world.h"
 
-void test_input_null_action_for_unoccupied_coordinate(void);
-void test_input_toggles_train_state(sem_heap* heap, const void* data);
+typedef struct {
+	sem_heap heap;
+	sem_world world;
+	sem_train train;
+} test_input_context;
+
+void test_input_null_action_for_unoccupied_coordinate(test_input_context* test_ctx, const void* data);
+void test_input_toggles_train_state(test_input_context* test_ctx, const void* data);
+
+void add_test_input(const char *test_name, void (*test)(test_input_context*, const void* data));
+void test_input_setup(test_input_context* test_ctx, const void* data);
+void test_input_teardown(test_input_context* test_ctx, const void* data);
 
 void add_tests_input(void) {
-	g_test_add_func("/input/null_action_for_unoccupied_coordinate", test_input_null_action_for_unoccupied_coordinate);
-	add_test_heap("/input/toggles_train_state", test_input_toggles_train_state);
+	add_test_input("/input/null_action_for_unoccupied_coordinate", test_input_null_action_for_unoccupied_coordinate);
+	add_test_input("/input/toggles_train_state", test_input_toggles_train_state);
 }
 
-// TODO: use glib to handle train init/destroy
-void test_input_null_action_for_unoccupied_coordinate() {
-	sem_train train;
-	sem_train_init(&train);
+void add_test_input(const char *test_name, void (*test)(test_input_context*, const void* data)) {
+	g_test_add(test_name, test_input_context, NULL, test_input_setup, test, test_input_teardown);
+}
+
+void test_input_setup(test_input_context* test_ctx, const void* data) {
+	#pragma unused(data)
+
+	test_ctx->world.max_x = 2;
+	test_ctx->world.max_y = 1;
+	sem_world_init_blank(&(test_ctx->world));
+
+	sem_train_init(&(test_ctx->train));
+	test_ctx->train.world = &(test_ctx->world);
+	test_ctx->world.train = &(test_ctx->train);
+
+	sem_heap_init(&(test_ctx->heap));
+}
+
+void test_input_teardown(test_input_context* test_ctx, const void* data) {
+	#pragma unused(data)
+
+	sem_world_destroy(&(test_ctx->world));
+	sem_train_destroy(&(test_ctx->train));
+	sem_heap_destroy(&(test_ctx->heap));
+}
+
+void test_input_null_action_for_unoccupied_coordinate(test_input_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	sem_train* train = &(test_ctx->train);
+	sem_world* world = &(test_ctx->world);
 
 	sem_coordinate position;
 	sem_coordinate_set(&position, 1, 4);
-	sem_train_add_car(&train, &position);
-
-	sem_world world;
-	world.train = &train;
+	sem_train_add_car(train, &position);
 
 	sem_input_event input;
 	input.x = 3;
@@ -39,32 +71,24 @@ void test_input_null_action_for_unoccupied_coordinate() {
 
 	sem_action* action = NULL;
 
-	sem_train_input_act_upon(&input, &world, &action);
+	sem_train_input_act_upon(&input, world, &action);
 
 	g_assert_null(action);
 }
 
-// TODO: get glib to init/destroy the world and train!
-void test_input_toggles_train_state(sem_heap* heap, const void* data) {
+void test_input_toggles_train_state(test_input_context* test_ctx, const void* data) {
 	#pragma unused(data)
-
-	sem_train train;
-	sem_train_init(&train);
+	sem_train* train = &(test_ctx->train);
+	sem_world* world = &(test_ctx->world);
+	sem_heap* heap = &(test_ctx->heap);
 
 	sem_coordinate position;
 	sem_coordinate_set(&position, 0, 0);
-	sem_train_add_car(&train, &position);
-	train.direction = SEM_EAST;
-	train.moving = false;
+	sem_train_add_car(train, &position);
+	train->direction = SEM_EAST;
+	train->moving = false;
 
-	sem_world world;
-	world.max_x = 2;
-	world.max_y = 1;
-	sem_world_init_blank(&world);
 	// TODO: should really define the track here
-
-	world.train = &train;
-	train.world = &world;
 
 	sem_input_event input;
 	input.time = 3000L;
@@ -73,7 +97,7 @@ void test_input_toggles_train_state(sem_heap* heap, const void* data) {
 
 	sem_action* action = NULL;
 
-	sem_train_input_act_upon(&input, &world, &action);
+	sem_train_input_act_upon(&input, world, &action);
 	action->function(heap, action);
 
 	action = sem_heap_remove_earliest(heap);
@@ -82,7 +106,7 @@ void test_input_toggles_train_state(sem_heap* heap, const void* data) {
 	action->function(heap, action);
 	free(action);
 
-	g_assert_true(train.moving == true);
-	g_assert_true(train.position->x == 1);
-	g_assert_true(train.position->y == 0);
+	g_assert_true(train->moving == true);
+	g_assert_true(train->position->x == 1);
+	g_assert_true(train->position->y == 0);
 }

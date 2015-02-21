@@ -35,7 +35,7 @@ sem_success change_train_state(sem_dynamic_array* heap, sem_action* action) {
 
 	if (train->state == STOPPED) {
 		train->state = MOVING;
-	} else {
+	} else if (train->state == MOVING) {
 		train->state = STOPPED;
 	}
 

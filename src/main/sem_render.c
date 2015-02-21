@@ -66,8 +66,16 @@ void render_train(sem_render_context* ctx, sem_train* train) {
 		sem_coordinate* c = (sem_coordinate*) train->cars->items[i];
 		sem_track* track = sem_tile_at_coord(train->world, c)->track;
 		render_track_path(ctx, c, track);
-		cairo_set_source_rgb(ctx->cr, 1.0, 0.0, 1.0);
-		cairo_set_line_width(ctx->cr, 0.4);
+		if (train->state == CRASHED) {
+			cairo_set_source_rgb(ctx->cr, 1.0, 0.0, 0.0);
+		} else {
+			cairo_set_source_rgb(ctx->cr, 1.0, 0.0, 1.0);
+		}
+		if (i == 0) {
+			cairo_set_line_width(ctx->cr, 0.6);
+		} else {
+			cairo_set_line_width(ctx->cr, 0.4);
+		}
 		cairo_stroke(ctx->cr);
 	}
 }

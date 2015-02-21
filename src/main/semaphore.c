@@ -132,15 +132,15 @@ int main(/*int argc, char **argv*/) {
 	sem_train train4;
 	sem_train_init(&train4);
 	sem_coordinate train4Car1;
-	sem_coordinate_set(&train4Car1, 10, 8);
+	sem_coordinate_set(&train4Car1, 13, 8);
 	sem_train_add_car(&train4, &train4Car1);
 
 	sem_coordinate train4Car2;
-	sem_coordinate_set(&train4Car2, 11, 8);
+	sem_coordinate_set(&train4Car2, 14, 8);
 	sem_train_add_car(&train4, &train4Car2);
 
 	sem_coordinate train4Car3;
-	sem_coordinate_set(&train4Car3, 12, 8);
+	sem_coordinate_set(&train4Car3, 15, 8);
 	sem_train_add_car(&train4, &train4Car3);
 
 	train4.direction = SEM_WEST;

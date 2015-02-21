@@ -4,13 +4,14 @@
 #include "sem_input.h"
 
 #include "sem_action.h"
+#include "sem_dynamic_array.h"
 #include "sem_error.h"
 #include "sem_heap.h"
 #include "sem_train.h"
 #include "sem_world.h"
 
-sem_success change_train_state(sem_heap* heap, sem_action* action);
-sem_success move_train_action(sem_heap* heap, sem_action* action);
+sem_success change_train_state(sem_dynamic_array* heap, sem_action* action);
+sem_success move_train_action(sem_dynamic_array* heap, sem_action* action);
 
 sem_success sem_train_input_act_upon(sem_input_event* input, sem_world* world, sem_action** action) {
 	if (sem_train_occupies(world->train, input->tile)) {
@@ -27,7 +28,7 @@ sem_success sem_train_input_act_upon(sem_input_event* input, sem_world* world, s
 	return SEM_OK;
 }
 
-sem_success change_train_state(sem_heap* heap, sem_action* action) {
+sem_success change_train_state(sem_dynamic_array* heap, sem_action* action) {
 	sem_train* train = (sem_train*) action->context;
 
 	train->moving ^= true;
@@ -40,7 +41,7 @@ sem_success change_train_state(sem_heap* heap, sem_action* action) {
 	return SEM_OK;
 }
 
-sem_success move_train_action(sem_heap* heap, sem_action* action) {
+sem_success move_train_action(sem_dynamic_array* heap, sem_action* action) {
 	sem_train* train = (sem_train*) action->context;
 	if (train->moving) {
 		if (sem_train_move(train) != SEM_OK) return SEM_ERROR;

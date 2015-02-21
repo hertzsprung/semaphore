@@ -18,7 +18,7 @@ $(eval $(call TEST_DEP_OBJ,test_all,test/test_action_list test/compass test/test
 $(eval $(call TEST_DEP_OBJ,test_action_list,test/test_action_list main/sem_action_list main/sem_error main/sem_heap))
 $(eval $(call TEST_DEP_OBJ,test_compass,main/sem_compass))
 $(eval $(call TEST_DEP_OBJ,test_dynamic_array,main/sem_dynamic_array))
-$(eval $(call TEST_DEP_OBJ,test_heap,main/sem_error main/sem_heap))
+$(eval $(call TEST_DEP_OBJ,test_heap,main/sem_dynamic_array main/sem_error main/sem_heap))
 $(eval $(call TEST_DEP_OBJ,test_input,test/test_heap main/sem_action_list main/sem_error main/sem_input))
 $(eval $(call TEST_DEP_OBJ,test_timer,main/sem_timer))
 $(eval $(call TEST_DEP_OBJ,test_train,main/sem_train main/sem_world))

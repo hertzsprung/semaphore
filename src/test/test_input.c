@@ -8,12 +8,13 @@
 #include "sem_action_list.h"
 #include "sem_compass.h"
 #include "sem_input.h"
+#include "sem_dynamic_array.h"
 #include "sem_heap.h"
 #include "sem_train.h"
 #include "sem_world.h"
 
 typedef struct {
-	sem_heap heap;
+	sem_dynamic_array heap;
 	sem_world world;
 	sem_train train;
 } test_input_context;
@@ -53,7 +54,7 @@ void test_input_teardown(test_input_context* test_ctx, const void* data) {
 
 	sem_world_destroy(&(test_ctx->world));
 	sem_train_destroy(&(test_ctx->train));
-	sem_heap_destroy(&(test_ctx->heap));
+	sem_dynamic_array_destroy(&(test_ctx->heap));
 }
 
 void test_input_null_action_for_unoccupied_coordinate(test_input_context* test_ctx, const void* data) {
@@ -81,7 +82,7 @@ void test_input_toggles_train_state(test_input_context* test_ctx, const void* da
 	#pragma unused(data)
 	sem_train* train = &(test_ctx->train);
 	sem_world* world = &(test_ctx->world);
-	sem_heap* heap = &(test_ctx->heap);
+	sem_dynamic_array* heap = &(test_ctx->heap);
 
 	sem_coordinate position;
 	sem_coordinate_set(&position, 0, 0);

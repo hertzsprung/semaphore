@@ -12,9 +12,10 @@
 #include <SDL_render.h>
 #include <SDL_video.h>
 
-#include "sem_compass.h"
-#include "sem_error.h"
 #include "sem_action_list.h"
+#include "sem_compass.h"
+#include "sem_dynamic_array.h"
+#include "sem_error.h"
 #include "sem_heap.h"
 #include "sem_input.h"
 #include "sem_render.h"
@@ -186,7 +187,7 @@ int main(/*int argc, char **argv*/) {
 	timer_ctx.clock = sem_clock_monotonic;
 	sem_timer_init(&timer_ctx);
 
-	sem_heap actions;
+	sem_dynamic_array actions;
 	sem_heap_init(&actions);
 
 	cairo_scale(cr, render_ctx.scale, render_ctx.scale);
@@ -292,7 +293,7 @@ int main(/*int argc, char **argv*/) {
 		frames++;
 	}
 
-	sem_heap_destroy(&actions);
+	sem_dynamic_array_destroy(&actions);
 	sem_world_destroy(&world);
 	sem_train_destroy(&train);
 	cairo_destroy(cr);

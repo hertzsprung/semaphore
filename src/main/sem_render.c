@@ -11,6 +11,7 @@ void render_tile(sem_render_context* ctx, uint32_t x, uint32_t y, sem_tile* tile
 void render_tile_blank(sem_render_context* ctx, uint32_t x, uint32_t y, sem_tile* tile);
 void render_tile_track(sem_render_context* ctx, uint32_t x, uint32_t y, sem_tile* tile);
 void render_train(sem_render_context* ctx, sem_train* train);
+void render_track_path(sem_render_context* ctx, sem_coordinate* coord, sem_track* track);
 
 void sem_render_world(sem_render_context* ctx, sem_world* world) {
 	render_tiles(ctx, world);
@@ -59,8 +60,15 @@ void render_tile_track(sem_render_context* ctx, uint32_t x, uint32_t y, sem_tile
 void render_train(sem_render_context* ctx, sem_train* train) {
 	for (uint32_t i=0; i < train->cars->tail_idx; i++) {
 		sem_coordinate* c = (sem_coordinate*) train->cars->items[i];
-		cairo_rectangle(ctx->cr, c->x, c->y, 1.0, 1.0);	
+		sem_track* track = sem_tile_at_coord(train->world, c)->track;
+		render_track_path(ctx, c, track);
 		cairo_set_source_rgb(ctx->cr, 1.0, 0.0, 1.0);
-		cairo_fill(ctx->cr);
+		cairo_set_line_width(ctx->cr, 0.4);
+		cairo_stroke(ctx->cr);
 	}
+}
+
+void render_track_path(sem_render_context* ctx, sem_coordinate* coord, sem_track* track) {
+	cairo_move_to(ctx->cr, coord->x + 0.5 + SEM_COMPASS_X(track->start)/2.0, coord->y + 0.5 + SEM_COMPASS_Y(track->start)/2.0);
+	cairo_line_to(ctx->cr, coord->x + 0.5 + SEM_COMPASS_X(track->end)/2.0, coord->y + 0.5 + SEM_COMPASS_Y(track->end)/2.0);
 }

@@ -12,7 +12,7 @@ typedef struct sem_train sem_train;
 #include "sem_world.h"
 
 typedef enum {
-	STOPPED, MOVING
+	STOPPED, MOVING, CRASHED
 } sem_train_state;
 
 struct sem_train {

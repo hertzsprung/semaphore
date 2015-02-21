@@ -9,6 +9,7 @@
 typedef struct {
 	sem_world world;
 	sem_train train;
+	sem_train train1, train2;
 } test_train_context;
 
 void test_train_moves_given_velocity(test_train_context* test_ctx, const void* data);
@@ -19,6 +20,7 @@ void test_train_moves_trailing_cars(test_train_context* test_ctx, const void* da
 void test_train_head_car_occupies_tile(test_train_context* test_ctx, const void* data);
 void test_train_second_car_occupies_tile(test_train_context* test_ctx, const void* data);
 void test_train_not_occupies_tile(test_train_context* test_ctx, const void* data);
+void test_train_crashes_by_occupying_same_tile(test_train_context* test_ctx, const void* data);
 
 void add_test_train(const char *test_name, void (*test)(test_train_context*, const void* data));
 void test_train_setup(test_train_context* test_ctx, const void* data);
@@ -33,6 +35,7 @@ void add_tests_train() {
 	add_test_train("/train/head_car_occupies_tile", test_train_head_car_occupies_tile);
 	add_test_train("/train/second_car_occupies_tile", test_train_second_car_occupies_tile);
 	add_test_train("/train/not_occupies_tile", test_train_not_occupies_tile);
+	add_test_train("/train/crashes_by_occupying_same_tile", test_train_crashes_by_occupying_same_tile);
 }
 
 void add_test_train(const char *test_name, void (*test)(test_train_context*, const void* data)) {
@@ -47,7 +50,12 @@ void test_train_setup(test_train_context* test_ctx, const void* data) {
 	sem_world_init_blank(&(test_ctx->world));
 
 	sem_train_init(&(test_ctx->train));
-	test_ctx->train.world = &(test_ctx->world);
+	sem_train_init(&(test_ctx->train1));
+	sem_train_init(&(test_ctx->train2));
+
+	sem_world_add_train(&(test_ctx->world), &(test_ctx->train));
+	sem_world_add_train(&(test_ctx->world), &(test_ctx->train1));
+	sem_world_add_train(&(test_ctx->world), &(test_ctx->train2));
 }
 
 void test_train_teardown(test_train_context* test_ctx, const void* data) {
@@ -55,6 +63,8 @@ void test_train_teardown(test_train_context* test_ctx, const void* data) {
 
 	sem_world_destroy(&(test_ctx->world));
 	sem_train_destroy(&(test_ctx->train));
+	sem_train_destroy(&(test_ctx->train1));
+	sem_train_destroy(&(test_ctx->train2));
 }
 
 void test_train_moves_given_velocity(test_train_context* test_ctx, const void* data) {
@@ -258,4 +268,31 @@ void test_train_not_occupies_tile(test_train_context* test_ctx, const void* data
 	sem_coordinate_set(&other_tile, 1, 1);
 
 	g_assert_false(sem_train_occupies(train, &other_tile));
+}
+
+void test_train_crashes_by_occupying_same_tile(test_train_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	sem_train* train1 = &(test_ctx->train1);
+	train1->state = MOVING;
+	train1->direction = SEM_EAST;
+
+	sem_coordinate train1_car;
+	sem_coordinate_set(&train1_car, 0, 0);
+	sem_train_add_car(train1, &train1_car);
+
+	sem_train* train2 = &(test_ctx->train2);
+	train2->state = STOPPED;
+
+	sem_coordinate train2_car1;
+	sem_coordinate_set(&train2_car1, 1, 0);
+	sem_train_add_car(train2, &train2_car1);
+
+	sem_coordinate train2_car2;
+	sem_coordinate_set(&train2_car2, 2, 0);
+	sem_train_add_car(train2, &train2_car2);
+
+	sem_train_move(train1); // move head of train1 into tail of train2
+
+	g_assert_true(train1->state == CRASHED);
+	g_assert_true(train2->state == CRASHED);
 }

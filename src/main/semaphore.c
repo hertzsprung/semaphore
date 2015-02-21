@@ -111,6 +111,40 @@ int main(/*int argc, char **argv*/) {
 
 	train2.direction = SEM_WEST;
 
+	// train 3
+	sem_train train3;
+	sem_train_init(&train3);
+	sem_coordinate train3Car1;
+	sem_coordinate_set(&train3Car1, 2, 8);
+	sem_train_add_car(&train3, &train3Car1);
+
+	sem_coordinate train3Car2;
+	sem_coordinate_set(&train3Car2, 1, 8);
+	sem_train_add_car(&train3, &train3Car2);
+
+	sem_coordinate train3Car3;
+	sem_coordinate_set(&train3Car3, 0, 8);
+	sem_train_add_car(&train3, &train3Car3);
+
+	train3.direction = SEM_EAST;
+
+	// train 4
+	sem_train train4;
+	sem_train_init(&train4);
+	sem_coordinate train4Car1;
+	sem_coordinate_set(&train4Car1, 10, 8);
+	sem_train_add_car(&train4, &train4Car1);
+
+	sem_coordinate train4Car2;
+	sem_coordinate_set(&train4Car2, 11, 8);
+	sem_train_add_car(&train4, &train4Car2);
+
+	sem_coordinate train4Car3;
+	sem_coordinate_set(&train4Car3, 12, 8);
+	sem_train_add_car(&train4, &train4Car3);
+
+	train4.direction = SEM_WEST;
+
 	sem_world world;
 	world.max_x = 64;
 	world.max_y = 64;
@@ -118,6 +152,8 @@ int main(/*int argc, char **argv*/) {
 
 	sem_world_add_train(&world, &train1);
 	sem_world_add_train(&world, &train2);
+	sem_world_add_train(&world, &train3);
+	sem_world_add_train(&world, &train4);
 
 	for (uint32_t i=0; i<=1; i++) {
 		sem_tile* t = sem_tile_at(&world, i*8 + 1, 0);
@@ -199,6 +235,16 @@ int main(/*int argc, char **argv*/) {
 		t = sem_tile_at(&world, i*8 + 4, 2);
 		t->class = TRACK;
 		t->track = &trackNS;
+	}
+
+	sem_track trackEW;
+	trackEW.start = SEM_EAST;
+	trackEW.end = SEM_WEST;
+
+	for (uint32_t i=0; i<16; i++) {
+		sem_tile* t = sem_tile_at(&world, i, 8);
+		t->class = TRACK;
+		t->track = &trackEW;
 	}
 
 	sem_timer_context timer_ctx;
@@ -317,6 +363,8 @@ int main(/*int argc, char **argv*/) {
 	sem_world_destroy(&world);
 	sem_train_destroy(&train1);
 	sem_train_destroy(&train2);
+	sem_train_destroy(&train3);
+	sem_train_destroy(&train4);
 	cairo_destroy(cr);
 	SDL_DestroyTexture(texture);
 	return EXIT_SUCCESS;

@@ -12,23 +12,23 @@ void test_train_follows_track(sem_world* world, const void* data);
 void test_train_moves_head_car(sem_world* world, const void* data);
 void test_train_moves_trailing_cars(sem_world* world, const void* data);
 
-void add_test_world(const char *test_name, void (*test)(sem_world*, const void* data));
-void test_world_setup(sem_world* world, const void* data);
-void test_world_teardown(sem_world* world, const void* data);
+void add_test_train(const char *test_name, void (*test)(sem_world*, const void* data));
+void test_train_setup(sem_world* world, const void* data);
+void test_train_teardown(sem_world* world, const void* data);
 
 void add_tests_train() {
-	add_test_world("/train/moves_given_velocity", test_train_moves_given_velocity);
-	add_test_world("/train/error_moves_onto_blank_tile", test_train_error_moves_onto_blank_tile);
-	add_test_world("/train/train_follows_track", test_train_follows_track);
-	add_test_world("/train/moves_head_car", test_train_moves_head_car);
-	add_test_world("/train/moves_trailing_cars", test_train_moves_trailing_cars);
+	add_test_train("/train/moves_given_velocity", test_train_moves_given_velocity);
+	add_test_train("/train/error_moves_onto_blank_tile", test_train_error_moves_onto_blank_tile);
+	add_test_train("/train/train_follows_track", test_train_follows_track);
+	add_test_train("/train/moves_head_car", test_train_moves_head_car);
+	add_test_train("/train/moves_trailing_cars", test_train_moves_trailing_cars);
 }
 
-void add_test_world(const char *test_name, void (*test)(sem_world*, const void* data)) {
-	g_test_add(test_name, sem_world, NULL, test_world_setup, test, test_world_teardown);
+void add_test_train(const char *test_name, void (*test)(sem_world*, const void* data)) {
+	g_test_add(test_name, sem_world, NULL, test_train_setup, test, test_train_teardown);
 }
 
-void test_world_setup(sem_world* world, const void* data) {
+void test_train_setup(sem_world* world, const void* data) {
 	#pragma unused(data)
 
 	world->max_x = 4;
@@ -36,7 +36,7 @@ void test_world_setup(sem_world* world, const void* data) {
 	sem_world_init_blank(world);
 }
 
-void test_world_teardown(sem_world* world, const void* data) {
+void test_train_teardown(sem_world* world, const void* data) {
 	#pragma unused(data)
 
 	sem_world_destroy(world);

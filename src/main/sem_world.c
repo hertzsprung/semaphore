@@ -70,14 +70,20 @@ void sem_track_set(sem_track* track, unit_vector start, unit_vector end) {
 // private functions
 
 sem_success sem_track_redirect(sem_train* train, sem_track* track) {
-	if (train->direction == sem_compass_opposite_of(track->start)) {
-		train->direction = track->end;
-	} else if (train->direction == sem_compass_opposite_of(track->end)) {
-		train->direction = track->start;
-	} else {
-		return sem_set_error("Train ran onto disconnected track");
-	}
-	return SEM_OK;
+	bool accepted = false;
+	sem_track* t = track;
+	do {
+		if (train->direction == sem_compass_opposite_of(t->start)) {
+			train->direction = t->end;
+			accepted = true;
+		} else if (train->direction == sem_compass_opposite_of(t->end)) {
+			train->direction = t->start;
+			accepted = true;
+		}
+		t = t->next;	
+	} while (!accepted && t != NULL);
+
+	return accepted ? SEM_OK : sem_set_error("Train ran onto disconnected track");
 }
 
 void sem_tile_switch_points(sem_tile* tile) {

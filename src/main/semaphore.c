@@ -80,16 +80,22 @@ int main(/*int argc, char **argv*/) {
 	// train 1
 	sem_train train1;
 	sem_train_init(&train1);
-	sem_coordinate train1Car1;
-	sem_coordinate_set(&train1Car1, 2, 0);
+	sem_coordinate train1Car1Position;
+	sem_coordinate_set(&train1Car1Position, 2, 0);
+	sem_car train1Car1;
+	train1Car1.position = &train1Car1Position;
 	sem_train_add_car(&train1, &train1Car1);
 
-	sem_coordinate train1Car2;
-	sem_coordinate_set(&train1Car2, 1, 0);
+	sem_coordinate train1Car2Position;
+	sem_coordinate_set(&train1Car2Position, 1, 0);
+	sem_car train1Car2;
+	train1Car2.position = &train1Car2Position;
 	sem_train_add_car(&train1, &train1Car2);
 
-	sem_coordinate train1Car3;
-	sem_coordinate_set(&train1Car3, 0, 1);
+	sem_coordinate train1Car3Position;
+	sem_coordinate_set(&train1Car3Position, 0, 1);
+	sem_car train1Car3;
+	train1Car3.position = &train1Car3Position;
 	sem_train_add_car(&train1, &train1Car3);
 
 	train1.direction = SEM_EAST;
@@ -97,16 +103,22 @@ int main(/*int argc, char **argv*/) {
 	// train 2
 	sem_train train2;
 	sem_train_init(&train2);
-	sem_coordinate train2Car1;
-	sem_coordinate_set(&train2Car1, 10, 0);
+	sem_coordinate train2Car1Position;
+	sem_coordinate_set(&train2Car1Position, 10, 0);
+	sem_car train2Car1;
+	train2Car1.position = &train2Car1Position;
 	sem_train_add_car(&train2, &train2Car1);
 
-	sem_coordinate train2Car2;
-	sem_coordinate_set(&train2Car2, 11, 0);
+	sem_coordinate train2Car2Position;
+	sem_coordinate_set(&train2Car2Position, 11, 0);
+	sem_car train2Car2;
+	train2Car2.position = &train2Car2Position;
 	sem_train_add_car(&train2, &train2Car2);
 
-	sem_coordinate train2Car3;
-	sem_coordinate_set(&train2Car3, 12, 1);
+	sem_coordinate train2Car3Position;
+	sem_coordinate_set(&train2Car3Position, 12, 1);
+	sem_car train2Car3;
+	train2Car3.position = &train2Car3Position;
 	sem_train_add_car(&train2, &train2Car3);
 
 	train2.direction = SEM_WEST;
@@ -114,16 +126,22 @@ int main(/*int argc, char **argv*/) {
 	// train 3
 	sem_train train3;
 	sem_train_init(&train3);
-	sem_coordinate train3Car1;
-	sem_coordinate_set(&train3Car1, 2, 8);
+	sem_coordinate train3Car1Position;
+	sem_coordinate_set(&train3Car1Position, 2, 8);
+	sem_car train3Car1;
+	train3Car1.position = &train3Car1Position;
 	sem_train_add_car(&train3, &train3Car1);
 
-	sem_coordinate train3Car2;
-	sem_coordinate_set(&train3Car2, 1, 8);
+	sem_coordinate train3Car2Position;
+	sem_coordinate_set(&train3Car2Position, 1, 8);
+	sem_car train3Car2;
+	train3Car2.position = &train3Car2Position;
 	sem_train_add_car(&train3, &train3Car2);
 
-	sem_coordinate train3Car3;
-	sem_coordinate_set(&train3Car3, 0, 8);
+	sem_coordinate train3Car3Position;
+	sem_coordinate_set(&train3Car3Position, 0, 8);
+	sem_car train3Car3;
+	train3Car3.position = &train3Car3Position;
 	sem_train_add_car(&train3, &train3Car3);
 
 	train3.direction = SEM_EAST;
@@ -131,16 +149,22 @@ int main(/*int argc, char **argv*/) {
 	// train 4
 	sem_train train4;
 	sem_train_init(&train4);
-	sem_coordinate train4Car1;
-	sem_coordinate_set(&train4Car1, 13, 8);
+	sem_coordinate train4Car1Position;
+	sem_coordinate_set(&train4Car1Position, 13, 8);
+	sem_car train4Car1;
+	train4Car1.position = &train4Car1Position;
 	sem_train_add_car(&train4, &train4Car1);
 
-	sem_coordinate train4Car2;
-	sem_coordinate_set(&train4Car2, 14, 8);
+	sem_coordinate train4Car2Position;
+	sem_coordinate_set(&train4Car2Position, 14, 8);
+	sem_car train4Car2;
+	train4Car2.position = &train4Car2Position;
 	sem_train_add_car(&train4, &train4Car2);
 
-	sem_coordinate train4Car3;
-	sem_coordinate_set(&train4Car3, 15, 8);
+	sem_coordinate train4Car3Position;
+	sem_coordinate_set(&train4Car3Position, 15, 8);
+	sem_car train4Car3;
+	train4Car3.position = &train4Car3Position;
 	sem_train_add_car(&train4, &train4Car3);
 
 	train4.direction = SEM_WEST;

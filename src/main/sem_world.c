@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "sem_dynamic_array.h"
 #include "sem_error.h"

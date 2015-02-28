@@ -36,9 +36,9 @@ sem_success sem_train_move(sem_train* train) {
 	return sem_tile_redirect(train, tile);
 }
 
-sem_success sem_train_add_car(sem_train* train, sem_coordinate* car) {
+sem_success sem_train_add_car(sem_train* train, sem_car* car) {
 	if (train->cars->tail_idx == 0) {
-		train->position = car;
+		train->position = car->position;
 	}
 	sem_dynamic_array_add(train->cars, car);
 	return SEM_OK;
@@ -46,8 +46,8 @@ sem_success sem_train_add_car(sem_train* train, sem_coordinate* car) {
 
 bool sem_train_occupies(sem_train* train, sem_coordinate* tile) {
 	for (uint32_t i=0; i < train->cars->tail_idx; i++) {
-		sem_coordinate* car = (sem_coordinate*) train->cars->items[i];
-		if (sem_coordinate_equal(car, tile)) return true;
+		sem_car* car = (sem_car*) train->cars->items[i];
+		if (sem_coordinate_equal(car->position, tile)) return true;
 	}
 
 	return false;
@@ -60,10 +60,10 @@ void sem_train_destroy(sem_train* train) {
 
 void train_move_trailing(sem_dynamic_array* cars) {
 	for (uint32_t i=cars->tail_idx-1; i > 0; i--) {
-		sem_coordinate* car_behind = (sem_coordinate*) cars->items[i];
-		sem_coordinate* car_in_front = (sem_coordinate*) cars->items[i-1];
-		car_behind->x = car_in_front->x;
-		car_behind->y = car_in_front->y;
+		sem_car* car_behind = (sem_car*) cars->items[i];
+		sem_car* car_in_front = (sem_car*) cars->items[i-1];
+		car_behind->position->x = car_in_front->position->x;
+		car_behind->position->y = car_in_front->position->y;
 	}
 }
 
@@ -74,10 +74,10 @@ sem_train* train_detect_collision(sem_train* t1) {
 		if (t2 == t1) continue;
 
 		for (uint32_t c1=0; c1 < t1->cars->tail_idx; c1++) {
-			sem_coordinate* car1 = (sem_coordinate*) t1->cars->items[c1];
+			sem_car* car1 = (sem_car*) t1->cars->items[c1];
 			for (uint32_t c2=0; c2 < t2->cars->tail_idx; c2++) {
-				sem_coordinate* car2 = (sem_coordinate*) t2->cars->items[c2];
-				if (sem_coordinate_equal(car1, car2)) return t2;	
+				sem_car* car2 = (sem_car*) t2->cars->items[c2];
+				if (sem_coordinate_equal(car1->position, car2->position)) return t2;	
 			}
 		}
 	}

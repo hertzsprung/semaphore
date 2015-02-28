@@ -32,7 +32,7 @@ sem_success sem_train_init(sem_train* train);
 
 sem_success sem_train_move(sem_train* train);
 
-sem_success sem_train_add_car(sem_train* train, sem_coordinate* car);
+sem_success sem_train_add_car(sem_train* train, sem_car* car);
 
 bool sem_train_occupies(sem_train* train, sem_coordinate* tile);
 

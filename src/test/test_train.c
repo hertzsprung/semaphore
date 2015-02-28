@@ -76,7 +76,9 @@ void test_train_moves_given_velocity(test_train_context* test_ctx, const void* d
 
 	sem_coordinate position;
 	sem_coordinate_set(&position, 0, 1);
-	sem_train_add_car(train, &position);
+	sem_car car;
+	car.position = &position;
+	sem_train_add_car(train, &car);
 
 	train->direction = SEM_NORTH | SEM_EAST;
 
@@ -100,7 +102,9 @@ void test_train_error_moves_onto_blank_tile(test_train_context* test_ctx, const 
 
 	sem_coordinate position;
 	sem_coordinate_set(&position, 0, 0);
-	sem_train_add_car(train, &position);
+	sem_car car;
+	car.position = &position;
+	sem_train_add_car(train, &car);
 	train->direction = SEM_EAST;
 
 	sem_track track_E_W;
@@ -120,7 +124,9 @@ void test_train_follows_track(test_train_context* test_ctx, const void* data) {
 
 	sem_coordinate position;
 	sem_coordinate_set(&position, 0, 0);
-	sem_train_add_car(train, &position);
+	sem_car car;
+	car.position = &position;
+	sem_train_add_car(train, &car);
 	train->direction = SEM_EAST;
 
 	sem_track track_E_W;
@@ -149,7 +155,9 @@ void test_train_follows_secondary_track(test_train_context* test_ctx, const void
 
 	sem_coordinate position;
 	sem_coordinate_set(&position, 0, 0);
-	sem_train_add_car(train, &position);
+	sem_car car;
+	car.position = &position;
+	sem_train_add_car(train, &car);
 	train->direction = SEM_EAST;
 
 	sem_track track_E_W;
@@ -179,12 +187,16 @@ void test_train_moves_head_car(test_train_context* test_ctx, const void* data) {
 	sem_world* world = &(test_ctx->world);
 	sem_train* train = &(test_ctx->train);
 
-	sem_coordinate head_car;
-	sem_coordinate_set(&head_car, 1, 0);
+	sem_coordinate head_position;
+	sem_coordinate_set(&head_position, 1, 0);
+	sem_car head_car;
+	head_car.position = &head_position;
 	sem_train_add_car(train, &head_car);
 
-	sem_coordinate car2;
-	sem_coordinate_set(&car2, 0, 0);
+	sem_coordinate car2_position;
+	sem_coordinate_set(&car2_position, 0, 0);
+	sem_car car2;
+	car2.position = &car2_position;
 	sem_train_add_car(train, &car2);
 
 	train->direction = SEM_EAST;
@@ -216,16 +228,22 @@ void test_train_moves_trailing_cars(test_train_context* test_ctx, const void* da
 	sem_world* world = &(test_ctx->world);
 	sem_train* train = &(test_ctx->train);
 
-	sem_coordinate head_car;
-	sem_coordinate_set(&head_car, 2, 0);
+	sem_coordinate head_position;
+	sem_coordinate_set(&head_position, 2, 0);
+	sem_car head_car;
+	head_car.position = &head_position;
 	sem_train_add_car(train, &head_car);
 
-	sem_coordinate car2;
-	sem_coordinate_set(&car2, 1, 0);
+	sem_coordinate car2_position;
+	sem_coordinate_set(&car2_position, 1, 0);
+	sem_car car2;
+	car2.position = &car2_position;
 	sem_train_add_car(train, &car2);
 
-	sem_coordinate car3;
-	sem_coordinate_set(&car3, 0, 0);
+	sem_coordinate car3_position;
+	sem_coordinate_set(&car3_position, 0, 0);
+	sem_car car3;
+	car3.position = &car3_position;
 	sem_train_add_car(train, &car3);
 
 	train->direction = SEM_EAST;
@@ -251,45 +269,53 @@ void test_train_moves_trailing_cars(test_train_context* test_ctx, const void* da
 	
 	sem_train_move(train);
 
-	g_assert_cmpuint(car2.x, ==, 2);
-	g_assert_cmpuint(car2.y, ==, 0);
+	g_assert_cmpuint(car2.position->x, ==, 2);
+	g_assert_cmpuint(car2.position->y, ==, 0);
 
-	g_assert_cmpuint(car3.x, ==, 1);
-	g_assert_cmpuint(car3.y, ==, 0);
+	g_assert_cmpuint(car3.position->x, ==, 1);
+	g_assert_cmpuint(car3.position->y, ==, 0);
 }
 
 void test_train_head_car_occupies_tile(test_train_context* test_ctx, const void* data) {
 	#pragma unused(data)
 	sem_train* train = &(test_ctx->train);
 
-	sem_coordinate head_car;
-	sem_coordinate_set(&head_car, 2, 0);
+	sem_coordinate head_position;
+	sem_coordinate_set(&head_position, 2, 0);
+	sem_car head_car;
+	head_car.position = &head_position;
 	sem_train_add_car(train, &head_car);
 
-	g_assert_true(sem_train_occupies(train, &head_car));
+	g_assert_true(sem_train_occupies(train, &head_position));
 }
 
 void test_train_second_car_occupies_tile(test_train_context* test_ctx, const void* data) {
 	#pragma unused(data)
 	sem_train* train = &(test_ctx->train);
 
-	sem_coordinate head_car;
-	sem_coordinate_set(&head_car, 2, 0);
+	sem_coordinate head_position;
+	sem_coordinate_set(&head_position, 2, 0);
+	sem_car head_car;
+	head_car.position = &head_position;
 	sem_train_add_car(train, &head_car);
 
-	sem_coordinate second_car;
-	sem_coordinate_set(&second_car, 1, 0);
+	sem_coordinate second_car_position;
+	sem_coordinate_set(&second_car_position, 1, 0);
+	sem_car second_car;
+	second_car.position = &second_car_position;
 	sem_train_add_car(train, &second_car);
 
-	g_assert_true(sem_train_occupies(train, &second_car));
+	g_assert_true(sem_train_occupies(train, &second_car_position));
 }
 
 void test_train_not_occupies_tile(test_train_context* test_ctx, const void* data) {
 	#pragma unused(data)
 	sem_train* train = &(test_ctx->train);
 
-	sem_coordinate head_car;
-	sem_coordinate_set(&head_car, 2, 0);
+	sem_coordinate head_position;
+	sem_coordinate_set(&head_position, 2, 0);
+	sem_car head_car;
+	head_car.position = &head_position;
 	sem_train_add_car(train, &head_car);
 
 	sem_coordinate other_tile;
@@ -304,19 +330,25 @@ void test_train_crashes_by_occupying_same_tile(test_train_context* test_ctx, con
 	train1->state = MOVING;
 	train1->direction = SEM_EAST;
 
-	sem_coordinate train1_car;
-	sem_coordinate_set(&train1_car, 0, 0);
+	sem_coordinate train1_position;
+	sem_coordinate_set(&train1_position, 0, 0);
+	sem_car train1_car;
+	train1_car.position = &train1_position;
 	sem_train_add_car(train1, &train1_car);
 
 	sem_train* train2 = &(test_ctx->train2);
 	train2->state = STOPPED;
 
-	sem_coordinate train2_car1;
-	sem_coordinate_set(&train2_car1, 1, 0);
+	sem_coordinate train2_car1_position;
+	sem_coordinate_set(&train2_car1_position, 1, 0);
+	sem_car train2_car1;
+	train2_car1.position = &train2_car1_position;
 	sem_train_add_car(train2, &train2_car1);
 
-	sem_coordinate train2_car2;
-	sem_coordinate_set(&train2_car2, 2, 0);
+	sem_coordinate train2_car2_position;
+	sem_coordinate_set(&train2_car2_position, 2, 0);
+	sem_car train2_car2;
+	train2_car2.position = &train2_car2_position;
 	sem_train_add_car(train2, &train2_car2);
 
 	sem_train_move(train1); // move head of train1 into tail of train2

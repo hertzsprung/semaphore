@@ -67,7 +67,9 @@ void test_input_null_action_for_unoccupied_coordinate(test_input_context* test_c
 
 	sem_coordinate position;
 	sem_coordinate_set(&position, 1, 4);
-	sem_train_add_car(train, &position);
+	sem_car car;
+	car.position = &position;
+	sem_train_add_car(train, &car);
 
 	sem_coordinate coord;
 	sem_coordinate_set(&coord, 3, 2);
@@ -89,7 +91,10 @@ void test_input_toggles_train_state(test_input_context* test_ctx, const void* da
 
 	sem_coordinate position;
 	sem_coordinate_set(&position, 0, 0);
-	sem_train_add_car(train, &position);
+	sem_car car;
+	car.position = &position;
+
+	sem_train_add_car(train, &car);
 	train->direction = SEM_EAST;
 	train->state = STOPPED;
 

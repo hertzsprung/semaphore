@@ -15,6 +15,11 @@ typedef enum {
 	STOPPED, MOVING, CRASHED
 } sem_train_state;
 
+typedef struct {
+	sem_coordinate* position;
+	sem_track* track;
+} sem_car;
+
 struct sem_train {
 	sem_world* world;
 	sem_train_state state;

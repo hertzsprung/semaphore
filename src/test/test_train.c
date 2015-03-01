@@ -87,9 +87,7 @@ void test_train_moves_given_velocity(test_train_context* test_ctx, const void* d
 	sem_track track_SW_NE;
 	sem_track_set(&track_SW_NE, SEM_SOUTH | SEM_WEST, SEM_NORTH | SEM_EAST);
 
-	sem_tile* tile = sem_tile_at(world, 1, 0);
-	tile->class = TRACK;
-	tile->track = &track_SW_NE;
+	sem_tile_set_track(sem_tile_at(world, 1, 0), &track_SW_NE);
 
 	sem_train_move(train);
 
@@ -112,9 +110,7 @@ void test_train_error_moves_onto_blank_tile(test_train_context* test_ctx, const 
 	sem_track track_E_W;
 	sem_track_set(&track_E_W, SEM_EAST, SEM_WEST);
 
-	sem_tile* tile = sem_tile_at(world, 0, 0);
-	tile->class = TRACK;
-	tile->track = &track_E_W;
+	sem_tile_set_track(sem_tile_at(world, 0, 0), &track_E_W);
 	
 	g_assert_cmpint(sem_train_move(train), ==, SEM_ERROR);
 }
@@ -134,16 +130,11 @@ void test_train_follows_track(test_train_context* test_ctx, const void* data) {
 	sem_track track_E_W;
 	sem_track_set(&track_E_W, SEM_EAST, SEM_WEST);
 
-	sem_tile* tile = sem_tile_at(world, 0, 0);
-	tile->class = TRACK;
-	tile->track = &track_E_W;
-
 	sem_track track_SE_W;
 	sem_track_set(&track_SE_W, SEM_WEST, SEM_SOUTH | SEM_EAST);
 
-	tile = sem_tile_at(world, 1, 0);
-	tile->class = TRACK;
-	tile->track = &track_SE_W;
+	sem_tile_set_track(sem_tile_at(world, 0, 0), &track_E_W);
+	sem_tile_set_track(sem_tile_at(world, 1, 0), &track_SE_W);
 
 	sem_train_move(train);
 
@@ -172,13 +163,8 @@ void test_train_follows_secondary_track(test_train_context* test_ctx, const void
 	sem_track_set(&track_N_S_SE_W, SEM_NORTH, SEM_SOUTH);
 	track_N_S_SE_W.next = &track_SE_W;
 
-	sem_tile* tile = sem_tile_at(world, 0, 0);
-	tile->class = TRACK;
-	tile->track = &track_E_W;
-
-	tile = sem_tile_at(world, 1, 0);
-	tile->class = TRACK;
-	tile->track = &track_N_S_SE_W;
+	sem_tile_set_track(sem_tile_at(world, 0, 0), &track_E_W);
+	sem_tile_set_track(sem_tile_at(world, 1, 0), &track_N_S_SE_W);
 
 	g_assert_true(sem_train_move(train) == SEM_OK);
 	g_assert_true(train->direction == (SEM_SOUTH | SEM_EAST));
@@ -206,17 +192,9 @@ void test_train_moves_head_car(test_train_context* test_ctx, const void* data) {
 	sem_track track_E_W;
 	sem_track_set(&track_E_W, SEM_EAST, SEM_WEST);
 
-	sem_tile* tile = sem_tile_at(world, 0, 0);
-	tile->class = TRACK;
-	tile->track = &track_E_W;
-
-	tile = sem_tile_at(world, 1, 0);
-	tile->class = TRACK;
-	tile->track = &track_E_W;
-
-	tile = sem_tile_at(world, 2, 0);
-	tile->class = TRACK;
-	tile->track = &track_E_W;
+	sem_tile_set_track(sem_tile_at(world, 0, 0), &track_E_W);
+	sem_tile_set_track(sem_tile_at(world, 1, 0), &track_E_W);
+	sem_tile_set_track(sem_tile_at(world, 2, 0), &track_E_W);
 	
 	sem_train_move(train);
 
@@ -253,21 +231,10 @@ void test_train_moves_trailing_cars(test_train_context* test_ctx, const void* da
 	sem_track track_E_W;
 	sem_track_set(&track_E_W, SEM_EAST, SEM_WEST);
 
-	sem_tile* tile = sem_tile_at(world, 0, 0);
-	tile->class = TRACK;
-	tile->track = &track_E_W;
-
-	tile = sem_tile_at(world, 1, 0);
-	tile->class = TRACK;
-	tile->track = &track_E_W;
-
-	tile = sem_tile_at(world, 2, 0);
-	tile->class = TRACK;
-	tile->track = &track_E_W;
-
-	tile = sem_tile_at(world, 3, 0);
-	tile->class = TRACK;
-	tile->track = &track_E_W;
+	sem_tile_set_track(sem_tile_at(world, 0, 0), &track_E_W);
+	sem_tile_set_track(sem_tile_at(world, 1, 0), &track_E_W);
+	sem_tile_set_track(sem_tile_at(world, 2, 0), &track_E_W);
+	sem_tile_set_track(sem_tile_at(world, 3, 0), &track_E_W);
 	
 	sem_train_move(train);
 

@@ -33,7 +33,11 @@ sem_success sem_train_move(sem_train* train) {
 	}
 
 	sem_tile* tile = sem_tile_at_coord(train->world, train->position);
-	return sem_tile_redirect(train, tile);
+	sem_track* relocated_track;
+	sem_success success = sem_tile_redirect(train, tile, &relocated_track);
+	if (success != SEM_OK) return success;
+	((sem_car*) train->cars->items[0])->track = relocated_track;	
+	return SEM_OK;
 }
 
 sem_success sem_train_add_car(sem_train* train, sem_car* car) {

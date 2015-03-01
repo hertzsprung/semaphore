@@ -22,6 +22,7 @@ void test_train_head_car_occupies_tile(test_train_context* test_ctx, const void*
 void test_train_second_car_occupies_tile(test_train_context* test_ctx, const void* data);
 void test_train_not_occupies_tile(test_train_context* test_ctx, const void* data);
 void test_train_crashes_by_occupying_same_tile(test_train_context* test_ctx, const void* data);
+void test_train_car_occupies_track(test_train_context* test_ctx, const void* data);
 
 void add_test_train(const char *test_name, void (*test)(test_train_context*, const void* data));
 void test_train_setup(test_train_context* test_ctx, const void* data);
@@ -38,6 +39,7 @@ void add_tests_train() {
 	add_test_train("/train/second_car_occupies_tile", test_train_second_car_occupies_tile);
 	add_test_train("/train/not_occupies_tile", test_train_not_occupies_tile);
 	add_test_train("/train/crashes_by_occupying_same_tile", test_train_crashes_by_occupying_same_tile);
+	add_test_train("/train/car_occupies_track", test_train_car_occupies_track);
 }
 
 void add_test_train(const char *test_name, void (*test)(test_train_context*, const void* data)) {
@@ -326,6 +328,7 @@ void test_train_not_occupies_tile(test_train_context* test_ctx, const void* data
 
 void test_train_crashes_by_occupying_same_tile(test_train_context* test_ctx, const void* data) {
 	#pragma unused(data)
+
 	sem_train* train1 = &(test_ctx->train1);
 	train1->state = MOVING;
 	train1->direction = SEM_EAST;
@@ -355,4 +358,34 @@ void test_train_crashes_by_occupying_same_tile(test_train_context* test_ctx, con
 
 	g_assert_true(train1->state == CRASHED);
 	g_assert_true(train2->state == CRASHED);
+}
+
+void test_train_car_occupies_track(test_train_context* test_ctx, const void* data) {
+	#pragma unused(data)
+
+	sem_world* world = &(test_ctx->world);
+	sem_train* train = &(test_ctx->train);
+
+	sem_track track_E_W;
+	sem_track_set(&track_E_W, SEM_EAST, SEM_WEST);
+
+	sem_track track_W_S;
+	sem_track_set(&track_W_S, SEM_WEST, SEM_SOUTH);
+
+	sem_tile_set_track(sem_tile_at(world, 0, 0), &track_E_W);
+	sem_tile_set_track(sem_tile_at(world, 1, 0), &track_W_S);
+
+	train->state = MOVING;
+	train->direction = SEM_EAST;
+
+	sem_coordinate train_position;
+	sem_coordinate_set(&train_position, 0, 0);
+	sem_car car;
+	car.position = &train_position;
+	car.track = &track_E_W;
+	sem_train_add_car(train, &car);
+
+	sem_train_move(train);
+
+	g_assert_true(((sem_car*) train->cars->items[0])->track == &track_W_S);
 }

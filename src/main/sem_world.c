@@ -6,7 +6,7 @@
 #include "sem_error.h"
 #include "sem_world.h"
 
-sem_success sem_track_redirect(sem_train* train, sem_track* track);
+sem_success sem_track_redirect(sem_train* train, sem_track* track, sem_track** relocated_track);
 
 sem_success sem_world_init_blank(sem_world* world) {
 	world->trains = malloc(sizeof(sem_dynamic_array));
@@ -52,14 +52,19 @@ sem_tile* sem_tile_at(sem_world* world, uint32_t x, uint32_t y) {
 	return &(world->tiles[y*world->max_x + x]);
 }
 
-sem_success sem_tile_redirect(sem_train* train, sem_tile* tile) {
+sem_success sem_tile_redirect(sem_train* train, sem_tile* tile, sem_track** relocated_track) {
 	switch (tile->class) {
 	case BLANK:
 		return sem_set_error("Train ran onto blank tile");
 	case TRACK:
 	case POINTS:
-		return sem_track_redirect(train, tile->track);
+		return sem_track_redirect(train, tile->track, relocated_track);
 	}
+}
+
+void sem_tile_set_track(sem_tile* tile, sem_track* track) {
+	tile->class = TRACK;
+	tile->track = track;
 }
 
 void sem_track_set(sem_track* track, unit_vector start, unit_vector end) {
@@ -70,7 +75,8 @@ void sem_track_set(sem_track* track, unit_vector start, unit_vector end) {
 
 // private functions
 
-sem_success sem_track_redirect(sem_train* train, sem_track* track) {
+sem_success sem_track_redirect(sem_train* train, sem_track* track, sem_track** relocated_track) {
+	*relocated_track = NULL;
 	bool accepted = false;
 	sem_track* t = track;
 	do {
@@ -80,6 +86,10 @@ sem_success sem_track_redirect(sem_train* train, sem_track* track) {
 		} else if (train->direction == sem_compass_opposite_of(t->end)) {
 			train->direction = t->start;
 			accepted = true;
+		}
+
+		if (accepted) {
+			*relocated_track = t;
 		}
 		t = t->next;	
 	} while (!accepted && t != NULL);

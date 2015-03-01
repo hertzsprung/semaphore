@@ -42,9 +42,16 @@ sem_tile* sem_tile_at_coord(sem_world* world, sem_coordinate* c);
 
 sem_tile* sem_tile_at(sem_world* world, uint32_t x, uint32_t y);
 
-sem_success sem_tile_redirect(sem_train* train, sem_tile* tile);
+/**
+ * Redirect a train that has moved onto a new tile.
+ *
+ * @param relocated_track If the train is accepted onto the new tile, this points to the track which the head of the train now occupies, otherwise NULL.
+ */
+sem_success sem_tile_redirect(sem_train* train, sem_tile* tile, sem_track** relocated_track);
 
 void sem_tile_switch_points(sem_tile* tile);
+
+void sem_tile_set_track(sem_tile* tile, sem_track* track);
 
 void sem_track_set(sem_track* track, unit_vector start, unit_vector end);
 

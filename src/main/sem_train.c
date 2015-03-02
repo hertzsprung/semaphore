@@ -68,6 +68,7 @@ void train_move_trailing(sem_dynamic_array* cars) {
 		sem_car* car_in_front = (sem_car*) cars->items[i-1];
 		car_behind->position->x = car_in_front->position->x;
 		car_behind->position->y = car_in_front->position->y;
+		car_behind->track = car_in_front->track;
 	}
 }
 

@@ -82,9 +82,7 @@ void render_tile_points(sem_render_context* ctx, sem_coordinate* coord, sem_tile
 void render_train(sem_render_context* ctx, sem_train* train) {
 	for (uint32_t i=0; i < train->cars->tail_idx; i++) {
 		sem_car* car = (sem_car*) train->cars->items[i];
-		// TODO: change this to get the track straight from the car
-		sem_track* track = sem_tile_at_coord(train->world, car->position)->track;
-		render_track_path(ctx, car->position, track);
+		render_track_path(ctx, car->position, car->track);
 		if (train->state == CRASHED) {
 			cairo_set_source_rgb(ctx->cr, 1.0, 0.0, 0.0);
 		} else {

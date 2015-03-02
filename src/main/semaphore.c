@@ -326,6 +326,8 @@ int main(/*int argc, char **argv*/) {
 	// train 4
 	sem_train train4;
 	sem_train_init(&train4);
+	train4.state = DERAILED;
+
 	sem_coordinate train4Car1Position;
 	sem_coordinate_set(&train4Car1Position, 13, 8);
 	sem_car train4Car1;

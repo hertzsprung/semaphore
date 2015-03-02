@@ -85,6 +85,8 @@ void render_train(sem_render_context* ctx, sem_train* train) {
 		render_track_path(ctx, car->position, car->track);
 		if (train->state == CRASHED) {
 			cairo_set_source_rgb(ctx->cr, 1.0, 0.0, 0.0);
+		} else if (train->state == DERAILED) {
+			cairo_set_source_rgb(ctx->cr, 1.0, 1.0, 0.0);
 		} else {
 			cairo_set_source_rgb(ctx->cr, 1.0, 0.0, 1.0);
 		}

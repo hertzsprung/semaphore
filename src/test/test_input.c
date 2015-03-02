@@ -146,12 +146,10 @@ void test_input_switches_points(test_input_context* test_ctx, const void* data) 
 	sem_dynamic_array* heap = &(test_ctx->heap);
 
 	sem_track trackW_NE;
-	trackW_NE.start = SEM_WEST;
-	trackW_NE.end = SEM_NORTH | SEM_EAST;
+	sem_track_set(&trackW_NE, SEM_WEST, SEM_NORTH | SEM_EAST);
 
 	sem_track trackW_E;
-	trackW_E.start = SEM_WEST;
-	trackW_E.end = SEM_EAST;
+	sem_track_set(&trackW_E, SEM_WEST, SEM_EAST);
 
 	sem_tile* tile = sem_tile_at(world, 0, 0);
 	tile->class = POINTS;

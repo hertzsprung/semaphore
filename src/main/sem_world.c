@@ -6,7 +6,7 @@
 #include "sem_error.h"
 #include "sem_world.h"
 
-sem_success sem_track_redirect(sem_train* train, sem_track* track, sem_track** relocated_track);
+sem_success sem_track_accept(sem_train* train, sem_track* track, sem_track** relocated_track);
 
 sem_success sem_world_init_blank(sem_world* world) {
 	world->trains = malloc(sizeof(sem_dynamic_array));
@@ -52,13 +52,17 @@ sem_tile* sem_tile_at(sem_world* world, uint32_t x, uint32_t y) {
 	return &(world->tiles[y*world->max_x + x]);
 }
 
-sem_success sem_tile_redirect(sem_train* train, sem_tile* tile, sem_track** relocated_track) {
+sem_success sem_tile_accept(sem_train* train, sem_tile* tile, sem_track** relocated_track) {
 	switch (tile->class) {
 	case BLANK:
 		return sem_set_error("Train ran onto blank tile");
 	case TRACK:
+		return sem_track_accept(train, tile->track, relocated_track);
 	case POINTS:
-		return sem_track_redirect(train, tile->track, relocated_track);
+		return sem_track_accept(train, tile->track, relocated_track);
+		// TODO: here, we should look at the track in tile->points[] and see
+		// if any of them are acceptable.  if one is, the train becomes derailed,
+		// or we auto-switch the points if the train is at a slow speed
 	}
 }
 
@@ -75,12 +79,15 @@ void sem_track_set(sem_track* track, unit_vector start, unit_vector end) {
 
 // private functions
 
-sem_success sem_track_redirect(sem_train* train, sem_track* track, sem_track** relocated_track) {
+sem_success sem_track_accept(sem_train* train, sem_track* track, sem_track** relocated_track) {
 	*relocated_track = NULL;
 	bool accepted = false;
 	sem_track* t = track;
 	do {
 		if (train->direction == sem_compass_opposite_of(t->start)) {
+			// TODO: don't change the train direction in here
+			// instead, pass in a ptr to a sem_tile_acceptance struct
+			// that we mutate in here
 			train->direction = t->end;
 			accepted = true;
 		} else if (train->direction == sem_compass_opposite_of(t->end)) {

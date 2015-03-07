@@ -88,9 +88,9 @@ sem_tile* sem_tile_at(sem_world* world, uint32_t x, uint32_t y);
 /**
  * Accept a train that has moved onto a new tile.
  *
- * @param relocated_track If the train is accepted onto the new tile, this points to the track which the head of the train now occupies, otherwise NULL.
+ * @param acceptance Modified upon return to indicate the acceptance criteria.  If the call was not successful, the struct elements will be undefined.
  */
-sem_success sem_tile_accept(sem_train* train, sem_tile* tile, sem_track** relocated_track);
+sem_success sem_tile_accept(sem_train* train, sem_tile* tile, sem_tile_acceptance* acceptance);
 
 void sem_tile_switch_points(sem_tile* tile);
 

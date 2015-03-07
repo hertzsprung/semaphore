@@ -80,18 +80,14 @@ void sem_track_set(sem_track* track, unit_vector start, unit_vector end) {
 // private functions
 
 sem_success sem_track_accept(sem_train* train, sem_track* track, sem_tile_acceptance* acceptance) {
-	acceptance->track = NULL;
 	bool accepted = false;
 	sem_track* t = track;
 	do {
 		if (train->direction == sem_compass_opposite_of(t->start)) {
-			// TODO: don't change the train direction in here
-			// instead, pass in a ptr to a sem_tile_acceptance struct
-			// that we mutate in here
-			train->direction = t->end;
+			acceptance->direction = t->end;
 			accepted = true;
 		} else if (train->direction == sem_compass_opposite_of(t->end)) {
-			train->direction = t->start;
+			acceptance->direction = t->start;
 			accepted = true;
 		}
 

@@ -36,6 +36,7 @@ sem_success sem_train_move(sem_train* train) {
 	sem_tile_acceptance acceptance;
 	sem_success success = sem_tile_accept(train, tile, &acceptance);
 	if (success != SEM_OK) return success;
+	train->direction = acceptance.direction;
 	((sem_car*) train->cars->items[0])->track = acceptance.track;	
 	return SEM_OK;
 }

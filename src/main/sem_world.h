@@ -92,9 +92,16 @@ sem_tile* sem_tile_at(sem_world* world, uint32_t x, uint32_t y);
  */
 sem_success sem_tile_accept(sem_train* train, sem_tile* tile, sem_tile_acceptance* acceptance);
 
+/**
+ * Initialise a sem_tile_acceptance with default values.
+ */
+void sem_tile_acceptance_init(sem_tile_acceptance* acceptance);
+
 void sem_tile_switch_points(sem_tile* tile);
 
 void sem_tile_set_track(sem_tile* tile, sem_track* track);
+
+void sem_tile_set_points(sem_tile* tile, sem_track* track);
 
 void sem_track_set(sem_track* track, unit_vector start, unit_vector end);
 

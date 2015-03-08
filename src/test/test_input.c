@@ -62,6 +62,7 @@ void test_input_teardown(test_input_context* test_ctx, const void* data) {
 
 void test_input_null_action_for_unoccupied_coordinate(test_input_context* test_ctx, const void* data) {
 	#pragma unused(data)
+
 	sem_train* train = &(test_ctx->train);
 	sem_world* world = &(test_ctx->world);
 
@@ -152,11 +153,9 @@ void test_input_switches_points(test_input_context* test_ctx, const void* data) 
 	sem_track_set(&trackW_E, SEM_WEST, SEM_EAST);
 
 	sem_tile* tile = sem_tile_at(world, 0, 0);
-	tile->class = POINTS;
-	tile->track = &trackW_NE;
+	sem_tile_set_points(tile, &trackW_NE);
 	tile->points[0] = &trackW_E;
 	tile->points[1] = &trackW_NE;
-	tile->points[2] = NULL;
 
 	sem_coordinate coord;
 	sem_coordinate_set(&coord, 0, 0);

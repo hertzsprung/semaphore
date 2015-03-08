@@ -7,6 +7,7 @@
 #include "sem_world.h"
 
 sem_success sem_track_accept(sem_train* train, sem_track* track, sem_tile_acceptance* acceptance);
+sem_success sem_inactive_track_accept(sem_train* train, sem_tile* tile, sem_tile_acceptance* acceptance);
 
 sem_success sem_world_init_blank(sem_world* world) {
 	world->trains = malloc(sizeof(sem_dynamic_array));
@@ -59,16 +60,32 @@ sem_success sem_tile_accept(sem_train* train, sem_tile* tile, sem_tile_acceptanc
 	case TRACK:
 		return sem_track_accept(train, tile->track, acceptance);
 	case POINTS:
-		return sem_track_accept(train, tile->track, acceptance);
+		if (sem_track_accept(train, tile->track, acceptance) == SEM_OK) return SEM_OK;
+		acceptance->need_points_switch = true;
+		return sem_inactive_track_accept(train, tile, acceptance);
 		// TODO: here, we should look at the track in tile->points[] and see
 		// if any of them are acceptable.  if one is, the train becomes derailed,
 		// or we auto-switch the points if the train is at a slow speed
 	}
 }
 
+void sem_tile_acceptance_init(sem_tile_acceptance* acceptance) {
+	acceptance->direction = 0;
+	acceptance->track = NULL;
+	acceptance->need_points_switch = false;
+}
+
 void sem_tile_set_track(sem_tile* tile, sem_track* track) {
 	tile->class = TRACK;
 	tile->track = track;
+}
+
+void sem_tile_set_points(sem_tile* tile, sem_track* track) {
+	tile->class = POINTS;
+	tile->track = track;
+	tile->points[0] = track;
+	tile->points[1] = NULL;
+	tile->points[2] = NULL;
 }
 
 void sem_track_set(sem_track* track, unit_vector start, unit_vector end) {
@@ -98,6 +115,15 @@ sem_success sem_track_accept(sem_train* train, sem_track* track, sem_tile_accept
 	} while (!accepted && t != NULL);
 
 	return accepted ? SEM_OK : sem_set_error("Train ran onto disconnected track");
+}
+
+sem_success sem_inactive_track_accept(sem_train* train, sem_tile* tile, sem_tile_acceptance* acceptance) {
+	for (uint8_t i=0; i<3 && tile->points[i] != NULL; i++) {
+		if (tile->points[i] == tile->track) continue;
+		if (sem_track_accept(train, tile->points[i], acceptance) == SEM_OK) return SEM_OK;
+	}
+
+	return sem_set_error("Train ran onto disconnected track");
 }
 
 void sem_tile_switch_points(sem_tile* tile) {

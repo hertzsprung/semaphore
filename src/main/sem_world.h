@@ -86,14 +86,15 @@ sem_tile* sem_tile_at_coord(sem_world* world, sem_coordinate* c);
 sem_tile* sem_tile_at(sem_world* world, uint32_t x, uint32_t y);
 
 /**
- * Accept a train that has moved onto a new tile.
+ * \brief Accept a train that has moved onto a new tile.
  *
  * @param acceptance Modified upon return to indicate the acceptance criteria.  If the call was not successful, the struct elements will be undefined.
+ * @return \ref SEM_OK if the train was accepted onto active or inactive track, or \ref SEM_ERROR if the train moved onto disconnected train.
  */
 sem_success sem_tile_accept(sem_train* train, sem_tile* tile, sem_tile_acceptance* acceptance);
 
 /**
- * Initialise a sem_tile_acceptance with default values.
+ * \brief Initialise a sem_tile_acceptance with default values.
  */
 void sem_tile_acceptance_init(sem_tile_acceptance* acceptance);
 
@@ -101,6 +102,9 @@ void sem_tile_switch_points(sem_tile* tile);
 
 void sem_tile_set_track(sem_tile* tile, sem_track* track);
 
+/**
+ * \brief Initialise a sem_tile with an active track, leaving the inactive tracks as NULL.
+ */
 void sem_tile_set_points(sem_tile* tile, sem_track* track);
 
 void sem_track_set(sem_track* track, unit_vector start, unit_vector end);

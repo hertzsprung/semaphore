@@ -24,6 +24,7 @@ void test_train_not_occupies_tile(test_train_context* test_ctx, const void* data
 void test_train_crashes_by_occupying_same_tile(test_train_context* test_ctx, const void* data);
 void test_train_car_occupies_track(test_train_context* test_ctx, const void* data);
 void test_train_moves_trailing_car_onto_track(test_train_context* test_ctx, const void* data);
+void test_train_derails_when_need_points_switch(test_train_context* test_ctx, const void* data);
 
 void add_test_train(const char *test_name, void (*test)(test_train_context*, const void* data));
 void test_train_setup(test_train_context* test_ctx, const void* data);
@@ -42,6 +43,7 @@ void add_tests_train() {
 	add_test_train("/train/crashes_by_occupying_same_tile", test_train_crashes_by_occupying_same_tile);
 	add_test_train("/train/car_occupies_track", test_train_car_occupies_track);
 	add_test_train("/train/moves_trailing_car_onto_track", test_train_moves_trailing_car_onto_track);
+	add_test_train("/train/derails_when_need_points_switch", test_train_derails_when_need_points_switch);
 }
 
 void add_test_train(const char *test_name, void (*test)(test_train_context*, const void* data)) {
@@ -297,8 +299,16 @@ void test_train_not_occupies_tile(test_train_context* test_ctx, const void* data
 
 void test_train_crashes_by_occupying_same_tile(test_train_context* test_ctx, const void* data) {
 	#pragma unused(data)
-
 	sem_train* train1 = &(test_ctx->train1);
+	sem_train* train2 = &(test_ctx->train2);
+	sem_world* world = &(test_ctx->world);
+
+	sem_track trackW_E;
+	sem_track_set(&trackW_E, SEM_WEST, SEM_EAST);
+
+	sem_tile* tile = sem_tile_at(world, 1, 0);
+	sem_tile_set_track(tile, &trackW_E);
+
 	train1->state = MOVING;
 	train1->direction = SEM_EAST;
 
@@ -308,7 +318,6 @@ void test_train_crashes_by_occupying_same_tile(test_train_context* test_ctx, con
 	train1_car.position = &train1_position;
 	sem_train_add_car(train1, &train1_car);
 
-	sem_train* train2 = &(test_ctx->train2);
 	train2->state = STOPPED;
 
 	sem_coordinate train2_car1_position;
@@ -400,4 +409,36 @@ void test_train_moves_trailing_car_onto_track(test_train_context* test_ctx, cons
 
 	g_assert_true(((sem_car*) train->cars->items[0])->track == &track_N_S);
 	g_assert_true(((sem_car*) train->cars->items[1])->track == &track_W_S);
+}
+
+void test_train_derails_when_need_points_switch(test_train_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	sem_train* train = &(test_ctx->train);
+	sem_world* world = &(test_ctx->world);
+
+	sem_tile_acceptance acceptance;
+	sem_tile_acceptance_init(&acceptance);
+	
+	train->direction = SEM_EAST;
+
+	sem_coordinate car_position;
+	sem_coordinate_set(&car_position, 0, 0);
+	sem_car car;
+	car.position = &car_position;
+
+	sem_train_add_car(train, &car);
+
+	sem_track trackNW_E;
+	sem_track_set(&trackNW_E, SEM_NORTH | SEM_WEST, SEM_EAST);
+
+	sem_track trackW_E;
+	sem_track_set(&trackW_E, SEM_WEST, SEM_EAST);
+
+	sem_tile* tile = sem_tile_at(world, 1, 0);
+	sem_tile_set_points(tile, &trackNW_E);
+	tile->points[1] = &trackW_E;
+
+	sem_train_move(train);
+
+	g_assert_true(train->state == DERAILED);
 }

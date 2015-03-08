@@ -63,9 +63,6 @@ sem_success sem_tile_accept(sem_train* train, sem_tile* tile, sem_tile_acceptanc
 		if (sem_track_accept(train, tile->track, acceptance) == SEM_OK) return SEM_OK;
 		acceptance->need_points_switch = true;
 		return sem_inactive_track_accept(train, tile, acceptance);
-		// TODO: here, we should look at the track in tile->points[] and see
-		// if any of them are acceptable.  if one is, the train becomes derailed,
-		// or we auto-switch the points if the train is at a slow speed
 	}
 }
 

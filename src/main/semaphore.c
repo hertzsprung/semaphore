@@ -19,6 +19,7 @@
 #include "sem_heap.h"
 #include "sem_input.h"
 #include "sem_render.h"
+#include "sem_serialize.h"
 #include "sem_timer.h"
 #include "sem_train.h"
 #include "sem_world.h"
@@ -77,11 +78,10 @@ int main(/*int argc, char **argv*/) {
 	render_ctx.cr = cr;	
 	render_ctx.scale = 32.0;
 
-
+	FILE* map = fopen("maps/64x64blank", "r");
 	sem_world world;
-	world.max_x = 64;
-	world.max_y = 64;
-	sem_world_init_blank(&world);
+	sem_serialize_load(map, &world);
+	fclose(map);
 
 	for (uint32_t i=0; i<=1; i++) {
 		sem_tile* t = sem_tile_at(&world, i*8 + 1, 0);

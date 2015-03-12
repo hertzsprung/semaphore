@@ -29,6 +29,10 @@ char* sem_tokenization_next(sem_tokenization* tokenization) {
 	return token;
 }
 
+uint32_t sem_parse_uint32_t(char* string) {
+	return (uint32_t) strtoul(string, NULL, 10);
+}
+
 char* strip_newline(char* string) {
 	if (string[strlen(string)-1] == '\n') string[strlen(string)-1] = '\0';
 	return string;

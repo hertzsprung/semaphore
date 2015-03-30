@@ -22,6 +22,8 @@ sem_success sem_serialize_load(FILE* in, sem_world* world) {
 
 	sem_world_init_blank(world);
 
+	free(line);
+
 	return read_tiles(in, world);
 }
 
@@ -43,6 +45,8 @@ sem_success read_tiles(FILE* in, sem_world* world) {
 	
 	token = sem_tokenization_next(&tokens);	
 
+	free(line);
+
 	return SEM_OK;
 }
 
@@ -58,6 +62,8 @@ sem_success read_tile(FILE* in, sem_world* world) {
 
 	sem_tile* tile = sem_tile_at(world, x, y);
 	tile->class = TRACK;
+
+	free(line);
 
 	return SEM_OK;
 }

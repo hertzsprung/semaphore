@@ -24,7 +24,7 @@ void sem_tokenization_init(sem_tokenization* tokenization, char* string) {
 
 char* sem_tokenization_next(sem_tokenization* tokenization) {
 	char* delimiter = " ";
-	char* token = strtok_r(tokenization->string, delimiter, &tokenization->state);
+	char* token = strtok_r(tokenization->string, delimiter, &(tokenization->state));
 	tokenization->string = NULL;
 	return token;
 }

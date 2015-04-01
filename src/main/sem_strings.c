@@ -17,17 +17,14 @@ char* sem_read_line(FILE* in) {
 	}
 }
 
-void sem_tokenization_init(sem_tokenization* tokenization, char* string) {
+void sem_tokenization_init(sem_tokenization* tokenization, char* string, char* delimiter) {
 	tokenization->string = string;
 	tokenization->state = NULL;
+	tokenization->delimiter = delimiter;
 }
 
 char* sem_tokenization_next(sem_tokenization* tokenization) {
-	return sem_tokenization_split(tokenization, " ");
-}
-
-char* sem_tokenization_split(sem_tokenization* tokenization, char* delimiter) {
-	char* token = strtok_r(tokenization->string, delimiter, &(tokenization->state));
+	char* token = strtok_r(tokenization->string, tokenization->delimiter, &(tokenization->state));
 	tokenization->string = NULL;
 	return token;
 }

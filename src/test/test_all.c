@@ -9,7 +9,7 @@
 #include "test_input.h"
 #include "test_serialize.h"
 #include "test_timer.h"
-#include "test_tile_parser.h"
+#include "test_parser.h"
 #include "test_track_cache.h"
 #include "test_train.h"
 #include "test_world.h"
@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
 	add_tests_input();
 	add_tests_serialize();
 	add_tests_timer();
-	add_tests_tile_parser();
+	add_tests_parser();
 	add_tests_track_cache();
 	add_tests_train();
 	add_tests_world();

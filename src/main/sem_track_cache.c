@@ -1,6 +1,7 @@
 #include <stdlib.h>
 
 #include "sem_track_cache.h"
+#include "sem_parser.h"
 
 void track_free(gpointer track);
 
@@ -17,9 +18,9 @@ sem_success sem_track_cache_find(sem_track_cache* track_cache, char* track_descr
 		if (*track == NULL) return sem_set_error("Failed to allocated memory for track");
 		g_hash_table_insert(track_cache->table, track_description, *track);
 
-		(*track)->start = SEM_NORTH;
-		(*track)->end = SEM_SOUTH;
 	}
+
+	sem_track_parse(*track, track_description);
 
 	return SEM_OK;
 }

@@ -28,8 +28,9 @@ void test_track_cache_teardown(sem_track_cache* track_cache, const void* data) {
 
 void test_track_cache_create_uncached_track(sem_track_cache* track_cache, const void* data) {
 	#pragma unused(data)
+	char track_description[16] = "N-S";
 	sem_track* track = NULL;
-	sem_track_cache_find(track_cache, "N-S", &track);
+	sem_track_cache_find(track_cache, track_description, &track);
 
 	g_assert_nonnull(track);
 	g_assert_true(track->start == SEM_NORTH);
@@ -38,12 +39,13 @@ void test_track_cache_create_uncached_track(sem_track_cache* track_cache, const 
 
 void test_track_cache_return_cached_track(sem_track_cache* track_cache, const void* data) {
 	#pragma unused(data)
+	char track_description[16] = "N-S";
 
 	sem_track* track_N_S = malloc(sizeof(sem_track));
-	g_hash_table_insert(track_cache->table, "N-S", track_N_S);
+	g_hash_table_insert(track_cache->table, track_description, track_N_S);
 
 	sem_track* cached_track = NULL;
-	sem_track_cache_find(track_cache, "N-S", &cached_track);
+	sem_track_cache_find(track_cache, track_description, &cached_track);
 
 	g_assert_true(cached_track == track_N_S);
 }

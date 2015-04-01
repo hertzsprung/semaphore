@@ -14,7 +14,7 @@ sem_success sem_serialize_load(FILE* in, sem_world* world) {
 	char* line = sem_read_line(in);
 	if (line == NULL) return sem_set_error("Could not read line");
 	sem_tokenization tokens;
-	sem_tokenization_init(&tokens, line);
+	sem_tokenization_init(&tokens, line, " ");
 	sem_tokenization_next(&tokens); // TODO: check token is "world"
 	
 	world->max_x = sem_parse_uint32_t(sem_tokenization_next(&tokens));
@@ -32,7 +32,7 @@ sem_success read_tiles(FILE* in, sem_world* world) {
 	if (line == NULL) return sem_set_error("Could not read line");
 
 	sem_tokenization tokens;
-	sem_tokenization_init(&tokens, line);
+	sem_tokenization_init(&tokens, line, " ");
 	char* token = sem_tokenization_next(&tokens);
 	// TODO: check token is "tiles"
 	
@@ -55,7 +55,7 @@ sem_success read_tile(FILE* in, sem_world* world) {
 	if (line == NULL) return sem_set_error("Could not read line");
 
 	sem_tokenization tokens;
-	sem_tokenization_init(&tokens, line);
+	sem_tokenization_init(&tokens, line, " ");
 
 	uint32_t x = sem_parse_uint32_t(sem_tokenization_next(&tokens));
 	uint32_t y = sem_parse_uint32_t(sem_tokenization_next(&tokens));

@@ -7,6 +7,7 @@
 typedef struct {
     char* string;
     char* state;
+    char* delimiter;
 } sem_tokenization;
 
 /**
@@ -15,11 +16,9 @@ typedef struct {
  */
 char* sem_read_line(FILE* in);
 
-void sem_tokenization_init(sem_tokenization* tokenization, char* string);
+void sem_tokenization_init(sem_tokenization* tokenization, char* string, char* delimiter);
 
 char* sem_tokenization_next(sem_tokenization* tokenization);
-
-char* sem_tokenization_split(sem_tokenization* tokenization, char* delimiter);
 
 uint32_t sem_parse_uint32_t(char* string);
 

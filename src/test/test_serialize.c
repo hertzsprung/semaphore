@@ -33,8 +33,8 @@ void test_serialize_load_track_tile() {
 
 	sem_tile* tile = sem_tile_at(&world, 0, 0);
 	g_assert_true(tile->class == TRACK);
-//	g_assert_true(tile->track->start == SEM_WEST);
-//	g_assert_true(tile->track->start == SEM_EAST);
+	g_assert_true(tile->track->start == SEM_WEST);
+	g_assert_true(tile->track->end == SEM_EAST);
 
 	sem_world_destroy(&world);
 	fclose(file);

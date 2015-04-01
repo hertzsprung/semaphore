@@ -3,6 +3,7 @@
 
 #include "sem_serialize.h"
 #include "sem_error.h"
+#include "sem_parser.h"
 #include "sem_strings.h"
 
 sem_success read_tiles(FILE* in, sem_world* world);
@@ -62,6 +63,7 @@ sem_success read_tile(FILE* in, sem_world* world) {
 
 	sem_tile* tile = sem_tile_at(world, x, y);
 	tile->class = TRACK;
+	sem_tile_parse(tile, &tokens, world->track_cache);
 
 	free(line);
 

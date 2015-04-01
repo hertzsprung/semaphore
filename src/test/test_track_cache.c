@@ -1,5 +1,6 @@
-#include <stdlib.h>
 #include <glib.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "test_track_cache.h"
 #include "sem_track_cache.h"
@@ -42,7 +43,7 @@ void test_track_cache_return_cached_track(sem_track_cache* track_cache, const vo
 	char track_description[16] = "N-S";
 
 	sem_track* track_N_S = malloc(sizeof(sem_track));
-	g_hash_table_insert(track_cache->table, track_description, track_N_S);
+	g_hash_table_insert(track_cache->table, strdup(track_description), track_N_S);
 
 	sem_track* cached_track = NULL;
 	sem_track_cache_find(track_cache, track_description, &cached_track);

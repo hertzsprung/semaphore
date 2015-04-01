@@ -4,6 +4,7 @@
 
 #include "sem_dynamic_array.h"
 #include "sem_error.h"
+#include "sem_track_cache.h"
 #include "sem_world.h"
 
 sem_success sem_track_accept(sem_train* train, sem_track* track, sem_tile_acceptance* acceptance);
@@ -11,10 +12,12 @@ sem_success sem_inactive_track_accept(sem_train* train, sem_tile* tile, sem_tile
 
 sem_success sem_world_init_blank(sem_world* world) {
 	world->trains = malloc(sizeof(sem_dynamic_array));
-	if (world->trains == NULL) {
-		return sem_set_error("Could not allocate memory for trains");
-	}
+	if (world->trains == NULL) return sem_set_error("Could not allocate memory for trains");
 	if (sem_dynamic_array_init(world->trains) != SEM_OK) return SEM_ERROR;
+
+	world->track_cache = malloc(sizeof(sem_track_cache));
+	if (world->track_cache == NULL) return sem_set_error("Could not allocate memory for track cache");
+	if (sem_track_cache_init(world->track_cache) != SEM_OK) return SEM_ERROR;
 
 	world->tiles = malloc(world->max_x * world->max_y * sizeof(sem_tile));
 	if (world->tiles == NULL) {
@@ -31,8 +34,10 @@ sem_success sem_world_init_blank(sem_world* world) {
 
 void sem_world_destroy(sem_world* world) {
 	sem_dynamic_array_destroy(world->trains);
+	sem_track_cache_destroy(world->track_cache);
 	free(world->trains);
 	free(world->tiles);
+	free(world->track_cache);
 }
 
 sem_success sem_world_add_train(sem_world* world, sem_train* train) {

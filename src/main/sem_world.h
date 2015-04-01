@@ -57,7 +57,7 @@ typedef struct {
 } sem_tile_acceptance;
 
 /**
- * @brief Initialise a world with \ref BLANK tiles and no trains.
+ * @brief Initialise a world with \ref BLANK tiles, no trains and an empty track cache.
  *
  * Once initialised, a sem_world should be destroyed by calling sem_world_destroy().
  * 

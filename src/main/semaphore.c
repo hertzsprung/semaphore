@@ -83,17 +83,6 @@ int main(/*int argc, char **argv*/) {
 	sem_serialize_load(map, &world);
 	fclose(map);
 
-	sem_track trackNE_SW;
-	sem_track_set(&trackNE_SW, SEM_NORTH | SEM_WEST, SEM_SOUTH | SEM_EAST);
-
-	sem_track trackNW_SE__NE_SW;
-	sem_track_set(&trackNW_SE__NE_SW, SEM_NORTH | SEM_EAST, SEM_SOUTH | SEM_WEST);
-	trackNW_SE__NE_SW.next = &trackNE_SW;
-
-	sem_tile* t = sem_tile_at(&world, 6, 2);
-	t->class = TRACK;
-	t->track = &trackNW_SE__NE_SW;
-
 	sem_track trackW_SE;
 	sem_track_set(&trackW_SE, SEM_WEST, SEM_SOUTH | SEM_EAST);
 
@@ -109,7 +98,7 @@ int main(/*int argc, char **argv*/) {
 	sem_track trackNW_S;
 	sem_track_set(&trackNW_S, SEM_NORTH | SEM_WEST, SEM_SOUTH);
 
-	t = sem_tile_at(&world, 4, 1);
+	sem_tile* t = sem_tile_at(&world, 4, 1);
 	t->class = POINTS;
 	t->track = &trackNW_S;
 	t->points[0] = &trackNW_S;

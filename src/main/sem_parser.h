@@ -7,7 +7,7 @@
 
 sem_success sem_tile_parse(sem_tile* tile, sem_tokenization* tile_description, sem_track_cache* track_cache);
 
-sem_success sem_track_parse(sem_track* track, char* track_description);
+sem_success sem_track_parse(char* track_description, sem_track** track);
 
 #endif
 

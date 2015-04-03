@@ -43,6 +43,7 @@ void test_track_cache_return_cached_track(sem_track_cache* track_cache, const vo
 	char track_description[16] = "N-S";
 
 	sem_track* track_N_S = malloc(sizeof(sem_track));
+	sem_track_set(track_N_S, SEM_NORTH, SEM_SOUTH);
 	g_hash_table_insert(track_cache->table, strdup(track_description), track_N_S);
 
 	sem_track* cached_track = NULL;

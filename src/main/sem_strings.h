@@ -18,6 +18,9 @@ char* sem_read_line(FILE* in);
 
 void sem_tokenization_init(sem_tokenization* tokenization, char* string, char* delimiter);
 
+/**
+ * @return the next token, or NULL if there are no more tokens
+ */
 char* sem_tokenization_next(sem_tokenization* tokenization);
 
 uint32_t sem_parse_uint32_t(char* string);

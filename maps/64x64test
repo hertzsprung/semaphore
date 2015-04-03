@@ -1,5 +1,5 @@
 world 64 64
-tiles 44
+tiles 45
 0 8 track W-E
 1 8 track W-E
 2 8 track W-E
@@ -44,3 +44,4 @@ tiles 44
 7 1 track SW-E
 5 3 track W-NE
 7 3 track NW-E
+6 2 track NW-SE+NE-SW

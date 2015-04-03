@@ -5,25 +5,23 @@
 #include "sem_track_cache.h"
 #include "sem_parser.h"
 
-void sem_track_cache_free(gpointer x);
+void key_destroy(gpointer key);
+void track_destroy(gpointer ptr);
 
 sem_success sem_track_cache_init(sem_track_cache* track_cache) {
-	track_cache->table = g_hash_table_new_full(g_str_hash, g_str_equal, sem_track_cache_free, sem_track_cache_free);
+	track_cache->table = g_hash_table_new_full(g_str_hash, g_str_equal, key_destroy, track_destroy);
 	return SEM_OK;
 }
 
 sem_success sem_track_cache_find(sem_track_cache* track_cache, char* track_description, sem_track** track) {
-	*track = g_hash_table_lookup(track_cache->table, track_description);
+	char* key = strdup(track_description);
+	*track = g_hash_table_lookup(track_cache->table, key);
 
 	if (*track == NULL) {
-		*track = malloc(sizeof(sem_track));
-		if (*track == NULL) return sem_set_error("Failed to allocated memory for track");
+		sem_track_parse(track_description, track);
 
-		g_hash_table_insert(track_cache->table, strdup(track_description), *track);
-
+		g_hash_table_insert(track_cache->table, key, *track);
 	}
-
-	sem_track_parse(*track, track_description);
 
 	return SEM_OK;
 }
@@ -32,6 +30,12 @@ void sem_track_cache_destroy(sem_track_cache* track_cache) {
 	g_hash_table_destroy(track_cache->table);
 }
 
-void sem_track_cache_free(gpointer x) {
-	free(x);
+void key_destroy(gpointer key) {
+	free(key);
+}
+
+void track_destroy(gpointer ptr) {
+	sem_track* track = (sem_track*) ptr;
+	if (track->next != NULL) track_destroy(track->next);
+	free(track);
 }

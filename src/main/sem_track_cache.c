@@ -14,10 +14,10 @@ sem_success sem_track_cache_init(sem_track_cache* track_cache) {
 }
 
 sem_success sem_track_cache_find(sem_track_cache* track_cache, char* track_description, sem_track** track) {
-	char* key = strdup(track_description);
-	*track = g_hash_table_lookup(track_cache->table, key);
+	*track = g_hash_table_lookup(track_cache->table, track_description);
 
 	if (*track == NULL) {
+		char* key = strdup(track_description);
 		sem_track_parse(track_description, track);
 
 		g_hash_table_insert(track_cache->table, key, *track);

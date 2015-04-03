@@ -9,5 +9,7 @@ sem_success sem_tile_parse(sem_tile* tile, sem_tokenization* tile_description, s
 
 sem_success sem_track_parse(char* track_description, sem_track** track);
 
+sem_success sem_parse_unit_vector(unit_vector* vector, char* description);
+
 #endif
 

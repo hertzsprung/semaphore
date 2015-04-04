@@ -45,4 +45,32 @@ tiles 45
 5 3 track W-NE
 7 3 track NW-E
 6 2 track NW-SE+NE-SW
-trains 0
+trains 4
+train 0
+state STOPPED
+direction E
+cars 3
+2 0 W-E
+1 0 SW-E
+0 1 S-NE
+train 1
+state STOPPED
+direction W
+cars 3
+10 0 W-E
+11 0 W-SE
+12 1 S-NW
+train 2
+state STOPPED
+direction E
+cars 3
+2 8 W-E
+1 8 W-E
+0 8 W-E
+train 3
+state STOPPED
+direction W
+cars 3
+13 8 W-E
+14 8 W-E
+15 8 W-E

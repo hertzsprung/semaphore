@@ -135,117 +135,6 @@ int main(/*int argc, char **argv*/) {
 	t->points[1] = &trackW_NE;
 	t->points[2] = NULL;
 
-	// train 1
-	sem_train train1;
-	sem_train_init(&train1);
-	sem_coordinate train1Car1Position;
-	sem_coordinate_set(&train1Car1Position, 2, 0);
-	sem_car train1Car1;
-	train1Car1.position = &train1Car1Position;
-	train1Car1.track = sem_tile_at_coord(&world, &train1Car1Position)->track;
-	sem_train_add_car(&train1, &train1Car1);
-
-	sem_coordinate train1Car2Position;
-	sem_coordinate_set(&train1Car2Position, 1, 0);
-	sem_car train1Car2;
-	train1Car2.position = &train1Car2Position;
-	train1Car2.track = sem_tile_at_coord(&world, &train1Car2Position)->track;
-	sem_train_add_car(&train1, &train1Car2);
-
-	sem_coordinate train1Car3Position;
-	sem_coordinate_set(&train1Car3Position, 0, 1);
-	sem_car train1Car3;
-	train1Car3.position = &train1Car3Position;
-	train1Car3.track = sem_tile_at_coord(&world, &train1Car3Position)->track;
-	sem_train_add_car(&train1, &train1Car3);
-
-	train1.direction = SEM_EAST;
-
-	// train 2
-	sem_train train2;
-	sem_train_init(&train2);
-	sem_coordinate train2Car1Position;
-	sem_coordinate_set(&train2Car1Position, 10, 0);
-	sem_car train2Car1;
-	train2Car1.position = &train2Car1Position;
-	train2Car1.track = sem_tile_at_coord(&world, &train2Car1Position)->track;
-	sem_train_add_car(&train2, &train2Car1);
-
-	sem_coordinate train2Car2Position;
-	sem_coordinate_set(&train2Car2Position, 11, 0);
-	sem_car train2Car2;
-	train2Car2.position = &train2Car2Position;
-	train2Car2.track = sem_tile_at_coord(&world, &train2Car2Position)->track;
-	sem_train_add_car(&train2, &train2Car2);
-
-	sem_coordinate train2Car3Position;
-	sem_coordinate_set(&train2Car3Position, 12, 1);
-	sem_car train2Car3;
-	train2Car3.position = &train2Car3Position;
-	train2Car3.track = sem_tile_at_coord(&world, &train2Car3Position)->track;
-	sem_train_add_car(&train2, &train2Car3);
-
-	train2.direction = SEM_WEST;
-
-	// train 3
-	sem_train train3;
-	sem_train_init(&train3);
-	sem_coordinate train3Car1Position;
-	sem_coordinate_set(&train3Car1Position, 2, 8);
-	sem_car train3Car1;
-	train3Car1.position = &train3Car1Position;
-	train3Car1.track = sem_tile_at_coord(&world, &train3Car1Position)->track;
-	sem_train_add_car(&train3, &train3Car1);
-
-	sem_coordinate train3Car2Position;
-	sem_coordinate_set(&train3Car2Position, 1, 8);
-	sem_car train3Car2;
-	train3Car2.position = &train3Car2Position;
-	train3Car2.track = sem_tile_at_coord(&world, &train3Car2Position)->track;
-	sem_train_add_car(&train3, &train3Car2);
-
-	sem_coordinate train3Car3Position;
-	sem_coordinate_set(&train3Car3Position, 0, 8);
-	sem_car train3Car3;
-	train3Car3.position = &train3Car3Position;
-	train3Car3.track = sem_tile_at_coord(&world, &train3Car3Position)->track;
-	sem_train_add_car(&train3, &train3Car3);
-
-	train3.direction = SEM_EAST;
-
-	// train 4
-	sem_train train4;
-	sem_train_init(&train4);
-	train4.state = DERAILED;
-
-	sem_coordinate train4Car1Position;
-	sem_coordinate_set(&train4Car1Position, 13, 8);
-	sem_car train4Car1;
-	train4Car1.position = &train4Car1Position;
-	train4Car1.track = sem_tile_at_coord(&world, &train4Car1Position)->track;
-	sem_train_add_car(&train4, &train4Car1);
-
-	sem_coordinate train4Car2Position;
-	sem_coordinate_set(&train4Car2Position, 14, 8);
-	sem_car train4Car2;
-	train4Car2.position = &train4Car2Position;
-	train4Car2.track = sem_tile_at_coord(&world, &train4Car2Position)->track;
-	sem_train_add_car(&train4, &train4Car2);
-
-	sem_coordinate train4Car3Position;
-	sem_coordinate_set(&train4Car3Position, 15, 8);
-	sem_car train4Car3;
-	train4Car3.position = &train4Car3Position;
-	train4Car3.track = sem_tile_at_coord(&world, &train4Car3Position)->track;
-	sem_train_add_car(&train4, &train4Car3);
-
-	train4.direction = SEM_WEST;
-
-	sem_world_add_train(&world, &train1);
-	sem_world_add_train(&world, &train2);
-	sem_world_add_train(&world, &train3);
-	sem_world_add_train(&world, &train4);
-
 	sem_timer_context timer_ctx;
 	timer_ctx.now = 0L;
 	timer_ctx.multiplier = 1.0;
@@ -345,10 +234,6 @@ int main(/*int argc, char **argv*/) {
 
 	sem_dynamic_array_destroy(&actions);
 	sem_world_destroy(&world);
-	sem_train_destroy(&train1);
-	sem_train_destroy(&train2);
-	sem_train_destroy(&train3);
-	sem_train_destroy(&train4);
 	cairo_destroy(cr);
 	SDL_DestroyTexture(texture);
 	return EXIT_SUCCESS;

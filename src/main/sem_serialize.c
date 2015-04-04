@@ -12,6 +12,9 @@ sem_success read_tile(FILE* in, sem_world* world);
 sem_success read_trains(FILE* in, sem_world* world);
 sem_success read_train(FILE* in, sem_world* world);
 sem_success read_train_state(FILE* in, sem_train* train);
+sem_success read_train_direction(FILE* in, sem_train* train);
+sem_success read_train_cars(FILE* in, sem_train* train);
+sem_success read_car(FILE* in, sem_train* train);
 
 sem_success sem_serialize_load(FILE* in, sem_world* world) {
 	if (in == NULL) return sem_set_error("File does not exist");
@@ -100,6 +103,8 @@ sem_success read_trains(FILE* in, sem_world* world) {
 sem_success read_train(FILE* in, sem_world* world) {
 	sem_train* train = malloc(sizeof(sem_train));
 	if (train == NULL) return sem_set_error("Failed to allocated memory for train");
+	sem_train_init(train);
+	train->world = world;
 
 	char* line = sem_read_line(in);
 	if (line == NULL) return sem_set_error("Could not read train name");
@@ -107,17 +112,8 @@ sem_success read_train(FILE* in, sem_world* world) {
 	free(line);
 
 	if (read_train_state(in, train) != SEM_OK) return SEM_ERROR;
-
-	line = sem_read_line(in);
-	if (line == NULL) return sem_set_error("Could not read train direction");
-	sem_tokenization tokens;
-	sem_tokenization_init(&tokens, line, " ");
-	sem_tokenization_next(&tokens);
-	// TODO: check token is "direction"
-
-	if (sem_parse_unit_vector(&(train->direction), sem_tokenization_next(&tokens)) != SEM_OK) return SEM_ERROR;
-	
-	free(line);
+	if (read_train_direction(in, train) != SEM_OK) return SEM_ERROR;
+	if (read_train_cars(in, train) != SEM_OK) return SEM_ERROR;
 
 	sem_dynamic_array_add(world->trains, train); // TODO: free() this in sem_world_destroy()
 
@@ -141,4 +137,65 @@ sem_success read_train_state(FILE* in, sem_train* train) {
 	free(line);
 
 	return SEM_OK;
+}
+
+sem_success read_train_direction(FILE* in, sem_train* train) {
+	char* line = sem_read_line(in);
+	if (line == NULL) return sem_set_error("Could not read train direction");
+	sem_tokenization tokens;
+	sem_tokenization_init(&tokens, line, " ");
+	sem_tokenization_next(&tokens);
+	// TODO: check token is "direction"
+
+	if (sem_parse_unit_vector(&(train->direction), sem_tokenization_next(&tokens)) != SEM_OK) return SEM_ERROR;
+	
+	free(line);
+
+	return SEM_OK;
+}
+
+sem_success read_train_cars(FILE* in, sem_train* train) {
+	char* line = sem_read_line(in);
+	if (line == NULL) return sem_set_error("Could not read cars count");
+
+	sem_tokenization tokens;
+	sem_tokenization_init(&tokens, line, " ");
+	sem_tokenization_next(&tokens);
+	// TODO: check token is "cars"
+	
+	uint32_t cars = sem_parse_uint32_t(sem_tokenization_next(&tokens));
+
+	for (uint32_t i=0; i < cars; i++) {
+		if (read_car(in, train) != SEM_OK) return SEM_ERROR;
+	}
+
+	free(line);
+
+	return SEM_OK;
+}
+
+sem_success read_car(FILE* in, sem_train* train) {
+	sem_car* car = malloc(sizeof(sem_car));
+	if (car == NULL) return sem_set_error("Failed to allocated memory for car");
+
+	char* line = sem_read_line(in);
+	if (line == NULL) return sem_set_error("Could not read car");
+
+	sem_tokenization tokens;
+	sem_tokenization_init(&tokens, line, " ");
+
+	uint32_t x = sem_parse_uint32_t(sem_tokenization_next(&tokens));
+	uint32_t y = sem_parse_uint32_t(sem_tokenization_next(&tokens));
+
+	car->position = malloc(sizeof(sem_coordinate)); // TODO: change sem_car to have a sem_position, not a sem_position*
+
+	car->position->x = x;
+	car->position->y = y;
+
+	sem_tile* tile = sem_tile_at(train->world, x, y);
+	car->track = tile->track; // TODO: find the piece of track that matches 
+
+	free(line);
+
+	return sem_train_add_car(train, car); // TODO: free train cars in sem_train_destroy
 }

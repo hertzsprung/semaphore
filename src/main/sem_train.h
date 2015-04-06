@@ -16,7 +16,7 @@ typedef enum {
 } sem_train_state;
 
 typedef struct {
-	sem_coordinate* position;
+	sem_coordinate position;
 	sem_track* track;
 } sem_car;
 

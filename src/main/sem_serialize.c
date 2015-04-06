@@ -187,10 +187,8 @@ sem_success read_car(FILE* in, sem_train* train) {
 	uint32_t x = sem_parse_uint32_t(sem_tokenization_next(&tokens));
 	uint32_t y = sem_parse_uint32_t(sem_tokenization_next(&tokens));
 
-	car->position = malloc(sizeof(sem_coordinate)); // TODO: change sem_car to have a sem_position, not a sem_position*
-
-	car->position->x = x;
-	car->position->y = y;
+	car->position.x = x;
+	car->position.y = y;
 
 	sem_tile* tile = sem_tile_at(train->world, x, y);
 	car->track = tile->track; // TODO: find the piece of track that matches 

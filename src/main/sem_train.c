@@ -46,7 +46,7 @@ sem_success sem_train_move(sem_train* train) {
 
 sem_success sem_train_add_car(sem_train* train, sem_car* car) {
 	if (train->cars->tail_idx == 0) {
-		train->position = car->position;
+		train->position = &(car->position);
 	}
 	sem_dynamic_array_add(train->cars, car);
 	return SEM_OK;
@@ -55,7 +55,7 @@ sem_success sem_train_add_car(sem_train* train, sem_car* car) {
 bool sem_train_occupies(sem_train* train, sem_coordinate* tile) {
 	for (uint32_t i=0; i < train->cars->tail_idx; i++) {
 		sem_car* car = (sem_car*) train->cars->items[i];
-		if (sem_coordinate_equal(car->position, tile)) return true;
+		if (sem_coordinate_equal(car->position, *tile)) return true;
 	}
 
 	return false;
@@ -70,8 +70,7 @@ void train_move_trailing(sem_dynamic_array* cars) {
 	for (uint32_t i=cars->tail_idx-1; i > 0; i--) {
 		sem_car* car_behind = (sem_car*) cars->items[i];
 		sem_car* car_in_front = (sem_car*) cars->items[i-1];
-		car_behind->position->x = car_in_front->position->x;
-		car_behind->position->y = car_in_front->position->y;
+		car_behind->position = car_in_front->position;
 		car_behind->track = car_in_front->track;
 	}
 }

@@ -33,6 +33,9 @@ sem_success sem_world_init_blank(sem_world* world) {
 }
 
 void sem_world_destroy(sem_world* world) {
+	for (uint32_t i=0; i<world->trains->tail_idx; i++) {
+		sem_train_destroy(world->trains->items[i]);
+	}
 	sem_dynamic_array_destroy(world->trains);
 	sem_track_cache_destroy(world->track_cache);
 	free(world->trains);

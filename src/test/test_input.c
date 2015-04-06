@@ -56,7 +56,6 @@ void test_input_teardown(test_input_context* test_ctx, const void* data) {
 	#pragma unused(data)
 
 	sem_world_destroy(&(test_ctx->world));
-	sem_train_destroy(&(test_ctx->train));
 	sem_dynamic_array_destroy(&(test_ctx->heap));
 }
 

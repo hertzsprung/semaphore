@@ -70,9 +70,6 @@ void test_train_teardown(test_train_context* test_ctx, const void* data) {
 	#pragma unused(data)
 
 	sem_world_destroy(&(test_ctx->world));
-	sem_train_destroy(&(test_ctx->train));
-	sem_train_destroy(&(test_ctx->train1));
-	sem_train_destroy(&(test_ctx->train2));
 }
 
 void test_train_moves_given_velocity(test_train_context* test_ctx, const void* data) {

@@ -80,7 +80,7 @@ int main(/*int argc, char **argv*/) {
 
 	FILE* map = fopen("maps/64x64test", "r");
 	sem_world world;
-	sem_serialize_load(map, &world);
+	if (sem_serialize_load(map, &world) != SEM_OK) return sem_fatal_error();
 	fclose(map);
 
 	sem_track trackW_SE;

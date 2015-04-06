@@ -191,9 +191,11 @@ sem_success read_car(FILE* in, sem_train* train) {
 	car->position.y = y;
 
 	sem_tile* tile = sem_tile_at(train->world, x, y);
-	car->track = tile->track; // TODO: find the piece of track that matches 
+	sem_track key;
+	sem_parse_track_part(&key, sem_tokenization_next(&tokens));
+	if (sem_track_matching(tile, &key, &(car->track)) != SEM_OK) return SEM_ERROR;
 
 	free(line);
 
-	return sem_train_add_car(train, car); // TODO: free train cars in sem_train_destroy
+	return sem_train_add_car(train, car);
 }

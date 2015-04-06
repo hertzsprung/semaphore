@@ -6,8 +6,6 @@
 #include "sem_strings.h"
 #include "sem_world.h"
 
-sem_success set_track_part(sem_track* track, char* track_part_description);
-
 sem_success sem_tile_parse(sem_tile* tile, sem_tokenization* tile_description, sem_track_cache* track_cache) {
 	sem_tokenization_next(tile_description); // TODO: check token is "track"
 
@@ -27,7 +25,7 @@ sem_success sem_track_parse(char* track_description, sem_track** track) {
 		current_track = malloc(sizeof(sem_track));
 		if (current_track == NULL) return sem_set_error("Failed to allocated memory for track");
 
-		set_track_part(current_track, track_part_description);
+		sem_parse_track_part(current_track, track_part_description);
 
 		if (previous_track == NULL) {
 			*track = current_track;
@@ -42,7 +40,7 @@ sem_success sem_track_parse(char* track_description, sem_track** track) {
 	return SEM_OK;
 }
 
-sem_success set_track_part(sem_track* track, char* track_part_description) {
+sem_success sem_parse_track_part(sem_track* track, char* track_part_description) {
 	sem_tokenization tokens;
 	sem_tokenization_init(&tokens, track_part_description, "-");
 

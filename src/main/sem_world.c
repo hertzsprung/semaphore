@@ -99,6 +99,20 @@ void sem_track_set(sem_track* track, unit_vector start, unit_vector end) {
 	track->next = NULL;
 }
 
+sem_success sem_track_matching(sem_tile* tile, sem_track* key, sem_track** destination) {
+	sem_track* t = tile->track;
+	do {
+		if ((key->start == t->start && key->end == t->end) ||
+		    (key->start == t->end && key->end == t->start)) {
+			*destination = t;
+			return SEM_OK;
+		}
+		t = t->next;
+	} while (t != NULL);
+
+	return sem_set_error("Could not find desired track part in tile");
+}
+
 // private functions
 
 sem_success sem_track_accept(sem_train* train, sem_track* track, sem_tile_acceptance* acceptance) {

@@ -54,14 +54,14 @@ void test_serialize_load_train() {
 	g_assert_true(train->state == STOPPED);
 	g_assert_true(train->direction == SEM_EAST);
 
-	g_assert_cmpuint(train->cars->tail_idx, ==, 1);
+	g_assert_cmpuint(train->cars->tail_idx, ==, 2);
 	sem_car* car = (sem_car*) train->cars->items[0];
-	g_assert_cmpuint(car->position.x, ==, 0);
+	g_assert_cmpuint(car->position.x, ==, 1);
 	g_assert_cmpuint(car->position.y, ==, 1);
 
 	sem_track* track = car->track;
-	g_assert_true(track->start == SEM_WEST);
-	g_assert_true(track->end == SEM_EAST);
+	g_assert_true(track->start == SEM_EAST);
+	g_assert_true(track->end == SEM_WEST);
 
 	sem_world_destroy(&world);
 	fclose(file);

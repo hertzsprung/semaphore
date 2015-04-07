@@ -83,58 +83,6 @@ int main(/*int argc, char **argv*/) {
 	if (sem_serialize_load(map, &world) != SEM_OK) return sem_fatal_error();
 	fclose(map);
 
-	sem_track trackW_SE;
-	sem_track_set(&trackW_SE, SEM_WEST, SEM_SOUTH | SEM_EAST);
-
-	sem_track trackNW_E;
-	sem_track_set(&trackNW_E, SEM_NORTH | SEM_WEST, SEM_EAST);
-
-	sem_track trackW_NE;
-	sem_track_set(&trackW_NE, SEM_WEST, SEM_NORTH | SEM_EAST);
-
-	sem_track trackSW_E;
-	sem_track_set(&trackSW_E, SEM_SOUTH | SEM_WEST, SEM_EAST);
-
-	sem_track trackNW_S;
-	sem_track_set(&trackNW_S, SEM_NORTH | SEM_WEST, SEM_SOUTH);
-
-	sem_tile* t = sem_tile_at(&world, 4, 1);
-	t->class = POINTS;
-	t->track = &trackNW_S;
-	t->points[0] = &trackNW_S;
-	t->points[1] = &trackNW_E;
-	t->points[2] = NULL;
-
-	sem_track trackN_SE;
-	sem_track_set(&trackN_SE, SEM_NORTH, SEM_SOUTH | SEM_EAST);
-
-	t = sem_tile_at(&world, 8, 3);
-	t->class = POINTS;
-	t->track = &trackN_SE;
-	t->points[0] = &trackN_SE;
-	t->points[1] = &trackW_SE;
-	t->points[2] = NULL;
-
-	sem_track trackSW_N;
-	sem_track_set(&trackSW_N, SEM_SOUTH | SEM_WEST, SEM_NORTH);
-
-	t = sem_tile_at(&world, 4, 3);
-	t->class = POINTS;
-	t->track = &trackSW_N;
-	t->points[0] = &trackSW_N;
-	t->points[1] = &trackSW_E;
-	t->points[2] = NULL;
-
-	sem_track trackNE_S;
-	sem_track_set(&trackNE_S, SEM_NORTH | SEM_EAST, SEM_SOUTH);
-
-	t = sem_tile_at(&world, 8, 1);
-	t->class = POINTS;
-	t->track = &trackNE_S;
-	t->points[0] = &trackNE_S;
-	t->points[1] = &trackW_NE;
-	t->points[2] = NULL;
-
 	sem_timer_context timer_ctx;
 	timer_ctx.now = 0L;
 	timer_ctx.multiplier = 1.0;

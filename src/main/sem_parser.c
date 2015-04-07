@@ -7,10 +7,25 @@
 #include "sem_world.h"
 
 sem_success sem_tile_parse(sem_tile* tile, sem_tokenization* tile_description, sem_track_cache* track_cache) {
-	sem_tokenization_next(tile_description); // TODO: check token is "track"
+	char* class = sem_tokenization_next(tile_description);
 
-	tile->class = TRACK;
-	return sem_track_cache_find(track_cache, sem_tokenization_next(tile_description), &(tile->track));
+	if (strcmp(class, "track") == 0) {
+		tile->class = TRACK;
+	} else if (strcmp(class, "points") == 0) {
+		tile->class = POINTS;
+	} else {
+		return sem_set_error("Unknown tile class");
+	}
+
+	if (sem_track_cache_find(track_cache, sem_tokenization_next(tile_description), &(tile->track)) != SEM_OK) return SEM_ERROR;
+
+	if (tile->class == POINTS) {
+		sem_tile_set_points(tile, tile->track);
+		sem_track_cache_find(track_cache, sem_tokenization_next(tile_description), &(tile->points[1]));
+		// TODO: three-way points
+	}
+
+	return SEM_OK;
 }
 
 sem_success sem_track_parse(char* track_description, sem_track** track) {

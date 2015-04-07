@@ -71,7 +71,6 @@ sem_success read_tile(FILE* in, sem_world* world) {
 	uint32_t y = sem_parse_uint32_t(sem_tokenization_next(&tokens));
 
 	sem_tile* tile = sem_tile_at(world, x, y);
-	tile->class = TRACK;
 	sem_tile_parse(tile, &tokens, world->track_cache);
 
 	free(line);

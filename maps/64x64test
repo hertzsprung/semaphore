@@ -1,5 +1,5 @@
 world 64 64
-tiles 45
+tiles 49
 0 8 track W-E
 1 8 track W-E
 2 8 track W-E
@@ -45,6 +45,10 @@ tiles 45
 5 3 track W-NE
 7 3 track NW-E
 6 2 track NW-SE+NE-SW
+4 1 points NW-S NW-E
+8 3 points N-SE W-SE
+4 3 points SW-N SW-E
+8 1 points NE-S W-NE
 trains 4
 train 0
 state STOPPED

@@ -7,6 +7,7 @@
 #include "sem_parser.h"
 #include "sem_strings.h"
 
+sem_success read_dimensions(FILE* in, sem_world* world);
 sem_success read_now(FILE* in, sem_world* world);
 sem_success read_multiplier(FILE* in, sem_world* world);
 sem_success read_tiles(FILE* in, sem_world* world);
@@ -21,6 +22,15 @@ sem_success read_car(FILE* in, sem_train* train);
 sem_success sem_serialize_load(FILE* in, sem_world* world) {
 	if (in == NULL) return sem_set_error("File does not exist");
 
+	if (read_dimensions(in, world) != SEM_OK) return SEM_ERROR;
+	if (read_now(in, world) != SEM_OK) return SEM_ERROR;
+	if (read_multiplier(in, world) != SEM_OK) return SEM_ERROR;
+	if (read_tiles(in, world) != SEM_OK) return SEM_ERROR;
+	if (read_trains(in, world) != SEM_OK) return SEM_ERROR;
+	return SEM_OK;
+}
+
+sem_success read_dimensions(FILE* in, sem_world* world) {
 	char* line = sem_read_line(in);
 	if (line == NULL) return sem_set_error("Could not read world dimensions");
 	sem_tokenization tokens;
@@ -29,16 +39,9 @@ sem_success sem_serialize_load(FILE* in, sem_world* world) {
 	
 	world->max_x = sem_parse_uint32_t(sem_tokenization_next(&tokens));
 	world->max_y = sem_parse_uint32_t(sem_tokenization_next(&tokens));
-
-	sem_world_init_blank(world);
-
 	free(line);
 
-	if (read_now(in, world) != SEM_OK) return SEM_ERROR;
-	if (read_multiplier(in, world) != SEM_OK) return SEM_ERROR;
-	if (read_tiles(in, world) != SEM_OK) return SEM_ERROR;
-	if (read_trains(in, world) != SEM_OK) return SEM_ERROR;
-	return SEM_OK;
+	return sem_world_init_blank(world);
 }
 
 sem_success read_now(FILE* in, sem_world* world) {

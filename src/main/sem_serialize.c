@@ -7,6 +7,8 @@
 #include "sem_parser.h"
 #include "sem_strings.h"
 
+sem_success read_now(FILE* in, sem_world* world);
+sem_success read_multiplier(FILE* in, sem_world* world);
 sem_success read_tiles(FILE* in, sem_world* world);
 sem_success read_tile(FILE* in, sem_world* world);
 sem_success read_trains(FILE* in, sem_world* world);
@@ -20,7 +22,7 @@ sem_success sem_serialize_load(FILE* in, sem_world* world) {
 	if (in == NULL) return sem_set_error("File does not exist");
 
 	char* line = sem_read_line(in);
-	if (line == NULL) return sem_set_error("Could not read line");
+	if (line == NULL) return sem_set_error("Could not read world dimensions");
 	sem_tokenization tokens;
 	sem_tokenization_init(&tokens, line, " ");
 	sem_tokenization_next(&tokens); // TODO: check token is "world"
@@ -32,8 +34,40 @@ sem_success sem_serialize_load(FILE* in, sem_world* world) {
 
 	free(line);
 
+	if (read_now(in, world) != SEM_OK) return SEM_ERROR;
+	if (read_multiplier(in, world) != SEM_OK) return SEM_ERROR;
 	if (read_tiles(in, world) != SEM_OK) return SEM_ERROR;
 	if (read_trains(in, world) != SEM_OK) return SEM_ERROR;
+	return SEM_OK;
+}
+
+sem_success read_now(FILE* in, sem_world* world) {
+	char* line = sem_read_line(in);
+	if (line == NULL) return sem_set_error("Could not read current time");
+
+	sem_tokenization tokens;
+	sem_tokenization_init(&tokens, line, " ");
+	sem_tokenization_next(&tokens); // TODO: check token is "now"
+
+	world->timer->now = sem_parse_uint32_t(sem_tokenization_next(&tokens));
+
+	free(line);
+
+	return SEM_OK;
+}
+
+sem_success read_multiplier(FILE* in, sem_world* world) {
+	char* line = sem_read_line(in);
+	if (line == NULL) return sem_set_error("Could not read timer multiplier");
+
+	sem_tokenization tokens;
+	sem_tokenization_init(&tokens, line, " ");
+	sem_tokenization_next(&tokens); // TODO: check token is "now"
+
+	world->timer->multiplier = strtod(sem_tokenization_next(&tokens), NULL);
+
+	free(line);
+
 	return SEM_OK;
 }
 

@@ -8,11 +8,13 @@
 void test_serialize_load_blank_tiles(void);
 void test_serialize_load_track_tile(void);
 void test_serialize_load_train(void);
+void test_serialize_load_timer(void);
 
-void add_tests_serialize(void) {
+void add_tests_serialize() {
 	g_test_add_func("/serialize/load_blank_tiles", test_serialize_load_blank_tiles);
 	g_test_add_func("/serialize/load_track_tile", test_serialize_load_track_tile);
 	g_test_add_func("/serialize/load_train", test_serialize_load_train);
+	g_test_add_func("/serialize/load_timer", test_serialize_load_timer);
 }
 
 void test_serialize_load_blank_tiles() {
@@ -62,6 +64,20 @@ void test_serialize_load_train() {
 	sem_track* track = car->track;
 	g_assert_true(track->start == SEM_EAST);
 	g_assert_true(track->end == SEM_WEST);
+
+	sem_world_destroy(&world);
+	fclose(file);
+}
+
+void test_serialize_load_timer() {
+	FILE* file = fopen("src/test/load_timer", "r");
+
+	sem_world world;
+	sem_serialize_load(file, &world);
+
+	g_assert_cmpuint(world.timer->now, ==, 123);
+	g_assert_cmpfloat(world.timer->multiplier, >, 1.59);
+	g_assert_cmpfloat(world.timer->multiplier, <, 1.61);
 
 	sem_world_destroy(&world);
 	fclose(file);

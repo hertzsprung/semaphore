@@ -7,6 +7,7 @@ typedef struct sem_track sem_track;
 #include "sem_compass.h"
 #include "sem_dynamic_array.h"
 #include "sem_error.h"
+#include "sem_timer.h"
 #include "sem_track_cache.h"
 #include "sem_train.h"
 
@@ -27,6 +28,7 @@ typedef struct {
 } sem_tile;
 
 struct sem_world {
+	sem_timer_context* timer;
 	sem_dynamic_array* trains;
 	uint32_t max_x;
 	uint32_t max_y;

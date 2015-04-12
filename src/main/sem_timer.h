@@ -13,6 +13,11 @@ typedef struct {
 	sem_success (*clock)(uint64_t* now); /**< a monotonic clock function such as sem_clock_monotonic() */
 } sem_timer_context;
 
+/**
+ * \brief Initialse the sem_timer_context with the current time as 0 and a multiplier of 1.
+ */
+sem_success sem_timer_init_default(sem_timer_context* ctx);
+
 sem_success sem_timer_init(sem_timer_context* ctx);
 sem_success sem_timer_now(sem_timer_context* ctx);
 

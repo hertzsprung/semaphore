@@ -6,6 +6,13 @@
 
 uint64_t sem_time_millis(struct timespec *ts);
 
+sem_success sem_timer_init_default(sem_timer_context* ctx) {
+	ctx->now = 0L;
+	ctx->multiplier = 1.0;
+	ctx->clock = sem_clock_monotonic;
+	return sem_timer_init(ctx);
+}
+
 sem_success sem_timer_init(sem_timer_context* ctx) {
 	return ctx->clock(&(ctx->clock_now));
 }

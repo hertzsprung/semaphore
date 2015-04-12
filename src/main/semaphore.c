@@ -83,12 +83,6 @@ int main(/*int argc, char **argv*/) {
 	if (sem_serialize_load(map, &world) != SEM_OK) return sem_fatal_error();
 	fclose(map);
 
-	sem_timer_context timer_ctx;
-	timer_ctx.now = 0L;
-	timer_ctx.multiplier = 1.0;
-	timer_ctx.clock = sem_clock_monotonic;
-	sem_timer_init(&timer_ctx);
-
 	sem_dynamic_array actions;
 	sem_heap_init(&actions);
 
@@ -98,7 +92,7 @@ int main(/*int argc, char **argv*/) {
 	bool quit = false;	
 	uint64_t frames = 0;
 	while (!quit) {
-		sem_timer_now(&timer_ctx);
+		sem_timer_now(world.timer);
 
 		while (SDL_PollEvent(&e)){
 			if (e.type == SDL_QUIT) {
@@ -114,9 +108,9 @@ int main(/*int argc, char **argv*/) {
 			if (e.type == SDL_MOUSEWHEEL) {
 				if (SDL_GetModState() & KMOD_CTRL) {
 					if (e.wheel.y > 0) {
-						timer_ctx.multiplier *= 1.1 * e.wheel.y;
+						world.timer->multiplier *= 1.1 * e.wheel.y;
 					} else if (e.wheel.y < 0) {
-						timer_ctx.multiplier /= -1.1 * e.wheel.y;
+						world.timer->multiplier /= -1.1 * e.wheel.y;
 					}
 				} else {
 					if (e.wheel.y > 0) {
@@ -134,7 +128,7 @@ int main(/*int argc, char **argv*/) {
 				sem_coordinate coord;
 				sem_coordinate_set(&coord, (uint32_t) (floor(x)), (uint32_t) (floor(y)));
 				sem_input_event input;
-				input.time = timer_ctx.now;
+				input.time = world.timer->now;
 				input.tile = &coord;
 
 				sem_action* a = NULL;
@@ -156,7 +150,7 @@ int main(/*int argc, char **argv*/) {
 		cairo_rectangle(cr, 0, 0, width-1, height-1);
 		cairo_fill(cr);
 
-		if (sem_action_list_execute(&actions, timer_ctx.now) != SEM_OK) {
+		if (sem_action_list_execute(&actions, world.timer->now) != SEM_OK) {
 			return sem_fatal_error();
 		}
 
@@ -166,7 +160,7 @@ int main(/*int argc, char **argv*/) {
 		sem_render_world(&render_ctx, &world);
 
 		char buf[128] = "";
-		snprintf(buf, sizeof(buf), "frame: %ld, game time: %ld, multiplier: %f", frames, timer_ctx.now, timer_ctx.multiplier);
+		snprintf(buf, sizeof(buf), "frame: %ld, game time: %ld, multiplier: %f", frames, world.timer->now, world.timer->multiplier);
 		cairo_move_to(cr, 0, 10);
 		cairo_set_font_size(cr, 0.7);
 		cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);

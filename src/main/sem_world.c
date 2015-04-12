@@ -5,12 +5,17 @@
 #include "sem_dynamic_array.h"
 #include "sem_error.h"
 #include "sem_track_cache.h"
+#include "sem_timer.h"
 #include "sem_world.h"
 
 sem_success sem_track_accept(sem_train* train, sem_track* track, sem_tile_acceptance* acceptance);
 sem_success sem_inactive_track_accept(sem_train* train, sem_tile* tile, sem_tile_acceptance* acceptance);
 
 sem_success sem_world_init_blank(sem_world* world) {
+	world->timer = malloc(sizeof(sem_timer_context));
+	if (world->timer == NULL) return sem_set_error("Could not allocate memory for timer");
+	if (sem_timer_init_default(world->timer) != SEM_OK) return SEM_ERROR;
+
 	world->trains = malloc(sizeof(sem_dynamic_array));
 	if (world->trains == NULL) return sem_set_error("Could not allocate memory for trains");
 	if (sem_dynamic_array_init(world->trains) != SEM_OK) return SEM_ERROR;
@@ -39,6 +44,7 @@ void sem_world_destroy(sem_world* world) {
 	sem_dynamic_array_destroy(world->trains);
 	sem_track_cache_destroy(world->track_cache);
 	free(world->trains);
+	free(world->timer);
 	free(world->tiles);
 	free(world->track_cache);
 }

@@ -1,5 +1,6 @@
 #include <glib.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "test_parser.h"
 #include "test_track_cache.h"
@@ -9,17 +10,19 @@
 #include "sem_world.h"
 
 void test_parser_bad_tile_class(void);
-void test_parser_n_s_track(sem_track_cache* track_cache, const void* data);
+void test_parser_parse_n_s_track(sem_track_cache* track_cache, const void* data);
 void test_parser_e_w_track(sem_track_cache* track_cache, const void* data);
 void test_parser_n_s_e_w_track(void);
 void test_parser_two_way_points(sem_track_cache* track_cache, const void* data);
+void test_parser_print_n_s_track(void);
 
 void add_tests_parser() {
 	g_test_add_func("/parser/bad_tile_class", test_parser_bad_tile_class);
-	add_test_track_cache("/parser/n_s_track", test_parser_n_s_track);
+	add_test_track_cache("/parser/parse_n_s_track", test_parser_parse_n_s_track);
 	add_test_track_cache("/parser/e_w_track", test_parser_e_w_track);
 	g_test_add_func("/parser/n_s_e_w_track", test_parser_n_s_e_w_track);
 	add_test_track_cache("/parser/two_way_points", test_parser_two_way_points);
+	g_test_add_func("/parser/print_n_s_track", test_parser_print_n_s_track);
 }
 
 void test_parser_bad_tile_class() {
@@ -31,7 +34,7 @@ void test_parser_bad_tile_class() {
 	g_assert_true(sem_tile_parse(&tile, &tokens, NULL) != SEM_OK);
 }
 
-void test_parser_n_s_track(sem_track_cache* track_cache, const void* data) {
+void test_parser_parse_n_s_track(sem_track_cache* track_cache, const void* data) {
 	#pragma unused(data)
 	char track_description[16] = "track N-S";
 	sem_tokenization tokens;
@@ -90,4 +93,21 @@ void test_parser_two_way_points(sem_track_cache* track_cache, const void* data) 
 
 	g_assert_true(tile.points[0]->start == SEM_WEST);
 	g_assert_true(tile.points[0]->end == SEM_EAST);
+}
+
+void test_parser_print_n_s_track(void) {
+	char expected_description[32] = "track N-S";
+	char actual_description[32];
+	FILE* out = fmemopen(actual_description, 32*sizeof(char), "w");
+
+	sem_tile tile;
+	sem_track track;
+	sem_track_set(&track, SEM_NORTH, SEM_SOUTH);
+	sem_tile_set_track(&tile, &track);
+
+	sem_tile_print(out, &tile);
+
+	fclose(out);
+
+	g_assert_cmpstr(expected_description, ==, actual_description);
 }

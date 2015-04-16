@@ -85,3 +85,10 @@ sem_success sem_parse_unit_vector(unit_vector* vector, char* description) {
 
 	return SEM_OK;
 }
+
+sem_success sem_tile_print(FILE* out, sem_tile* tile) {
+	#pragma unused(tile)
+
+	fprintf(out, "track W-E");
+	return SEM_OK;
+}

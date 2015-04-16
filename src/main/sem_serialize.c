@@ -273,8 +273,9 @@ sem_success write_tiles(FILE* out, sem_world* world) {
 }
 
 sem_success write_tile(FILE* out, uint32_t x, uint32_t y, sem_tile* tile) {
-	#pragma unused(tile)
-	fprintf(out, "%d %d track W-E\n", x, y);
+	fprintf(out, "%d %d ", x, y);
+	sem_tile_print(out, tile);
+	fprintf(out, "\n");
 
 	return SEM_OK;
 }

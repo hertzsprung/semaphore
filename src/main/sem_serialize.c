@@ -19,6 +19,9 @@ sem_success read_train_direction(FILE* in, sem_train* train);
 sem_success read_train_cars(FILE* in, sem_train* train);
 sem_success read_car(FILE* in, sem_train* train);
 
+sem_success write_tiles(FILE* out, sem_world* world);
+sem_success write_tile(FILE* out, uint32_t x, uint32_t y, sem_tile* tile);
+
 sem_success sem_serialize_load(FILE* in, sem_world* world) {
 	if (in == NULL) return sem_set_error("File does not exist");
 
@@ -27,6 +30,15 @@ sem_success sem_serialize_load(FILE* in, sem_world* world) {
 	if (read_multiplier(in, world) != SEM_OK) return SEM_ERROR;
 	if (read_tiles(in, world) != SEM_OK) return SEM_ERROR;
 	if (read_trains(in, world) != SEM_OK) return SEM_ERROR;
+	return SEM_OK;
+}
+
+sem_success sem_serialize_save(FILE* out, sem_world* world) {
+	fprintf(out, "world %d %d\n", world->max_x, world->max_y); // TODO: check status of fprintf
+	fprintf(out, "now 0\nmultiplier 1.0\n");
+	if (write_tiles(out, world) != SEM_OK) return SEM_ERROR;
+	fprintf(out, "trains 0\n");
+
 	return SEM_OK;
 }
 
@@ -234,4 +246,35 @@ sem_success read_car(FILE* in, sem_train* train) {
 	free(line);
 
 	return sem_train_add_car(train, car);
+}
+
+sem_success write_tiles(FILE* out, sem_world* world) {
+	uint32_t tiles = 0;
+	for (uint32_t j=0; j<world->max_y; j++) {
+		for (uint32_t i=0; i<world->max_x; i++) {
+			if (sem_tile_at(world, i, j)->class != BLANK) {
+				tiles++;
+			}
+		}
+	}
+
+	fprintf(out, "tiles %d\n", tiles); // TODO: check return
+
+	for (uint32_t j=0; j<world->max_y; j++) {
+		for (uint32_t i=0; i<world->max_x; i++) {
+			sem_tile* tile = sem_tile_at(world, i, j);
+			if (tile->class != BLANK) {
+				write_tile(out, i, j, tile);
+			}
+		}
+	}
+
+	return SEM_OK;
+}
+
+sem_success write_tile(FILE* out, uint32_t x, uint32_t y, sem_tile* tile) {
+	#pragma unused(tile)
+	fprintf(out, "%d %d track W-E\n", x, y);
+
+	return SEM_OK;
 }

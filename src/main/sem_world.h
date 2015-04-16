@@ -18,7 +18,7 @@ typedef enum {
 struct sem_track {
 	unit_vector start;
 	unit_vector end;	
-	sem_track* next; /**< when two tracks appear on the same tile, this points to the second piece of track */
+	sem_track* next; /**< \brief When two tracks appear on the same tile, this points to the second piece of track */
 };
 
 typedef struct {
@@ -32,7 +32,7 @@ struct sem_world {
 	sem_dynamic_array* trains;
 	uint32_t max_x;
 	uint32_t max_y;
-	sem_tile* tiles;
+	sem_tile* tiles; // TODO: would be better not to have BLANK tiles, just have NULL pointers
 	sem_track_cache* track_cache;
 };
 
@@ -59,7 +59,7 @@ typedef struct {
 } sem_tile_acceptance;
 
 /**
- * @brief Initialise a world with \ref BLANK tiles, no trains and an empty track cache.
+ * @brief Initialise a world with \ref BLANK tiles, no trains and a default timer.
  *
  * Once initialised, a sem_world should be destroyed by calling sem_world_destroy().
  * 
@@ -111,6 +111,9 @@ void sem_tile_set_track(sem_tile* tile, sem_track* track);
  */
 void sem_tile_set_points(sem_tile* tile, sem_track* track);
 
+/**
+ * \brief Set track start and end points, and set next track to NULL.
+ */
 void sem_track_set(sem_track* track, unit_vector start, unit_vector end);
 
 /**

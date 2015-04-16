@@ -6,5 +6,6 @@
 #include "sem_world.h"
 
 sem_success sem_serialize_load(FILE* in, sem_world* world);
+sem_success sem_serialize_save(FILE* out, sem_world* world);
 
 #endif

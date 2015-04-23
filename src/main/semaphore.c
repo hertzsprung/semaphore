@@ -101,6 +101,10 @@ int main(/*int argc, char **argv*/) {
 			if (e.type == SDL_KEYDOWN) {
 				if (e.key.keysym.sym == SDLK_LCTRL || e.key.keysym.sym == SDLK_RCTRL) {
 					// ignore
+				} else if (e.key.keysym.sym == SDLK_s) {
+					FILE* save = fopen("build/main/saved_map", "w");
+					if (sem_serialize_save(save, &world) != SEM_OK) return sem_fatal_error();
+					fclose(save);
 				} else {
 					quit = true;
 				}

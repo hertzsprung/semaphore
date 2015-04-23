@@ -6,6 +6,8 @@
 #include "sem_strings.h"
 #include "sem_world.h"
 
+sem_success sem_print_endpoint(FILE* out, unit_vector endpoint);
+
 sem_success sem_tile_parse(sem_tile* tile, sem_tokenization* tile_description, sem_track_cache* track_cache) {
 	char* class = sem_tokenization_next(tile_description);
 
@@ -87,8 +89,26 @@ sem_success sem_parse_unit_vector(unit_vector* vector, char* description) {
 }
 
 sem_success sem_tile_print(FILE* out, sem_tile* tile) {
-	#pragma unused(tile)
+	fprintf(out, "track "); // TODO: check return
+	if (sem_print_endpoint(out, tile->track->start) != SEM_OK) return SEM_ERROR;
+	fprintf(out, "-");
+	if (sem_print_endpoint(out, tile->track->end) != SEM_OK) return SEM_ERROR;
 
-	fprintf(out, "track W-E");
+	return SEM_OK;
+}
+
+sem_success sem_print_endpoint(FILE* out, unit_vector endpoint) {
+	if (SEM_COMPASS_Y(endpoint) < 0) {
+		fprintf(out, "N"); // TODO: check returns
+	} else if (SEM_COMPASS_Y(endpoint) > 0) {
+		fprintf(out, "S");
+	}
+
+	if (SEM_COMPASS_X(endpoint) > 0) {
+		fprintf(out, "E");
+	} else if (SEM_COMPASS_X(endpoint) < 0) {
+		fprintf(out, "W");
+	}
+		
 	return SEM_OK;
 }

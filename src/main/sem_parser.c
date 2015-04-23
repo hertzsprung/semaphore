@@ -89,10 +89,17 @@ sem_success sem_parse_unit_vector(unit_vector* vector, char* description) {
 }
 
 sem_success sem_tile_print(FILE* out, sem_tile* tile) {
-	fprintf(out, "track "); // TODO: check return
-	if (sem_print_endpoint(out, tile->track->start) != SEM_OK) return SEM_ERROR;
-	fprintf(out, "-");
-	if (sem_print_endpoint(out, tile->track->end) != SEM_OK) return SEM_ERROR;
+	fprintf(out, "track "); // TODO: check returns
+
+	sem_track* t = tile->track;
+	do {
+		if (sem_print_endpoint(out, t->start) != SEM_OK) return SEM_ERROR;
+		fprintf(out, "-");
+		if (sem_print_endpoint(out, t->end) != SEM_OK) return SEM_ERROR;
+
+		t = t->next;
+		if (t != NULL) fprintf(out, "+");
+	} while (t != NULL);
 
 	return SEM_OK;
 }

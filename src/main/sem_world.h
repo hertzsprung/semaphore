@@ -30,6 +30,7 @@ typedef struct {
 struct sem_world {
 	sem_timer_context* timer;
 	sem_dynamic_array* trains;
+	sem_dynamic_array* actions;
 	uint32_t max_x;
 	uint32_t max_y;
 	sem_tile* tiles; // TODO: would be better not to have BLANK tiles, just have NULL pointers

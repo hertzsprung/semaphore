@@ -83,9 +83,6 @@ int main(/*int argc, char **argv*/) {
 	if (sem_serialize_load(map, &world) != SEM_OK) return sem_fatal_error();
 	fclose(map);
 
-	sem_dynamic_array actions;
-	sem_heap_init(&actions);
-
 	cairo_scale(cr, render_ctx.scale, render_ctx.scale);
 
 	SDL_Event e;
@@ -101,6 +98,11 @@ int main(/*int argc, char **argv*/) {
 			if (e.type == SDL_KEYDOWN) {
 				if (e.key.keysym.sym == SDLK_LCTRL || e.key.keysym.sym == SDLK_RCTRL) {
 					// ignore
+				} else if (e.key.keysym.sym == SDLK_l) {
+					sem_world_destroy(&world);
+					FILE* load = fopen("build/main/saved_map", "r");
+					if (sem_serialize_load(load, &world) != SEM_OK) return sem_fatal_error();
+					fclose(load);
 				} else if (e.key.keysym.sym == SDLK_s) {
 					FILE* save = fopen("build/main/saved_map", "w");
 					if (sem_serialize_save(save, &world) != SEM_OK) return sem_fatal_error();
@@ -142,10 +144,10 @@ int main(/*int argc, char **argv*/) {
 
 				if (a != NULL) {
 					// TODO: should just chuck this onto the action list with "immediate" flag set
-					a->function(&actions, a);
+					a->function(world.actions, a);
 				} else {
 					sem_tile_input_act_upon(&input, &world, &a);
-					if (a != NULL) a->function(&actions, a);
+					if (a != NULL) a->function(world.actions, a);
 				}
 			}
 		}
@@ -154,7 +156,7 @@ int main(/*int argc, char **argv*/) {
 		cairo_rectangle(cr, 0, 0, width-1, height-1);
 		cairo_fill(cr);
 
-		if (sem_action_list_execute(&actions, world.timer->now) != SEM_OK) {
+		if (sem_action_list_execute(world.actions, world.timer->now) != SEM_OK) {
 			return sem_fatal_error();
 		}
 
@@ -178,7 +180,6 @@ int main(/*int argc, char **argv*/) {
 		frames++;
 	}
 
-	sem_dynamic_array_destroy(&actions);
 	sem_world_destroy(&world);
 	cairo_destroy(cr);
 	SDL_DestroyTexture(texture);

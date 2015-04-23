@@ -4,6 +4,7 @@
 
 #include "sem_dynamic_array.h"
 #include "sem_error.h"
+#include "sem_heap.h"
 #include "sem_track_cache.h"
 #include "sem_timer.h"
 #include "sem_world.h"
@@ -19,6 +20,10 @@ sem_success sem_world_init_blank(sem_world* world) {
 	world->trains = malloc(sizeof(sem_dynamic_array));
 	if (world->trains == NULL) return sem_set_error("Could not allocate memory for trains");
 	if (sem_dynamic_array_init(world->trains) != SEM_OK) return SEM_ERROR;
+
+	world->actions = malloc(sizeof(sem_dynamic_array));
+	if (world->actions == NULL) return sem_set_error("Could not allocate memory for actions");
+	if (sem_heap_init(world->actions) != SEM_OK) return SEM_ERROR;
 
 	world->track_cache = malloc(sizeof(sem_track_cache));
 	if (world->track_cache == NULL) return sem_set_error("Could not allocate memory for track cache");
@@ -42,6 +47,7 @@ void sem_world_destroy(sem_world* world) {
 		sem_train_destroy(world->trains->items[i]);
 	}
 	sem_dynamic_array_destroy(world->trains);
+	sem_dynamic_array_destroy(world->actions); // TODO: we might need to free() malloc'd actions within this list before deleting the action list itself
 	sem_track_cache_destroy(world->track_cache);
 	free(world->trains);
 	free(world->timer);

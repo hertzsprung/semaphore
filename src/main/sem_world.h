@@ -15,6 +15,14 @@ typedef enum {
 	BLANK, TRACK, POINTS, SIGNAL
 } sem_tile_class;
 
+typedef enum {
+	MAIN_MANUAL, MAIN_AUTO, SUB
+} sem_signal_type;
+
+typedef enum {
+	RED, AMBER, GREEN
+} sem_signal_aspect;
+
 struct sem_track {
 	unit_vector start;
 	unit_vector end;	
@@ -22,9 +30,15 @@ struct sem_track {
 };
 
 typedef struct {
+	sem_signal_type type;
+	sem_signal_aspect aspect;
+} sem_signal;
+
+typedef struct {
 	sem_tile_class class;	
 	sem_track* track;
-	sem_track* points[3];		
+	sem_track* points[3];
+	sem_signal* signal;
 } sem_tile;
 
 struct sem_world {

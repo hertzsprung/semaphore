@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include "sem_compass.h"
 
 void sem_coordinate_set(sem_coordinate* coord, uint32_t x, uint32_t y) {
@@ -27,4 +29,14 @@ unit_vector sem_compass_opposite_of(unit_vector v) {
 
 bool sem_compass_straight(unit_vector a, unit_vector b) {
 	return sem_compass_opposite_of(a) == b;
+}
+
+double sem_compass_rotation(unit_vector v) {
+	if (SEM_COMPASS_X(v) == 0) {
+		return 0.5 * M_PI;
+	} else if (SEM_COMPASS_Y(v) == 0) {
+		return 0;
+	} else {
+		return 0; // TODO: diagonals
+	}
 }

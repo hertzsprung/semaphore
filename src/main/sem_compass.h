@@ -26,4 +26,6 @@ unit_vector sem_compass_opposite_of(unit_vector v);
 
 bool sem_compass_straight(unit_vector a, unit_vector b);
 
+double sem_compass_rotation(unit_vector v);
+
 #endif

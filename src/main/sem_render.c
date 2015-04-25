@@ -1,3 +1,4 @@
+#include <math.h>
 #include <stdlib.h>
 #include <cairo.h>
 
@@ -11,6 +12,8 @@ void render_tile_blank(sem_render_context* ctx, sem_coordinate coord, sem_tile* 
 void render_track(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
 void render_tile_points(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
 void render_tile_signal(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
+void render_signal_main(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
+void render_signal_circle(sem_render_context* ctx, sem_tile* tile, double offset);
 void render_train(sem_render_context* ctx, sem_train* train);
 void render_track_path(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
 
@@ -84,6 +87,28 @@ void render_tile_points(sem_render_context* ctx, sem_coordinate coord, sem_tile*
 
 void render_tile_signal(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile) {
 	render_track(ctx, coord, tile->track);
+	render_signal_main(ctx, coord, tile);
+}
+
+void render_signal_main(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile) {
+	cairo_save(ctx->cr);
+	cairo_set_line_width(ctx->cr, 0.05);
+	cairo_translate(ctx->cr, coord.x + 0.5, coord.y + 0.5);
+	cairo_rotate(ctx->cr, sem_compass_rotation(tile->track->start));
+
+	render_signal_circle(ctx, tile, 0.26);
+	render_signal_circle(ctx, tile, -0.26);
+
+	cairo_restore(ctx->cr);
+}
+
+void render_signal_circle(sem_render_context* ctx, sem_tile* tile, double offset) {
+	#pragma unused(tile)
+	cairo_arc(ctx->cr, 0, offset, 0.18, 0, 2*M_PI);
+	cairo_set_source_rgb(ctx->cr, 0.0, 1.0, 0.0); // TODO: aspect color
+	cairo_fill_preserve(ctx->cr);
+	cairo_set_source_rgb(ctx->cr, 0.0, 0.0, 0.0);
+	cairo_stroke(ctx->cr);
 }
 
 void render_train(sem_render_context* ctx, sem_train* train) {

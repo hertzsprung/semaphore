@@ -84,6 +84,7 @@ int main(/*int argc, char **argv*/) {
 	fclose(map);
 
 	sem_tile_at(&world, 8, 2)->class = SIGNAL;
+	sem_tile_at(&world, 10, 4)->class = SIGNAL;
 
 	cairo_scale(cr, render_ctx.scale, render_ctx.scale);
 

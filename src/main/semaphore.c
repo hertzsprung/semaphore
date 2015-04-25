@@ -83,6 +83,8 @@ int main(/*int argc, char **argv*/) {
 	if (sem_serialize_load(map, &world) != SEM_OK) return sem_fatal_error();
 	fclose(map);
 
+	sem_tile_at(&world, 8, 2)->class = SIGNAL;
+
 	cairo_scale(cr, render_ctx.scale, render_ctx.scale);
 
 	SDL_Event e;
@@ -161,7 +163,6 @@ int main(/*int argc, char **argv*/) {
 		}
 
 		cairo_set_line_width(cr, 0.1);
-		cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
 
 		sem_render_world(&render_ctx, &world);
 

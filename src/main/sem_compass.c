@@ -24,3 +24,7 @@ unit_vector sem_compass_opposite_of(unit_vector v) {
 	}
 	return opposite;	
 }
+
+bool sem_compass_straight(unit_vector a, unit_vector b) {
+	return sem_compass_opposite_of(a) == b;
+}

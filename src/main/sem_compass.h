@@ -24,4 +24,6 @@ bool sem_coordinate_equal(sem_coordinate a, sem_coordinate b);
 
 unit_vector sem_compass_opposite_of(unit_vector v);
 
+bool sem_compass_straight(unit_vector a, unit_vector b);
+
 #endif

@@ -10,6 +10,7 @@ void render_tile(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
 void render_tile_blank(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
 void render_track(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
 void render_tile_points(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
+void render_tile_signal(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
 void render_train(sem_render_context* ctx, sem_train* train);
 void render_track_path(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
 
@@ -43,6 +44,8 @@ void render_tile(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile) 
 	case POINTS:
 		render_tile_points(ctx, coord, tile);
 		return;
+	case SIGNAL:
+		render_tile_signal(ctx, coord, tile);
 	}
 }
 
@@ -79,6 +82,10 @@ void render_tile_points(sem_render_context* ctx, sem_coordinate coord, sem_tile*
 	render_track(ctx, coord, tile->track);
 }
 
+void render_tile_signal(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile) {
+	render_track(ctx, coord, tile->track);
+}
+
 void render_train(sem_render_context* ctx, sem_train* train) {
 	for (uint32_t i=0; i < train->cars->tail_idx; i++) {
 		sem_car* car = (sem_car*) train->cars->items[i];
@@ -101,5 +108,12 @@ void render_train(sem_render_context* ctx, sem_train* train) {
 
 void render_track_path(sem_render_context* ctx, sem_coordinate coord, sem_track* track) {
 	cairo_move_to(ctx->cr, coord.x + 0.5 + SEM_COMPASS_X(track->start)/2.0, coord.y + 0.5 + SEM_COMPASS_Y(track->start)/2.0);
-	cairo_line_to(ctx->cr, coord.x + 0.5 + SEM_COMPASS_X(track->end)/2.0, coord.y + 0.5 + SEM_COMPASS_Y(track->end)/2.0);
+	if (sem_compass_straight(track->start, track->end)) {
+		cairo_line_to(ctx->cr, coord.x + 0.5 + SEM_COMPASS_X(track->end)/2.0, coord.y + 0.5 + SEM_COMPASS_Y(track->end)/2.0);
+	} else {
+		cairo_curve_to(ctx->cr,
+			coord.x + 0.5, coord.y + 0.5,
+			coord.x + 0.5 + SEM_COMPASS_X(track->end)*0.25, coord.y + 0.5 + SEM_COMPASS_Y(track->end)*0.25,
+			coord.x + 0.5 + SEM_COMPASS_X(track->end)/2.0, coord.y + 0.5 + SEM_COMPASS_Y(track->end)/2.0);
+	}
 }

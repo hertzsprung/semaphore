@@ -13,6 +13,7 @@ void render_track(sem_render_context* ctx, sem_coordinate coord, sem_track* trac
 void render_tile_points(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
 void render_tile_signal(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
 void render_signal_main(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
+void render_signal_aspect(sem_render_context* ctx, sem_tile* tile);
 void render_signal_circle(sem_render_context* ctx, sem_tile* tile, double offset);
 void render_train(sem_render_context* ctx, sem_train* train);
 void render_track_path(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
@@ -98,17 +99,34 @@ void render_signal_main(sem_render_context* ctx, sem_coordinate coord, sem_tile*
 
 	render_signal_circle(ctx, tile, 0.26);
 	render_signal_circle(ctx, tile, -0.26);
+	cairo_move_to(ctx->cr, 0, -0.1);
+	cairo_line_to(ctx->cr, 0, 0.1);
+	cairo_set_source_rgb(ctx->cr, 0.0, 0.0, 0.0);
+	cairo_stroke(ctx->cr);
 
 	cairo_restore(ctx->cr);
 }
 
 void render_signal_circle(sem_render_context* ctx, sem_tile* tile, double offset) {
-	#pragma unused(tile)
 	cairo_arc(ctx->cr, 0, offset, 0.18, 0, 2*M_PI);
-	cairo_set_source_rgb(ctx->cr, 0.0, 1.0, 0.0); // TODO: aspect color
+	render_signal_aspect(ctx, tile);
 	cairo_fill_preserve(ctx->cr);
 	cairo_set_source_rgb(ctx->cr, 0.0, 0.0, 0.0);
 	cairo_stroke(ctx->cr);
+}
+
+void render_signal_aspect(sem_render_context* ctx, sem_tile* tile) {
+	switch (tile->signal->aspect) {
+	case GREEN:
+		cairo_set_source_rgb(ctx->cr, 0.0, 1.0, 0.0);
+		return;
+	case AMBER:
+		cairo_set_source_rgb(ctx->cr, 1.0, 0.75, 0.0);
+		return;	
+	case RED:
+		cairo_set_source_rgb(ctx->cr, 1.0, 0.2, 0.2);
+		return;
+	}
 }
 
 void render_train(sem_render_context* ctx, sem_train* train) {

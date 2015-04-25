@@ -84,7 +84,19 @@ int main(/*int argc, char **argv*/) {
 	fclose(map);
 
 	sem_tile_at(&world, 8, 2)->class = SIGNAL;
+	sem_signal signal1;
+	signal1.aspect = RED;
+	sem_tile_at(&world, 8, 2)->signal = &signal1;
+
 	sem_tile_at(&world, 10, 4)->class = SIGNAL;
+	sem_signal signal2;
+	signal2.aspect = GREEN;
+	sem_tile_at(&world, 10, 4)->signal = &signal2;
+
+	sem_tile_at(&world, 2, 4)->class = SIGNAL;
+	sem_signal signal3;
+	signal3.aspect = AMBER;
+	sem_tile_at(&world, 2, 4)->signal = &signal3;
 
 	cairo_scale(cr, render_ctx.scale, render_ctx.scale);
 

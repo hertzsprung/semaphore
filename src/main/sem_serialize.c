@@ -19,6 +19,7 @@ sem_success read_train_direction(FILE* in, sem_train* train);
 sem_success read_train_cars(FILE* in, sem_train* train);
 sem_success read_car(FILE* in, sem_train* train);
 
+sem_success write_timer(FILE* out, sem_world* world);
 sem_success write_tiles(FILE* out, sem_world* world);
 sem_success write_tile(FILE* out, uint32_t x, uint32_t y, sem_tile* tile);
 
@@ -35,7 +36,7 @@ sem_success sem_serialize_load(FILE* in, sem_world* world) {
 
 sem_success sem_serialize_save(FILE* out, sem_world* world) {
 	fprintf(out, "world %d %d\n", world->max_x, world->max_y); // TODO: check status of fprintf
-	fprintf(out, "now 0\nmultiplier 1.0\n");
+	if (write_timer(out, world) != SEM_OK) return SEM_ERROR;
 	if (write_tiles(out, world) != SEM_OK) return SEM_ERROR;
 	fprintf(out, "trains 0\n");
 
@@ -246,6 +247,12 @@ sem_success read_car(FILE* in, sem_train* train) {
 	free(line);
 
 	return sem_train_add_car(train, car);
+}
+
+sem_success write_timer(FILE* out, sem_world* world) {
+	fprintf(out, "now %lu\nmultiplier %lf\n", world->timer->now, world->timer->multiplier);
+
+	return SEM_OK;
 }
 
 sem_success write_tiles(FILE* out, sem_world* world) {

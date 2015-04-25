@@ -9,13 +9,13 @@ FILE* save_and_load(char* filename, sem_world* world);
 void test_serialize_save_load_blank_tiles(void);
 void test_serialize_load_track_tile(void);
 void test_serialize_load_train(void);
-void test_serialize_load_timer(void);
+void test_serialize_save_load_timer(void);
 
 void add_tests_serialize() {
-	g_test_add_func("/serialize/load_blank_tiles", test_serialize_save_load_blank_tiles);
+	g_test_add_func("/serialize/save_load_blank_tiles", test_serialize_save_load_blank_tiles);
 	g_test_add_func("/serialize/load_track_tile", test_serialize_load_track_tile);
 	g_test_add_func("/serialize/load_train", test_serialize_load_train);
-	g_test_add_func("/serialize/load_timer", test_serialize_load_timer);
+	g_test_add_func("/serialize/save_load_timer", test_serialize_save_load_timer);
 }
 
 FILE* save_and_load(char* filename, sem_world* world) {
@@ -91,11 +91,15 @@ void test_serialize_load_train() {
 	fclose(file);
 }
 
-void test_serialize_load_timer() {
-	FILE* file = fopen("src/test/load_timer", "r");
-
+void test_serialize_save_load_timer() {
 	sem_world world;
-	sem_serialize_load(file, &world);
+	world.max_x = 1;
+	world.max_y = 1;
+	sem_world_init_blank(&world);
+	world.timer->now = 123;
+	world.timer->multiplier = 1.6;
+
+	FILE* file = save_and_load("build/test/timer", &world);
 
 	g_assert_cmpuint(world.timer->now, ==, 123);
 	g_assert_cmpfloat(world.timer->multiplier, >, 1.59);

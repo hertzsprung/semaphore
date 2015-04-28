@@ -1,19 +1,24 @@
 world 64 64
 now 0
 multiplier 1.0
-tiles 49
+tiles 54
 0 8 track W-E
 1 8 track W-E
 2 8 track W-E
 3 8 track W-E
 4 8 track W-E
-5 8 track W-E
-6 8 track W-E
-7 8 track W-E
-8 8 track W-E
-9 8 track W-E
-10 8 track W-E
-11 8 track W-E
+5 8 points W-NE W-SE
+6 7 track NE-SW
+6 9 track SE-NW
+7 6 track SW-E
+7 10 track NW-E
+8 6 track W-E
+8 10 track W-E
+9 6 track W-SE
+9 10 track W-NE
+10 7 track NW-SE
+10 9 track SW-NE
+11 8 points NW-E SW-E
 12 8 track W-E
 13 8 track W-E
 14 8 track W-E

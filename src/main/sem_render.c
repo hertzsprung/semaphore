@@ -12,8 +12,9 @@ void render_tile_blank(sem_render_context* ctx, sem_coordinate coord, sem_tile* 
 void render_track(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
 void render_tile_points(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
 void render_tile_signal(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
-void render_signal_main(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
-void render_signal_aspect(sem_render_context* ctx, sem_tile* tile);
+void render_signal_main(sem_render_context* ctx, sem_tile* tile);
+void render_signal_sub(sem_render_context* ctx, sem_tile* tile);
+void render_signal_aspect(sem_render_context* ctx, sem_signal_aspect aspect);
 void render_signal_circle(sem_render_context* ctx, sem_tile* tile, double offset);
 void render_train(sem_render_context* ctx, sem_train* train);
 void render_track_path(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
@@ -50,6 +51,7 @@ void render_tile(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile) 
 		return;
 	case SIGNAL:
 		render_tile_signal(ctx, coord, tile);
+		return;
 	}
 }
 
@@ -88,17 +90,22 @@ void render_tile_points(sem_render_context* ctx, sem_coordinate coord, sem_tile*
 
 void render_tile_signal(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile) {
 	render_track(ctx, coord, tile->track);
-	render_signal_main(ctx, coord, tile);
-}
 
-void render_signal_main(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile) {
 	cairo_save(ctx->cr);
 	cairo_set_line_width(ctx->cr, 0.05);
 	cairo_translate(ctx->cr, coord.x + 0.5, coord.y + 0.5);
 	cairo_rotate(ctx->cr, sem_compass_rotation(tile->track->start));
 
-	render_signal_circle(ctx, tile, 0.26);
-	render_signal_circle(ctx, tile, -0.26);
+	switch (tile->signal->type) {
+	case MAIN_AUTO:
+	case MAIN_MANUAL:
+		render_signal_main(ctx, tile);
+		break;
+	case SUB:
+		render_signal_sub(ctx, tile);
+		break;
+	}
+
 	cairo_move_to(ctx->cr, 0, -0.1);
 	cairo_line_to(ctx->cr, 0, 0.1);
 	cairo_set_source_rgb(ctx->cr, 0.0, 0.0, 0.0);
@@ -107,26 +114,56 @@ void render_signal_main(sem_render_context* ctx, sem_coordinate coord, sem_tile*
 	cairo_restore(ctx->cr);
 }
 
+void render_signal_main(sem_render_context* ctx, sem_tile* tile) {
+	render_signal_circle(ctx, tile, 0.26);
+	render_signal_circle(ctx, tile, -0.26);
+}
+
+void render_signal_sub(sem_render_context* ctx, sem_tile* tile) {
+	double w, h;
+	if (tile->signal->aspect == GREEN) {
+		w = 0.22;
+		h = 0.15;
+	} else {
+		w = 0.3;
+		h = 0.2;
+	}
+
+	cairo_rectangle(ctx->cr, 
+		-w/2.0,
+		-h - 0.1 + 0.025,
+		w,
+		h);
+	render_signal_aspect(ctx, tile->signal->aspect);
+
+	cairo_rectangle(ctx->cr, 
+		-w/2.0,
+		0.1 - 0.025,
+		w,
+		h);
+	render_signal_aspect(ctx, tile->signal->aspect == RED ? AMBER : tile->signal->aspect);
+}
+
 void render_signal_circle(sem_render_context* ctx, sem_tile* tile, double offset) {
 	cairo_arc(ctx->cr, 0, offset, 0.18, 0, 2*M_PI);
-	render_signal_aspect(ctx, tile);
+	render_signal_aspect(ctx, tile->signal->aspect);
+}
+
+void render_signal_aspect(sem_render_context* ctx, sem_signal_aspect aspect) {
+	switch (aspect) {
+	case GREEN:
+		cairo_set_source_rgb(ctx->cr, 0.0, 1.0, 0.0);
+		break;
+	case AMBER:
+		cairo_set_source_rgb(ctx->cr, 1.0, 0.75, 0.0);
+		break;
+	case RED:
+		cairo_set_source_rgb(ctx->cr, 1.0, 0.2, 0.2);
+		break;
+	}
 	cairo_fill_preserve(ctx->cr);
 	cairo_set_source_rgb(ctx->cr, 0.0, 0.0, 0.0);
 	cairo_stroke(ctx->cr);
-}
-
-void render_signal_aspect(sem_render_context* ctx, sem_tile* tile) {
-	switch (tile->signal->aspect) {
-	case GREEN:
-		cairo_set_source_rgb(ctx->cr, 0.0, 1.0, 0.0);
-		return;
-	case AMBER:
-		cairo_set_source_rgb(ctx->cr, 1.0, 0.75, 0.0);
-		return;	
-	case RED:
-		cairo_set_source_rgb(ctx->cr, 1.0, 0.2, 0.2);
-		return;
-	}
 }
 
 void render_train(sem_render_context* ctx, sem_train* train) {
@@ -141,9 +178,9 @@ void render_train(sem_render_context* ctx, sem_train* train) {
 			cairo_set_source_rgb(ctx->cr, 1.0, 0.0, 1.0);
 		}
 		if (i == 0) {
-			cairo_set_line_width(ctx->cr, 0.6);
-		} else {
 			cairo_set_line_width(ctx->cr, 0.4);
+		} else {
+			cairo_set_line_width(ctx->cr, 0.25);
 		}
 		cairo_stroke(ctx->cr);
 	}

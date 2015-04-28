@@ -36,7 +36,13 @@ double sem_compass_rotation(unit_vector v) {
 		return 0.5 * M_PI;
 	} else if (SEM_COMPASS_Y(v) == 0) {
 		return 0;
+	} else if (SEM_COMPASS_X(v) < 0 && SEM_COMPASS_Y(v) < 0) {
+		return 0.25 * M_PI;
+	} else if (SEM_COMPASS_X(v) < 0 && SEM_COMPASS_Y(v) > 0) {
+		return -0.25 * M_PI;
+	} else if (SEM_COMPASS_X(v) > 0 && SEM_COMPASS_Y(v) < 0) {
+		return -0.25 * M_PI;
 	} else {
-		return 0; // TODO: diagonals
+		return 0.25 * M_PI;
 	}
 }

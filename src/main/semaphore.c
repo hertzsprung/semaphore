@@ -85,18 +85,39 @@ int main(/*int argc, char **argv*/) {
 
 	sem_tile_at(&world, 8, 2)->class = SIGNAL;
 	sem_signal signal1;
+	signal1.type = MAIN_AUTO;
 	signal1.aspect = RED;
 	sem_tile_at(&world, 8, 2)->signal = &signal1;
 
-	sem_tile_at(&world, 10, 4)->class = SIGNAL;
+	sem_tile_at(&world, 6, 7)->class = SIGNAL;
 	sem_signal signal2;
+	signal2.type = MAIN_AUTO;
 	signal2.aspect = GREEN;
-	sem_tile_at(&world, 10, 4)->signal = &signal2;
+	sem_tile_at(&world, 6, 7)->signal = &signal2;
 
 	sem_tile_at(&world, 2, 4)->class = SIGNAL;
 	sem_signal signal3;
+	signal3.type = MAIN_AUTO;
 	signal3.aspect = AMBER;
 	sem_tile_at(&world, 2, 4)->signal = &signal3;
+
+	sem_tile_at(&world, 6, 9)->class = SIGNAL;
+	sem_signal signal4;
+	signal4.type = SUB;
+	signal4.aspect = RED;
+	sem_tile_at(&world, 6, 9)->signal = &signal4;
+
+	sem_tile_at(&world, 10, 7)->class = SIGNAL;
+	sem_signal signal5;
+	signal5.type = SUB;
+	signal5.aspect = GREEN;
+	sem_tile_at(&world, 10, 7)->signal = &signal5;
+
+	sem_tile_at(&world, 10, 9)->class = SIGNAL;
+	sem_signal signal6;
+	signal6.type = SUB;
+	signal6.aspect = AMBER;
+	sem_tile_at(&world, 10, 9)->signal = &signal6;
 
 	cairo_scale(cr, render_ctx.scale, render_ctx.scale);
 
@@ -181,7 +202,7 @@ int main(/*int argc, char **argv*/) {
 
 		char buf[128] = "";
 		snprintf(buf, sizeof(buf), "frame: %ld, game time: %ld, multiplier: %f", frames, world.timer->now, world.timer->multiplier);
-		cairo_move_to(cr, 0, 10);
+		cairo_move_to(cr, 0, 14);
 		cairo_set_font_size(cr, 0.7);
 		cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
 		cairo_show_text(cr, buf);

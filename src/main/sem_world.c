@@ -11,6 +11,7 @@
 
 sem_success sem_track_accept(sem_train* train, sem_track* track, sem_tile_acceptance* acceptance);
 sem_success sem_inactive_track_accept(sem_train* train, sem_tile* tile, sem_tile_acceptance* acceptance);
+void sem_destroy_signals(sem_world* world);
 
 sem_success sem_world_init_blank(sem_world* world) {
 	world->timer = malloc(sizeof(sem_timer_context));
@@ -48,11 +49,21 @@ void sem_world_destroy(sem_world* world) {
 	}
 	sem_dynamic_array_destroy(world->trains);
 	sem_dynamic_array_destroy(world->actions); // TODO: we might need to free() malloc'd actions within this list before deleting the action list itself
+	sem_destroy_signals(world);
 	sem_track_cache_destroy(world->track_cache);
 	free(world->trains);
 	free(world->timer);
 	free(world->tiles);
 	free(world->track_cache);
+}
+
+void sem_destroy_signals(sem_world* world) {
+	for (uint32_t j=0; j<world->max_y; j++) {
+		for (uint32_t i=0; i<world->max_x; i++) {
+			sem_tile* tile = sem_tile_at(world, i, j);
+			if (tile->class == SIGNAL) free(tile->signal);
+		}
+	}
 }
 
 sem_success sem_world_add_train(sem_world* world, sem_train* train) {

@@ -99,8 +99,7 @@ sem_success read_tiles(FILE* in, sem_world* world) {
 	uint32_t tiles = sem_parse_uint32_t(sem_tokenization_next(&tokens));
 
 	for (uint32_t i=0; i < tiles; i++) {
-		sem_success success = read_tile(in, world);
-		if (success != SEM_OK) return success;
+		if (read_tile(in, world) != SEM_OK) return SEM_ERROR;
 	}
 	
 	token = sem_tokenization_next(&tokens);	
@@ -121,7 +120,7 @@ sem_success read_tile(FILE* in, sem_world* world) {
 	uint32_t y = sem_parse_uint32_t(sem_tokenization_next(&tokens));
 
 	sem_tile* tile = sem_tile_at(world, x, y);
-	sem_tile_parse(tile, &tokens, world->track_cache);
+	if (sem_tile_parse(tile, &tokens, world->track_cache) != SEM_OK) return SEM_ERROR;
 
 	free(line);
 

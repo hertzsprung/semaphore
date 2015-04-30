@@ -14,6 +14,9 @@ void test_parser_parse_n_s_track(sem_track_cache* track_cache, const void* data)
 void test_parser_e_w_track(sem_track_cache* track_cache, const void* data);
 void test_parser_parse_n_s_e_w_track(void);
 void test_parser_two_way_points(sem_track_cache* track_cache, const void* data);
+void test_parser_red_main_auto_signal(sem_track_cache* track_cache, const void* data);
+void test_parser_green_main_manual_signal(sem_track_cache* track_cache, const void* data);
+void test_parser_amber_sub_signal(sem_track_cache* track_cache, const void* data);
 void test_parser_print_ne_sw_track(void);
 void test_parser_print_n_s_e_w_track(void);
 
@@ -23,6 +26,9 @@ void add_tests_parser() {
 	add_test_track_cache("/parser/e_w_track", test_parser_e_w_track);
 	g_test_add_func("/parser/parse_n_s_e_w_track", test_parser_parse_n_s_e_w_track);
 	add_test_track_cache("/parser/two_way_points", test_parser_two_way_points);
+	add_test_track_cache("/parser/red_main_auto_signal", test_parser_red_main_auto_signal);
+	add_test_track_cache("/parser/green_main_manual_signal", test_parser_green_main_manual_signal);
+	add_test_track_cache("/parser/amber_sub_signal", test_parser_amber_sub_signal);
 	g_test_add_func("/parser/print_ne_sw_track", test_parser_print_ne_sw_track);
 	g_test_add_func("/parser/print_n_s_e_w_track", test_parser_print_n_s_e_w_track);
 }
@@ -95,6 +101,51 @@ void test_parser_two_way_points(sem_track_cache* track_cache, const void* data) 
 
 	g_assert_true(tile.points[0]->start == SEM_WEST);
 	g_assert_true(tile.points[0]->end == SEM_EAST);
+}
+
+void test_parser_red_main_auto_signal(sem_track_cache* track_cache, const void* data) {
+	#pragma unused(data)
+	char track_description[32] = "signal SW-NE red main auto";
+	sem_tokenization tokens;
+	sem_tokenization_init(&tokens, track_description, " ");
+
+	sem_tile tile;
+	sem_tile_parse(&tile, &tokens, track_cache);
+
+	g_assert_true(tile.class == SIGNAL);
+	g_assert_true(tile.track->start == (SEM_SOUTH | SEM_WEST));
+	g_assert_true(tile.track->end == (SEM_NORTH | SEM_EAST));
+	g_assert_true(tile.signal->aspect == RED);
+	g_assert_true(tile.signal->type == MAIN_AUTO);
+}
+
+void test_parser_green_main_manual_signal(sem_track_cache* track_cache, const void* data) {
+	#pragma unused(data)
+	char track_description[32] = "signal W-E green main manual";
+	sem_tokenization tokens;
+	sem_tokenization_init(&tokens, track_description, " ");
+
+	sem_tile tile;
+	sem_tile_parse(&tile, &tokens, track_cache);
+
+	g_assert_true(tile.class == SIGNAL);
+	g_assert_true(tile.track->start == SEM_WEST);
+	g_assert_true(tile.track->end == SEM_EAST);
+	g_assert_true(tile.signal->aspect == GREEN);
+	g_assert_true(tile.signal->type == MAIN_MANUAL);
+}
+
+void test_parser_amber_sub_signal(sem_track_cache* track_cache, const void* data) {
+	#pragma unused(data)
+	char track_description[32] = "signal W-E amber sub";
+	sem_tokenization tokens;
+	sem_tokenization_init(&tokens, track_description, " ");
+
+	sem_tile tile;
+	sem_tile_parse(&tile, &tokens, track_cache);
+
+	g_assert_true(tile.signal->aspect == AMBER);
+	g_assert_true(tile.signal->type == SUB);
 }
 
 void test_parser_print_ne_sw_track(void) {

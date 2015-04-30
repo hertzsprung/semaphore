@@ -8,28 +8,28 @@ tiles 54
 3 8 track W-E
 4 8 track W-E
 5 8 points W-NE W-SE
-6 7 track NE-SW
-6 9 track SE-NW
+6 7 signal NE-SW green main auto
+6 9 signal SE-NW red sub
 7 6 track SW-E
 7 10 track NW-E
 8 6 track W-E
 8 10 track W-E
 9 6 track W-SE
 9 10 track W-NE
-10 7 track NW-SE
-10 9 track SW-NE
+10 7 signal NW-SE green sub
+10 9 signal SW-NE amber sub
 11 8 points NW-E SW-E
 12 8 track W-E
 13 8 track W-E
 14 8 track W-E
 15 8 track W-E
 2 0 track W-E
-2 4 track W-E
+2 4 signal W-E amber main auto
 10 0 track W-E
 10 4 track W-E
 0 2 track N-S
 4 2 track N-S
-8 2 track N-S
+8 2 signal N-S red main auto
 12 2 track N-S
 1 0 track SW-E
 3 0 track W-SE

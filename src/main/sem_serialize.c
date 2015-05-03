@@ -101,7 +101,7 @@ sem_success read_tiles(FILE* in, sem_world* world) {
 	for (uint32_t i=0; i < tiles; i++) {
 		if (read_tile(in, world) != SEM_OK) return SEM_ERROR;
 	}
-	
+
 	token = sem_tokenization_next(&tokens);	
 
 	free(line);

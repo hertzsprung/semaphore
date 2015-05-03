@@ -1,5 +1,5 @@
-#ifndef _SEM_STRINGS_H
-#define _SEM_STRINGS_H
+#ifndef SEM_STRINGS_H
+#define SEM_STRINGS_H
 
 #include <inttypes.h>
 #include <stdio.h>

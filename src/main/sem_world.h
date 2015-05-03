@@ -1,5 +1,5 @@
-#ifndef _SEM_WORLD_H
-#define _SEM_WORLD_H
+#ifndef SEM_WORLD_H
+#define SEM_WORLD_H
 
 typedef struct sem_world sem_world;
 typedef struct sem_track sem_track;
@@ -125,6 +125,8 @@ void sem_tile_set_track(sem_tile* tile, sem_track* track);
  * \brief Initialise a sem_tile with an active track, leaving the inactive tracks as NULL.
  */
 void sem_tile_set_points(sem_tile* tile, sem_track* track);
+
+void sem_tile_set_signal(sem_tile* tile, sem_track* track, sem_signal* signal);
 
 /**
  * \brief Set track start and end points, and set next track to NULL.

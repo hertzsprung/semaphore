@@ -1,5 +1,5 @@
-#ifndef _SEM_RENDER_H
-#define _SEM_RENDER_H
+#ifndef SEM_RENDER_H
+#define SEM_RENDER_H
 
 #include <cairo.h>
 

@@ -1,5 +1,5 @@
-#ifndef _SEM_TEST_TRACK_CACHE_H
-#define _SEM_TEST_TRACK_CACHE_H
+#ifndef SEM_TEST_TRACK_CACHE_H
+#define SEM_TEST_TRACK_CACHE_H
 
 #include "sem_track_cache.h"
 

@@ -1,5 +1,5 @@
-#ifndef _SEM_TRAIN_H
-#define _SEM_TRAIN_H
+#ifndef SEM_TRAIN_H
+#define SEM_TRAIN_H
 
 #include <stdbool.h>
 #include <stdint.h>

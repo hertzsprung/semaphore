@@ -117,6 +117,12 @@ void sem_tile_set_points(sem_tile* tile, sem_track* track) {
 	tile->points[2] = NULL;
 }
 
+void sem_tile_set_signal(sem_tile* tile, sem_track* track, sem_signal* signal) {
+	tile->class = SIGNAL;
+	tile->track = track;
+	tile->signal = signal;
+}
+
 void sem_track_set(sem_track* track, unit_vector start, unit_vector end) {
 	track->start = start;
 	track->end = end;

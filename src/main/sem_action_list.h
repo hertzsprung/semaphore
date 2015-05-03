@@ -1,5 +1,5 @@
-#ifndef _SEM_ACTION_LIST_H
-#define _SEM_ACTION_LIST_H
+#ifndef SEM_ACTION_LIST_H
+#define SEM_ACTION_LIST_H
 
 #include <inttypes.h>
 

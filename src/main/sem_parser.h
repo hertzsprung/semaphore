@@ -1,5 +1,5 @@
-#ifndef _SEM_PARSER_H
-#define _SEM_PARSER_H
+#ifndef SEM_PARSER_H
+#define SEM_PARSER_H
 
 #include "sem_error.h"
 #include "sem_strings.h"

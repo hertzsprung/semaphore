@@ -1,5 +1,5 @@
-#ifndef _SEM_HEAP_H
-#define _SEM_HEAP_H
+#ifndef SEM_HEAP_H
+#define SEM_HEAP_H
 
 #include <inttypes.h>
 #include <stdbool.h>

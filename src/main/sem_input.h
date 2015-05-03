@@ -1,5 +1,5 @@
-#ifndef _SEM_INPUT_H
-#define _SEM_INPUT_H
+#ifndef SEM_INPUT_H
+#define SEM_INPUT_H
 
 #include <stdint.h>
 

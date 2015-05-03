@@ -1,5 +1,5 @@
-#ifndef _SEM_DYNAMIC_ARRAY_H
-#define _SEM_DYNAMIC_ARRAY_H
+#ifndef SEM_DYNAMIC_ARRAY_H
+#define SEM_DYNAMIC_ARRAY_H
 
 #include <inttypes.h>
 

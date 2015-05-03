@@ -1,5 +1,5 @@
-#ifndef _SEM_TRACK_CACHE_H
-#define _SEM_TRACK_CACHE_H
+#ifndef SEM_TRACK_CACHE_H
+#define SEM_TRACK_CACHE_H
 
 #include <glib.h>
 

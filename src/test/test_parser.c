@@ -19,6 +19,7 @@ void test_parser_green_main_manual_signal(sem_track_cache* track_cache, const vo
 void test_parser_amber_sub_signal(sem_track_cache* track_cache, const void* data);
 void test_parser_print_ne_sw_track(void);
 void test_parser_print_n_s_e_w_track(void);
+void test_parser_print_red_main_auto_signal(void);
 
 void add_tests_parser() {
 	g_test_add_func("/parser/bad_tile_class", test_parser_bad_tile_class);
@@ -31,6 +32,7 @@ void add_tests_parser() {
 	add_test_track_cache("/parser/amber_sub_signal", test_parser_amber_sub_signal);
 	g_test_add_func("/parser/print_ne_sw_track", test_parser_print_ne_sw_track);
 	g_test_add_func("/parser/print_n_s_e_w_track", test_parser_print_n_s_e_w_track);
+	g_test_add_func("/parser/print_red_main_auto_signal", test_parser_print_red_main_auto_signal);
 }
 
 void test_parser_bad_tile_class() {
@@ -148,7 +150,7 @@ void test_parser_amber_sub_signal(sem_track_cache* track_cache, const void* data
 	g_assert_true(tile.signal->type == SUB);
 }
 
-void test_parser_print_ne_sw_track(void) {
+void test_parser_print_ne_sw_track() {
 	char expected_description[32] = "track NE-SW";
 	char actual_description[32];
 	FILE* out = fmemopen(actual_description, 32*sizeof(char), "w");
@@ -165,7 +167,7 @@ void test_parser_print_ne_sw_track(void) {
 	g_assert_cmpstr(expected_description, ==, actual_description);
 }
 
-void test_parser_print_n_s_e_w_track(void) {
+void test_parser_print_n_s_e_w_track() {
 	char expected_description[32] = "track N-S+E-W";
 	char actual_description[32];
 	FILE* out = fmemopen(actual_description, 32*sizeof(char), "w");
@@ -179,6 +181,26 @@ void test_parser_print_n_s_e_w_track(void) {
 	sem_track trackE_W;
 	sem_track_set(&trackE_W, SEM_EAST, SEM_WEST);
 	trackN_S.next = &trackE_W;
+
+	sem_tile_print(out, &tile);
+
+	fclose(out);
+
+	g_assert_cmpstr(expected_description, ==, actual_description);
+}
+
+void test_parser_print_red_main_auto_signal() {
+	char expected_description[32] = "signal N-S red main auto";
+	char actual_description[32];
+	FILE* out = fmemopen(actual_description, 32*sizeof(char), "w");
+
+	sem_tile tile;
+	sem_track track;
+	sem_track_set(&track, SEM_NORTH, SEM_SOUTH);
+	sem_signal signal;
+	signal.type = MAIN_AUTO;
+	signal.aspect = RED;
+	sem_tile_set_signal(&tile, &track, &signal);
 
 	sem_tile_print(out, &tile);
 

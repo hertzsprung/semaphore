@@ -7,6 +7,7 @@
 #include "sem_world.h"
 
 sem_success sem_parse_signal(sem_tile* tile, sem_tokenization* tile_description);
+sem_success sem_print_signal(FILE* out, sem_signal* signal);
 sem_success sem_print_endpoint(FILE* out, unit_vector endpoint);
 
 sem_success sem_tile_parse(sem_tile* tile, sem_tokenization* tile_description, sem_track_cache* track_cache) {
@@ -129,7 +130,21 @@ sem_success sem_parse_signal(sem_tile* tile, sem_tokenization* tile_description)
 }
 
 sem_success sem_tile_print(FILE* out, sem_tile* tile) {
-	fprintf(out, "track "); // TODO: check returns
+	switch (tile->class) {
+	case BLANK:
+		break;
+	case TRACK:
+		fprintf(out, "track"); // TODO: check returns
+		break;
+	case POINTS:
+		fprintf(out, "track"); // TODO: implement points saving
+		break;
+	case SIGNAL:
+		fprintf(out, "signal");
+		break;
+	}
+
+	fprintf(out, " ");
 
 	sem_track* t = tile->track;
 	do {
@@ -140,6 +155,10 @@ sem_success sem_tile_print(FILE* out, sem_tile* tile) {
 		t = t->next;
 		if (t != NULL) fprintf(out, "+");
 	} while (t != NULL);
+
+	if (tile->class == SIGNAL) {
+		if (sem_print_signal(out, tile->signal) != SEM_OK) return SEM_ERROR;
+	}
 
 	return SEM_OK;
 }
@@ -157,5 +176,37 @@ sem_success sem_print_endpoint(FILE* out, unit_vector endpoint) {
 		fprintf(out, "W");
 	}
 		
+	return SEM_OK;
+}
+
+sem_success sem_print_signal(FILE* out, sem_signal* signal) {
+	fprintf(out, " ");
+
+	switch (signal->aspect) {
+	case RED:
+		fprintf(out, "red");
+		break;
+	case AMBER:
+		fprintf(out, "amber");
+		break;
+	case GREEN:
+		fprintf(out, "green");
+		break;
+	}
+
+	fprintf(out, " ");
+
+	switch (signal->type) {
+	case MAIN_AUTO:
+		fprintf(out, "main auto");
+		break;
+	case MAIN_MANUAL:
+		fprintf(out, "main manual");
+		break;
+	case SUB:
+		fprintf(out, "sub");
+		break;
+	}
+
 	return SEM_OK;
 }

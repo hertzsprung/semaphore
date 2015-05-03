@@ -1,5 +1,5 @@
-#ifndef _SEM_ACTION_H
-#define _SEM_ACTION_H
+#ifndef SEM_ACTION_H
+#define SEM_ACTION_H
 
 #include "sem_heap.h"
 

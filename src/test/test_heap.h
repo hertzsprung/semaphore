@@ -1,5 +1,5 @@
-#ifndef _SEM_TEST_HEAP_H
-#define _SEM_TEST_HEAP_H
+#ifndef SEM_TEST_HEAP_H
+#define SEM_TEST_HEAP_H
 
 #include "sem_dynamic_array.h"
 

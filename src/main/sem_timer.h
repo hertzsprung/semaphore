@@ -1,5 +1,5 @@
-#ifndef _SEM_TIMER_H
-#define _SEM_TIMER_H
+#ifndef SEM_TIMER_H
+#define SEM_TIMER_H
 
 #include <inttypes.h>
 

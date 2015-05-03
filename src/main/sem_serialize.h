@@ -1,5 +1,5 @@
-#ifndef _SEM_SERIALIZE_H
-#define _SEM_SERIALIZE_H
+#ifndef SEM_SERIALIZE_H
+#define SEM_SERIALIZE_H
 
 #include <stdio.h>
 #include "sem_error.h"

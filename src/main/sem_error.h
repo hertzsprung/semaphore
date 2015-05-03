@@ -1,5 +1,5 @@
-#ifndef _SEM_ERROR_H
-#define _SEM_ERROR_H
+#ifndef SEM_ERROR_H
+#define SEM_ERROR_H
 
 /** \brief Indicates a function completed without error */
 #define SEM_OK 0

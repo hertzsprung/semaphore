@@ -10,11 +10,11 @@ LD := ld
 SDL_CONFIG := sdl2-config
 PKG_CONFIG := pkg-config
 
-SDL_CFLAGS := $(shell $(SDL_CONFIG) --cflags)
+SDL_CFLAGS := $(shell $(SDL_CONFIG) --cflags | sed -re "s/-I/-isystem /g")
 SDL_LDFLAGS := $(shell $(SDL_CONFIG) --libs)
-CAIRO_CFLAGS := $(shell $(PKG_CONFIG) cairo --cflags)
+CAIRO_CFLAGS := $(shell $(PKG_CONFIG) cairo --cflags | sed -re "s/-I/-isystem /g")
 CAIRO_LDFLAGS := $(shell $(PKG_CONFIG) cairo --libs)
-GLIB_CFLAGS := $(shell $(PKG_CONFIG) glib-2.0 --cflags)
+GLIB_CFLAGS := $(shell $(PKG_CONFIG) glib-2.0 --cflags | sed -re "s/-I/-isystem /g")
 GLIB_LDFLAGS := $(shell $(PKG_CONFIG) glib-2.0 --libs)
 WARNINGS := -pedantic-errors -Werror -Weverything \
 -Wno-error=padded -Wno-error=documentation -Wno-error=documentation-unknown-command \

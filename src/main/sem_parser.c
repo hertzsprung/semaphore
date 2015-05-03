@@ -6,6 +6,7 @@
 #include "sem_strings.h"
 #include "sem_world.h"
 
+sem_success sem_parse_points(sem_tile* tile, sem_tokenization* tile_description, sem_track_cache* track_cache);
 sem_success sem_parse_signal(sem_tile* tile, sem_tokenization* tile_description);
 sem_success sem_print_track(FILE* out, sem_track* track);
 sem_success sem_print_points(FILE* out, sem_tile* tile);
@@ -28,9 +29,7 @@ sem_success sem_tile_parse(sem_tile* tile, sem_tokenization* tile_description, s
 	if (sem_track_cache_find(track_cache, sem_tokenization_next(tile_description), &(tile->track)) != SEM_OK) return SEM_ERROR;
 
 	if (tile->class == POINTS) {
-		sem_tile_set_points(tile, tile->track);
-		sem_track_cache_find(track_cache, sem_tokenization_next(tile_description), &(tile->points[1]));
-		// TODO: three-way points
+		if (sem_parse_points(tile, tile_description, track_cache) != SEM_OK) return SEM_ERROR;
 	} else if (tile->class == SIGNAL) {
 		if (sem_parse_signal(tile, tile_description) != SEM_OK) return SEM_ERROR;
 	}
@@ -91,6 +90,19 @@ sem_success sem_parse_unit_vector(unit_vector* vector, char* description) {
 		(*vector) |= SEM_EAST;
 	} else if (strchr(description, 'W') != NULL) {
 		(*vector) |= SEM_WEST;
+	}
+
+	return SEM_OK;
+}
+
+sem_success sem_parse_points(sem_tile* tile, sem_tokenization* tile_description, sem_track_cache* track_cache) {
+	sem_tile_set_points(tile, tile->track);
+
+	if (sem_track_cache_find(track_cache, sem_tokenization_next(tile_description), &(tile->points[1])) != SEM_OK) return SEM_ERROR;
+
+	char* third_track = sem_tokenization_next(tile_description);	
+	if (third_track != NULL) {
+		if (sem_track_cache_find(track_cache, third_track, &(tile->points[2])) != SEM_OK) return SEM_ERROR;
 	}
 
 	return SEM_OK;

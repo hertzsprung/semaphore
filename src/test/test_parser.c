@@ -14,6 +14,7 @@ void test_parser_parse_n_s_track(sem_track_cache* track_cache, const void* data)
 void test_parser_e_w_track(sem_track_cache* track_cache, const void* data);
 void test_parser_parse_n_s_e_w_track(void);
 void test_parser_two_way_points(sem_track_cache* track_cache, const void* data);
+void test_parser_three_way_points(sem_track_cache* track_cache, const void* data);
 void test_parser_red_main_auto_signal(sem_track_cache* track_cache, const void* data);
 void test_parser_green_main_manual_signal(sem_track_cache* track_cache, const void* data);
 void test_parser_amber_sub_signal(sem_track_cache* track_cache, const void* data);
@@ -29,6 +30,7 @@ void add_tests_parser() {
 	add_test_track_cache("/parser/e_w_track", test_parser_e_w_track);
 	g_test_add_func("/parser/parse_n_s_e_w_track", test_parser_parse_n_s_e_w_track);
 	add_test_track_cache("/parser/two_way_points", test_parser_two_way_points);
+	add_test_track_cache("/parser/three_way_points", test_parser_three_way_points);
 	add_test_track_cache("/parser/red_main_auto_signal", test_parser_red_main_auto_signal);
 	add_test_track_cache("/parser/green_main_manual_signal", test_parser_green_main_manual_signal);
 	add_test_track_cache("/parser/amber_sub_signal", test_parser_amber_sub_signal);
@@ -107,6 +109,24 @@ void test_parser_two_way_points(sem_track_cache* track_cache, const void* data) 
 
 	g_assert_true(tile.points[0]->start == SEM_WEST);
 	g_assert_true(tile.points[0]->end == SEM_EAST);
+
+	g_assert_true(tile.points[1]->start == SEM_WEST);
+	g_assert_true(tile.points[1]->end == (SEM_NORTH | SEM_EAST));
+}
+
+void test_parser_three_way_points(sem_track_cache* track_cache, const void* data) {
+	#pragma unused(data)
+	char track_description[32] = "points W-E W-NE W-SE";
+	sem_tokenization tokens;
+	sem_tokenization_init(&tokens, track_description, " ");
+
+	sem_tile tile;
+	sem_tile_parse(&tile, &tokens, track_cache);
+
+	g_assert_true(tile.class == POINTS);
+
+	g_assert_true(tile.points[2]->start == SEM_WEST);
+	g_assert_true(tile.points[2]->end == (SEM_SOUTH | SEM_EAST));
 }
 
 void test_parser_red_main_auto_signal(sem_track_cache* track_cache, const void* data) {

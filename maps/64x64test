@@ -1,13 +1,18 @@
 world 64 64
 now 0
 multiplier 1.0
-tiles 54
+tiles 59
 0 8 track W-E
 1 8 track W-E
 2 8 track W-E
 3 8 track W-E
 4 8 track W-E
-5 8 points W-NE W-SE
+5 8 points W-NE W-SE W-E
+6 8 track W-E
+7 8 track W-E
+8 8 track W-E
+9 8 track W-E
+10 8 track W-E
 6 7 signal NE-SW green main auto
 6 9 signal SE-NW red sub
 7 6 track SW-E
@@ -18,7 +23,7 @@ tiles 54
 9 10 track W-NE
 10 7 signal NW-SE green sub
 10 9 signal SW-NE amber sub
-11 8 points NW-E SW-E
+11 8 points NW-E SW-E W-E
 12 8 track W-E
 13 8 track W-E
 14 8 track W-E

@@ -187,3 +187,7 @@ void sem_tile_switch_points(sem_tile* tile) {
 	}
 	assert(false && "Track is not one of the points settings");
 }
+
+bool sem_track_active(sem_tile* tile, sem_track* track) {
+	return tile->track == track;
+}

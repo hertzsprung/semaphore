@@ -119,6 +119,11 @@ void sem_tile_acceptance_init(sem_tile_acceptance* acceptance);
 
 void sem_tile_switch_points(sem_tile* tile);
 
+/**
+ * \brief Check if a given track is the active track for a POINTS tile.
+ */
+bool sem_track_active(sem_tile* tile, sem_track* track);
+
 void sem_tile_set_track(sem_tile* tile, sem_track* track);
 
 /**

@@ -19,6 +19,8 @@ void test_parser_green_main_manual_signal(sem_track_cache* track_cache, const vo
 void test_parser_amber_sub_signal(sem_track_cache* track_cache, const void* data);
 void test_parser_print_ne_sw_track(void);
 void test_parser_print_n_s_e_w_track(void);
+void test_parser_print_two_way_points(void);
+void test_parser_print_three_way_points(void);
 void test_parser_print_red_main_auto_signal(void);
 
 void add_tests_parser() {
@@ -32,6 +34,8 @@ void add_tests_parser() {
 	add_test_track_cache("/parser/amber_sub_signal", test_parser_amber_sub_signal);
 	g_test_add_func("/parser/print_ne_sw_track", test_parser_print_ne_sw_track);
 	g_test_add_func("/parser/print_n_s_e_w_track", test_parser_print_n_s_e_w_track);
+	g_test_add_func("/parser/print_two_way_points", test_parser_print_two_way_points);
+	g_test_add_func("/parser/print_three_way_points", test_parser_print_three_way_points);
 	g_test_add_func("/parser/print_red_main_auto_signal", test_parser_print_red_main_auto_signal);
 }
 
@@ -182,6 +186,55 @@ void test_parser_print_n_s_e_w_track() {
 	sem_track_set(&trackE_W, SEM_EAST, SEM_WEST);
 	trackN_S.next = &trackE_W;
 
+	sem_tile_print(out, &tile);
+
+	fclose(out);
+
+	g_assert_cmpstr(expected_description, ==, actual_description);
+}
+
+void test_parser_print_two_way_points() {
+	char expected_description[32] = "points N-S N-SE";
+	char actual_description[32];
+	FILE* out = fmemopen(actual_description, 32*sizeof(char), "w");
+
+	sem_tile tile;
+
+	sem_track trackN_S;
+	sem_track_set(&trackN_S, SEM_NORTH, SEM_SOUTH);
+	sem_tile_set_points(&tile, &trackN_S);
+
+	sem_track trackN_SE;
+	sem_track_set(&trackN_SE, SEM_NORTH, SEM_SOUTH | SEM_EAST);
+	tile.points[1] = &trackN_SE;	
+
+	sem_tile_print(out, &tile);
+
+	fclose(out);
+
+	g_assert_cmpstr(expected_description, ==, actual_description);
+}
+
+void test_parser_print_three_way_points() {
+	char expected_description[32] = "points N-SE N-S N-SW";
+	char actual_description[32];
+	FILE* out = fmemopen(actual_description, 32*sizeof(char), "w");
+
+	sem_tile tile;
+
+	sem_track trackN_S;
+	sem_track_set(&trackN_S, SEM_NORTH, SEM_SOUTH);
+	sem_tile_set_points(&tile, &trackN_S);
+
+	sem_track trackN_SE;
+	sem_track_set(&trackN_SE, SEM_NORTH, SEM_SOUTH | SEM_EAST);
+	tile.points[1] = &trackN_SE;	
+
+	sem_track trackN_SW;
+	sem_track_set(&trackN_SW, SEM_NORTH, SEM_SOUTH | SEM_WEST);
+	tile.points[2] = &trackN_SW;	
+
+	sem_tile_switch_points(&tile);
 	sem_tile_print(out, &tile);
 
 	fclose(out);

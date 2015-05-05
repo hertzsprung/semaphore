@@ -13,7 +13,7 @@ tiles 59
 8 8 track W-E
 9 8 track W-E
 10 8 track W-E
-6 7 signal NE-SW green main auto
+6 7 signal NE-SW green main manual
 6 9 signal SE-NW red sub
 7 6 track SW-E
 7 10 track NW-E
@@ -22,7 +22,7 @@ tiles 59
 9 6 track W-SE
 9 10 track W-NE
 10 7 signal NW-SE green sub
-10 9 signal SW-NE amber sub
+10 9 signal SW-NE amber main manual
 11 8 points NW-E SW-E W-E
 12 8 track W-E
 13 8 track W-E

@@ -13,9 +13,12 @@ void render_track(sem_render_context* ctx, sem_coordinate coord, sem_track* trac
 void render_tile_points(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
 void render_tile_signal(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
 void render_signal_main(sem_render_context* ctx, sem_tile* tile);
+void render_signal_main_manual(sem_render_context* ctx, sem_tile* tile);
 void render_signal_sub(sem_render_context* ctx, sem_tile* tile);
 void render_signal_aspect(sem_render_context* ctx, sem_signal_aspect aspect);
-void render_signal_circle(sem_render_context* ctx, sem_tile* tile, double offset);
+void render_signal_aspect_unstroked(sem_render_context* ctx, sem_signal_aspect aspect);
+void render_signal_set_aspect(sem_render_context* ctx, sem_signal_aspect aspect);
+void render_signal_circle(sem_render_context* ctx, double offset_x, double offset_y, double radius);
 void render_train(sem_render_context* ctx, sem_train* train);
 void render_track_path(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
 
@@ -68,10 +71,10 @@ void render_track(sem_render_context* ctx, sem_coordinate coord, sem_track* trac
 	do {
 		render_track_path(ctx, coord, t);
 		cairo_set_source_rgb(ctx->cr, 0.0, 0.0, 0.0);
-		cairo_set_line_width(ctx->cr, 0.2);
+		cairo_set_line_width(ctx->cr, ctx->style->track_back_width);
 		cairo_stroke_preserve(ctx->cr);
-		cairo_set_source_rgb(ctx->cr, 0.53125, 0.796875, 0.796875);
-		cairo_set_line_width(ctx->cr, 0.1);
+		cairo_set_source(ctx->cr, ctx->style->track_front_color);
+		cairo_set_line_width(ctx->cr, ctx->style->track_front_width);
 		cairo_stroke(ctx->cr);
 
 		t = t->next;
@@ -98,16 +101,19 @@ void render_tile_signal(sem_render_context* ctx, sem_coordinate coord, sem_tile*
 
 	switch (tile->signal->type) {
 	case MAIN_AUTO:
+		render_signal_main(ctx, tile);
+		break;
 	case MAIN_MANUAL:
 		render_signal_main(ctx, tile);
+		render_signal_main_manual(ctx, tile);	
 		break;
 	case SUB:
 		render_signal_sub(ctx, tile);
 		break;
 	}
 
-	cairo_move_to(ctx->cr, 0, -0.1);
-	cairo_line_to(ctx->cr, 0, 0.1);
+	cairo_move_to(ctx->cr, 0, -ctx->style->track_back_width/2.0);
+	cairo_line_to(ctx->cr, 0, ctx->style->track_back_width/2.0);
 	cairo_set_source_rgb(ctx->cr, 0.0, 0.0, 0.0);
 	cairo_stroke(ctx->cr);
 
@@ -115,55 +121,83 @@ void render_tile_signal(sem_render_context* ctx, sem_coordinate coord, sem_tile*
 }
 
 void render_signal_main(sem_render_context* ctx, sem_tile* tile) {
-	render_signal_circle(ctx, tile, 0.26);
-	render_signal_circle(ctx, tile, -0.26);
+	double offset = ctx->style->signal_main_offset;
+	double radius = ctx->style->signal_main_radius;
+
+	render_signal_circle(ctx, 0, offset, radius);
+	render_signal_aspect(ctx, tile->signal->aspect);
+	render_signal_circle(ctx, 0, -offset, radius);
+	render_signal_aspect(ctx, tile->signal->aspect);
+}
+
+void render_signal_main_manual(sem_render_context* ctx, sem_tile* tile) {
+	double offset_x = ctx->style->signal_main_manual_extra_offset_x;
+	double offset_y = ctx->style->signal_main_manual_extra_offset_y;
+	double radius = ctx->style->signal_main_manual_extra_radius;
+
+	render_signal_circle(ctx, offset_x, offset_y, radius);
+	render_signal_aspect_unstroked(ctx, tile->signal->aspect);
+	render_signal_circle(ctx, -offset_x, offset_y, radius);
+	render_signal_aspect_unstroked(ctx, tile->signal->aspect);
+	render_signal_circle(ctx, offset_x, -offset_y, radius);
+	render_signal_aspect_unstroked(ctx, tile->signal->aspect);
+	render_signal_circle(ctx, -offset_x, -offset_y, radius);
+	render_signal_aspect_unstroked(ctx, tile->signal->aspect);
 }
 
 void render_signal_sub(sem_render_context* ctx, sem_tile* tile) {
 	double w, h;
 	if (tile->signal->aspect == GREEN) {
-		w = 0.22;
-		h = 0.15;
+		w = ctx->style->signal_sub_minor_width;
+		h = ctx->style->signal_sub_minor_height;
 	} else {
-		w = 0.3;
-		h = 0.2;
+		w = ctx->style->signal_sub_major_width;
+		h = ctx->style->signal_sub_major_height;
 	}
 
 	cairo_rectangle(ctx->cr, 
 		-w/2.0,
-		-h - 0.1 + 0.025,
+		-h - ctx->style->track_back_width/2.0 + 0.025,
 		w,
 		h);
 	render_signal_aspect(ctx, tile->signal->aspect);
 
 	cairo_rectangle(ctx->cr, 
 		-w/2.0,
-		0.1 - 0.025,
+		ctx->style->track_back_width/2.0 - 0.025,
 		w,
 		h);
 	render_signal_aspect(ctx, tile->signal->aspect == RED ? AMBER : tile->signal->aspect);
 }
 
-void render_signal_circle(sem_render_context* ctx, sem_tile* tile, double offset) {
-	cairo_arc(ctx->cr, 0, offset, 0.18, 0, 2*M_PI);
-	render_signal_aspect(ctx, tile->signal->aspect);
+void render_signal_circle(sem_render_context* ctx, double offset_x, double offset_y, double radius) {
+	cairo_arc(ctx->cr, offset_x, offset_y, radius, 0, 2*M_PI);
 }
 
 void render_signal_aspect(sem_render_context* ctx, sem_signal_aspect aspect) {
-	switch (aspect) {
-	case GREEN:
-		cairo_set_source_rgb(ctx->cr, 0.0, 1.0, 0.0);
-		break;
-	case AMBER:
-		cairo_set_source_rgb(ctx->cr, 1.0, 0.75, 0.0);
-		break;
-	case RED:
-		cairo_set_source_rgb(ctx->cr, 1.0, 0.2, 0.2);
-		break;
-	}
+	render_signal_set_aspect(ctx, aspect);
 	cairo_fill_preserve(ctx->cr);
 	cairo_set_source_rgb(ctx->cr, 0.0, 0.0, 0.0);
 	cairo_stroke(ctx->cr);
+}
+
+void render_signal_aspect_unstroked(sem_render_context* ctx, sem_signal_aspect aspect) {
+	render_signal_set_aspect(ctx, aspect);
+	cairo_fill(ctx->cr);
+}
+
+void render_signal_set_aspect(sem_render_context* ctx, sem_signal_aspect aspect) {
+	switch (aspect) {
+	case GREEN:
+		cairo_set_source(ctx->cr, ctx->style->signal_green);
+		break;
+	case AMBER:
+		cairo_set_source(ctx->cr, ctx->style->signal_amber);
+		break;
+	case RED:
+		cairo_set_source(ctx->cr, ctx->style->signal_red);
+		break;
+	}
 }
 
 void render_train(sem_render_context* ctx, sem_train* train) {
@@ -200,5 +234,21 @@ void render_track_path(sem_render_context* ctx, sem_coordinate coord, sem_track*
 
 sem_success sem_render_default_style(sem_render_style* style) {
 	style->canvas = cairo_pattern_create_rgb(0.0, 0.53125, 0.26525);
+	style->track_front_color = cairo_pattern_create_rgb(0.53125, 0.796875, 0.796875);
+	style->signal_red = cairo_pattern_create_rgb(1.0, 0.2, 0.2);
+	style->signal_amber = cairo_pattern_create_rgb(1.0, 0.75, 0.0);
+	style->signal_green = cairo_pattern_create_rgb(0.0, 1.0, 0.0);
+	
+	style->track_back_width = 0.2;
+	style->track_front_width = 0.1;
+	style->signal_main_radius = 0.18;
+	style->signal_main_offset = 0.26;
+	style->signal_main_manual_extra_radius = 0.0625;
+	style->signal_main_manual_extra_offset_x = 0.35;
+	style->signal_main_manual_extra_offset_y = 0.26;
+	style->signal_sub_major_width = 0.3;
+	style->signal_sub_major_height = 0.2;
+	style->signal_sub_minor_width = 0.22;
+	style->signal_sub_minor_height = 0.15;
 	return SEM_OK;
 }

@@ -14,6 +14,7 @@ void render_tile_points(sem_render_context* ctx, sem_coordinate coord, sem_tile*
 void render_tile_signal(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
 void render_signal_main(sem_render_context* ctx, sem_tile* tile);
 void render_signal_main_manual(sem_render_context* ctx, sem_tile* tile);
+void render_rounded_rect(sem_render_context* ctx, double x, double y, double w, double h, double r);
 void render_signal_sub(sem_render_context* ctx, sem_tile* tile);
 void render_signal_aspect(sem_render_context* ctx, sem_signal_aspect aspect);
 void render_signal_aspect_unstroked(sem_render_context* ctx, sem_signal_aspect aspect);
@@ -104,8 +105,8 @@ void render_tile_signal(sem_render_context* ctx, sem_coordinate coord, sem_tile*
 		render_signal_main(ctx, tile);
 		break;
 	case MAIN_MANUAL:
-		render_signal_main(ctx, tile);
 		render_signal_main_manual(ctx, tile);	
+		render_signal_main(ctx, tile);
 		break;
 	case SUB:
 		render_signal_sub(ctx, tile);
@@ -131,6 +132,12 @@ void render_signal_main(sem_render_context* ctx, sem_tile* tile) {
 }
 
 void render_signal_main_manual(sem_render_context* ctx, sem_tile* tile) {
+	double width = ctx->style->signal_main_manual_rect_width;
+	double height = ctx->style->signal_main_manual_rect_height;
+	render_rounded_rect(ctx, -width/2, -height/2, width, height, ctx->style->signal_main_manual_rect_radius);
+	cairo_set_source_rgb(ctx->cr, 0.0, 0.0, 0.0);
+	cairo_stroke(ctx->cr);
+
 	double offset_x = ctx->style->signal_main_manual_extra_offset_x;
 	double offset_y = ctx->style->signal_main_manual_extra_offset_y;
 	double radius = ctx->style->signal_main_manual_extra_radius;
@@ -143,6 +150,26 @@ void render_signal_main_manual(sem_render_context* ctx, sem_tile* tile) {
 	render_signal_aspect_unstroked(ctx, tile->signal->aspect);
 	render_signal_circle(ctx, -offset_x, -offset_y, radius);
 	render_signal_aspect_unstroked(ctx, tile->signal->aspect);
+}
+
+
+/*
+ A****BQ
+H      C
+*      *
+G      D
+ F****E
+*/
+void render_rounded_rect(sem_render_context* ctx, double x, double y, double w, double h, double r) {
+	cairo_move_to(ctx->cr, x+r,y);                      // Move to A
+	cairo_line_to(ctx->cr, x+w-r,y);                    // Straight line to B
+	cairo_curve_to(ctx->cr, x+w,y,x+w,y,x+w,y+r);       // Curve to C, Control points are both at Q
+	cairo_line_to(ctx->cr, x+w,y+h-r);                  // Move to D
+	cairo_curve_to(ctx->cr, x+w,y+h,x+w,y+h,x+w-r,y+h); // Curve to E
+	cairo_line_to(ctx->cr, x+r,y+h);                    // Line to F
+	cairo_curve_to(ctx->cr, x,y+h,x,y+h,x,y+h-r);       // Curve to G
+	cairo_line_to(ctx->cr, x,y+r);                      // Line to H
+	cairo_curve_to(ctx->cr, x,y,x,y,x+r,y);             // Curve to A
 }
 
 void render_signal_sub(sem_render_context* ctx, sem_tile* tile) {
@@ -246,6 +273,9 @@ sem_success sem_render_default_style(sem_render_style* style) {
 	style->signal_main_manual_extra_radius = 0.0625;
 	style->signal_main_manual_extra_offset_x = 0.35;
 	style->signal_main_manual_extra_offset_y = 0.26;
+	style->signal_main_manual_rect_width = style->signal_main_manual_extra_offset_x*2;
+	style->signal_main_manual_rect_height = style->signal_main_manual_extra_offset_y*2;
+	style->signal_main_manual_rect_radius = 0.35;
 	style->signal_sub_major_width = 0.3;
 	style->signal_sub_major_height = 0.2;
 	style->signal_sub_minor_width = 0.22;

@@ -23,6 +23,9 @@ typedef struct {
 	double signal_main_manual_extra_radius;
 	double signal_main_manual_extra_offset_x;
 	double signal_main_manual_extra_offset_y;
+	double signal_main_manual_rect_width;
+	double signal_main_manual_rect_height;
+	double signal_main_manual_rect_radius;
 } sem_render_style;
 
 typedef struct {

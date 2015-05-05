@@ -78,6 +78,10 @@ int main(/*int argc, char **argv*/) {
 	render_ctx.cr = cr;	
 	render_ctx.scale = 32.0;
 
+	sem_render_style render_style;
+	render_ctx.style = &render_style;
+	sem_render_default_style(&render_style);
+
 	FILE* map = fopen("maps/64x64test", "r");
 	sem_world world;
 	if (sem_serialize_load(map, &world) != SEM_OK) return sem_fatal_error();
@@ -152,7 +156,7 @@ int main(/*int argc, char **argv*/) {
 			}
 		}
 
-		cairo_set_source_rgb(cr, 0.0, 0.53125, 0.26525);
+		cairo_set_source(cr, render_style.canvas);
 		cairo_rectangle(cr, 0, 0, width-1, height-1);
 		cairo_fill(cr);
 

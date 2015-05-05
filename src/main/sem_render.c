@@ -197,3 +197,8 @@ void render_track_path(sem_render_context* ctx, sem_coordinate coord, sem_track*
 			coord.x + 0.5 + SEM_COMPASS_X(track->end)/2.0, coord.y + 0.5 + SEM_COMPASS_Y(track->end)/2.0);
 	}
 }
+
+sem_success sem_render_default_style(sem_render_style* style) {
+	style->canvas = cairo_pattern_create_rgb(0.0, 0.53125, 0.26525);
+	return SEM_OK;
+}

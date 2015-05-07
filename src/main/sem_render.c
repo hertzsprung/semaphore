@@ -228,8 +228,8 @@ void render_signal_set_aspect(sem_render_context* ctx, sem_signal_aspect aspect)
 }
 
 void render_train(sem_render_context* ctx, sem_train* train) {
-	for (uint32_t i=0; i < train->cars->tail_idx; i++) {
-		sem_car* car = (sem_car*) train->cars->items[i];
+	sem_car* car = train->head_car;
+	while (car != NULL) {
 		render_track_path(ctx, car->position, car->track);
 		if (train->state == CRASHED) {
 			cairo_set_source_rgb(ctx->cr, 1.0, 0.0, 0.0);
@@ -238,12 +238,13 @@ void render_train(sem_render_context* ctx, sem_train* train) {
 		} else {
 			cairo_set_source_rgb(ctx->cr, 1.0, 0.0, 1.0);
 		}
-		if (i == 0) {
+		if (car == train->head_car) {
 			cairo_set_line_width(ctx->cr, 0.4);
 		} else {
 			cairo_set_line_width(ctx->cr, 0.25);
 		}
 		cairo_stroke(ctx->cr);
+		car = car->next;
 	}
 }
 

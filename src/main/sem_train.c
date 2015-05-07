@@ -8,23 +8,19 @@
 #include "sem_error.h"
 #include "sem_world.h"
 
-void train_move_trailing(sem_dynamic_array* cars);
+void train_move_trailing(sem_car* tail_car);
 sem_train* train_detect_collision(sem_train* train);
 
 sem_success sem_train_init(sem_train* train) {
 	train->state = STOPPED;
 	train->direction = 0;
-	train->cars = malloc(sizeof(sem_dynamic_array));
-	if (train->cars == NULL) {
-		return sem_set_error("Could not allocate memory for train cars");
-	}
 	train->head_car = NULL;
 	train->tail_car = NULL;
-	return sem_dynamic_array_init(train->cars);
+	return SEM_OK;
 }
 
 sem_success sem_train_move(sem_train* train) {
-	train_move_trailing(train->cars);
+	train_move_trailing(train->tail_car);
 	train->position->x += SEM_COMPASS_X(train->direction);
 	train->position->y += SEM_COMPASS_Y(train->direction);
 
@@ -34,7 +30,7 @@ sem_success sem_train_move(sem_train* train) {
 	if (success != SEM_OK) return success;
 
 	train->direction = acceptance.direction;
-	((sem_car*) train->cars->items[0])->track = acceptance.track;	
+	train->head_car->track = acceptance.track;	
 	if (acceptance.need_points_switch) train->state = DERAILED;
 
 	sem_train* collided_train = train_detect_collision(train);
@@ -47,10 +43,9 @@ sem_success sem_train_move(sem_train* train) {
 }
 
 sem_success sem_train_add_car(sem_train* train, sem_car* car) {
-	if (train->cars->tail_idx == 0) {
+	if (train->head_car == 0) {
 		train->position = &(car->position);
 	}
-	sem_dynamic_array_add(train->cars, car);
 	if (train->tail_car != NULL) train->tail_car->next = car;
 	car->previous = train->tail_car;
 	car->next = NULL;
@@ -60,25 +55,27 @@ sem_success sem_train_add_car(sem_train* train, sem_car* car) {
 }
 
 bool sem_train_occupies(sem_train* train, sem_coordinate* tile) {
-	for (uint32_t i=0; i < train->cars->tail_idx; i++) {
-		sem_car* car = (sem_car*) train->cars->items[i];
+	sem_car* car = train->head_car;
+	while (car != NULL) {
 		if (sem_coordinate_equal(car->position, *tile)) return true;
+		car = car->next;
 	}
 
 	return false;
 }
 
 void sem_train_destroy(sem_train* train) {
-	sem_dynamic_array_destroy(train->cars);
-	free(train->cars);
+	#pragma unused(train)
 }	
 
-void train_move_trailing(sem_dynamic_array* cars) {
-	for (uint32_t i=cars->tail_idx-1; i > 0; i--) {
-		sem_car* car_behind = (sem_car*) cars->items[i];
-		sem_car* car_in_front = (sem_car*) cars->items[i-1];
+void train_move_trailing(sem_car* tail_car) {
+	sem_car* car_behind = tail_car;
+	while (car_behind != NULL && car_behind->previous != NULL) {
+		sem_car* car_in_front = car_behind->previous;
 		car_behind->position = car_in_front->position;
 		car_behind->track = car_in_front->track;
+
+		car_behind = car_in_front;
 	}
 }
 
@@ -88,12 +85,14 @@ sem_train* train_detect_collision(sem_train* t1) {
 		sem_train* t2 = trains->items[t];
 		if (t2 == t1) continue;
 
-		for (uint32_t c1=0; c1 < t1->cars->tail_idx; c1++) {
-			sem_car* car1 = (sem_car*) t1->cars->items[c1];
-			for (uint32_t c2=0; c2 < t2->cars->tail_idx; c2++) {
-				sem_car* car2 = (sem_car*) t2->cars->items[c2];
-				if (sem_coordinate_equal(car1->position, car2->position)) return t2;	
+		sem_car* car1 = t1->head_car;
+		while (car1 != NULL) {
+			sem_car* car2 = t2->head_car;
+			while (car2 != NULL) {
+				if (sem_coordinate_equal(car1->position, car2->position)) return t2;
+				car2 = car2->next;
 			}
+			car1 = car1->next;
 		}
 	}
 

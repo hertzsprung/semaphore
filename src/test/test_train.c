@@ -334,7 +334,7 @@ void test_train_car_occupies_track(test_train_context* test_ctx, const void* dat
 
 	sem_train_move(train);
 
-	g_assert_true(((sem_car*) train->cars->items[0])->track == &track_W_S);
+	g_assert_true(train->head_car->track == &track_W_S);
 }
 
 void test_train_moves_trailing_car_onto_track(test_train_context* test_ctx, const void* data) {
@@ -372,8 +372,8 @@ void test_train_moves_trailing_car_onto_track(test_train_context* test_ctx, cons
 
 	sem_train_move(train);
 
-	g_assert_true(((sem_car*) train->cars->items[0])->track == &track_N_S);
-	g_assert_true(((sem_car*) train->cars->items[1])->track == &track_W_S);
+	g_assert_true(train->head_car->track == &track_N_S);
+	g_assert_true(train->head_car->next->track == &track_W_S);
 }
 
 void test_train_derails_when_need_points_switch(test_train_context* test_ctx, const void* data) {

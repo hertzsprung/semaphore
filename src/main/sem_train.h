@@ -5,6 +5,7 @@
 #include <stdint.h>
 
 typedef struct sem_train sem_train;
+typedef struct sem_car sem_car;
 
 #include "sem_compass.h"
 #include "sem_dynamic_array.h"
@@ -15,16 +16,20 @@ typedef enum {
 	STOPPED, MOVING, CRASHED, DERAILED
 } sem_train_state;
 
-typedef struct {
+struct sem_car {
 	sem_coordinate position;
 	sem_track* track;
-} sem_car;
+	sem_car* previous;
+	sem_car* next;
+};
 
 struct sem_train {
 	sem_world* world;
 	sem_train_state state;
 	sem_coordinate* position; /**< position of the train's head car */
 	sem_dynamic_array* cars; /**< array of sem_cars */
+	sem_car* head_car;
+	sem_car* tail_car;
 	unit_vector direction;
 };
 

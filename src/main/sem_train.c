@@ -18,6 +18,8 @@ sem_success sem_train_init(sem_train* train) {
 	if (train->cars == NULL) {
 		return sem_set_error("Could not allocate memory for train cars");
 	}
+	train->head_car = NULL;
+	train->tail_car = NULL;
 	return sem_dynamic_array_init(train->cars);
 }
 
@@ -49,6 +51,11 @@ sem_success sem_train_add_car(sem_train* train, sem_car* car) {
 		train->position = &(car->position);
 	}
 	sem_dynamic_array_add(train->cars, car);
+	if (train->tail_car != NULL) train->tail_car->next = car;
+	car->previous = train->tail_car;
+	car->next = NULL;
+	if (train->head_car == NULL) train->head_car = car;
+	train->tail_car = car;
 	return SEM_OK;
 }
 

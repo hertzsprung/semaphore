@@ -27,6 +27,7 @@ struct sem_train {
 	sem_world* world;
 	sem_train_state state;
 	sem_coordinate* position; /**< position of the train's head car */
+	uint8_t cars;
 	sem_car* head_car;
 	sem_car* tail_car;
 	unit_vector direction;

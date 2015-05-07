@@ -15,5 +15,9 @@ sem_success sem_parse_unit_vector(unit_vector* vector, char* description);
 
 sem_success sem_tile_print(FILE* out, sem_tile* tile);
 
+sem_success sem_print_track_part(FILE* out, sem_track* track);
+
+sem_success sem_print_endpoint(FILE* out, unit_vector endpoint);
+
 #endif
 

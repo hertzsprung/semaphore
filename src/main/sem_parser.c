@@ -11,7 +11,6 @@ sem_success sem_parse_signal(sem_tile* tile, sem_tokenization* tile_description)
 sem_success sem_print_track(FILE* out, sem_track* track);
 sem_success sem_print_points(FILE* out, sem_tile* tile);
 sem_success sem_print_signal(FILE* out, sem_signal* signal);
-sem_success sem_print_endpoint(FILE* out, unit_vector endpoint);
 
 sem_success sem_tile_parse(sem_tile* tile, sem_tokenization* tile_description, sem_track_cache* track_cache) {
 	char* class = sem_tokenization_next(tile_description);
@@ -174,14 +173,19 @@ sem_success sem_tile_print(FILE* out, sem_tile* tile) {
 sem_success sem_print_track(FILE* out, sem_track* track) {
 	sem_track* t = track;
 	do {
-		if (sem_print_endpoint(out, t->start) != SEM_OK) return SEM_ERROR;
-		fprintf(out, "-");
-		if (sem_print_endpoint(out, t->end) != SEM_OK) return SEM_ERROR;
+		if (sem_print_track_part(out, t) != SEM_OK) return SEM_ERROR;
 
 		t = t->next;
 		if (t != NULL) fprintf(out, "+");
 	} while (t != NULL);
 
+	return SEM_OK;
+}
+
+sem_success sem_print_track_part(FILE* out, sem_track* track) {
+	if (sem_print_endpoint(out, track->start) != SEM_OK) return SEM_ERROR;
+	fprintf(out, "-");
+	if (sem_print_endpoint(out, track->end) != SEM_OK) return SEM_ERROR;
 	return SEM_OK;
 }
 

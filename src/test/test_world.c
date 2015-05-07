@@ -14,6 +14,7 @@ void test_world_switch_points_to_next_in_array(test_world_context* test_ctx, con
 void test_world_needs_points_switch_when_train_on_inactive_track(test_world_context* test_ctx, const void* data);
 void test_world_not_needs_points_switch_when_train_on_active_track(test_world_context* test_ctx, const void* data);
 void test_world_train_not_accepted_on_unconnected_points(test_world_context* test_ctx, const void* data);
+void test_world_track_matching_inactive_points(test_world_context* test_ctx, const void* data);
 
 void test_world_setup(test_world_context* test_ctx, const void* data);
 void test_world_teardown(test_world_context* test_ctx, const void* data);
@@ -42,6 +43,7 @@ void add_tests_world() {
 	add_test_world("/world/needs_points_switch_when_train_on_inactive_track", test_world_needs_points_switch_when_train_on_inactive_track);
 	add_test_world("/world/not_needs_points_switch_when_train_on_active_track", test_world_not_needs_points_switch_when_train_on_active_track);
 	add_test_world("/world/train_not_accepted_on_unconnected_points", test_world_train_not_accepted_on_unconnected_points);
+	add_test_world("/world/track_matching_inactive_points", test_world_track_matching_inactive_points);
 }
 
 void add_test_world(const char *test_name, void (*test)(test_world_context*, const void* data)) {
@@ -147,4 +149,11 @@ void test_world_train_not_accepted_on_unconnected_points(test_world_context* tes
 	tile->points[1] = &trackN_S;
 
 	g_assert_true(sem_tile_accept(train, tile, &acceptance) == SEM_ERROR);
+}
+
+void test_world_track_matching_inactive_points(test_world_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	#pragma unused(test_ctx)
+	g_assert_true(false);
+	// TODO
 }

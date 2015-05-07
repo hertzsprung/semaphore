@@ -14,6 +14,7 @@ sem_train* train_detect_collision(sem_train* train);
 sem_success sem_train_init(sem_train* train) {
 	train->state = STOPPED;
 	train->direction = 0;
+	train->cars = 0;
 	train->head_car = NULL;
 	train->tail_car = NULL;
 	return SEM_OK;
@@ -43,6 +44,7 @@ sem_success sem_train_move(sem_train* train) {
 }
 
 sem_success sem_train_add_car(sem_train* train, sem_car* car) {
+	train->cars++;
 	if (train->head_car == 0) {
 		train->position = &(car->position);
 	}

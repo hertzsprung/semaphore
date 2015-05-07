@@ -22,6 +22,10 @@ sem_success read_car(FILE* in, sem_train* train);
 sem_success write_timer(FILE* out, sem_world* world);
 sem_success write_tiles(FILE* out, sem_world* world);
 sem_success write_tile(FILE* out, uint32_t x, uint32_t y, sem_tile* tile);
+sem_success write_trains(FILE* out, sem_dynamic_array* trains);
+sem_success write_train(FILE* out, sem_train* train);
+sem_success write_train_state(FILE* out, sem_train_state state);
+sem_success write_car(FILE* out, sem_car* car);
 
 sem_success sem_serialize_load(FILE* in, sem_world* world) {
 	if (in == NULL) return sem_set_error("File does not exist");
@@ -38,7 +42,7 @@ sem_success sem_serialize_save(FILE* out, sem_world* world) {
 	fprintf(out, "world %d %d\n", world->max_x, world->max_y); // TODO: check status of fprintf
 	if (write_timer(out, world) != SEM_OK) return SEM_ERROR;
 	if (write_tiles(out, world) != SEM_OK) return SEM_ERROR;
-	fprintf(out, "trains 0\n");
+	if (write_trains(out, world->trains) != SEM_OK) return SEM_ERROR;
 
 	return SEM_OK;
 }
@@ -163,7 +167,7 @@ sem_success read_train(FILE* in, sem_world* world) {
 	if (read_train_direction(in, train) != SEM_OK) return SEM_ERROR;
 	if (read_train_cars(in, train) != SEM_OK) return SEM_ERROR;
 
-	sem_dynamic_array_add(world->trains, train); // TODO: free() this in sem_world_destroy()
+	sem_dynamic_array_add(world->trains, train);
 
 	return SEM_OK;
 }
@@ -177,10 +181,18 @@ sem_success read_train_state(FILE* in, sem_train* train) {
 	// TODO: check token is "state"
 
 	char* state = sem_tokenization_next(&tokens);
-	if (strcmp(state, "STOPPED") == 0) {
+	if (strcmp(state, "stopped") == 0) {
 		train->state = STOPPED;
+	} else if (strcmp(state, "moving") == 0) {
+		train->state = MOVING;
+	} else if (strcmp(state, "derailed") == 0) {
+		train->state = DERAILED;
+	} else if (strcmp(state, "crashed") == 0) {
+		train->state = CRASHED;
+	} else {
+		free(line);
+		return sem_set_error("Unknown train state");
 	}
-	// TODO: other states
 
 	free(line);
 
@@ -283,5 +295,60 @@ sem_success write_tile(FILE* out, uint32_t x, uint32_t y, sem_tile* tile) {
 	sem_tile_print(out, tile);
 	fprintf(out, "\n");
 
+	return SEM_OK;
+}
+
+sem_success write_trains(FILE* out, sem_dynamic_array* trains) {
+	fprintf(out, "trains %d\n", trains->tail_idx);
+
+	for (uint32_t i=0; i<trains->tail_idx; i++) {
+		if (write_train(out, trains->items[i]) != SEM_OK) return SEM_ERROR;
+	}	
+
+	return SEM_OK;
+}
+
+sem_success write_train(FILE* out, sem_train* train) {
+	fprintf(out, "train IC-123\n");
+	if (write_train_state(out, train->state) != SEM_OK) return SEM_ERROR;
+	fprintf(out, "direction ");
+	if (sem_print_endpoint(out, train->direction) != SEM_OK) return SEM_ERROR;
+	fprintf(out, "\n");
+
+	fprintf(out, "cars %d\n", train->cars);
+
+	sem_car* car = train->head_car;
+	while (car != NULL) {
+		if (write_car(out, car) != SEM_OK) return SEM_ERROR;
+		car = car->next;
+	}		
+
+	return SEM_OK;
+}
+
+sem_success write_train_state(FILE* out, sem_train_state state) {
+	fprintf(out, "state ");
+	switch (state) {
+	case STOPPED:
+		fprintf(out, "stopped");
+		break;
+	case MOVING:
+		fprintf(out, "moving");
+		break;
+	case DERAILED:
+		fprintf(out, "derailed");
+		break;
+	case CRASHED:
+		fprintf(out, "crashed");
+		break;
+	}
+	fprintf(out, "\n");
+	return SEM_OK;
+}
+
+sem_success write_car(FILE* out, sem_car* car) {	
+	fprintf(out, "%d %d ", car->position.x, car->position.y);
+	sem_print_track_part(out, car->track);
+	fprintf(out, "\n");
 	return SEM_OK;
 }

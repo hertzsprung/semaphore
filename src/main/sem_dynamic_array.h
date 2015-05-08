@@ -25,6 +25,8 @@ sem_success sem_dynamic_array_init(sem_dynamic_array* array);
 
 sem_success sem_dynamic_array_add(sem_dynamic_array* array, void* item);
 
+sem_success sem_dynamic_array_remove(sem_dynamic_array* array, void* item);
+
 void sem_dynamic_array_destroy(sem_dynamic_array* array);
 
 #endif

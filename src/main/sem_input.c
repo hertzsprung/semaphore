@@ -72,6 +72,7 @@ sem_success move_train_action(sem_dynamic_array* heap, sem_action* action) {
 	sem_train* train = (sem_train*) action->context;
 	if (train->state == MOVING) {
 		if (sem_train_move(train) != SEM_OK) return SEM_ERROR;
+		// TODO: if derailed, don't reinsert a move action, but rather insert a remove_train action
 
 		action->time = action->time + 1000L;
 		sem_heap_insert(heap, action);

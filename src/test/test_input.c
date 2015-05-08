@@ -21,6 +21,7 @@ typedef struct {
 
 void test_input_null_action_for_unoccupied_coordinate(test_input_context* test_ctx, const void* data);
 void test_input_toggles_train_state(test_input_context* test_ctx, const void* data);
+void test_input_removes_derailed_train(test_input_context* test_ctx, const void* data);
 void test_input_null_action_on_blank_tile(test_input_context* test_ctx, const void* data);
 void test_input_switches_points(test_input_context* test_ctx, const void* data);
 
@@ -31,6 +32,7 @@ void test_input_teardown(test_input_context* test_ctx, const void* data);
 void add_tests_input(void) {
 	add_test_input("/input/null_action_for_unoccupied_coordinate", test_input_null_action_for_unoccupied_coordinate);
 	add_test_input("/input/toggles_train_state", test_input_toggles_train_state);
+	add_test_input("/input/removes_derailed_train", test_input_removes_derailed_train);
 	add_test_input("/input/null_action_on_blank_tile", test_input_null_action_on_blank_tile);
 	add_test_input("/input/switches_points", test_input_switches_points);
 }
@@ -116,6 +118,34 @@ void test_input_toggles_train_state(test_input_context* test_ctx, const void* da
 	g_assert_true(train->state == MOVING);
 	g_assert_true(train->position->x == 1);
 	g_assert_true(train->position->y == 0);
+}
+
+void test_input_removes_derailed_train(test_input_context* test_ctx, const void* data) {
+	#pragma unused(data)
+
+	sem_train* train = &(test_ctx->train);
+	sem_world* world = &(test_ctx->world);
+//	sem_dynamic_array* heap = &(test_ctx->heap);
+
+	sem_tile* tile = sem_tile_at(world, 0, 0);
+	sem_track trackW_E;
+	sem_track_set(&trackW_E, SEM_WEST, SEM_EAST);
+	sem_tile_set_track(tile, &trackW_E);
+
+	tile = sem_tile_at(world, 1, 0);
+	sem_track trackNW_E;
+	sem_track_set(&trackNW_E, SEM_NORTH | SEM_WEST, SEM_EAST);
+	sem_tile_set_points(tile, &trackNW_E);
+	tile->points[1] = &trackW_E;
+
+	train->state = MOVING;
+	train->direction = SEM_EAST;
+	sem_car car;
+	sem_coordinate_set(&(car.position), 0, 0);
+	car.track = &trackW_E;
+	sem_train_add_car(train, &car);
+
+	// TODO: create move_train_action, call it, check that it sticks a remove_train_action onto the heap
 }
 
 void test_input_null_action_on_blank_tile(test_input_context* test_ctx, const void* data) {

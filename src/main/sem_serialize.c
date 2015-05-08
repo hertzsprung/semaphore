@@ -253,7 +253,7 @@ sem_success read_car(FILE* in, sem_train* train) {
 	sem_tile* tile = sem_tile_at(train->world, x, y);
 	sem_track key;
 	sem_parse_track_part(&key, sem_tokenization_next(&tokens));
-	if (sem_track_matching(tile, &key, &(car->track)) != SEM_OK) return SEM_ERROR;
+	if (sem_tile_track_matching(tile, &key, &(car->track)) != SEM_OK) return SEM_ERROR;
 
 	free(line);
 

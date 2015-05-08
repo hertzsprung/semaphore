@@ -139,9 +139,9 @@ void sem_tile_set_signal(sem_tile* tile, sem_track* track, sem_signal* signal);
 void sem_track_set(sem_track* track, unit_vector start, unit_vector end);
 
 /**
- * \brief Find the piece of track matching the desired \ref key and return it in \arg destination.
+ * \brief Find the piece of track matching the desired \ref key and return it in \arg match.
  * Track may be found in active or inactive track for POINTS tiles.
  */
-sem_success sem_track_matching(sem_tile* tile, sem_track* key, sem_track** destination);
+sem_success sem_tile_track_matching(sem_tile* tile, sem_track* key, sem_track** match);
 
 #endif

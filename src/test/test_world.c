@@ -153,7 +153,20 @@ void test_world_train_not_accepted_on_unconnected_points(test_world_context* tes
 
 void test_world_track_matching_inactive_points(test_world_context* test_ctx, const void* data) {
 	#pragma unused(data)
-	#pragma unused(test_ctx)
-	g_assert_true(false);
-	// TODO
+	sem_world* world = &(test_ctx->world);
+
+	sem_tile* tile = sem_tile_at(world, 0, 0);
+	sem_track active_track;
+	sem_track_set(&active_track, SEM_NORTH, SEM_SOUTH);
+	sem_tile_set_points(tile, &active_track);
+
+	sem_track inactive_track;
+	sem_track_set(&inactive_track, SEM_NORTH, SEM_SOUTH | SEM_WEST);
+	tile->points[1] = &inactive_track;
+
+	sem_track* matched_track = NULL;
+	sem_tile_track_matching(tile, &inactive_track, &matched_track);
+
+	g_assert_false(matched_track == NULL);
+	g_assert_true(matched_track == &inactive_track);
 }

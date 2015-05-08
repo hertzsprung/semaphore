@@ -87,6 +87,8 @@ int main(/*int argc, char **argv*/) {
 	if (sem_serialize_load(map, &world) != SEM_OK) return sem_fatal_error();
 	fclose(map);
 
+	printf("\n");
+
 	cairo_scale(cr, render_ctx.scale, render_ctx.scale);
 
 	SDL_Event e;

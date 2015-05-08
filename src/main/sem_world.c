@@ -12,6 +12,7 @@
 sem_success sem_track_accept(sem_train* train, sem_track* track, sem_tile_acceptance* acceptance);
 sem_success sem_inactive_track_accept(sem_train* train, sem_tile* tile, sem_tile_acceptance* acceptance);
 void sem_destroy_signals(sem_world* world);
+void track_matching(sem_track* track, sem_track* key, sem_track** match);
 
 sem_success sem_world_init_blank(sem_world* world) {
 	world->timer = malloc(sizeof(sem_timer_context));
@@ -129,18 +130,32 @@ void sem_track_set(sem_track* track, unit_vector start, unit_vector end) {
 	track->next = NULL;
 }
 
-sem_success sem_track_matching(sem_tile* tile, sem_track* key, sem_track** destination) {
-	sem_track* t = tile->track;
+sem_success sem_tile_track_matching(sem_tile* tile, sem_track* key, sem_track** match) {
+	*match = NULL;
+	if (tile->class == POINTS) {
+		for (uint8_t i=0; i<3; i++) {
+			if (tile->points[i] == NULL) break;
+			track_matching(tile->points[i], key, match);
+			if (*match != NULL) return SEM_OK;
+		}
+	} else {
+		track_matching(tile->track, key, match);
+		if (*match != NULL) return SEM_OK;
+	}
+
+	return sem_set_error("Could not find desired track part in tile");
+}
+
+void track_matching(sem_track* track, sem_track* key, sem_track** match) {
+	sem_track* t = track;
 	do {
 		if ((key->start == t->start && key->end == t->end) ||
 		    (key->start == t->end && key->end == t->start)) {
-			*destination = t;
-			return SEM_OK;
+			*match = t;
+			return;
 		}
 		t = t->next;
 	} while (t != NULL);
-
-	return sem_set_error("Could not find desired track part in tile");
 }
 
 // private functions

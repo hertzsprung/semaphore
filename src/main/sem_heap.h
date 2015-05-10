@@ -23,6 +23,9 @@ sem_success sem_heap_init(sem_dynamic_array* heap);
 
 sem_success sem_heap_insert(sem_dynamic_array* heap, sem_action* entry);
 
+/**
+ * \return The \ref sem_action with the earliest time, or NULL if the heap is empty.
+ */
 sem_action* sem_heap_remove_earliest(sem_dynamic_array* heap);
 
 #endif

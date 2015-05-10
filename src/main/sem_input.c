@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "sem_input.h"
 
@@ -12,7 +13,7 @@
 
 sem_success switch_points_action(sem_dynamic_array* heap, sem_action* action);
 sem_success change_train_state(sem_dynamic_array* heap, sem_action* action);
-sem_success move_train_action(sem_dynamic_array* heap, sem_action* action);
+sem_success remove_train_action(sem_dynamic_array* heap, sem_action* action);
 
 sem_success sem_tile_input_act_upon(sem_input_event* input, sem_world* world, sem_action** action) {
 	sem_tile* tile = sem_tile_at_coord(world, input->tile);
@@ -72,11 +73,23 @@ sem_success move_train_action(sem_dynamic_array* heap, sem_action* action) {
 	sem_train* train = (sem_train*) action->context;
 	if (train->state == MOVING) {
 		if (sem_train_move(train) != SEM_OK) return SEM_ERROR;
-		// TODO: if derailed, don't reinsert a move action, but rather insert a remove_train action
 
-		action->time = action->time + 1000L;
+		if (train->state == DERAILED) {
+			action->time = action->time + 10000L;
+			action->function = remove_train_action;
+		} else {
+			action->time = action->time + 1000L;
+		}
+
 		sem_heap_insert(heap, action);
 	}
 
+	return SEM_OK;
+}
+
+sem_success remove_train_action(sem_dynamic_array* heap, sem_action* action) {
+	#pragma unused(heap)
+	sem_train* train = (sem_train*) action->context;
+	sem_dynamic_array_remove(train->world->trains, train);
 	return SEM_OK;
 }

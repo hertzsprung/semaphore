@@ -2,6 +2,9 @@
 #include <stdio.h>
 
 #include "test_serialize.h"
+#include "sem_dynamic_array.h"
+#include "sem_heap.h"
+#include "sem_input.h"
 #include "sem_serialize.h"
 #include "sem_world.h"
 
@@ -10,12 +13,14 @@ void test_serialize_save_load_blank_tiles(void);
 void test_serialize_save_load_track_tile(void);
 void test_serialize_save_load_train(void);
 void test_serialize_save_load_timer(void);
+void test_serialize_load_remove_train_action(void);
 
 void add_tests_serialize() {
 	g_test_add_func("/serialize/save_load_blank_tiles", test_serialize_save_load_blank_tiles);
 	g_test_add_func("/serialize/save_load_track_tile", test_serialize_save_load_track_tile);
 	g_test_add_func("/serialize/save_load_train", test_serialize_save_load_train);
 	g_test_add_func("/serialize/save_load_timer", test_serialize_save_load_timer);
+	g_test_add_func("/serialize/load_remove_train_action", test_serialize_load_remove_train_action);
 }
 
 FILE* save_and_load(char* filename, sem_world* world) {
@@ -147,6 +152,44 @@ void test_serialize_save_load_timer() {
 	g_assert_cmpuint(world.timer->now, ==, 123);
 	g_assert_cmpfloat(world.timer->multiplier, >, 1.59);
 	g_assert_cmpfloat(world.timer->multiplier, <, 1.61);
+
+	sem_world_destroy(&world);
+	fclose(file);
+}
+
+void test_serialize_load_remove_train_action() {
+	sem_world world;
+	world.max_x = 1;
+	world.max_y = 1;
+	sem_world_init_blank(&world);
+
+	sem_tile* tile = sem_tile_at(&world, 0, 0);
+	sem_track track;
+	sem_track_set(&track, SEM_WEST, SEM_EAST);
+	sem_tile_set_track(tile, &track);
+
+	sem_train train;
+	sem_train_init(&train);
+	train.state = DERAILED;
+	train.direction = SEM_EAST;
+	sem_car car;
+	sem_coordinate_set(&(car.position), 0, 0);
+	car.track = &track;
+	sem_train_add_car(&train, &car);
+	sem_world_add_train(&world, &train);
+	
+	sem_action action;
+	action.time = 5000;
+	action.function = remove_train_action;
+	action.context = &train;
+
+	sem_heap_insert(world.actions, &action);
+
+	FILE* file = save_and_load("build/test/remove_train_action", &world);
+
+//	sem_action* loaded_action = sem_heap_remove_earliest(world.actions);
+//	g_assert_false(loaded_action == NULL);
+//	TODO: get action off heap, call it, check that train has been removed
 
 	sem_world_destroy(&world);
 	fclose(file);

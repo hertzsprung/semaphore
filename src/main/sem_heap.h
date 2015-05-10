@@ -28,4 +28,8 @@ sem_success sem_heap_insert(sem_dynamic_array* heap, sem_action* entry);
  */
 sem_action* sem_heap_remove_earliest(sem_dynamic_array* heap);
 
+uint32_t sem_heap_size(sem_dynamic_array* heap);
+
+sem_action* sem_heap_peek(sem_dynamic_array* heap, uint32_t index);
+
 #endif

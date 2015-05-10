@@ -84,9 +84,11 @@ cars 3
 1 8 W-E
 0 8 W-E
 train 3
-state stopped
+state derailed
 direction W
 cars 3
 13 8 W-E
 14 8 W-E
 15 8 W-E
+actions 1
+10000 remove_train 3

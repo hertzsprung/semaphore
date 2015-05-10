@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <uuid/uuid.h>
 
 typedef struct sem_train sem_train;
 typedef struct sem_car sem_car;
@@ -25,6 +26,7 @@ struct sem_car {
 
 struct sem_train {
 	sem_world* world;
+    uuid_t id;
 	sem_train_state state;
 	sem_coordinate* position; /**< position of the train's head car */
 	uint8_t cars;

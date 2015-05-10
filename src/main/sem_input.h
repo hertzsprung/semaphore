@@ -20,5 +20,6 @@ sem_success sem_tile_input_act_upon(sem_input_event* input, sem_world* world, se
 sem_success sem_train_input_act_upon(sem_input_event* input, sem_world* world, sem_action** action);
 
 sem_success move_train_action(sem_dynamic_array* heap, sem_action* action); // TODO: should this really be public? only using it for tests
+sem_success remove_train_action(sem_dynamic_array* heap, sem_action* action);
 
 #endif

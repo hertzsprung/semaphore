@@ -72,3 +72,11 @@ void sem_heap_percolate_down(sem_dynamic_array* heap, uint32_t hole) {
 	}
 	heap->items[hole] = tmp;
 }
+
+uint32_t sem_heap_size(sem_dynamic_array* heap) {
+	return heap->tail_idx - 1;
+}
+
+sem_action* sem_heap_peek(sem_dynamic_array* heap, uint32_t index) {
+	return heap->items[index+1];
+}

@@ -13,7 +13,6 @@
 
 sem_success switch_points_action(sem_dynamic_array* heap, sem_action* action);
 sem_success change_train_state(sem_dynamic_array* heap, sem_action* action);
-sem_success remove_train_action(sem_dynamic_array* heap, sem_action* action);
 
 sem_success sem_tile_input_act_upon(sem_input_event* input, sem_world* world, sem_action** action) {
 	sem_tile* tile = sem_tile_at_coord(world, input->tile);

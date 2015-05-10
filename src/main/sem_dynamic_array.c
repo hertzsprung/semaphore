@@ -58,3 +58,4 @@ sem_success sem_dynamic_array_extend_tail(sem_dynamic_array* array) {
 	array->tail_idx++;
 	return SEM_OK;
 }
+

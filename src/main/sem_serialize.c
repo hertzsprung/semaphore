@@ -4,6 +4,7 @@
 
 #include "sem_serialize.h"
 #include "sem_error.h"
+#include "sem_heap.h"
 #include "sem_parser.h"
 #include "sem_strings.h"
 
@@ -26,6 +27,8 @@ sem_success write_trains(FILE* out, sem_dynamic_array* trains);
 sem_success write_train(FILE* out, sem_train* train);
 sem_success write_train_state(FILE* out, sem_train_state state);
 sem_success write_car(FILE* out, sem_car* car);
+sem_success write_actions(FILE* out, sem_dynamic_array* actions);
+sem_success write_action(FILE* out, sem_action* action);
 
 sem_success sem_serialize_load(FILE* in, sem_world* world) {
 	if (in == NULL) return sem_set_error("File does not exist");
@@ -43,6 +46,7 @@ sem_success sem_serialize_save(FILE* out, sem_world* world) {
 	if (write_timer(out, world) != SEM_OK) return SEM_ERROR;
 	if (write_tiles(out, world) != SEM_OK) return SEM_ERROR;
 	if (write_trains(out, world->trains) != SEM_OK) return SEM_ERROR;
+	if (write_actions(out, world->actions) != SEM_OK) return SEM_ERROR;
 
 	return SEM_OK;
 }
@@ -159,8 +163,8 @@ sem_success read_train(FILE* in, sem_world* world) {
 	train->world = world;
 
 	char* line = sem_read_line(in);
-	if (line == NULL) return sem_set_error("Could not read train name");
-	// TODO: check first token is "train", second token is train name
+	if (line == NULL) return sem_set_error("Could not read train identifier");
+	// TODO: check first token is "train", second token is train identifier
 	free(line);
 
 	if (read_train_state(in, train) != SEM_OK) return SEM_ERROR;
@@ -349,6 +353,20 @@ sem_success write_train_state(FILE* out, sem_train_state state) {
 sem_success write_car(FILE* out, sem_car* car) {	
 	fprintf(out, "%d %d ", car->position.x, car->position.y);
 	sem_print_track_part(out, car->track);
+	fprintf(out, "\n");
+	return SEM_OK;
+}
+
+sem_success write_actions(FILE* out, sem_dynamic_array* actions) {
+	fprintf(out, "actions %u\n", sem_heap_size(actions));
+	for (uint32_t i=0; i<sem_heap_size(actions); i++) {
+		if (write_action(out, sem_heap_peek(actions, i)) != SEM_OK) return SEM_ERROR;
+	}
+	return SEM_OK;
+}
+
+sem_success write_action(FILE* out, sem_action* action) {
+	fprintf(out, "%lu ", action->time);
 	fprintf(out, "\n");
 	return SEM_OK;
 }

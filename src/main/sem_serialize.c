@@ -294,12 +294,16 @@ sem_success read_action(FILE* in, sem_world* world) {
 	uint32_t time = sem_parse_uint32_t(sem_tokenization_next(&tokens));
 	char* action_name = sem_tokenization_next(&tokens);
 
-	sem_action_reader reader = sem_action_reader_lookup(action_name);
-	sem_action* action;
-	if (reader(in, &action) != SEM_OK) return SEM_ERROR;
-	action->time = time;
+	sem_action_reader read = sem_action_reader_lookup(action_name);
 
-	sem_heap_insert(world->actions, action);
+	// FIXME: temporary guard because we don't serialize all types of action
+	if (read != NULL) {
+		sem_action* action;
+		if (read(in, world, &action) != SEM_OK) return SEM_ERROR;
+		action->time = time;
+
+		sem_heap_insert(world->actions, action);
+	}
 
 	return SEM_OK;
 }
@@ -407,7 +411,12 @@ sem_success write_actions(FILE* out, sem_dynamic_array* actions) {
 
 sem_success write_action(FILE* out, sem_action* action) {
 	fprintf(out, "%lu ", action->time);
-	if (action->write(out, action) != SEM_OK) return SEM_ERROR;
+	// FIXME: temporary until we're serializing all types of action
+	if (action->write == NULL) {
+		fprintf(out, "unknown_action");
+	} else {
+		if (action->write(out, action) != SEM_OK) return SEM_ERROR;
+	}
 	fprintf(out, "\n");
 	return SEM_OK;
 }

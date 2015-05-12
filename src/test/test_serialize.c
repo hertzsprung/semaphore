@@ -193,7 +193,9 @@ void test_serialize_load_remove_train_action() {
 
 	sem_action* loaded_action = sem_heap_remove_earliest(world.actions);
 	g_assert_false(loaded_action == NULL);
-//	TODO: get action off heap, call it, check that train has been removed
+	g_assert_true(loaded_action->function(world.actions, loaded_action) == SEM_OK);
+
+	g_assert_cmpuint(world.trains->tail_idx, ==, 0);
 
 	sem_world_destroy(&world);
 	fclose(file);

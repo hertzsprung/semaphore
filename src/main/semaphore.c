@@ -32,7 +32,8 @@ int main(/*int argc, char **argv*/) {
 	atexit(SDL_Quit);
 
 	SDL_Window* window;
-	window = SDL_CreateWindow("semaphore", 0, 0, 0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP);
+	//window = SDL_CreateWindow("semaphore", 0, 0, 0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP);
+	window = SDL_CreateWindow("semaphore", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 768, 0);
 	if (window == NULL) {
 		sem_set_error("Unable to create window: %s", SDL_GetError());
 		return sem_fatal_error();

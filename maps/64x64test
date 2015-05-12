@@ -63,32 +63,32 @@ tiles 59
 8 1 points NE-S W-NE
 trains 4
 train 0
+state derailed
+direction E
+cars 3
+2 8 W-E
+1 8 W-E
+0 8 W-E
+train 1
+state stopped
+direction W
+cars 3
+13 8 W-E
+14 8 W-E
+15 8 W-E
+train 2
 state stopped
 direction E
 cars 3
 2 0 W-E
 1 0 SW-E
 0 1 S-NE
-train 1
+train 3
 state stopped
 direction W
 cars 3
 10 0 W-E
 11 0 W-SE
 12 1 S-NW
-train 2
-state stopped
-direction E
-cars 3
-2 8 W-E
-1 8 W-E
-0 8 W-E
-train 3
-state derailed
-direction W
-cars 3
-13 8 W-E
-14 8 W-E
-15 8 W-E
 actions 1
-10000 remove_train 3
+10000 remove_train 0

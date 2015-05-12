@@ -8,6 +8,7 @@ sem_action* sem_action_new() {
 		sem_set_error("Could not create action");
 		return NULL;
 	}
+	action->write = NULL;
 	action->dynamically_allocated = true;
 	return action;
 }

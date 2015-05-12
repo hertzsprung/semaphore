@@ -8,6 +8,7 @@
 #include "sem_dynamic_array.h"
 #include "sem_error.h"
 #include "sem_heap.h"
+#include "sem_serialize_actions.h"
 #include "sem_train.h"
 #include "sem_world.h"
 
@@ -76,6 +77,7 @@ sem_success move_train_action(sem_dynamic_array* heap, sem_action* action) {
 		if (train->state == DERAILED) {
 			action->time = action->time + 10000L;
 			action->function = remove_train_action;
+			action->write = sem_remove_train_action_write;
 		} else {
 			action->time = action->time + 1000L;
 		}

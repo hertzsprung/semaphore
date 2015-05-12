@@ -3,6 +3,7 @@
 
 #include <inttypes.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #include "sem_dynamic_array.h"
 #include "sem_error.h"
@@ -10,11 +11,13 @@
 typedef struct sem_action sem_action;
 
 typedef sem_success (*sem_action_func)(sem_dynamic_array* heap, sem_action* action);
+typedef sem_success (*sem_write_action_func)(FILE* out, sem_action* action);
 
 struct sem_action {
 	uint64_t time;
 	void* context;
 	sem_action_func function;
+    sem_write_action_func write;
 	bool dynamically_allocated; /**< If true, the action will be freed by sem_action_list_execute() after it is executed */
 	bool destroyable; /**< If true, the action will be destroyed after its function has been executed.  If false, the action will be reinserted onto the heap. */
 };

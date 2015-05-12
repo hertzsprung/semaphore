@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "sem_serialize.h"
+#include "sem_serialize_actions.h"
 #include "sem_error.h"
 #include "sem_heap.h"
 #include "sem_parser.h"
@@ -19,6 +20,8 @@ sem_success read_train_state(FILE* in, sem_train* train);
 sem_success read_train_direction(FILE* in, sem_train* train);
 sem_success read_train_cars(FILE* in, sem_train* train);
 sem_success read_car(FILE* in, sem_train* train);
+sem_success read_actions(FILE* in, sem_world* world);
+sem_success read_action(FILE* in, sem_world* world);
 
 sem_success write_timer(FILE* out, sem_world* world);
 sem_success write_tiles(FILE* out, sem_world* world);
@@ -38,6 +41,7 @@ sem_success sem_serialize_load(FILE* in, sem_world* world) {
 	if (read_multiplier(in, world) != SEM_OK) return SEM_ERROR;
 	if (read_tiles(in, world) != SEM_OK) return SEM_ERROR;
 	if (read_trains(in, world) != SEM_OK) return SEM_ERROR;
+	if (read_actions(in, world) != SEM_OK) return SEM_ERROR;
 	return SEM_OK;
 }
 
@@ -145,13 +149,11 @@ sem_success read_trains(FILE* in, sem_world* world) {
 	// TODO: check token is "trains"
 	
 	uint32_t trains = sem_parse_uint32_t(sem_tokenization_next(&tokens));
+	free(line);
 
 	for (uint32_t i=0; i < trains; i++) {
-		sem_success success = read_train(in, world);
-		if (success != SEM_OK) return success;
+		if (read_train(in, world) != SEM_OK) return SEM_ERROR;
 	}
-
-	free(line);
 
 	return SEM_OK;
 }
@@ -264,6 +266,44 @@ sem_success read_car(FILE* in, sem_train* train) {
 	return sem_train_add_car(train, car);
 }
 
+sem_success read_actions(FILE* in, sem_world* world) {
+	char* line = sem_read_line(in);
+	if (line == NULL) return sem_set_error("Could not read actions count");
+
+	sem_tokenization tokens;
+	sem_tokenization_init(&tokens, line, " ");
+	sem_tokenization_next(&tokens);
+	// TODO: check token is "actions"
+	
+	uint32_t actions = sem_parse_uint32_t(sem_tokenization_next(&tokens));
+	free(line);
+
+	for (uint32_t i=0; i < actions; i++) {
+		if (read_action(in, world) != SEM_OK) return SEM_ERROR;
+	}
+
+	return SEM_OK;
+}
+
+sem_success read_action(FILE* in, sem_world* world) {
+	char* line = sem_read_line(in);
+	if (line == NULL) return sem_set_error("Could not read action");
+
+	sem_tokenization tokens;
+	sem_tokenization_init(&tokens, line, " ");
+	uint32_t time = sem_parse_uint32_t(sem_tokenization_next(&tokens));
+	char* action_name = sem_tokenization_next(&tokens);
+
+	sem_action_reader reader = sem_action_reader_lookup(action_name);
+	sem_action* action;
+	if (reader(in, &action) != SEM_OK) return SEM_ERROR;
+	action->time = time;
+
+	sem_heap_insert(world->actions, action);
+
+	return SEM_OK;
+}
+
 sem_success write_timer(FILE* out, sem_world* world) {
 	fprintf(out, "now %lu\nmultiplier %lf\n", world->timer->now, world->timer->multiplier);
 
@@ -367,6 +407,7 @@ sem_success write_actions(FILE* out, sem_dynamic_array* actions) {
 
 sem_success write_action(FILE* out, sem_action* action) {
 	fprintf(out, "%lu ", action->time);
+	if (action->write(out, action) != SEM_OK) return SEM_ERROR;
 	fprintf(out, "\n");
 	return SEM_OK;
 }

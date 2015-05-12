@@ -6,6 +6,7 @@
 #include "sem_heap.h"
 #include "sem_input.h"
 #include "sem_serialize.h"
+#include "sem_serialize_actions.h"
 #include "sem_world.h"
 
 FILE* save_and_load(char* filename, sem_world* world);
@@ -178,17 +179,20 @@ void test_serialize_load_remove_train_action() {
 	sem_train_add_car(&train, &car);
 	sem_world_add_train(&world, &train);
 	
+	// TODO: should fetch a partially-initialised sem_action from
+	// a factory method
 	sem_action action;
 	action.time = 5000;
 	action.function = remove_train_action;
+	action.write = sem_remove_train_action_write;
 	action.context = &train;
 
 	sem_heap_insert(world.actions, &action);
 
 	FILE* file = save_and_load("build/test/remove_train_action", &world);
 
-//	sem_action* loaded_action = sem_heap_remove_earliest(world.actions);
-//	g_assert_false(loaded_action == NULL);
+	sem_action* loaded_action = sem_heap_remove_earliest(world.actions);
+	g_assert_false(loaded_action == NULL);
 //	TODO: get action off heap, call it, check that train has been removed
 
 	sem_world_destroy(&world);

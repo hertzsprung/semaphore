@@ -23,6 +23,7 @@ typedef struct {
 void test_input_null_action_for_unoccupied_coordinate(test_input_context* test_ctx, const void* data);
 void test_input_toggles_train_state(test_input_context* test_ctx, const void* data);
 void test_input_removes_derailed_train(test_input_context* test_ctx, const void* data);
+void test_input_unremoves_derailed_train_after_crash(test_input_context* test_ctx, const void* data);
 void test_input_null_action_on_blank_tile(test_input_context* test_ctx, const void* data);
 void test_input_switches_points(test_input_context* test_ctx, const void* data);
 
@@ -31,11 +32,12 @@ void test_input_setup(test_input_context* test_ctx, const void* data);
 void test_input_teardown(test_input_context* test_ctx, const void* data);
 
 void add_tests_input(void) {
-//	add_test_input("/input/null_action_for_unoccupied_coordinate", test_input_null_action_for_unoccupied_coordinate);
-//	add_test_input("/input/toggles_train_state", test_input_toggles_train_state);
+	add_test_input("/input/null_action_for_unoccupied_coordinate", test_input_null_action_for_unoccupied_coordinate);
+	add_test_input("/input/toggles_train_state", test_input_toggles_train_state);
 	add_test_input("/input/removes_derailed_train", test_input_removes_derailed_train);
-//	add_test_input("/input/null_action_on_blank_tile", test_input_null_action_on_blank_tile);
-//	add_test_input("/input/switches_points", test_input_switches_points);
+	add_test_input("/input/unremoves_derailed_train_after_crash", test_input_unremoves_derailed_train_after_crash);
+	add_test_input("/input/null_action_on_blank_tile", test_input_null_action_on_blank_tile);
+	add_test_input("/input/switches_points", test_input_switches_points);
 }
 
 void add_test_input(const char *test_name, void (*test)(test_input_context*, const void* data)) {
@@ -157,6 +159,12 @@ void test_input_removes_derailed_train(test_input_context* test_ctx, const void*
 	remove_train_action->function(heap, remove_train_action);
 
 	g_assert_cmpuint(world->trains->tail_idx, ==, 0);
+}
+
+void test_input_unremoves_derailed_train_after_crash(test_input_context* test_ctx, const void* data) {
+	#pragma unused(test_ctx)
+	#pragma unused(data)
+	// TODO
 }
 
 void test_input_null_action_on_blank_tile(test_input_context* test_ctx, const void* data) {

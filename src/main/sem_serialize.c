@@ -311,7 +311,7 @@ sem_success read_action(FILE* in, sem_world* world) {
 	// FIXME: temporary guard because we don't serialize all types of action
 	if (read != NULL) {
 		sem_action* action;
-		if (read(in, world, &action) != SEM_OK) return SEM_ERROR;
+		if (read(&tokens, world, &action) != SEM_OK) return SEM_ERROR;
 		action->time = time;
 
 		sem_heap_insert(world->actions, action);

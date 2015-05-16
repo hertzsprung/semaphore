@@ -210,8 +210,8 @@ void test_serialize_load_remove_train_action() {
 
 	g_assert_cmpuint(world.trains->tail_idx, ==, 1);
 
-	//sem_train* remaining_train = (sem_train*) world.trains->items[0];
-	//g_assert_true(uuid_compare(remaining_train->id, train1.id) == 0);
+	sem_train* remaining_train = (sem_train*) world.trains->items[0];
+	g_assert_true(uuid_compare(remaining_train->id, train1.id) == 0);
 
 	sem_world_destroy(&world);
 	fclose(file);

@@ -62,28 +62,28 @@ tiles 59
 4 3 points SW-N SW-E
 8 1 points NE-S W-NE
 trains 4
-train 0
-state derailed
-direction E
-cars 3
-2 8 W-E
-1 8 W-E
-0 8 W-E
-train 1
+train 107207dc-d4de-4ee5-accf-26ae19404603
 state stopped
 direction W
 cars 3
 13 8 W-E
 14 8 W-E
 15 8 W-E
-train 2
+train ca78820d-d3eb-4b7b-bafa-094cfb9fb9da
 state stopped
 direction E
 cars 3
 2 0 W-E
 1 0 SW-E
 0 1 S-NE
-train 3
+train 305211b8-799f-4ee7-afb5-303e4edcfaf9
+state derailed
+direction E
+cars 3
+2 8 W-E
+1 8 W-E
+0 8 W-E
+train 81cbbfd6-43c8-4143-a345-ee9e27dd0e8b
 state stopped
 direction W
 cars 3
@@ -91,4 +91,4 @@ cars 3
 11 0 W-SE
 12 1 S-NW
 actions 1
-10000 remove_train 0
+10000 remove_train 305211b8-799f-4ee7-afb5-303e4edcfaf9

@@ -4,6 +4,8 @@
 typedef struct sem_world sem_world;
 typedef struct sem_track sem_track;
 
+#include <uuid/uuid.h>
+
 #include "sem_compass.h"
 #include "sem_dynamic_array.h"
 #include "sem_error.h"
@@ -99,6 +101,8 @@ void sem_world_destroy(sem_world* world);
  * @return \ref SEM_OK on success, or \ref SEM_ERROR if there was insufficient memory to add the train to the world.
  */
 sem_success sem_world_add_train(sem_world* world, sem_train* train);
+
+sem_train* sem_train_by_id(sem_world* world, uuid_t id);
 
 sem_tile* sem_tile_at_coord(sem_world* world, sem_coordinate* c);
 

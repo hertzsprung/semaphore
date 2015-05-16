@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <uuid/uuid.h>
 
 #include "sem_train.h"
 
@@ -13,6 +14,7 @@ void train_move_trailing(sem_car* tail_car);
 sem_train* train_detect_collision(sem_train* train);
 
 sem_success sem_train_init(sem_train* train) {
+	uuid_generate(train->id);
 	train->state = STOPPED;
 	train->direction = 0;
 	train->cars = 0;

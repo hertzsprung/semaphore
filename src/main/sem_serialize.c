@@ -16,6 +16,7 @@ sem_success read_tiles(FILE* in, sem_world* world);
 sem_success read_tile(FILE* in, sem_world* world);
 sem_success read_trains(FILE* in, sem_world* world);
 sem_success read_train(FILE* in, sem_world* world);
+sem_success read_train_id(FILE* in, sem_train* train);
 sem_success read_train_state(FILE* in, sem_train* train);
 sem_success read_train_direction(FILE* in, sem_train* train);
 sem_success read_train_cars(FILE* in, sem_train* train);
@@ -164,16 +165,27 @@ sem_success read_train(FILE* in, sem_world* world) {
 	sem_train_init(train);
 	train->world = world;
 
-	char* line = sem_read_line(in);
-	if (line == NULL) return sem_set_error("Could not read train identifier");
-	// TODO: check first token is "train", second token is train identifier
-	free(line);
-
+	if (read_train_id(in, train) != SEM_OK) return SEM_ERROR;
 	if (read_train_state(in, train) != SEM_OK) return SEM_ERROR;
 	if (read_train_direction(in, train) != SEM_OK) return SEM_ERROR;
 	if (read_train_cars(in, train) != SEM_OK) return SEM_ERROR;
 
 	sem_dynamic_array_add(world->trains, train);
+
+	return SEM_OK;
+}
+
+sem_success read_train_id(FILE* in, sem_train* train) {
+	char* line = sem_read_line(in);
+	if (line == NULL) return sem_set_error("Could not read train identifier");
+	// TODO: check first token is "train", second token is train identifier
+
+	sem_tokenization tokens;
+	sem_tokenization_init(&tokens, line, " ");
+	sem_tokenization_next(&tokens);
+	char* id_str = sem_tokenization_next(&tokens);
+	uuid_parse(id_str, train->id);
+	free(line);
 
 	return SEM_OK;
 }
@@ -357,7 +369,9 @@ sem_success write_trains(FILE* out, sem_dynamic_array* trains) {
 }
 
 sem_success write_train(FILE* out, sem_train* train) {
-	fprintf(out, "train IC-123\n");
+	char id_str[37];
+	uuid_unparse(train->id, id_str);
+	fprintf(out, "train %s\n", id_str);
 	if (write_train_state(out, train->state) != SEM_OK) return SEM_ERROR;
 	fprintf(out, "direction ");
 	if (sem_print_endpoint(out, train->direction) != SEM_OK) return SEM_ERROR;

@@ -21,9 +21,9 @@ WARNINGS := -pedantic-errors -Werror -Weverything \
 -Wno-format-nonliteral
 COMMON_CFLAGS := $(WARNINGS) -O0 -g -std=gnu99
 CFLAGS := $(COMMON_CFLAGS) $(SDL_CFLAGS) $(CAIRO_CFLAGS) $(GLIB_CFLAGS)
-LDFLAGS := $(SDL_LDFLAGS) $(CAIRO_LDFLAGS) $(GLIB_LDFLAGS) -lrt -lm
+LDFLAGS := $(SDL_LDFLAGS) $(CAIRO_LDFLAGS) $(GLIB_LDFLAGS) -lrt -lm -luuid
 TEST_CFLAGS := -Isrc/main $(COMMON_CFLAGS) $(GLIB_CFLAGS)
-TEST_LDFLAGS := $(GLIB_LDFLAGS)
+TEST_LDFLAGS := $(GLIB_LDFLAGS) -luuid
 
 COMPONENTS := semaphore sem_action sem_action_list sem_compass sem_dynamic_array sem_error sem_heap sem_input sem_render sem_serialize sem_serialize_actions sem_strings sem_parser sem_timer sem_track_cache sem_train sem_world
 SOURCES := $(addsuffix .c,$(addprefix src/main/,$(COMPONENTS)))

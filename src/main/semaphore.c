@@ -20,6 +20,7 @@
 #include "sem_input.h"
 #include "sem_render.h"
 #include "sem_serialize.h"
+#include "sem_serialize_railpro.h"
 #include "sem_timer.h"
 #include "sem_train.h"
 #include "sem_world.h"
@@ -32,7 +33,7 @@ int main(/*int argc, char **argv*/) {
 	atexit(SDL_Quit);
 
 	SDL_Window* window;
-	//window = SDL_CreateWindow("semaphore", 0, 0, 0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP);
+//	window = SDL_CreateWindow("semaphore", 0, 0, 0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP);
 	window = SDL_CreateWindow("semaphore", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 768, 0);
 	if (window == NULL) {
 		sem_set_error("Unable to create window: %s", SDL_GetError());
@@ -83,9 +84,11 @@ int main(/*int argc, char **argv*/) {
 	render_ctx.style = &render_style;
 	sem_render_default_style(&render_style);
 
-	FILE* map = fopen("maps/64x64test", "r");
 	sem_world world;
-	if (sem_serialize_load(map, &world) != SEM_OK) return sem_fatal_error();
+	//FILE* map = fopen("maps/64x64test", "r");
+	//if (sem_serialize_load(map, &world) != SEM_OK) return sem_fatal_error();
+	FILE* map = fopen("maps/crazy.railpro", "r");
+	if (sem_serialize_load_railpro(map, &world) != SEM_OK) return sem_fatal_error();
 	fclose(map);
 
 	printf("\n");
@@ -173,7 +176,7 @@ int main(/*int argc, char **argv*/) {
 
 		char buf[128] = "";
 		snprintf(buf, sizeof(buf), "frame: %ld, game time: %ld, multiplier: %f", frames, world.timer->now, world.timer->multiplier);
-		cairo_move_to(cr, 0, 14);
+		cairo_move_to(cr, 0, 1);
 		cairo_set_font_size(cr, 0.7);
 		cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
 		cairo_show_text(cr, buf);

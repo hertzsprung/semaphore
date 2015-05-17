@@ -43,6 +43,7 @@ sem_success sem_serialize_load(FILE* in, sem_world* world) {
 	if (read_tiles(in, world) != SEM_OK) return SEM_ERROR;
 	if (read_trains(in, world) != SEM_OK) return SEM_ERROR;
 	if (read_actions(in, world) != SEM_OK) return SEM_ERROR;
+
 	return SEM_OK;
 }
 

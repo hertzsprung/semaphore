@@ -10,7 +10,7 @@ typedef struct sem_track_cache sem_track_cache;
 
 struct sem_track_cache {
 	GHashTable* table;
-}; 
+};
 
 sem_success sem_track_cache_init(sem_track_cache* track_cache);
 

@@ -101,6 +101,7 @@ sem_success sem_tile_accept(sem_train* train, sem_tile* tile, sem_tile_acceptanc
 	case BLANK:
 		return sem_set_error("Train ran onto blank tile");
 	case TRACK:
+	case BUFFER: // TODO: buffer logic
 	case SIGNAL: // TODO: signalling logic
 		return sem_track_accept(train, tile->track, acceptance);
 	case POINTS:

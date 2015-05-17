@@ -9,6 +9,7 @@ typedef struct {
 	cairo_pattern_t* canvas;
 	cairo_pattern_t* track_front_color;
 	cairo_pattern_t* points_highlight_color;
+	cairo_pattern_t* buffer_color;
 	cairo_pattern_t* signal_red;
 	cairo_pattern_t* signal_amber;
 	cairo_pattern_t* signal_green;
@@ -28,6 +29,7 @@ typedef struct {
 	double signal_main_manual_rect_width;
 	double signal_main_manual_rect_height;
 	double signal_main_manual_rect_radius;
+	double buffer_size;
 } sem_render_style;
 
 typedef struct {

@@ -22,6 +22,7 @@ void render_signal_aspect(sem_render_context* ctx, sem_signal_aspect aspect);
 void render_signal_aspect_unstroked(sem_render_context* ctx, sem_signal_aspect aspect);
 void render_signal_set_aspect(sem_render_context* ctx, sem_signal_aspect aspect);
 void render_signal_circle(sem_render_context* ctx, double offset_x, double offset_y, double radius);
+void render_tile_buffer(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
 void render_train(sem_render_context* ctx, sem_train* train);
 void render_train_name(sem_render_context* ctx, sem_train* train);
 void render_track_path(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
@@ -63,6 +64,8 @@ void render_tile(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile) 
 	case SIGNAL:
 		render_tile_signal(ctx, coord, tile);
 		return;
+	case BUFFER:
+		render_tile_buffer(ctx, coord, tile);
 	}
 }
 
@@ -267,6 +270,25 @@ void render_signal_set_aspect(sem_render_context* ctx, sem_signal_aspect aspect)
 	}
 }
 
+void render_tile_buffer(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile) {
+	render_track(ctx, coord, tile->track);
+
+	cairo_save(ctx->cr);
+	cairo_translate(ctx->cr, coord.x + 0.5, coord.y + 0.5);
+	cairo_rotate(ctx->cr, sem_compass_rotation(tile->track->start));
+
+	double buffer_size = ctx->style->buffer_size;
+
+	cairo_set_line_width(ctx->cr, 0.05);
+	cairo_rectangle(ctx->cr, -buffer_size/2.0,-buffer_size/2.0,buffer_size,buffer_size);
+	cairo_set_source(ctx->cr, ctx->style->buffer_color);
+	cairo_fill_preserve(ctx->cr);
+	cairo_set_source_rgb(ctx->cr, 0.0, 0.0, 0.0);
+	cairo_stroke(ctx->cr);
+
+	cairo_restore(ctx->cr);
+}
+
 void render_train(sem_render_context* ctx, sem_train* train) {
 	sem_car* car = train->head_car;
 	while (car != NULL) {
@@ -325,6 +347,7 @@ sem_success sem_render_default_style(sem_render_style* style) {
 	style->canvas = cairo_pattern_create_rgb(0.0, 0.53125, 0.26525);
 	style->track_front_color = cairo_pattern_create_rgb(0.53125, 0.796875, 0.796875);
 	style->points_highlight_color = cairo_pattern_create_rgb(0.2, 1.0, 1.0);
+	style->buffer_color = cairo_pattern_create_rgb(1.0, 0.2, 0.2);
 	style->signal_red = cairo_pattern_create_rgb(1.0, 0.2, 0.2);
 	style->signal_amber = cairo_pattern_create_rgb(1.0, 0.75, 0.0);
 	style->signal_green = cairo_pattern_create_rgb(0.0, 1.0, 0.0);
@@ -344,5 +367,6 @@ sem_success sem_render_default_style(sem_render_style* style) {
 	style->signal_sub_major_height = 0.2;
 	style->signal_sub_minor_width = 0.22;
 	style->signal_sub_minor_height = 0.15;
+	style->buffer_size = 0.4;
 	return SEM_OK;
 }

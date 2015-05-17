@@ -14,7 +14,7 @@ typedef struct sem_track sem_track;
 #include "sem_train.h"
 
 typedef enum {
-	BLANK, TRACK, POINTS, SIGNAL
+	BLANK, TRACK, POINTS, SIGNAL, BUFFER
 } sem_tile_class;
 
 typedef enum {

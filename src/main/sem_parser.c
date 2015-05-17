@@ -21,6 +21,8 @@ sem_success sem_tile_parse(sem_tile* tile, sem_tokenization* tile_description, s
 		tile->class = POINTS;
 	} else if (strcmp(class, "signal") == 0) {
 		tile->class = SIGNAL;
+	} else if (strcmp(class, "buffer") == 0) {
+		tile->class = BUFFER;
 	} else {
 		return sem_set_error("Unknown tile class");
 	}
@@ -154,6 +156,9 @@ sem_success sem_tile_print(FILE* out, sem_tile* tile) {
 		break;
 	case SIGNAL:
 		fprintf(out, "signal");
+		break;
+	case BUFFER:
+		fprintf(out, "buffer");
 		break;
 	}
 

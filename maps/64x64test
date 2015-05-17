@@ -1,7 +1,7 @@
 world 64 64
 now 0
 multiplier 1.0
-tiles 59
+tiles 60
 0 9 track W-E
 1 9 track W-E
 2 9 track W-E
@@ -28,6 +28,7 @@ tiles 59
 13 9 track W-E
 14 9 track W-E
 15 9 track W-E
+16 9 buffer W-E
 2 1 track W-E
 2 5 signal W-E amber main auto
 10 1 track W-E

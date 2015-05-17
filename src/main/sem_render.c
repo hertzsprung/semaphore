@@ -26,6 +26,10 @@ void render_train(sem_render_context* ctx, sem_train* train);
 void render_track_path(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
 
 void sem_render_world(sem_render_context* ctx, sem_world* world) {
+	cairo_rectangle(ctx->cr, 0, 0, world->max_x, world->max_y);
+	cairo_set_source(ctx->cr, ctx->style->canvas);
+	cairo_fill(ctx->cr);
+
 	render_tiles(ctx, world);
 	for (uint32_t i=0; i < world->trains->tail_idx; i++) {
 		render_train(ctx, world->trains->items[i]);

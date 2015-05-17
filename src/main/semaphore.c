@@ -132,6 +132,14 @@ int main(int argc, char **argv) {
 					FILE* save = fopen("build/main/saved_map", "w");
 					if (sem_serialize_save(save, &world) != SEM_OK) return sem_fatal_error();
 					fclose(save);
+				} else if (e.key.keysym.sym == SDLK_LEFT) {
+					cairo_translate(cr, 1.0, 0.0);
+				} else if (e.key.keysym.sym == SDLK_RIGHT) {
+					cairo_translate(cr, -1.0, 0.0);
+				} else if (e.key.keysym.sym == SDLK_UP) {
+					cairo_translate(cr, 0.0, 1.0);
+				} else if (e.key.keysym.sym == SDLK_DOWN) {
+					cairo_translate(cr, 0.0, -1.0);
 				} else {
 					quit = true;
 				}
@@ -176,10 +184,6 @@ int main(int argc, char **argv) {
 				}
 			}
 		}
-
-		cairo_set_source(cr, render_style.canvas);
-		cairo_rectangle(cr, 0, 0, width-1, height-1);
-		cairo_fill(cr);
 
 		if (sem_action_list_execute(world.actions, world.timer->now) != SEM_OK) {
 			return sem_fatal_error();

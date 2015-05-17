@@ -1,3 +1,4 @@
+#include <getopt.h>
 #include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -25,7 +26,15 @@
 #include "sem_train.h"
 #include "sem_world.h"
 
-int main(/*int argc, char **argv*/) {
+int main(int argc, char **argv) {
+	int fullscreen;
+	int c;
+	struct option long_options[] = { {"fullscreen", no_argument, &fullscreen, true}, {0,0,0,0}};
+	do {
+		int option_index = 0;
+		c = getopt_long(argc, argv, "", long_options, &option_index);
+	} while (c != -1);
+
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
 		sem_set_error("Unable to initialize SDL: %s", SDL_GetError());
 		return sem_fatal_error();
@@ -33,8 +42,11 @@ int main(/*int argc, char **argv*/) {
 	atexit(SDL_Quit);
 
 	SDL_Window* window;
-//	window = SDL_CreateWindow("semaphore", 0, 0, 0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP);
-	window = SDL_CreateWindow("semaphore", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 768, 0);
+	if (fullscreen) {
+		window = SDL_CreateWindow("semaphore", 0, 0, 0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP);
+	} else {
+		window = SDL_CreateWindow("semaphore", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 768, 0);
+	}
 	if (window == NULL) {
 		sem_set_error("Unable to create window: %s", SDL_GetError());
 		return sem_fatal_error();
@@ -84,8 +96,14 @@ int main(/*int argc, char **argv*/) {
 	render_ctx.style = &render_style;
 	sem_render_default_style(&render_style);
 
+	FILE* map;
+	if (optind < argc) {
+		map = fopen(argv[optind], "r");
+	} else {
+		map = fopen("maps/64x64test", "r");
+	}
+
 	sem_world world;
-	FILE* map = fopen("maps/64x64test", "r");
 	if (sem_serialize_load(map, &world) != SEM_OK) return sem_fatal_error();
 	//FILE* map = fopen("maps/crazy.railpro", "r");
 	//if (sem_serialize_load_railpro(map, &world) != SEM_OK) return sem_fatal_error();

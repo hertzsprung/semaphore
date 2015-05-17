@@ -23,6 +23,7 @@ void render_signal_aspect_unstroked(sem_render_context* ctx, sem_signal_aspect a
 void render_signal_set_aspect(sem_render_context* ctx, sem_signal_aspect aspect);
 void render_signal_circle(sem_render_context* ctx, double offset_x, double offset_y, double radius);
 void render_train(sem_render_context* ctx, sem_train* train);
+void render_train_name(sem_render_context* ctx, sem_train* train);
 void render_track_path(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
 
 void sem_render_world(sem_render_context* ctx, sem_world* world) {
@@ -285,6 +286,27 @@ void render_train(sem_render_context* ctx, sem_train* train) {
 		cairo_stroke(ctx->cr);
 		car = car->next;
 	}
+
+	render_train_name(ctx, train);
+}
+
+void render_train_name(sem_render_context* ctx, sem_train* train) {
+	sem_coordinate head_position = train->head_car->position;
+	sem_coordinate tail_position = train->tail_car->position;
+	sem_coordinate position;
+	position.x = head_position.x < tail_position.x ? head_position.x : tail_position.x;
+	position.y = head_position.y < tail_position.y ? head_position.y : tail_position.y;
+	
+	cairo_move_to(ctx->cr, position.x, position.y);
+	cairo_text_extents_t extents;
+	cairo_text_extents(ctx->cr, train->name, &extents);
+	cairo_rectangle(ctx->cr, position.x, position.y-extents.height, extents.width, extents.height);
+	cairo_set_source_rgba(ctx->cr, 0.0, 0.53125, 0.26525, 0.5);
+	cairo_fill(ctx->cr);
+
+	cairo_move_to(ctx->cr, position.x, position.y);
+	cairo_set_source_rgb(ctx->cr, 1.0, 1.0, 1.0);
+	cairo_show_text(ctx->cr, train->name);
 }
 
 void render_track_path(sem_render_context* ctx, sem_coordinate coord, sem_track* track) {

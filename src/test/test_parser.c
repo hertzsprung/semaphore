@@ -143,6 +143,8 @@ void test_parser_red_main_auto_signal(sem_track_cache* track_cache, const void* 
 	g_assert_true(tile.track->end == (SEM_NORTH | SEM_EAST));
 	g_assert_true(tile.signal->aspect == RED);
 	g_assert_true(tile.signal->type == MAIN_AUTO);
+
+	free(tile.signal);
 }
 
 void test_parser_green_main_manual_signal(sem_track_cache* track_cache, const void* data) {
@@ -159,6 +161,8 @@ void test_parser_green_main_manual_signal(sem_track_cache* track_cache, const vo
 	g_assert_true(tile.track->end == SEM_EAST);
 	g_assert_true(tile.signal->aspect == GREEN);
 	g_assert_true(tile.signal->type == MAIN_MANUAL);
+
+	free(tile.signal);
 }
 
 void test_parser_amber_sub_signal(sem_track_cache* track_cache, const void* data) {
@@ -172,6 +176,8 @@ void test_parser_amber_sub_signal(sem_track_cache* track_cache, const void* data
 
 	g_assert_true(tile.signal->aspect == AMBER);
 	g_assert_true(tile.signal->type == SUB);
+
+	free(tile.signal);
 }
 
 void test_parser_print_ne_sw_track() {

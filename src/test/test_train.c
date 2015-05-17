@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <glib.h>
 
 #include "test_train.h"
@@ -8,8 +9,9 @@
 
 typedef struct {
 	sem_world world;
-	sem_train train;
-	sem_train train1, train2;
+	sem_train* train;
+	sem_train* train1;
+	sem_train* train2;
 } test_train_context;
 
 void test_train_moves_given_velocity(test_train_context* test_ctx, const void* data);
@@ -57,13 +59,16 @@ void test_train_setup(test_train_context* test_ctx, const void* data) {
 	test_ctx->world.max_y = 4;
 	sem_world_init_blank(&(test_ctx->world));
 
-	sem_train_init(&(test_ctx->train));
-	sem_train_init(&(test_ctx->train1));
-	sem_train_init(&(test_ctx->train2));
+	test_ctx->train = malloc(sizeof(sem_train));
+	test_ctx->train1 = malloc(sizeof(sem_train));
+	test_ctx->train2 = malloc(sizeof(sem_train));
+	sem_train_init(test_ctx->train);
+	sem_train_init(test_ctx->train1);
+	sem_train_init(test_ctx->train2);
 
-	sem_world_add_train(&(test_ctx->world), &(test_ctx->train));
-	sem_world_add_train(&(test_ctx->world), &(test_ctx->train1));
-	sem_world_add_train(&(test_ctx->world), &(test_ctx->train2));
+	sem_world_add_train(&(test_ctx->world), test_ctx->train);
+	sem_world_add_train(&(test_ctx->world), test_ctx->train1);
+	sem_world_add_train(&(test_ctx->world), test_ctx->train2);
 }
 
 void test_train_teardown(test_train_context* test_ctx, const void* data) {
@@ -75,7 +80,7 @@ void test_train_teardown(test_train_context* test_ctx, const void* data) {
 void test_train_moves_given_velocity(test_train_context* test_ctx, const void* data) {
 	#pragma unused(data)
 	sem_world* world = &(test_ctx->world);
-	sem_train* train = &(test_ctx->train);
+	sem_train* train = test_ctx->train;
 
 	sem_car car;
 	sem_coordinate_set(&(car.position), 0, 1);
@@ -97,7 +102,7 @@ void test_train_moves_given_velocity(test_train_context* test_ctx, const void* d
 void test_train_error_moves_onto_blank_tile(test_train_context* test_ctx, const void* data) {
 	#pragma unused(data)
 	sem_world* world = &(test_ctx->world);
-	sem_train* train = &(test_ctx->train);
+	sem_train* train = test_ctx->train;
 
 	sem_car car;
 	sem_coordinate_set(&(car.position), 0, 0);
@@ -115,7 +120,7 @@ void test_train_error_moves_onto_blank_tile(test_train_context* test_ctx, const 
 void test_train_follows_track(test_train_context* test_ctx, const void* data) {
 	#pragma unused(data)
 	sem_world* world = &(test_ctx->world);
-	sem_train* train = &(test_ctx->train);
+	sem_train* train = test_ctx->train;
 
 	sem_car car;
 	sem_coordinate_set(&(car.position), 0, 0);
@@ -139,7 +144,7 @@ void test_train_follows_track(test_train_context* test_ctx, const void* data) {
 void test_train_follows_secondary_track(test_train_context* test_ctx, const void* data) {
 	#pragma unused(data)
 	sem_world* world = &(test_ctx->world);
-	sem_train* train = &(test_ctx->train);
+	sem_train* train = test_ctx->train;
 
 	sem_car car;
 	sem_coordinate_set(&(car.position), 0, 0);
@@ -166,7 +171,7 @@ void test_train_follows_secondary_track(test_train_context* test_ctx, const void
 void test_train_moves_head_car(test_train_context* test_ctx, const void* data) {
 	#pragma unused(data)
 	sem_world* world = &(test_ctx->world);
-	sem_train* train = &(test_ctx->train);
+	sem_train* train = test_ctx->train;
 
 	sem_car head_car;
 	sem_coordinate_set(&(head_car.position), 1, 0);
@@ -195,7 +200,7 @@ void test_train_moves_head_car(test_train_context* test_ctx, const void* data) {
 void test_train_moves_trailing_cars(test_train_context* test_ctx, const void* data) {
 	#pragma unused(data)
 	sem_world* world = &(test_ctx->world);
-	sem_train* train = &(test_ctx->train);
+	sem_train* train = test_ctx->train;
 
 	sem_car head_car;
 	sem_coordinate_set(&(head_car.position), 2, 0);
@@ -230,7 +235,7 @@ void test_train_moves_trailing_cars(test_train_context* test_ctx, const void* da
 
 void test_train_head_car_occupies_tile(test_train_context* test_ctx, const void* data) {
 	#pragma unused(data)
-	sem_train* train = &(test_ctx->train);
+	sem_train* train = test_ctx->train;
 
 	sem_coordinate head_position;
 	sem_coordinate_set(&head_position, 2, 0);
@@ -243,7 +248,7 @@ void test_train_head_car_occupies_tile(test_train_context* test_ctx, const void*
 
 void test_train_second_car_occupies_tile(test_train_context* test_ctx, const void* data) {
 	#pragma unused(data)
-	sem_train* train = &(test_ctx->train);
+	sem_train* train = test_ctx->train;
 
 	sem_car head_car;
 	sem_coordinate_set(&(head_car.position), 2, 0);
@@ -260,7 +265,7 @@ void test_train_second_car_occupies_tile(test_train_context* test_ctx, const voi
 
 void test_train_not_occupies_tile(test_train_context* test_ctx, const void* data) {
 	#pragma unused(data)
-	sem_train* train = &(test_ctx->train);
+	sem_train* train = test_ctx->train;
 
 	sem_coordinate head_position;
 	sem_coordinate_set(&head_position, 2, 0);
@@ -276,8 +281,8 @@ void test_train_not_occupies_tile(test_train_context* test_ctx, const void* data
 
 void test_train_crashes_by_occupying_same_tile(test_train_context* test_ctx, const void* data) {
 	#pragma unused(data)
-	sem_train* train1 = &(test_ctx->train1);
-	sem_train* train2 = &(test_ctx->train2);
+	sem_train* train1 = test_ctx->train1;
+	sem_train* train2 = test_ctx->train2;
 	sem_world* world = &(test_ctx->world);
 
 	sem_track trackW_E;
@@ -313,7 +318,7 @@ void test_train_car_occupies_track(test_train_context* test_ctx, const void* dat
 	#pragma unused(data)
 
 	sem_world* world = &(test_ctx->world);
-	sem_train* train = &(test_ctx->train);
+	sem_train* train = test_ctx->train;
 
 	sem_track track_E_W;
 	sem_track_set(&track_E_W, SEM_EAST, SEM_WEST);
@@ -341,7 +346,7 @@ void test_train_moves_trailing_car_onto_track(test_train_context* test_ctx, cons
 	#pragma unused(data)
 
 	sem_world* world = &(test_ctx->world);
-	sem_train* train = &(test_ctx->train);
+	sem_train* train = test_ctx->train;
 
 	sem_track track_E_W;
 	sem_track_set(&track_E_W, SEM_EAST, SEM_WEST);
@@ -378,7 +383,7 @@ void test_train_moves_trailing_car_onto_track(test_train_context* test_ctx, cons
 
 void test_train_derails_when_need_points_switch(test_train_context* test_ctx, const void* data) {
 	#pragma unused(data)
-	sem_train* train = &(test_ctx->train);
+	sem_train* train = test_ctx->train;
 	sem_world* world = &(test_ctx->world);
 
 	sem_tile_acceptance acceptance;

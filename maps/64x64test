@@ -63,6 +63,7 @@ tiles 59
 8 2 points NE-S W-NE
 trains 4
 train 107207dc-d4de-4ee5-accf-26ae19404603
+name TRAIN-1
 state stopped
 direction W
 cars 3
@@ -70,6 +71,7 @@ cars 3
 14 9 W-E
 15 9 W-E
 train ca78820d-d3eb-4b7b-bafa-094cfb9fb9da
+name TRAIN-2
 state stopped
 direction E
 cars 3
@@ -77,6 +79,7 @@ cars 3
 1 1 SW-E
 0 2 S-NE
 train 305211b8-799f-4ee7-afb5-303e4edcfaf9
+name TRAIN-3
 state derailed
 direction E
 cars 3
@@ -84,6 +87,7 @@ cars 3
 1 9 W-E
 0 9 W-E
 train 81cbbfd6-43c8-4143-a345-ee9e27dd0e8b
+name TRAIN-4
 state stopped
 direction W
 cars 3

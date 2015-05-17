@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 #include <uuid/uuid.h>
 
 #include "sem_train.h"
@@ -15,6 +16,7 @@ sem_train* train_detect_collision(sem_train* train);
 
 sem_success sem_train_init(sem_train* train) {
 	uuid_generate(train->id);
+	train->name = strdup("<none>");
 	train->state = STOPPED;
 	train->direction = 0;
 	train->cars = 0;
@@ -70,7 +72,7 @@ bool sem_train_occupies(sem_train* train, sem_coordinate* tile) {
 }
 
 void sem_train_destroy(sem_train* train) {
-	#pragma unused(train)
+	free(train->name);
 }	
 
 void train_move_trailing(sem_car* tail_car) {

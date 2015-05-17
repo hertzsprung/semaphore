@@ -17,6 +17,7 @@ sem_success read_tile(FILE* in, sem_world* world);
 sem_success read_trains(FILE* in, sem_world* world);
 sem_success read_train(FILE* in, sem_world* world);
 sem_success read_train_id(FILE* in, sem_train* train);
+sem_success read_train_name(FILE* in, sem_train* train);
 sem_success read_train_state(FILE* in, sem_train* train);
 sem_success read_train_direction(FILE* in, sem_train* train);
 sem_success read_train_cars(FILE* in, sem_train* train);
@@ -167,6 +168,7 @@ sem_success read_train(FILE* in, sem_world* world) {
 	train->world = world;
 
 	if (read_train_id(in, train) != SEM_OK) return SEM_ERROR;
+	if (read_train_name(in, train) != SEM_OK) return SEM_ERROR;
 	if (read_train_state(in, train) != SEM_OK) return SEM_ERROR;
 	if (read_train_direction(in, train) != SEM_OK) return SEM_ERROR;
 	if (read_train_cars(in, train) != SEM_OK) return SEM_ERROR;
@@ -179,13 +181,27 @@ sem_success read_train(FILE* in, sem_world* world) {
 sem_success read_train_id(FILE* in, sem_train* train) {
 	char* line = sem_read_line(in);
 	if (line == NULL) return sem_set_error("Could not read train identifier");
-	// TODO: check first token is "train", second token is train identifier
+	// TODO: check first token is "train"
 
 	sem_tokenization tokens;
 	sem_tokenization_init(&tokens, line, " ");
 	sem_tokenization_next(&tokens);
 	char* id_str = sem_tokenization_next(&tokens);
 	uuid_parse(id_str, train->id);
+	free(line);
+
+	return SEM_OK;
+}
+
+sem_success read_train_name(FILE* in, sem_train* train) {
+	char* line = sem_read_line(in);
+	if (line == NULL) return sem_set_error("Could not read train name");
+	// TODO: check first token is "name"
+
+	sem_tokenization tokens;
+	sem_tokenization_init(&tokens, line, " ");
+	sem_tokenization_next(&tokens);
+	train->name = strdup(sem_tokenization_next(&tokens));
 	free(line);
 
 	return SEM_OK;
@@ -373,6 +389,7 @@ sem_success write_train(FILE* out, sem_train* train) {
 	char id_str[37];
 	uuid_unparse(train->id, id_str);
 	fprintf(out, "train %s\n", id_str);
+	fprintf(out, "name %s\n", train->name);
 	if (write_train_state(out, train->state) != SEM_OK) return SEM_ERROR;
 	fprintf(out, "direction ");
 	if (sem_print_endpoint(out, train->direction) != SEM_OK) return SEM_ERROR;

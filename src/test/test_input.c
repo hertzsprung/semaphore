@@ -17,7 +17,7 @@
 typedef struct {
 	sem_dynamic_array heap;
 	sem_world world;
-	sem_train train;
+	sem_train* train;
 } test_input_context;
 
 void test_input_null_action_for_unoccupied_coordinate(test_input_context* test_ctx, const void* data);
@@ -51,8 +51,9 @@ void test_input_setup(test_input_context* test_ctx, const void* data) {
 	test_ctx->world.max_y = 1;
 	sem_world_init_blank(&(test_ctx->world));
 
-	sem_train_init(&(test_ctx->train));
-	sem_world_add_train(&(test_ctx->world), &(test_ctx->train));
+	test_ctx->train = malloc(sizeof(sem_train));
+	sem_train_init(test_ctx->train);
+	sem_world_add_train(&(test_ctx->world), test_ctx->train);
 
 	sem_heap_init(&(test_ctx->heap));
 }
@@ -67,7 +68,7 @@ void test_input_teardown(test_input_context* test_ctx, const void* data) {
 void test_input_null_action_for_unoccupied_coordinate(test_input_context* test_ctx, const void* data) {
 	#pragma unused(data)
 
-	sem_train* train = &(test_ctx->train);
+	sem_train* train = test_ctx->train;
 	sem_world* world = &(test_ctx->world);
 
 	sem_car car;
@@ -88,7 +89,7 @@ void test_input_null_action_for_unoccupied_coordinate(test_input_context* test_c
 
 void test_input_toggles_train_state(test_input_context* test_ctx, const void* data) {
 	#pragma unused(data)
-	sem_train* train = &(test_ctx->train);
+	sem_train* train = test_ctx->train;
 	sem_world* world = &(test_ctx->world);
 	sem_dynamic_array* heap = &(test_ctx->heap);
 
@@ -126,7 +127,7 @@ void test_input_toggles_train_state(test_input_context* test_ctx, const void* da
 void test_input_removes_derailed_train(test_input_context* test_ctx, const void* data) {
 	#pragma unused(data)
 
-	sem_train* train = &(test_ctx->train);
+	sem_train* train = test_ctx->train;
 	sem_world* world = &(test_ctx->world);
 	sem_dynamic_array* heap = &(test_ctx->heap);
 

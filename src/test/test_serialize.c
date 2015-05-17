@@ -1,5 +1,7 @@
 #include <glib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <uuid/uuid.h>
 
 #include "test_serialize.h"
@@ -90,10 +92,11 @@ void test_serialize_save_load_train() {
 	trackN_S_W_E.next = &trackW_E;
 	sem_tile_set_track(tile, &trackN_S_W_E);
 
-	sem_train saved_train1;
-	sem_train* train1 = &saved_train1;
+	sem_train* saved_train1 = malloc(sizeof(sem_train));
+	sem_train* train1 = saved_train1;
 	sem_train_init(train1);
 	train1->direction = SEM_EAST;
+	train1->name = strdup("IC-123");
 
 	sem_car car1;
 	sem_coordinate_set(&(car1.position), 1, 1);
@@ -107,8 +110,8 @@ void test_serialize_save_load_train() {
 
 	sem_world_add_train(&world, train1);
 
-	sem_train saved_train2;
-	sem_train* train2 = &saved_train2;
+	sem_train* saved_train2 = malloc(sizeof(sem_train));
+	sem_train* train2 = saved_train2;
 	sem_train_init(train2);
 	train2->direction = SEM_WEST;
 	train2->state = DERAILED;
@@ -122,6 +125,7 @@ void test_serialize_save_load_train() {
 	g_assert_true(train1->state == STOPPED);
 	g_assert_true(train1->direction == SEM_EAST);
 	g_assert_cmpuint(train1->cars, ==, 2);
+	g_assert_cmpstr(train1->name, ==, "IC-123");
 
 	sem_car* car = train1->head_car;
 	g_assert_cmpuint(car->position.x, ==, 1);
@@ -173,24 +177,26 @@ void test_serialize_load_remove_train_action() {
 	sem_track_set(&trackN_S, SEM_NORTH, SEM_SOUTH);
 	sem_tile_set_track(tile, &trackN_S);
 
-	sem_train train1;
-	sem_train_init(&train1);
-	train1.direction = SEM_NORTH;
+	sem_train* train1 = malloc(sizeof(sem_train));
+	sem_train_init(train1);
+	uuid_t train1_id;
+	uuid_copy(train1->id, train1_id);
+	train1->direction = SEM_NORTH;
 	sem_car car1;
 	sem_coordinate_set(&(car1.position), 2, 0);
 	car1.track = &trackN_S;
-	sem_train_add_car(&train1, &car1);
-	sem_world_add_train(&world, &train1);
+	sem_train_add_car(train1, &car1);
+	sem_world_add_train(&world, train1);
 
-	sem_train train2;
-	sem_train_init(&train2);
-	train2.state = DERAILED;
-	train2.direction = SEM_EAST;
+	sem_train* train2 = malloc(sizeof(sem_train));
+	sem_train_init(train2);
+	train2->state = DERAILED;
+	train2->direction = SEM_EAST;
 	sem_car car2;
 	sem_coordinate_set(&(car2.position), 0, 0);
 	car2.track = &trackW_E;
-	sem_train_add_car(&train2, &car2);
-	sem_world_add_train(&world, &train2);
+	sem_train_add_car(train2, &car2);
+	sem_world_add_train(&world, train2);
 	
 	// TODO: should fetch a partially-initialised sem_action from
 	// a factory method
@@ -198,7 +204,7 @@ void test_serialize_load_remove_train_action() {
 	action.time = 5000;
 	action.function = remove_train_action;
 	action.write = sem_remove_train_action_write;
-	action.context = &train2;
+	action.context = train2;
 
 	sem_heap_insert(world.actions, &action);
 
@@ -211,7 +217,7 @@ void test_serialize_load_remove_train_action() {
 	g_assert_cmpuint(world.trains->tail_idx, ==, 1);
 
 	sem_train* remaining_train = (sem_train*) world.trains->items[0];
-	g_assert_true(uuid_compare(remaining_train->id, train1.id) == 0);
+	g_assert_true(uuid_compare(remaining_train->id, train1_id) == 0);
 
 	sem_world_destroy(&world);
 	fclose(file);

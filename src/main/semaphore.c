@@ -198,7 +198,7 @@ int main(int argc, char **argv) {
 		cairo_move_to(cr, 0, 1);
 		cairo_set_font_size(cr, 0.7);
 		cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
-		cairo_show_text(cr, buf);
+//		cairo_show_text(cr, buf);
 
 		SDL_UnlockTexture(texture);
 

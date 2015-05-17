@@ -21,7 +21,6 @@
 #include "sem_input.h"
 #include "sem_render.h"
 #include "sem_serialize.h"
-#include "sem_serialize_railpro.h"
 #include "sem_timer.h"
 #include "sem_train.h"
 #include "sem_world.h"
@@ -105,8 +104,6 @@ int main(int argc, char **argv) {
 
 	sem_world world;
 	if (sem_serialize_load(map, &world) != SEM_OK) return sem_fatal_error();
-	//FILE* map = fopen("maps/crazy.railpro", "r");
-	//if (sem_serialize_load_railpro(map, &world) != SEM_OK) return sem_fatal_error();
 	fclose(map);
 
 	printf("\n");

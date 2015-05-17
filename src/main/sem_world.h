@@ -128,6 +128,10 @@ void sem_tile_switch_points(sem_tile* tile);
  */
 bool sem_track_active(sem_tile* tile, sem_track* track);
 
+bool sem_track_straight(sem_track* track);
+
+unit_vector sem_track_corner(sem_track* track);
+
 void sem_tile_set_track(sem_tile* tile, sem_track* track);
 
 /**

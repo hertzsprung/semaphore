@@ -31,6 +31,30 @@ bool sem_compass_straight(unit_vector a, unit_vector b) {
 	return sem_compass_opposite_of(a) == b;
 }
 
+unit_vector sem_compass_corner_of_curve(unit_vector a, unit_vector b) {
+	unit_vector existing_corner;
+	unit_vector non_corner;
+
+	if (sem_compass_is_corner(a)) {
+		existing_corner = a;
+		non_corner = b;
+	} else {
+		existing_corner = b;
+		non_corner = a;
+	}
+
+	unit_vector opposite_corner = sem_compass_opposite_of(existing_corner);
+	if (SEM_COMPASS_X(opposite_corner) == SEM_COMPASS_X(non_corner)) {
+		return (non_corner & SEM_COMPASS_HORIZONTAL_MASK) | (existing_corner & SEM_COMPASS_VERTICAL_MASK);
+	} else {
+		return (non_corner & SEM_COMPASS_VERTICAL_MASK) | (existing_corner & SEM_COMPASS_HORIZONTAL_MASK);
+	}
+}
+
+bool sem_compass_is_corner(unit_vector v) {
+	return SEM_COMPASS_X(v) != 0 && SEM_COMPASS_Y(v) != 0;
+}
+
 double sem_compass_rotation(unit_vector v) {
 	if (SEM_COMPASS_X(v) == 0) {
 		return 0.5 * M_PI;

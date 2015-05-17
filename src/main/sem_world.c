@@ -216,3 +216,11 @@ void sem_tile_switch_points(sem_tile* tile) {
 bool sem_track_active(sem_tile* tile, sem_track* track) {
 	return tile->track == track;
 }
+
+bool sem_track_straight(sem_track* track) {
+	return sem_compass_straight(track->start, track->end);
+}
+
+unit_vector sem_track_corner(sem_track* track) {
+	return sem_compass_corner_of_curve(track->start, track->end);
+}

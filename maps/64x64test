@@ -2,93 +2,93 @@ world 64 64
 now 0
 multiplier 1.0
 tiles 59
-0 8 track W-E
-1 8 track W-E
-2 8 track W-E
-3 8 track W-E
-4 8 track W-E
-5 8 points W-NE W-SE W-E
-6 8 track W-E
-7 8 track W-E
-8 8 track W-E
-9 8 track W-E
-10 8 track W-E
-6 7 signal NE-SW green main manual
-6 9 signal SE-NW red sub
-7 6 track SW-E
-7 10 track NW-E
-8 6 track W-E
-8 10 track W-E
-9 6 track W-SE
-9 10 track W-NE
-10 7 signal NW-SE green sub
-10 9 signal SW-NE amber main manual
-11 8 points NW-E SW-E W-E
-12 8 track W-E
-13 8 track W-E
-14 8 track W-E
-15 8 track W-E
-2 0 track W-E
-2 4 signal W-E amber main auto
-10 0 track W-E
-10 4 track W-E
-0 2 track N-S
-4 2 track N-S
-8 2 signal N-S red main auto
-12 2 track N-S
-1 0 track SW-E
-3 0 track W-SE
-0 1 track S-NE
-0 3 track SE-N
-4 1 track NW-S
-4 3 track SW-N
-9 0 track SW-E
-11 0 track W-SE
-8 1 track S-NW
-8 3 track SE-N
-12 1 track NW-S
-12 3 track SW-N
-1 4 track NW-E
-3 4 track W-NE
-9 4 track NW-E
-11 4 track W-NE
-5 1 track W-SE
-7 1 track SW-E
-5 3 track W-NE
-7 3 track NW-E
-6 2 track NW-SE+NE-SW
-4 1 points NW-S NW-E
-8 3 points N-SE W-SE
-4 3 points SW-N SW-E
-8 1 points NE-S W-NE
+0 9 track W-E
+1 9 track W-E
+2 9 track W-E
+3 9 track W-E
+4 9 track W-E
+5 9 points W-NE W-SE W-E
+6 9 track W-E
+7 9 track W-E
+8 9 track W-E
+9 9 track W-E
+10 9 track W-E
+6 8 signal NE-SW green main manual
+6 10 signal SE-NW red sub
+7 7 track SW-E
+7 11 track NW-E
+8 7 track W-E
+8 11 track W-E
+9 7 track W-SE
+9 11 track W-NE
+10 8 signal NW-SE green sub
+10 10 signal SW-NE amber main manual
+11 9 points NW-E SW-E W-E
+12 9 track W-E
+13 9 track W-E
+14 9 track W-E
+15 9 track W-E
+2 1 track W-E
+2 5 signal W-E amber main auto
+10 1 track W-E
+10 5 track W-E
+0 3 track N-S
+4 3 track N-S
+8 3 signal N-S red main auto
+12 3 track N-S
+1 1 track SW-E
+3 1 track W-SE
+0 2 track S-NE
+0 4 track SE-N
+4 2 track NW-S
+4 4 track SW-N
+9 1 track SW-E
+11 1 track W-SE
+8 2 track S-NW
+8 4 track SE-N
+12 2 track NW-S
+12 4 track SW-N
+1 5 track NW-E
+3 5 track W-NE
+9 5 track NW-E
+11 5 track W-NE
+5 2 track W-SE
+7 2 track SW-E
+5 4 track W-NE
+7 4 track NW-E
+6 3 track NW-SE+NE-SW
+4 2 points NW-S NW-E
+8 4 points N-SE W-SE
+4 4 points SW-N SW-E
+8 2 points NE-S W-NE
 trains 4
 train 107207dc-d4de-4ee5-accf-26ae19404603
 state stopped
 direction W
 cars 3
-13 8 W-E
-14 8 W-E
-15 8 W-E
+13 9 W-E
+14 9 W-E
+15 9 W-E
 train ca78820d-d3eb-4b7b-bafa-094cfb9fb9da
 state stopped
 direction E
 cars 3
-2 0 W-E
-1 0 SW-E
-0 1 S-NE
+2 1 W-E
+1 1 SW-E
+0 2 S-NE
 train 305211b8-799f-4ee7-afb5-303e4edcfaf9
 state derailed
 direction E
 cars 3
-2 8 W-E
-1 8 W-E
-0 8 W-E
+2 9 W-E
+1 9 W-E
+0 9 W-E
 train 81cbbfd6-43c8-4143-a345-ee9e27dd0e8b
 state stopped
 direction W
 cars 3
-10 0 W-E
-11 0 W-SE
-12 1 S-NW
+10 1 W-E
+11 1 W-SE
+12 2 S-NW
 actions 1
 10000 remove_train 305211b8-799f-4ee7-afb5-303e4edcfaf9

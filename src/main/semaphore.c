@@ -85,10 +85,10 @@ int main(/*int argc, char **argv*/) {
 	sem_render_default_style(&render_style);
 
 	sem_world world;
-	//FILE* map = fopen("maps/64x64test", "r");
-	//if (sem_serialize_load(map, &world) != SEM_OK) return sem_fatal_error();
-	FILE* map = fopen("maps/crazy.railpro", "r");
-	if (sem_serialize_load_railpro(map, &world) != SEM_OK) return sem_fatal_error();
+	FILE* map = fopen("maps/64x64test", "r");
+	if (sem_serialize_load(map, &world) != SEM_OK) return sem_fatal_error();
+	//FILE* map = fopen("maps/crazy.railpro", "r");
+	//if (sem_serialize_load_railpro(map, &world) != SEM_OK) return sem_fatal_error();
 	fclose(map);
 
 	printf("\n");

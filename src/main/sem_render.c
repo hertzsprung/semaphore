@@ -1,6 +1,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <cairo.h>
+#include <stdio.h>
 
 #include "sem_render.h"
 #include "sem_train.h"
@@ -11,6 +12,7 @@ void render_tile(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
 void render_tile_blank(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
 void render_track(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
 void render_tile_points(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
+void render_points_highlight(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
 void render_tile_signal(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
 void render_signal_main(sem_render_context* ctx, sem_tile* tile);
 void render_signal_main_manual(sem_render_context* ctx, sem_tile* tile);
@@ -63,7 +65,7 @@ void render_tile_blank(sem_render_context* ctx, sem_coordinate coord, sem_tile* 
 	#pragma unused(tile)
 	cairo_rectangle(ctx->cr, coord.x, coord.y, 1.0, 1.0);	
 	cairo_set_line_width(ctx->cr, 0.01);
-	cairo_set_source_rgb(ctx->cr, 0.0, 0.3, 0.0);
+	cairo_set_source_rgb(ctx->cr, 0.0, 0.45, 0.1);
 	cairo_stroke(ctx->cr);
 }
 
@@ -73,7 +75,14 @@ void render_track(sem_render_context* ctx, sem_coordinate coord, sem_track* trac
 		render_track_path(ctx, coord, t);
 		cairo_set_source_rgb(ctx->cr, 0.0, 0.0, 0.0);
 		cairo_set_line_width(ctx->cr, ctx->style->track_back_width);
-		cairo_stroke_preserve(ctx->cr);
+		cairo_stroke(ctx->cr);
+
+		t = t->next;
+	} while (t != NULL);
+
+	t = track;
+	do {
+		render_track_path(ctx, coord, t);
 		cairo_set_source(ctx->cr, ctx->style->track_front_color);
 		cairo_set_line_width(ctx->cr, ctx->style->track_front_width);
 		cairo_stroke(ctx->cr);
@@ -90,6 +99,32 @@ void render_tile_points(sem_render_context* ctx, sem_coordinate coord, sem_tile*
 		}
 	}
 	render_track(ctx, coord, tile->track);
+	if (!sem_track_straight(tile->track)) {
+		render_points_highlight(ctx, coord, tile->track);
+	}
+}
+
+void render_points_highlight(sem_render_context* ctx, sem_coordinate coord, sem_track* track) {
+	unit_vector corner = sem_track_corner(track);
+	double corner_x = 0.5 + SEM_COMPASS_X(corner)/2.0;
+	double corner_y = 0.5 + SEM_COMPASS_Y(corner)/2.0;
+	double start_x = 0.5 + SEM_COMPASS_X(track->start)/2.0;
+	double start_y = 0.5 + SEM_COMPASS_Y(track->start)/2.0;
+	double end_x = 0.5 + SEM_COMPASS_X(track->end)/2.0;
+	double end_y = 0.5 + SEM_COMPASS_Y(track->end)/2.0;
+
+	cairo_save(ctx->cr);
+	cairo_set_line_cap(ctx->cr, CAIRO_LINE_CAP_ROUND);
+	cairo_move_to(ctx->cr, coord.x + (start_x + corner_x)/2.0, coord.y + (start_y + corner_y)/2.0);
+	cairo_curve_to(ctx->cr,
+		coord.x + (0.5 + start_x + 1.5*corner_x)/3.5, coord.y + (0.5 + start_y + 1.5*corner_y)/3.5,
+		coord.x + (0.5 + end_x + 1.5*corner_x)/3.5, coord.y + (0.5 + end_y + 1.5*corner_y)/3.5,
+		coord.x + (end_x + corner_x)/2.0, coord.y + (end_y + corner_y)/2.0);
+
+	cairo_set_source(ctx->cr, ctx->style->points_highlight_color);
+	cairo_set_line_width(ctx->cr, ctx->style->points_highlight_width);
+	cairo_stroke(ctx->cr);
+	cairo_restore(ctx->cr);
 }
 
 void render_tile_signal(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile) {
@@ -250,7 +285,7 @@ void render_train(sem_render_context* ctx, sem_train* train) {
 
 void render_track_path(sem_render_context* ctx, sem_coordinate coord, sem_track* track) {
 	cairo_move_to(ctx->cr, coord.x + 0.5 + SEM_COMPASS_X(track->start)/2.0, coord.y + 0.5 + SEM_COMPASS_Y(track->start)/2.0);
-	if (sem_compass_straight(track->start, track->end)) {
+	if (sem_track_straight(track)) {
 		cairo_line_to(ctx->cr, coord.x + 0.5 + SEM_COMPASS_X(track->end)/2.0, coord.y + 0.5 + SEM_COMPASS_Y(track->end)/2.0);
 	} else {
 		cairo_curve_to(ctx->cr,
@@ -263,12 +298,14 @@ void render_track_path(sem_render_context* ctx, sem_coordinate coord, sem_track*
 sem_success sem_render_default_style(sem_render_style* style) {
 	style->canvas = cairo_pattern_create_rgb(0.0, 0.53125, 0.26525);
 	style->track_front_color = cairo_pattern_create_rgb(0.53125, 0.796875, 0.796875);
+	style->points_highlight_color = cairo_pattern_create_rgb(0.2, 1.0, 1.0);
 	style->signal_red = cairo_pattern_create_rgb(1.0, 0.2, 0.2);
 	style->signal_amber = cairo_pattern_create_rgb(1.0, 0.75, 0.0);
 	style->signal_green = cairo_pattern_create_rgb(0.0, 1.0, 0.0);
 	
 	style->track_back_width = 0.2;
 	style->track_front_width = 0.1;
+	style->points_highlight_width = 0.05;
 	style->signal_main_radius = 0.18;
 	style->signal_main_offset = 0.26;
 	style->signal_main_manual_extra_radius = 0.0625;

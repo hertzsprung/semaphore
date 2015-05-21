@@ -13,6 +13,8 @@
 
 void train_move_trailing(sem_car* tail_car);
 sem_train* train_detect_collision(sem_train* train);
+void reverse_cars(sem_car* car);
+unit_vector train_tail_end(sem_train* train);
 
 sem_success sem_train_init(sem_train* train) {
 	uuid_generate(train->id);
@@ -46,6 +48,42 @@ sem_success sem_train_move(sem_train* train) {
 	}
 
 	return SEM_OK;
+}
+
+void sem_train_reverse(sem_train* train) {
+	train->direction = train_tail_end(train);
+
+	reverse_cars(train->head_car);
+
+	sem_car* tmp = train->head_car;
+	train->head_car = train->tail_car;
+	train->tail_car = tmp;
+}
+
+void reverse_cars(sem_car* car) {
+	if (car->next != NULL) reverse_cars(car->next);	
+
+	sem_car* tmp = car->previous;
+	car->previous = car->next;
+	car->next = tmp;
+}
+
+unit_vector train_tail_end(sem_train* train) {
+	sem_car* car = train->head_car;	
+	unit_vector direction = train->direction;
+	unit_vector tail_end_of_car;
+
+	while (car != NULL) {
+		if (direction == car->track->start) {
+			tail_end_of_car = car->track->end;
+		} else {
+			tail_end_of_car = car->track->start;
+		}
+		direction = sem_compass_opposite_of(tail_end_of_car);
+		car = car->next;
+	}
+
+	return sem_compass_opposite_of(direction);
 }
 
 sem_success sem_train_add_car(sem_train* train, sem_car* car) {

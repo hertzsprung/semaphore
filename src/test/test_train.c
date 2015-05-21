@@ -27,6 +27,7 @@ void test_train_crashes_by_occupying_same_tile(test_train_context* test_ctx, con
 void test_train_car_occupies_track(test_train_context* test_ctx, const void* data);
 void test_train_moves_trailing_car_onto_track(test_train_context* test_ctx, const void* data);
 void test_train_derails_when_need_points_switch(test_train_context* test_ctx, const void* data);
+void test_train_reverses(test_train_context* test_ctx, const void* data);
 
 void add_test_train(const char *test_name, void (*test)(test_train_context*, const void* data));
 void test_train_setup(test_train_context* test_ctx, const void* data);
@@ -46,6 +47,7 @@ void add_tests_train() {
 	add_test_train("/train/car_occupies_track", test_train_car_occupies_track);
 	add_test_train("/train/moves_trailing_car_onto_track", test_train_moves_trailing_car_onto_track);
 	add_test_train("/train/derails_when_need_points_switch", test_train_derails_when_need_points_switch);
+	add_test_train("/train/reverses", test_train_reverses);
 }
 
 void add_test_train(const char *test_name, void (*test)(test_train_context*, const void* data)) {
@@ -410,3 +412,45 @@ void test_train_derails_when_need_points_switch(test_train_context* test_ctx, co
 
 	g_assert_true(train->state == DERAILED);
 }
+
+void test_train_reverses(test_train_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	sem_train* train = test_ctx->train;
+	sem_world* world = &(test_ctx->world);
+
+	sem_tile* tile = sem_tile_at(world, 1, 1);
+	sem_track trackS_NE;
+	sem_track_set(&trackS_NE, SEM_SOUTH, SEM_NORTH | SEM_EAST);
+	sem_tile_set_track(tile, &trackS_NE);
+
+	tile = sem_tile_at(world, 2, 0);
+	sem_track trackSW_E;
+	sem_track_set(&trackSW_E, SEM_SOUTH | SEM_WEST, SEM_EAST);
+	sem_tile_set_track(tile, &trackSW_E);
+
+	sem_tile_set_track(sem_tile_at(world, 3, 0), &trackSW_E);
+
+	train->direction = SEM_EAST;
+
+	sem_car car1;
+	sem_coordinate_set(&(car1.position), 3, 0);
+	sem_train_add_car(train, &car1);
+
+	sem_car car2;
+	sem_coordinate_set(&(car2.position), 2, 0);
+	sem_train_add_car(train, &car2);
+
+	sem_car car3;
+	sem_coordinate_set(&(car3.position), 1, 1);
+	sem_train_add_car(train, &car3);
+
+	sem_train_reverse(train);
+
+	g_assert_true(train->head_car == &car3);
+	g_assert_true(train->head_car->next == &car2);
+	g_assert_true(train->head_car->next->next == &car1);
+	g_assert_true(train->tail_car == &car1);
+
+	g_assert_true(train->direction == SEM_SOUTH);	
+}
+

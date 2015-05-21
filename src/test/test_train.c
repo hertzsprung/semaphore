@@ -423,25 +423,29 @@ void test_train_reverses(test_train_context* test_ctx, const void* data) {
 	sem_track_set(&trackS_NE, SEM_SOUTH, SEM_NORTH | SEM_EAST);
 	sem_tile_set_track(tile, &trackS_NE);
 
-	tile = sem_tile_at(world, 2, 0);
 	sem_track trackSW_E;
 	sem_track_set(&trackSW_E, SEM_SOUTH | SEM_WEST, SEM_EAST);
-	sem_tile_set_track(tile, &trackSW_E);
+	sem_tile_set_track(sem_tile_at(world, 2, 0), &trackSW_E);
 
-	sem_tile_set_track(sem_tile_at(world, 3, 0), &trackSW_E);
+	sem_track trackW_E;
+	sem_track_set(&trackW_E, SEM_WEST, SEM_EAST);
+	sem_tile_set_track(sem_tile_at(world, 3, 0), &trackW_E);
 
 	train->direction = SEM_EAST;
 
 	sem_car car1;
 	sem_coordinate_set(&(car1.position), 3, 0);
+	car1.track = &trackSW_E;
 	sem_train_add_car(train, &car1);
 
 	sem_car car2;
 	sem_coordinate_set(&(car2.position), 2, 0);
+	car2.track = &trackSW_E;
 	sem_train_add_car(train, &car2);
 
 	sem_car car3;
 	sem_coordinate_set(&(car3.position), 1, 1);
+	car3.track = &trackS_NE;
 	sem_train_add_car(train, &car3);
 
 	sem_train_reverse(train);
@@ -452,5 +456,7 @@ void test_train_reverses(test_train_context* test_ctx, const void* data) {
 	g_assert_true(train->tail_car == &car1);
 
 	g_assert_true(train->direction == SEM_SOUTH);	
+	g_assert_cmpuint(train->position->x, ==, 1);
+	g_assert_cmpuint(train->position->y, ==, 1);
 }
 

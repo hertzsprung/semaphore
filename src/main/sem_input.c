@@ -12,8 +12,10 @@
 #include "sem_train.h"
 #include "sem_world.h"
 
+sem_train* train_occupying_tile(sem_dynamic_array* trains, sem_coordinate* tile);
 sem_success switch_points_action(sem_dynamic_array* heap, sem_action* action);
 sem_success change_train_state(sem_dynamic_array* heap, sem_action* action);
+sem_success reverse_train(sem_dynamic_array* heap, sem_action* action);
 
 sem_success sem_tile_input_act_upon(sem_input_event* input, sem_world* world, sem_action** action) {
 	sem_tile* tile = sem_tile_at_coord(world, input->tile);
@@ -36,19 +38,32 @@ sem_success switch_points_action(sem_dynamic_array* heap, sem_action* action) {
 }
 
 sem_success sem_train_input_act_upon(sem_input_event* input, sem_world* world, sem_action** action) {
-	for (uint32_t i=0; i < world->trains->tail_idx; i++) {
-		// TODO: if it's legitimate for mulitple trains to occupy the same tile then this input will act upon all of them
-		// TODO: not an issue until we introduce layers
-		if (sem_train_occupies(world->trains->items[i], input->tile)) {
-			*action = sem_action_new();
-			if (*action == NULL) return SEM_ERROR;
-			(*action)->time = input->time;
-			(*action)->context = world->trains->items[i];
-			(*action)->function = change_train_state;
-		}
+	sem_train* train = train_occupying_tile(world->trains, input->tile);
+	if (train == NULL) return SEM_OK;
+
+	*action = sem_action_new();
+	if (*action == NULL) return SEM_ERROR;
+	(*action)->time = input->time;
+	(*action)->context = train;
+
+	switch (input->rank) {
+	case PRIMARY:
+		(*action)->function = change_train_state;
+		break;
+	case SECONDARY:
+		(*action)->function = reverse_train;
+		break;
 	}
 
 	return SEM_OK;
+}
+
+sem_train* train_occupying_tile(sem_dynamic_array* trains, sem_coordinate* tile) {
+	for (uint32_t i=0; i < trains->tail_idx; i++) {
+		if (sem_train_occupies(trains->items[i], tile))  return trains->items[i];
+	}
+
+	return NULL;
 }
 
 sem_success change_train_state(sem_dynamic_array* heap, sem_action* action) {
@@ -85,6 +100,14 @@ sem_success move_train_action(sem_dynamic_array* heap, sem_action* action) {
 		sem_heap_insert(heap, action);
 	}
 
+	return SEM_OK;
+}
+
+sem_success reverse_train(sem_dynamic_array* heap, sem_action* action) {
+	#pragma unused(heap)
+	sem_train* train = (sem_train*) action->context;
+	sem_train_reverse(train);
+	
 	return SEM_OK;
 }
 

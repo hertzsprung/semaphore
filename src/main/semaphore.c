@@ -169,6 +169,12 @@ int main(int argc, char **argv) {
 				sem_input_event input;
 				input.time = world.timer->now;
 				input.tile = &coord;
+				
+				if (e.button.button == SDL_BUTTON_LEFT) {
+					input.rank = PRIMARY;
+				} else {
+					input.rank = SECONDARY;
+				}
 
 				sem_action* a = NULL;
 

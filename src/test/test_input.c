@@ -22,6 +22,7 @@ typedef struct {
 
 void test_input_null_action_for_unoccupied_coordinate(test_input_context* test_ctx, const void* data);
 void test_input_toggles_train_state(test_input_context* test_ctx, const void* data);
+void test_input_reverses_train(test_input_context* test_ctx, const void* data);
 void test_input_removes_derailed_train(test_input_context* test_ctx, const void* data);
 void test_input_unremoves_derailed_train_after_crash(test_input_context* test_ctx, const void* data);
 void test_input_null_action_on_blank_tile(test_input_context* test_ctx, const void* data);
@@ -34,6 +35,7 @@ void test_input_teardown(test_input_context* test_ctx, const void* data);
 void add_tests_input(void) {
 	add_test_input("/input/null_action_for_unoccupied_coordinate", test_input_null_action_for_unoccupied_coordinate);
 	add_test_input("/input/toggles_train_state", test_input_toggles_train_state);
+	add_test_input("/input/reverses_train", test_input_reverses_train);
 	add_test_input("/input/removes_derailed_train", test_input_removes_derailed_train);
 	add_test_input("/input/unremoves_derailed_train_after_crash", test_input_unremoves_derailed_train_after_crash);
 	add_test_input("/input/null_action_on_blank_tile", test_input_null_action_on_blank_tile);
@@ -107,6 +109,7 @@ void test_input_toggles_train_state(test_input_context* test_ctx, const void* da
 	sem_input_event input;
 	input.time = 3000L;
 	input.tile = &coord;
+	input.rank = PRIMARY;
 
 	sem_action* action = NULL;
 
@@ -122,6 +125,38 @@ void test_input_toggles_train_state(test_input_context* test_ctx, const void* da
 	g_assert_true(train->state == MOVING);
 	g_assert_true(train->position->x == 1);
 	g_assert_true(train->position->y == 0);
+}
+
+void test_input_reverses_train(test_input_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	sem_train* train = test_ctx->train;
+	sem_world* world = &(test_ctx->world);
+	sem_dynamic_array* heap = &(test_ctx->heap);
+
+	sem_track track;
+	sem_track_set(&track, SEM_WEST, SEM_EAST);
+
+	sem_car car;
+	sem_coordinate_set(&(car.position), 0, 0);
+	car.track = &track;
+
+	sem_train_add_car(train, &car);
+	train->direction = SEM_EAST;
+
+	sem_coordinate coord;
+	sem_coordinate_set(&coord, 0, 0);
+	sem_input_event input;
+	input.time = 3000L;
+	input.tile = &coord;
+	input.rank = SECONDARY;
+
+	sem_action* action = NULL;
+	sem_train_input_act_upon(&input, world, &action);
+
+	g_assert_nonnull(action);
+	action->function(heap, action);
+
+	g_assert_true(train->direction == SEM_WEST);
 }
 
 void test_input_removes_derailed_train(test_input_context* test_ctx, const void* data) {

@@ -52,6 +52,7 @@ sem_success sem_train_move(sem_train* train) {
 
 void sem_train_reverse(sem_train* train) {
 	train->direction = train_tail_end(train);
+	train->position = &(train->tail_car->position);
 
 	reverse_cars(train->head_car);
 
@@ -71,7 +72,7 @@ void reverse_cars(sem_car* car) {
 unit_vector train_tail_end(sem_train* train) {
 	sem_car* car = train->head_car;	
 	unit_vector direction = train->direction;
-	unit_vector tail_end_of_car;
+	unit_vector tail_end_of_car = 0;
 
 	while (car != NULL) {
 		if (direction == car->track->start) {
@@ -88,7 +89,7 @@ unit_vector train_tail_end(sem_train* train) {
 
 sem_success sem_train_add_car(sem_train* train, sem_car* car) {
 	train->cars++;
-	if (train->head_car == 0) {
+	if (train->head_car == NULL) {
 		train->position = &(car->position);
 	}
 	if (train->tail_car != NULL) train->tail_car->next = car;

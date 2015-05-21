@@ -97,6 +97,8 @@ sem_tile* sem_tile_at(sem_world* world, uint32_t x, uint32_t y) {
 }
 
 sem_success sem_tile_accept(sem_train* train, sem_tile* tile, sem_tile_acceptance* acceptance) {
+	sem_tile_acceptance_init(acceptance);
+
 	switch (tile->class) {
 	case BLANK:
 		return sem_set_error("Train ran onto blank tile");

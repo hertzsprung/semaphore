@@ -18,7 +18,7 @@ GLIB_CFLAGS := $(shell $(PKG_CONFIG) glib-2.0 --cflags | sed -re "s/-I/-isystem 
 GLIB_LDFLAGS := $(shell $(PKG_CONFIG) glib-2.0 --libs)
 WARNINGS := -pedantic-errors -Werror -Weverything \
 -Wno-error=padded -Wno-error=documentation -Wno-error=documentation-unknown-command \
--Wno-format-nonliteral
+-Wno-format-nonliteral -Wno-padded
 COMMON_CFLAGS := $(WARNINGS) -O0 -g -std=gnu99
 CFLAGS := $(COMMON_CFLAGS) $(SDL_CFLAGS) $(CAIRO_CFLAGS) $(GLIB_CFLAGS)
 LDFLAGS := $(SDL_LDFLAGS) $(CAIRO_LDFLAGS) $(GLIB_LDFLAGS) -lrt -lm -luuid

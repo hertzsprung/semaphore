@@ -36,9 +36,13 @@ struct sem_train {
 	unit_vector direction;
 };
 
+typedef struct {
+	bool stopped_at_buffer;
+} sem_train_move_outcome;
+
 sem_success sem_train_init(sem_train* train);
 
-sem_success sem_train_move(sem_train* train);
+sem_success sem_train_move(sem_train* train, sem_train_move_outcome* outcome);
 
 void sem_train_reverse(sem_train* train);
 

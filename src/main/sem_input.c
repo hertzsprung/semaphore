@@ -88,17 +88,25 @@ sem_success change_train_state(sem_dynamic_array* heap, sem_action* action) {
 sem_success sem_move_train_action(sem_dynamic_array* heap, sem_action* action) {
 	sem_train* train = (sem_train*) action->context;
 	if (train->state == MOVING) {
-		if (sem_train_move(train) != SEM_OK) return SEM_ERROR;
+		sem_train_move_outcome outcome;
+		if (sem_train_move(train, &outcome) != SEM_OK) return SEM_ERROR;
 
 		if (train->state == DERAILED) {
-			action->time = action->time + 10000L;
+			action->time += 10000L;
 			action->function = remove_train_action;
 			action->write = sem_remove_train_action_write;
-		} else {
-			action->time = action->time + 1000L;
+			sem_heap_insert(heap, action);
+		} else if (train->state == MOVING) {
+			action->time += 1000L;
+			sem_heap_insert(heap, action);
 		}
 
-		sem_heap_insert(heap, action);
+		if (outcome.stopped_at_buffer) {
+			action->time += 5000L;
+			action->function = reverse_train;
+			action->write = NULL;
+			sem_heap_insert(heap, action);
+		}
 	}
 
 	return SEM_OK;

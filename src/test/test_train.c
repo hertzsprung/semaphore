@@ -97,7 +97,8 @@ void test_train_moves_given_velocity(test_train_context* test_ctx, const void* d
 
 	sem_tile_set_track(sem_tile_at(world, 1, 0), &track_SW_NE);
 
-	sem_train_move(train);
+	sem_train_move_outcome outcome;
+	sem_train_move(train, &outcome);
 
 	g_assert_cmpuint(train->position->x, ==, 1);
 	g_assert_cmpuint(train->position->y, ==, 0);
@@ -118,7 +119,8 @@ void test_train_error_moves_onto_blank_tile(test_train_context* test_ctx, const 
 
 	sem_tile_set_track(sem_tile_at(world, 0, 0), &track_E_W);
 	
-	g_assert_cmpint(sem_train_move(train), ==, SEM_ERROR);
+	sem_train_move_outcome outcome;
+	g_assert_cmpint(sem_train_move(train, &outcome), ==, SEM_ERROR);
 }
 
 void test_train_follows_track(test_train_context* test_ctx, const void* data) {
@@ -140,7 +142,8 @@ void test_train_follows_track(test_train_context* test_ctx, const void* data) {
 	sem_tile_set_track(sem_tile_at(world, 0, 0), &track_E_W);
 	sem_tile_set_track(sem_tile_at(world, 1, 0), &track_SE_W);
 
-	sem_train_move(train);
+	sem_train_move_outcome outcome;
+	sem_train_move(train, &outcome);
 
 	g_assert_true(train->direction == (SEM_SOUTH | SEM_EAST));
 }
@@ -168,7 +171,8 @@ void test_train_follows_secondary_track(test_train_context* test_ctx, const void
 	sem_tile_set_track(sem_tile_at(world, 0, 0), &track_E_W);
 	sem_tile_set_track(sem_tile_at(world, 1, 0), &track_N_S_SE_W);
 
-	g_assert_true(sem_train_move(train) == SEM_OK);
+	sem_train_move_outcome outcome;
+	g_assert_true(sem_train_move(train, &outcome) == SEM_OK);
 	g_assert_true(train->direction == (SEM_SOUTH | SEM_EAST));
 }
 
@@ -194,7 +198,8 @@ void test_train_moves_head_car(test_train_context* test_ctx, const void* data) {
 	sem_tile_set_track(sem_tile_at(world, 1, 0), &track_E_W);
 	sem_tile_set_track(sem_tile_at(world, 2, 0), &track_E_W);
 	
-	sem_train_move(train);
+	sem_train_move_outcome outcome;
+	sem_train_move(train, &outcome);
 
 	g_assert_cmpuint(train->position->x, ==, 2);
 	g_assert_cmpuint(train->position->y, ==, 0);
@@ -228,7 +233,8 @@ void test_train_moves_trailing_cars(test_train_context* test_ctx, const void* da
 	sem_tile_set_track(sem_tile_at(world, 2, 0), &track_E_W);
 	sem_tile_set_track(sem_tile_at(world, 3, 0), &track_E_W);
 	
-	sem_train_move(train);
+	sem_train_move_outcome outcome;
+	sem_train_move(train, &outcome);
 
 	g_assert_cmpuint(car2.position.x, ==, 2);
 	g_assert_cmpuint(car2.position.y, ==, 0);
@@ -312,7 +318,8 @@ void test_train_crashes_by_occupying_same_tile(test_train_context* test_ctx, con
 	sem_coordinate_set(&(train2_car2.position), 2, 0);
 	sem_train_add_car(train2, &train2_car2);
 
-	sem_train_move(train1); // move head of train1 into tail of train2
+	sem_train_move_outcome outcome;
+	sem_train_move(train1, &outcome); // move head of train1 into tail of train2
 
 	g_assert_true(train1->state == CRASHED);
 	g_assert_true(train2->state == CRASHED);
@@ -341,7 +348,8 @@ void test_train_car_occupies_track(test_train_context* test_ctx, const void* dat
 	car.track = &track_E_W;
 	sem_train_add_car(train, &car);
 
-	sem_train_move(train);
+	sem_train_move_outcome outcome;
+	sem_train_move(train, &outcome);
 
 	g_assert_true(train->head_car->track == &track_W_S);
 }
@@ -379,7 +387,8 @@ void test_train_moves_trailing_car_onto_track(test_train_context* test_ctx, cons
 	sem_train_add_car(train, &car1);
 	sem_train_add_car(train, &car2);
 
-	sem_train_move(train);
+	sem_train_move_outcome outcome;
+	sem_train_move(train, &outcome);
 
 	g_assert_true(train->head_car->track == &track_N_S);
 	g_assert_true(train->head_car->next->track == &track_W_S);
@@ -410,7 +419,8 @@ void test_train_derails_when_need_points_switch(test_train_context* test_ctx, co
 	sem_tile_set_points(tile, &trackNW_E);
 	tile->points[1] = &trackW_E;
 
-	sem_train_move(train);
+	sem_train_move_outcome outcome;
+	sem_train_move(train, &outcome);
 
 	g_assert_true(train->state == DERAILED);
 }
@@ -480,9 +490,11 @@ void test_train_stops_at_buffer(test_train_context* test_ctx, const void* data) 
 	train->direction = SEM_EAST;
 	train->state = MOVING;
 
-	sem_train_move(train);
+	sem_train_move_outcome outcome;
+	sem_train_move(train, &outcome);
 	
 	g_assert_true(train->state == STOPPED);
 	g_assert_cmpuint(train->position->x, ==, 0);
 	g_assert_cmpuint(train->position->y, ==, 0);
+	g_assert_true(outcome.stopped_at_buffer == true);
 }

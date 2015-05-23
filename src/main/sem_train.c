@@ -11,6 +11,7 @@
 #include "sem_error.h"
 #include "sem_world.h"
 
+void sem_train_move_outcome_init(sem_train_move_outcome* outcome);
 void train_move_trailing(sem_car* tail_car);
 sem_train* train_detect_collision(sem_train* train);
 void reverse_cars(sem_car* car);
@@ -27,7 +28,8 @@ sem_success sem_train_init(sem_train* train) {
 	return SEM_OK;
 }
 
-sem_success sem_train_move(sem_train* train) {
+sem_success sem_train_move(sem_train* train, sem_train_move_outcome* outcome) {
+	sem_train_move_outcome_init(outcome);
 	sem_coordinate new_position;
 	new_position.x = train->position->x + SEM_COMPASS_X(train->direction);
 	new_position.y = train->position->y + SEM_COMPASS_Y(train->direction);
@@ -38,6 +40,7 @@ sem_success sem_train_move(sem_train* train) {
 
 	if (acceptance.reached_buffer) {
 		train->state = STOPPED;
+		outcome->stopped_at_buffer = true;
 	} else {
 		train_move_trailing(train->tail_car);
 		train->position->x = new_position.x;
@@ -53,8 +56,11 @@ sem_success sem_train_move(sem_train* train) {
 		}
 	}
 
-
 	return SEM_OK;
+}
+
+void sem_train_move_outcome_init(sem_train_move_outcome* outcome) {
+	outcome->stopped_at_buffer = false;
 }
 
 void sem_train_reverse(sem_train* train) {

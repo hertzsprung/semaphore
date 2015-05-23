@@ -287,4 +287,6 @@ void test_input_reverses_at_buffer(test_input_context* test_ctx, const void* dat
 	g_assert_nonnull(reverse_at_buffer_action);
 	reverse_at_buffer_action->function(heap, reverse_at_buffer_action);
 	g_assert_true(train->direction == SEM_WEST);
+	g_assert_cmpuint(train->position->x, ==, 0);
+	g_assert_cmpuint(train->position->y, ==, 0);
 }

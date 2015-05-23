@@ -2,7 +2,7 @@ world 64 64
 now 0
 multiplier 1.0
 tiles 60
-0 9 track W-E
+0 9 buffer W-E
 1 9 track W-E
 2 9 track W-E
 3 9 track W-E
@@ -81,12 +81,12 @@ cars 3
 0 2 S-NE
 train 305211b8-799f-4ee7-afb5-303e4edcfaf9
 name TRAIN-3
-state derailed
+state stopped
 direction E
 cars 3
+3 9 W-E
 2 9 W-E
 1 9 W-E
-0 9 W-E
 train 81cbbfd6-43c8-4143-a345-ee9e27dd0e8b
 name TRAIN-4
 state stopped
@@ -95,5 +95,4 @@ cars 3
 10 1 W-E
 11 1 W-SE
 12 2 S-NW
-actions 1
-10000 remove_train 305211b8-799f-4ee7-afb5-303e4edcfaf9
+actions 0

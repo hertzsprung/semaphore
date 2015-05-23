@@ -28,6 +28,7 @@ void test_train_car_occupies_track(test_train_context* test_ctx, const void* dat
 void test_train_moves_trailing_car_onto_track(test_train_context* test_ctx, const void* data);
 void test_train_derails_when_need_points_switch(test_train_context* test_ctx, const void* data);
 void test_train_reverses(test_train_context* test_ctx, const void* data);
+void test_train_stops_at_buffer(test_train_context* test_ctx, const void* data);
 
 void add_test_train(const char *test_name, void (*test)(test_train_context*, const void* data));
 void test_train_setup(test_train_context* test_ctx, const void* data);
@@ -48,6 +49,7 @@ void add_tests_train() {
 	add_test_train("/train/moves_trailing_car_onto_track", test_train_moves_trailing_car_onto_track);
 	add_test_train("/train/derails_when_need_points_switch", test_train_derails_when_need_points_switch);
 	add_test_train("/train/reverses", test_train_reverses);
+	add_test_train("/train/stops_at_buffer", test_train_stops_at_buffer);
 }
 
 void add_test_train(const char *test_name, void (*test)(test_train_context*, const void* data)) {
@@ -460,3 +462,27 @@ void test_train_reverses(test_train_context* test_ctx, const void* data) {
 	g_assert_cmpuint(train->position->y, ==, 1);
 }
 
+void test_train_stops_at_buffer(test_train_context* test_ctx, const void* data) {
+	#pragma unused(data)
+
+	sem_train* train = test_ctx->train;
+	sem_world* world = &(test_ctx->world);
+
+	sem_track trackE_W;
+	sem_track_set(&trackE_W, SEM_EAST, SEM_WEST);
+	sem_tile_set_track(sem_tile_at(world, 0, 0), &trackE_W);
+	sem_tile_set_buffer(sem_tile_at(world, 1, 0), &trackE_W);
+
+	sem_car car;
+	sem_coordinate_set(&(car.position), 0, 0);
+	car.track = &trackE_W;	
+	sem_train_add_car(train, &car);
+	train->direction = SEM_EAST;
+	train->state = MOVING;
+
+	sem_train_move(train);
+	
+	g_assert_true(train->state == STOPPED);
+	g_assert_cmpuint(train->position->x, ==, 0);
+	g_assert_cmpuint(train->position->y, ==, 0);
+}

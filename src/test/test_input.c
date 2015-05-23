@@ -95,14 +95,17 @@ void test_input_toggles_train_state(test_input_context* test_ctx, const void* da
 	sem_world* world = &(test_ctx->world);
 	sem_dynamic_array* heap = &(test_ctx->heap);
 
+	sem_track trackW_E;
+	sem_track_set(&trackW_E, SEM_WEST, SEM_EAST);
+	sem_tile_set_track(sem_tile_at(world, 0, 0), &trackW_E);
+	sem_tile_set_track(sem_tile_at(world, 1, 0), &trackW_E);
+
 	sem_car car;
 	sem_coordinate_set(&(car.position), 0, 0);
 
 	sem_train_add_car(train, &car);
 	train->direction = SEM_EAST;
 	train->state = STOPPED;
-
-	// TODO: should really define the track here
 
 	sem_coordinate coord;
 	sem_coordinate_set(&coord, 0, 0);

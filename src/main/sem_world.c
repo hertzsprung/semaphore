@@ -103,9 +103,12 @@ sem_success sem_tile_accept(sem_train* train, sem_tile* tile, sem_tile_acceptanc
 	case BLANK:
 		return sem_set_error("Train ran onto blank tile");
 	case TRACK:
-	case BUFFER: // TODO: buffer logic
 	case SIGNAL: // TODO: signalling logic
 		return sem_track_accept(train, tile->track, acceptance);
+	case BUFFER:
+		if (sem_track_accept(train, tile->track, acceptance) != SEM_OK) return SEM_ERROR;
+		acceptance->reached_buffer = true;
+		return SEM_OK;
 	case POINTS:
 		if (sem_track_accept(train, tile->track, acceptance) == SEM_OK) return SEM_OK;
 		acceptance->need_points_switch = true;
@@ -117,10 +120,16 @@ void sem_tile_acceptance_init(sem_tile_acceptance* acceptance) {
 	acceptance->direction = 0;
 	acceptance->track = NULL;
 	acceptance->need_points_switch = false;
+	acceptance->reached_buffer = false;
 }
 
 void sem_tile_set_track(sem_tile* tile, sem_track* track) {
 	tile->class = TRACK;
+	tile->track = track;
+}
+
+void sem_tile_set_buffer(sem_tile* tile, sem_track* track) {
+	tile->class = BUFFER;
 	tile->track = track;
 }
 

@@ -28,24 +28,31 @@ sem_success sem_train_init(sem_train* train) {
 }
 
 sem_success sem_train_move(sem_train* train) {
-	train_move_trailing(train->tail_car);
-	train->position->x += SEM_COMPASS_X(train->direction);
-	train->position->y += SEM_COMPASS_Y(train->direction);
+	sem_coordinate new_position;
+	new_position.x = train->position->x + SEM_COMPASS_X(train->direction);
+	new_position.y = train->position->y + SEM_COMPASS_Y(train->direction);
 
-	sem_tile* tile = sem_tile_at_coord(train->world, train->position);
+	sem_tile* tile = sem_tile_at_coord(train->world, &new_position);
 	sem_tile_acceptance acceptance;
-	sem_success success = sem_tile_accept(train, tile, &acceptance);
-	if (success != SEM_OK) return success;
+	if (sem_tile_accept(train, tile, &acceptance) != SEM_OK) return SEM_ERROR;
 
-	train->direction = acceptance.direction;
-	train->head_car->track = acceptance.track;	
-	if (acceptance.need_points_switch) train->state = DERAILED;
+	if (acceptance.reached_buffer) {
+		train->state = STOPPED;
+	} else {
+		train_move_trailing(train->tail_car);
+		train->position->x = new_position.x;
+		train->position->y = new_position.y;
+		train->direction = acceptance.direction;
+		train->head_car->track = acceptance.track;	
+		if (acceptance.need_points_switch) train->state = DERAILED;
 
-	sem_train* collided_train = train_detect_collision(train);
-	if (collided_train != NULL) {
-		train->state = CRASHED;
-		collided_train->state = CRASHED;
+		sem_train* collided_train = train_detect_collision(train);
+		if (collided_train != NULL) {
+			train->state = CRASHED;
+			collided_train->state = CRASHED;
+		}
 	}
+
 
 	return SEM_OK;
 }

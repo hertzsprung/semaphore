@@ -73,6 +73,14 @@ typedef struct {
 	 * calling sem_points_activate() or it must derail.
 	 */
 	bool need_points_switch;
+
+	/**
+	 * @brief Indicates whether or not the train has reached a buffer stop.
+	 * 
+	 * If @c true, indicates that the train should stop without moving first
+	 * and eventually reverse.
+	 */
+	bool reached_buffer;
 } sem_tile_acceptance;
 
 /**
@@ -133,6 +141,8 @@ bool sem_track_straight(sem_track* track);
 unit_vector sem_track_corner(sem_track* track);
 
 void sem_tile_set_track(sem_tile* tile, sem_track* track);
+
+void sem_tile_set_buffer(sem_tile* tile, sem_track* track);
 
 /**
  * \brief Initialise a sem_tile with an active track, leaving the inactive tracks as NULL.

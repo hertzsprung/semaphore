@@ -21,10 +21,9 @@ typedef struct {
 typedef sem_success (*sem_input_handler)(sem_input_event* input, sem_world* world, sem_action** action);
 
 sem_success sem_tile_input_act_upon(sem_input_event* input, sem_world* world, sem_action** action);
-
 sem_success sem_train_input_act_upon(sem_input_event* input, sem_world* world, sem_action** action);
 
-sem_success move_train_action(sem_dynamic_array* heap, sem_action* action); // TODO: should this really be public? only using it for tests
+sem_success sem_move_train_action(sem_dynamic_array* heap, sem_action* action);
 sem_success remove_train_action(sem_dynamic_array* heap, sem_action* action);
 
 #endif

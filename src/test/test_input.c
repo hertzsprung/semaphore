@@ -187,7 +187,7 @@ void test_input_removes_derailed_train(test_input_context* test_ctx, const void*
 	sem_action action;
 	action.time = 4000;
 	action.context = train;
-	g_assert_true(move_train_action(heap, &action) == SEM_OK);
+	g_assert_true(sem_move_train_action(heap, &action) == SEM_OK);
 
 	g_assert_true(train->state == DERAILED);
 

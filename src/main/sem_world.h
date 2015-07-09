@@ -3,12 +3,14 @@
 
 typedef struct sem_world sem_world;
 typedef struct sem_track sem_track;
+typedef struct sem_signal_acceptance sem_signal_acceptance;
 
 #include <uuid/uuid.h>
 
 #include "sem_compass.h"
 #include "sem_dynamic_array.h"
 #include "sem_error.h"
+#include "sem_signal.h"
 #include "sem_timer.h"
 #include "sem_track_cache.h"
 #include "sem_train.h"
@@ -17,24 +19,11 @@ typedef enum {
 	BLANK, TRACK, POINTS, SIGNAL, BUFFER
 } sem_tile_class;
 
-typedef enum {
-	MAIN_MANUAL, MAIN_AUTO, SUB
-} sem_signal_type;
-
-typedef enum {
-	RED, AMBER, GREEN
-} sem_signal_aspect;
-
 struct sem_track {
 	unit_vector start;
 	unit_vector end;	
 	sem_track* next; /**< \brief When two tracks appear on the same tile, this points to the second piece of track */
 };
-
-typedef struct {
-	sem_signal_type type;
-	sem_signal_aspect aspect;
-} sem_signal;
 
 typedef struct {
 	sem_tile_class class;	
@@ -51,6 +40,10 @@ struct sem_world {
 	uint32_t max_y;
 	sem_tile* tiles; // TODO: would be better not to have BLANK tiles, just have NULL pointers
 	sem_track_cache* track_cache;
+};
+
+struct sem_signal_acceptance {
+	bool stop;
 };
 
 typedef struct {
@@ -81,6 +74,8 @@ typedef struct {
 	 * and eventually reverse.
 	 */
 	bool reached_buffer;
+
+	sem_signal_acceptance signalling;
 } sem_tile_acceptance;
 
 /**

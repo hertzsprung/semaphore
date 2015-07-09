@@ -107,7 +107,7 @@ sem_success sem_tile_accept(sem_train* train, sem_tile* tile, sem_tile_acceptanc
 		return sem_track_accept(train, tile->track, acceptance);
 	case SIGNAL:
 		if (sem_track_accept(train, tile->track, acceptance) != SEM_OK) return SEM_ERROR;
-		return sem_signal_accept(train, tile->signal);
+		return sem_signal_accept(train, tile->signal, &(acceptance->signalling));
 	case BUFFER:
 		if (sem_track_accept(train, tile->track, acceptance) != SEM_OK) return SEM_ERROR;
 		acceptance->reached_buffer = true;
@@ -124,6 +124,7 @@ void sem_tile_acceptance_init(sem_tile_acceptance* acceptance) {
 	acceptance->track = NULL;
 	acceptance->need_points_switch = false;
 	acceptance->reached_buffer = false;
+	sem_signal_acceptance_init(&(acceptance->signalling));
 }
 
 void sem_tile_set_track(sem_tile* tile, sem_track* track) {

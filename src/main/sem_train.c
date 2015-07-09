@@ -41,6 +41,8 @@ sem_success sem_train_move(sem_train* train, sem_train_move_outcome* outcome) {
 	if (acceptance.reached_buffer) {
 		train->state = STOPPED;
 		outcome->stopped_at_buffer = true;
+	} else if (acceptance.signalling.stop) {
+		train->state = STOPPED;
 	} else {
 		train_move_trailing(train->tail_car);
 		train->position->x = new_position.x;

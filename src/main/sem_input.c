@@ -16,7 +16,6 @@ sem_train* train_occupying_tile(sem_dynamic_array* trains, sem_coordinate* tile)
 sem_success switch_points_action(sem_dynamic_array* heap, sem_action* action);
 sem_success change_train_state(sem_dynamic_array* heap, sem_action* action);
 sem_success reverse_train(sem_dynamic_array* heap, sem_action* action);
-sem_success reverse_train_at_buffer(sem_dynamic_array* heap, sem_action* action);
 
 sem_success sem_tile_input_act_upon(sem_input_event* input, sem_world* world, sem_action** action) {
 	sem_tile* tile = sem_tile_at_coord(world, input->tile);
@@ -107,8 +106,8 @@ sem_success sem_move_train_action(sem_dynamic_array* heap, sem_action* action) {
 
 		if (outcome.stopped_at_buffer) {
 			action->time += 5000L;
-			action->function = reverse_train_at_buffer;
-			action->write = NULL; // TODO
+			action->function = sem_reverse_train_at_buffer_action;
+			action->write = sem_reverse_train_at_buffer_action_write;
 			sem_heap_insert(heap, action);
 		}
 	}
@@ -124,7 +123,7 @@ sem_success reverse_train(sem_dynamic_array* heap, sem_action* action) {
 	return SEM_OK;
 }
 
-sem_success reverse_train_at_buffer(sem_dynamic_array* heap, sem_action* action) {
+sem_success sem_reverse_train_at_buffer_action(sem_dynamic_array* heap, sem_action* action) {
 	if (reverse_train(heap, action) != SEM_OK) return SEM_ERROR;
 	((sem_train*) action->context)->state = MOVING;
 	if (sem_move_train_action(heap, action) != SEM_OK) return SEM_ERROR;

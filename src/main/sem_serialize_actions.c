@@ -8,6 +8,7 @@
 
 sem_success sem_move_train_action_reader(sem_tokenization* tokens, sem_world* world, sem_action** action);
 sem_success sem_remove_train_action_reader(sem_tokenization* tokens, sem_world* world, sem_action** action);
+sem_success sem_reverse_train_at_buffer_action_reader(sem_tokenization* tokens, sem_world* world, sem_action** action);
 
 sem_success write_train_action(FILE* out, char* tag, sem_action* action);
 sem_success set_train_context(sem_world* world, sem_tokenization* tokens, sem_action* action);
@@ -17,6 +18,8 @@ sem_action_reader sem_action_reader_lookup(char* action_name) {
 		return sem_move_train_action_reader;
 	} else if (strcmp(action_name, "remove_train") == 0) {
 		return sem_remove_train_action_reader;
+	} else if (strcmp(action_name, "reverse_train_at_buffer") == 0) {
+		return sem_reverse_train_at_buffer_action_reader;
 	} else {
 		return NULL;
 	}
@@ -40,12 +43,25 @@ sem_success sem_remove_train_action_reader(sem_tokenization* tokens, sem_world* 
 	return set_train_context(world, tokens, *action);
 }
 
+sem_success sem_reverse_train_at_buffer_action_reader(sem_tokenization* tokens, sem_world* world, sem_action** action) {
+	*action = sem_action_new();
+	if (*action == NULL) return SEM_ERROR;
+	(*action)->function = sem_reverse_train_at_buffer_action; 
+	(*action)->write = sem_reverse_train_at_buffer_action_write;
+
+	return set_train_context(world, tokens, *action);
+}
+
 sem_success sem_move_train_action_write(FILE* out, sem_action* action) {
 	return write_train_action(out, "move_train", action);
 }
 
 sem_success sem_remove_train_action_write(FILE* out, sem_action* action) {
 	return write_train_action(out, "remove_train", action);
+}
+
+sem_success sem_reverse_train_at_buffer_action_write(FILE* out, sem_action* action) {
+	return write_train_action(out, "reverse_train_at_buffer", action);
 }
 
 sem_success write_train_action(FILE* out, char* tag, sem_action* action) {

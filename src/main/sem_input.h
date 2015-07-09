@@ -25,5 +25,6 @@ sem_success sem_train_input_act_upon(sem_input_event* input, sem_world* world, s
 
 sem_success sem_move_train_action(sem_dynamic_array* heap, sem_action* action);
 sem_success remove_train_action(sem_dynamic_array* heap, sem_action* action);
+sem_success sem_reverse_train_at_buffer_action(sem_dynamic_array* heap, sem_action* action);
 
 #endif

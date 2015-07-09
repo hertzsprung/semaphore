@@ -16,9 +16,9 @@ void test_world_not_needs_points_switch_when_train_on_active_track(test_world_co
 void test_world_train_not_accepted_on_unconnected_points(test_world_context* test_ctx, const void* data);
 void test_world_track_matching_inactive_points(test_world_context* test_ctx, const void* data);
 
+void add_test_world(const char *test_name, void (*test)(test_world_context*, const void* data));
 void test_world_setup(test_world_context* test_ctx, const void* data);
 void test_world_teardown(test_world_context* test_ctx, const void* data);
-void add_test_world(const char *test_name, void (*test)(test_world_context*, const void* data));
 
 void test_world_setup(test_world_context* test_ctx, const void* data) {
 	#pragma unused(data)

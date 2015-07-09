@@ -25,7 +25,7 @@ LDFLAGS := $(SDL_LDFLAGS) $(CAIRO_LDFLAGS) $(GLIB_LDFLAGS) -lrt -lm -luuid
 TEST_CFLAGS := -Isrc/main $(COMMON_CFLAGS) $(GLIB_CFLAGS)
 TEST_LDFLAGS := $(GLIB_LDFLAGS) -luuid
 
-COMPONENTS := sem_action sem_action_list sem_compass sem_dynamic_array sem_error sem_heap sem_input sem_render sem_serialize sem_serialize_actions sem_serialize_railpro sem_strings sem_parser sem_timer sem_track_cache sem_train sem_world
+COMPONENTS := sem_action sem_action_list sem_compass sem_dynamic_array sem_error sem_heap sem_input sem_render sem_serialize sem_serialize_actions sem_serialize_railpro sem_signal sem_strings sem_parser sem_timer sem_track_cache sem_train sem_world
 EXECUTABLES := semaphore railpro2semaphore
 SOURCES := $(addsuffix .c,$(addprefix src/main/,$(EXECUTABLES) $(COMPONENTS)))
 

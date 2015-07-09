@@ -6,6 +6,7 @@
 #include "sem_dynamic_array.h"
 #include "sem_error.h"
 #include "sem_heap.h"
+#include "sem_signal.h"
 #include "sem_track_cache.h"
 #include "sem_timer.h"
 #include "sem_world.h"
@@ -103,8 +104,10 @@ sem_success sem_tile_accept(sem_train* train, sem_tile* tile, sem_tile_acceptanc
 	case BLANK:
 		return sem_set_error("Train ran onto blank tile");
 	case TRACK:
-	case SIGNAL: // TODO: signalling logic
 		return sem_track_accept(train, tile->track, acceptance);
+	case SIGNAL:
+		if (sem_track_accept(train, tile->track, acceptance) != SEM_OK) return SEM_ERROR;
+		return sem_signal_accept(train, tile->signal);
 	case BUFFER:
 		if (sem_track_accept(train, tile->track, acceptance) != SEM_OK) return SEM_ERROR;
 		acceptance->reached_buffer = true;

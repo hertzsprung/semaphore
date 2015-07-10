@@ -28,6 +28,7 @@ void test_input_unremoves_derailed_train_after_crash(test_input_context* test_ct
 void test_input_null_action_on_blank_tile(test_input_context* test_ctx, const void* data);
 void test_input_switches_points(test_input_context* test_ctx, const void* data);
 void test_input_reverses_at_buffer(test_input_context* test_ctx, const void* data);
+void test_input_signal_green_to_red(test_input_context* test_ctx, const void* data);
 
 void add_test_input(const char *test_name, void (*test)(test_input_context*, const void* data));
 void test_input_setup(test_input_context* test_ctx, const void* data);
@@ -42,6 +43,7 @@ void add_tests_input(void) {
 	add_test_input("/input/null_action_on_blank_tile", test_input_null_action_on_blank_tile);
 	add_test_input("/input/switches_points", test_input_switches_points);
 	add_test_input("/input/reverses_at_buffer", test_input_reverses_at_buffer);
+	add_test_input("/input/signal_green_to_red", test_input_signal_green_to_red);
 }
 
 void add_test_input(const char *test_name, void (*test)(test_input_context*, const void* data)) {
@@ -258,6 +260,7 @@ void test_input_switches_points(test_input_context* test_ctx, const void* data) 
 
 void test_input_reverses_at_buffer(test_input_context* test_ctx, const void* data) {
 	#pragma unused(data)
+
 	sem_world* world = &(test_ctx->world);
 	sem_train* train = test_ctx->train;
 	sem_dynamic_array* heap = &(test_ctx->heap);
@@ -289,4 +292,34 @@ void test_input_reverses_at_buffer(test_input_context* test_ctx, const void* dat
 	g_assert_true(train->direction == SEM_WEST);
 	g_assert_cmpuint(train->position->x, ==, 0);
 	g_assert_cmpuint(train->position->y, ==, 0);
+}
+
+void test_input_signal_green_to_red(test_input_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	sem_world* world = &(test_ctx->world);
+	sem_dynamic_array* heap = &(test_ctx->heap);
+
+	sem_track track;
+	sem_track_set(&track, SEM_WEST, SEM_EAST);
+
+	sem_signal* signal = malloc(sizeof(sem_signal));
+	signal->type = MAIN_MANUAL;
+	signal->aspect = GREEN;
+	
+	sem_tile_set_signal(sem_tile_at(world, 0, 0), &track, signal);
+
+	sem_coordinate coord;
+	sem_coordinate_set(&coord, 0, 0);
+	sem_input_event input;
+	input.time = 3000L;
+	input.tile = &coord;
+	input.rank = PRIMARY;
+
+	sem_action* action = NULL;
+	sem_tile_input_act_upon(&input, world, &action);
+
+	g_assert_nonnull(action);
+	action->function(heap, action);
+
+	g_assert_true(signal->aspect == RED);
 }

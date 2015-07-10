@@ -16,6 +16,7 @@ sem_train* train_occupying_tile(sem_dynamic_array* trains, sem_coordinate* tile)
 sem_success switch_points_action(sem_dynamic_array* heap, sem_action* action);
 sem_success change_train_state(sem_dynamic_array* heap, sem_action* action);
 sem_success reverse_train(sem_dynamic_array* heap, sem_action* action);
+sem_success toggle_signal_aspect(sem_dynamic_array* heap, sem_action* action);
 
 sem_success sem_tile_input_act_upon(sem_input_event* input, sem_world* world, sem_action** action) {
 	sem_tile* tile = sem_tile_at_coord(world, input->tile);
@@ -26,6 +27,12 @@ sem_success sem_tile_input_act_upon(sem_input_event* input, sem_world* world, se
 		(*action)->time = input->time;
 		(*action)->context = tile;
 		(*action)->function = switch_points_action;
+	} else if (tile->class == SIGNAL) {
+		*action = sem_action_new();
+		if (*action == NULL) return SEM_ERROR;
+		(*action)->time = input->time;
+		(*action)->context = tile->signal;
+		(*action)->function = toggle_signal_aspect;
 	}
 	return SEM_OK;
 }
@@ -135,5 +142,12 @@ sem_success remove_train_action(sem_dynamic_array* heap, sem_action* action) {
 	#pragma unused(heap)
 	sem_train* train = (sem_train*) action->context;
 	sem_dynamic_array_remove(train->world->trains, train);
+	return SEM_OK;
+}
+
+sem_success toggle_signal_aspect(sem_dynamic_array* heap, sem_action* action) {
+	#pragma unused(heap)
+	sem_signal* signal = (sem_signal*) action->context;
+	signal->aspect = RED;
 	return SEM_OK;
 }

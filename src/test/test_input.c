@@ -29,10 +29,13 @@ void test_input_null_action_on_blank_tile(test_input_context* test_ctx, const vo
 void test_input_switches_points(test_input_context* test_ctx, const void* data);
 void test_input_reverses_at_buffer(test_input_context* test_ctx, const void* data);
 void test_input_signal_green_to_red(test_input_context* test_ctx, const void* data);
+void test_input_signal_not_green_to_green(test_input_context* test_ctx, const void* data);
+void test_input_signal_to_amber(test_input_context* test_ctx, const void* data);
 
 void add_test_input(const char *test_name, void (*test)(test_input_context*, const void* data));
 void test_input_setup(test_input_context* test_ctx, const void* data);
 void test_input_teardown(test_input_context* test_ctx, const void* data);
+void test_signal_aspect(test_input_context* test_ctx, sem_signal_aspect before, sem_input_rank input_rank, sem_signal_aspect after);
 
 void add_tests_input(void) {
 	add_test_input("/input/null_action_for_unoccupied_coordinate", test_input_null_action_for_unoccupied_coordinate);
@@ -44,6 +47,8 @@ void add_tests_input(void) {
 	add_test_input("/input/switches_points", test_input_switches_points);
 	add_test_input("/input/reverses_at_buffer", test_input_reverses_at_buffer);
 	add_test_input("/input/signal_green_to_red", test_input_signal_green_to_red);
+	add_test_input("/input/signal_not_green_to_green", test_input_signal_not_green_to_green);
+	add_test_input("/input/signal_to_amber", test_input_signal_to_amber);
 }
 
 void add_test_input(const char *test_name, void (*test)(test_input_context*, const void* data)) {
@@ -296,6 +301,20 @@ void test_input_reverses_at_buffer(test_input_context* test_ctx, const void* dat
 
 void test_input_signal_green_to_red(test_input_context* test_ctx, const void* data) {
 	#pragma unused(data)
+	test_signal_aspect(test_ctx, GREEN, PRIMARY, RED);
+}
+
+void test_input_signal_not_green_to_green(test_input_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	test_signal_aspect(test_ctx, AMBER, PRIMARY, GREEN);
+}
+
+void test_input_signal_to_amber(test_input_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	test_signal_aspect(test_ctx, GREEN, SECONDARY, AMBER);
+}
+
+void test_signal_aspect(test_input_context* test_ctx, sem_signal_aspect before, sem_input_rank input_rank, sem_signal_aspect after) {
 	sem_world* world = &(test_ctx->world);
 	sem_dynamic_array* heap = &(test_ctx->heap);
 
@@ -304,7 +323,7 @@ void test_input_signal_green_to_red(test_input_context* test_ctx, const void* da
 
 	sem_signal* signal = malloc(sizeof(sem_signal));
 	signal->type = MAIN_MANUAL;
-	signal->aspect = GREEN;
+	signal->aspect = before;
 	
 	sem_tile_set_signal(sem_tile_at(world, 0, 0), &track, signal);
 
@@ -313,7 +332,7 @@ void test_input_signal_green_to_red(test_input_context* test_ctx, const void* da
 	sem_input_event input;
 	input.time = 3000L;
 	input.tile = &coord;
-	input.rank = PRIMARY;
+	input.rank = input_rank;
 
 	sem_action* action = NULL;
 	sem_tile_input_act_upon(&input, world, &action);
@@ -321,5 +340,5 @@ void test_input_signal_green_to_red(test_input_context* test_ctx, const void* da
 	g_assert_nonnull(action);
 	action->function(heap, action);
 
-	g_assert_true(signal->aspect == RED);
+	g_assert_true(signal->aspect == after);
 }

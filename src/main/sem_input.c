@@ -18,6 +18,7 @@ sem_success change_train_state(sem_dynamic_array* heap, sem_action* action);
 sem_success reverse_train(sem_dynamic_array* heap, sem_action* action);
 sem_success toggle_signal_aspect(sem_dynamic_array* heap, sem_action* action);
 sem_success set_signal_to_amber(sem_dynamic_array* heap, sem_action* action);
+sem_success release_any_held_train(sem_signal* signal, sem_dynamic_array* heap, sem_action* action);
 
 sem_success sem_tile_input_act_upon(sem_input_event* input, sem_world* world, sem_action** action) {
 	sem_tile* tile = sem_tile_at_coord(world, input->tile);
@@ -112,19 +113,19 @@ sem_success sem_move_train_action(sem_dynamic_array* heap, sem_action* action) {
 			action->time += 10000L;
 			action->function = remove_train_action;
 			action->write = sem_remove_train_action_write;
-			sem_heap_insert(heap, action);
+			if (sem_heap_insert(heap, action) != SEM_OK) return SEM_ERROR;
 		} else if (train->state == MOVING) {
 			action->time += 1000L;
 			action->function = sem_move_train_action;
 			action->write = sem_move_train_action_write;
-			sem_heap_insert(heap, action);
+			if (sem_heap_insert(heap, action) != SEM_OK) return SEM_ERROR;
 		}
 
 		if (outcome.stopped_at_buffer) {
 			action->time += 5000L;
 			action->function = sem_reverse_train_at_buffer_action;
 			action->write = sem_reverse_train_at_buffer_action_write;
-			sem_heap_insert(heap, action);
+			if (sem_heap_insert(heap, action) != SEM_OK) return SEM_ERROR;
 		}
 	}
 
@@ -155,15 +156,23 @@ sem_success remove_train_action(sem_dynamic_array* heap, sem_action* action) {
 }
 
 sem_success toggle_signal_aspect(sem_dynamic_array* heap, sem_action* action) {
-	#pragma unused(heap)
 	sem_signal* signal = (sem_signal*) action->context;
 	signal->aspect = (signal->aspect == GREEN) ? RED : GREEN;
-	return SEM_OK;
+	return release_any_held_train(signal, heap, action);
 }
 
 sem_success set_signal_to_amber(sem_dynamic_array* heap, sem_action* action) {
-	#pragma unused(heap)
 	sem_signal* signal = (sem_signal*) action->context;
 	signal->aspect = AMBER;
-	return SEM_OK;
+	return release_any_held_train(signal, heap, action);
+}
+
+sem_success release_any_held_train(sem_signal* signal, sem_dynamic_array* heap, sem_action* action) {
+	if (sem_signal_holding_train(signal)) {
+		action->function = change_train_state;
+		action->context = sem_signal_release_train(signal);
+		return sem_heap_insert(heap, action);
+	} else {
+		return SEM_OK;
+	}
 }

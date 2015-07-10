@@ -31,11 +31,14 @@ void test_input_reverses_at_buffer(test_input_context* test_ctx, const void* dat
 void test_input_signal_green_to_red(test_input_context* test_ctx, const void* data);
 void test_input_signal_not_green_to_green(test_input_context* test_ctx, const void* data);
 void test_input_signal_to_amber(test_input_context* test_ctx, const void* data);
+void test_input_move_train_when_signal_goes_green(test_input_context* test_ctx, const void* data);
+void test_input_move_train_when_signal_goes_amber(test_input_context* test_ctx, const void* data);
 
 void add_test_input(const char *test_name, void (*test)(test_input_context*, const void* data));
 void test_input_setup(test_input_context* test_ctx, const void* data);
 void test_input_teardown(test_input_context* test_ctx, const void* data);
-void test_signal_aspect(test_input_context* test_ctx, sem_signal_aspect before, sem_input_rank input_rank, sem_signal_aspect after);
+void test_input_signal_aspect(test_input_context* test_ctx, sem_signal_aspect before, sem_input_rank input_rank, sem_signal_aspect after);
+void test_input_move_train_on_signal_aspect_change(test_input_context* test_ctx, sem_input_rank input_rank);
 
 void add_tests_input(void) {
 	add_test_input("/input/null_action_for_unoccupied_coordinate", test_input_null_action_for_unoccupied_coordinate);
@@ -49,6 +52,8 @@ void add_tests_input(void) {
 	add_test_input("/input/signal_green_to_red", test_input_signal_green_to_red);
 	add_test_input("/input/signal_not_green_to_green", test_input_signal_not_green_to_green);
 	add_test_input("/input/signal_to_amber", test_input_signal_to_amber);
+	add_test_input("/input/move_train_when_signal_goes_green", test_input_move_train_when_signal_goes_green);
+	add_test_input("/input/move_train_when_signal_goes_amber", test_input_move_train_when_signal_goes_amber);
 }
 
 void add_test_input(const char *test_name, void (*test)(test_input_context*, const void* data)) {
@@ -301,20 +306,20 @@ void test_input_reverses_at_buffer(test_input_context* test_ctx, const void* dat
 
 void test_input_signal_green_to_red(test_input_context* test_ctx, const void* data) {
 	#pragma unused(data)
-	test_signal_aspect(test_ctx, GREEN, PRIMARY, RED);
+	test_input_signal_aspect(test_ctx, GREEN, PRIMARY, RED);
 }
 
 void test_input_signal_not_green_to_green(test_input_context* test_ctx, const void* data) {
 	#pragma unused(data)
-	test_signal_aspect(test_ctx, AMBER, PRIMARY, GREEN);
+	test_input_signal_aspect(test_ctx, AMBER, PRIMARY, GREEN);
 }
 
 void test_input_signal_to_amber(test_input_context* test_ctx, const void* data) {
 	#pragma unused(data)
-	test_signal_aspect(test_ctx, GREEN, SECONDARY, AMBER);
+	test_input_signal_aspect(test_ctx, GREEN, SECONDARY, AMBER);
 }
 
-void test_signal_aspect(test_input_context* test_ctx, sem_signal_aspect before, sem_input_rank input_rank, sem_signal_aspect after) {
+void test_input_signal_aspect(test_input_context* test_ctx, sem_signal_aspect before, sem_input_rank input_rank, sem_signal_aspect after) {
 	sem_world* world = &(test_ctx->world);
 	sem_dynamic_array* heap = &(test_ctx->heap);
 
@@ -322,8 +327,7 @@ void test_signal_aspect(test_input_context* test_ctx, sem_signal_aspect before, 
 	sem_track_set(&track, SEM_WEST, SEM_EAST);
 
 	sem_signal* signal = malloc(sizeof(sem_signal));
-	signal->type = MAIN_MANUAL;
-	signal->aspect = before;
+	sem_signal_init(signal, MAIN_MANUAL, before);
 	
 	sem_tile_set_signal(sem_tile_at(world, 0, 0), &track, signal);
 
@@ -339,6 +343,64 @@ void test_signal_aspect(test_input_context* test_ctx, sem_signal_aspect before, 
 
 	g_assert_nonnull(action);
 	action->function(heap, action);
+	free(action);
 
 	g_assert_true(signal->aspect == after);
+}
+
+void test_input_move_train_when_signal_goes_green(test_input_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	test_input_move_train_on_signal_aspect_change(test_ctx, PRIMARY);
+}
+
+void test_input_move_train_when_signal_goes_amber(test_input_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	test_input_move_train_on_signal_aspect_change(test_ctx, SECONDARY);
+}
+
+void test_input_move_train_on_signal_aspect_change(test_input_context* test_ctx, sem_input_rank input_rank) {
+	sem_world* world = &(test_ctx->world);
+	sem_dynamic_array* heap = &(test_ctx->heap);
+	sem_train* train = test_ctx->train;
+
+	sem_track track;
+	sem_track_set(&track, SEM_WEST, SEM_EAST);
+	sem_tile_set_track(sem_tile_at(world, 0, 0), &track);
+
+	sem_signal* signal = malloc(sizeof(sem_signal));
+	sem_signal_init(signal, MAIN_MANUAL, RED);
+	
+	sem_tile_set_signal(sem_tile_at(world, 1, 0), &track, signal);
+
+	sem_car car;
+	sem_coordinate_set(&(car.position), 0, 0);
+	car.track = &track;
+	sem_train_add_car(train, &car);
+
+	train->direction = SEM_EAST;
+	train->state = MOVING;
+
+	sem_train_move_outcome outcome;
+	g_assert_true(sem_train_move(train, &outcome) == SEM_OK);
+	g_assert_true(train->state == STOPPED);
+
+	sem_coordinate coord;
+	sem_coordinate_set(&coord, 1, 0);
+	sem_input_event input;
+	input.time = 3000L;
+	input.tile = &coord;
+	input.rank = input_rank;
+
+	sem_action* action = NULL;
+	sem_tile_input_act_upon(&input, world, &action);
+
+	g_assert_nonnull(action);
+	action->function(heap, action);
+
+	sem_action* change_train_state = sem_heap_remove_earliest(heap);
+	g_assert_nonnull(change_train_state);
+	change_train_state->function(heap, change_train_state);
+	free(action);
+
+	g_assert_true(train->state == MOVING);
 }

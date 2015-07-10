@@ -114,32 +114,38 @@ sem_success sem_parse_signal(sem_tile* tile, sem_tokenization* tile_description)
 	if (signal == NULL) return sem_set_error("Failed to allocated memory for signal");
 	tile->signal = signal;
 
-	char* aspect = sem_tokenization_next(tile_description);
-	if (strcmp(aspect, "green") == 0) {
-		signal->aspect = GREEN;
-	} else if (strcmp(aspect, "amber") == 0) {
-		signal->aspect = AMBER;
-	} else if (strcmp(aspect, "red") == 0) {
-		signal->aspect = RED;
+	sem_signal_aspect aspect;
+	char* aspect_str = sem_tokenization_next(tile_description);
+
+	if (strcmp(aspect_str, "green") == 0) {
+		aspect = GREEN;
+	} else if (strcmp(aspect_str, "amber") == 0) {
+		aspect = AMBER;
+	} else if (strcmp(aspect_str, "red") == 0) {
+		aspect = RED;
 	} else {
 		return sem_set_error("Unknown signal aspect");
 	}
 
+	sem_signal_type type;
 	char* primary_type = sem_tokenization_next(tile_description);
+
 	if (strcmp(primary_type, "main") == 0) {
 		char* secondary_type = sem_tokenization_next(tile_description);
 		if (strcmp(secondary_type, "manual") == 0) {
-			signal->type = MAIN_MANUAL;
+			type = MAIN_MANUAL;
 		} else if (strcmp(secondary_type, "auto") == 0) {
-			signal->type = MAIN_AUTO;
+			type = MAIN_AUTO;
 		} else {
 			return sem_set_error("Unknown main signal subtype");
 		}
 	} else if (strcmp(primary_type, "sub") == 0) {
-		signal->type = SUB;
+		type = SUB;
 	} else {
 		return sem_set_error("Unknown signal type");
 	}
+
+	sem_signal_init(signal, type, aspect);
 	
 	return SEM_OK;
 }

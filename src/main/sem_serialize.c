@@ -163,7 +163,7 @@ sem_success read_trains(FILE* in, sem_world* world) {
 
 sem_success read_train(FILE* in, sem_world* world) {
 	sem_train* train = malloc(sizeof(sem_train));
-	if (train == NULL) return sem_set_error("Failed to allocated memory for train");
+	if (train == NULL) return sem_set_error("Failed to allocate memory for train");
 	sem_train_init(train);
 	train->world = world;
 
@@ -271,7 +271,7 @@ sem_success read_train_cars(FILE* in, sem_train* train) {
 
 sem_success read_car(FILE* in, sem_train* train) {
 	sem_car* car = malloc(sizeof(sem_car));
-	if (car == NULL) return sem_set_error("Failed to allocated memory for car");
+	if (car == NULL) return sem_set_error("Failed to allocate memory for car");
 
 	char* line = sem_read_line(in);
 	if (line == NULL) return sem_set_error("Could not read car");

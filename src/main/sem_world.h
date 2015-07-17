@@ -16,7 +16,7 @@ typedef struct sem_signal_acceptance sem_signal_acceptance;
 #include "sem_train.h"
 
 typedef enum {
-	BLANK, TRACK, POINTS, SIGNAL, BUFFER
+	BLANK, TRACK, POINTS, SIGNAL, BUFFER, ENTRY
 } sem_tile_class;
 
 struct sem_track {
@@ -138,6 +138,8 @@ unit_vector sem_track_corner(sem_track* track);
 void sem_tile_set_track(sem_tile* tile, sem_track* track);
 
 void sem_tile_set_buffer(sem_tile* tile, sem_track* track);
+
+void sem_tile_set_entry(sem_tile* tile, sem_track* track);
 
 /**
  * \brief Initialise a sem_tile with an active track, leaving the inactive tracks as NULL.

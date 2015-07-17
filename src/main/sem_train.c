@@ -127,6 +127,7 @@ bool sem_train_occupies(sem_train* train, sem_coordinate* tile) {
 
 void sem_train_destroy(sem_train* train) {
 	free(train->name);
+	// TODO: free cars
 }	
 
 void train_move_trailing(sem_car* tail_car) {

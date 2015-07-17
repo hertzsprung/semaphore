@@ -102,7 +102,6 @@ sem_success change_train_state(sem_dynamic_array* heap, sem_action* action) {
 	return SEM_OK;
 }
 
-
 sem_success sem_move_train_action(sem_dynamic_array* heap, sem_action* action) {
 	sem_train* train = (sem_train*) action->context;
 	if (train->state == MOVING) {

@@ -104,6 +104,7 @@ sem_success sem_tile_accept(sem_train* train, sem_tile* tile, sem_tile_acceptanc
 	case BLANK:
 		return sem_set_error("Train ran onto blank tile");
 	case TRACK:
+	case ENTRY: // FIXME: a train should not be accepted onto an entry tile, this is tantamount to a crash
 		return sem_track_accept(train, tile->track, acceptance);
 	case SIGNAL:
 		if (sem_track_accept(train, tile->track, acceptance) != SEM_OK) return SEM_ERROR;
@@ -134,6 +135,11 @@ void sem_tile_set_track(sem_tile* tile, sem_track* track) {
 
 void sem_tile_set_buffer(sem_tile* tile, sem_track* track) {
 	tile->class = BUFFER;
+	tile->track = track;
+}
+
+void sem_tile_set_entry(sem_tile* tile, sem_track* track) {
+	tile->class = ENTRY;
 	tile->track = track;
 }
 

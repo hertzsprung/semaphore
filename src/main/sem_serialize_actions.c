@@ -62,7 +62,7 @@ sem_success sem_train_entry_action_reader(sem_tokenization* tokens, sem_world* w
 	*action = sem_action_new();
 	if (*action == NULL) return SEM_ERROR;
 	(*action)->function = sem_train_entry_action;
-	(*action)->write = NULL; // FIXME
+	(*action)->write = sem_train_entry_action_write;
 	sem_train_entry_context* context = malloc(sizeof(sem_train_entry_context)); // TODO: where to free() this?
 	if (context == NULL) return sem_set_error("Failed to allocate memory for train entry context");
 
@@ -89,6 +89,14 @@ sem_success sem_remove_train_action_write(FILE* out, sem_action* action) {
 
 sem_success sem_reverse_train_at_buffer_action_write(FILE* out, sem_action* action) {
 	return write_train_action(out, "reverse_train_at_buffer", action);
+}
+
+sem_success sem_train_entry_action_write(FILE* out, sem_action* action) {
+	sem_train_entry_context* context = (sem_train_entry_context*) action->context;
+	fprintf(out, "train_entry at %d %d ", context->position.x, context->position.y);
+	fprintf(out, "direction ");
+	if (sem_print_endpoint(out, context->direction) != SEM_OK) return SEM_ERROR;
+	return SEM_OK;
 }
 
 sem_success write_train_action(FILE* out, char* tag, sem_action* action) {

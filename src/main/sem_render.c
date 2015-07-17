@@ -56,6 +56,7 @@ void render_tile(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile) 
 		render_tile_blank(ctx, coord, tile);
 		return;
 	case TRACK:
+	case ENTRY:
 		render_track(ctx, coord, tile->track);
 		return;
 	case POINTS:

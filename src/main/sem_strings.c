@@ -29,6 +29,10 @@ char* sem_tokenization_next(sem_tokenization* tokenization) {
 	return token;
 }
 
+uint8_t sem_parse_uint8_t(char* string) {
+	return (uint8_t) strtoul(string, NULL, 10);
+}
+
 uint32_t sem_parse_uint32_t(char* string) {
 	return (uint32_t) strtoul(string, NULL, 10);
 }

@@ -75,6 +75,10 @@ sem_success sem_train_entry_action_reader(sem_tokenization* tokens, sem_world* w
 
 	sem_tokenization_next(tokens); // TODO: check "direction"
 	if (sem_parse_unit_vector(&(context->direction), sem_tokenization_next(tokens)) != SEM_OK) return SEM_ERROR;
+
+	sem_tokenization_next(tokens); // TODO: check "cars"
+	uint8_t cars = sem_parse_uint8_t(sem_tokenization_next(tokens));
+	context->cars = cars;
 	
 	return SEM_OK;
 }
@@ -96,6 +100,7 @@ sem_success sem_train_entry_action_write(FILE* out, sem_action* action) {
 	fprintf(out, "train_entry at %d %d ", context->position.x, context->position.y);
 	fprintf(out, "direction ");
 	if (sem_print_endpoint(out, context->direction) != SEM_OK) return SEM_ERROR;
+	fprintf(out, " cars %d", context->cars);
 	return SEM_OK;
 }
 

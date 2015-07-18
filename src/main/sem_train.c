@@ -21,6 +21,7 @@ sem_success sem_train_init(sem_train* train) {
 	uuid_generate(train->id);
 	train->name = strdup("<none>");
 	train->state = STOPPED;
+	train->portal_state = ENTERED;
 	train->direction = 0;
 	train->cars = 0;
 	train->head_car = NULL;
@@ -102,7 +103,7 @@ unit_vector train_tail_end(sem_train* train) {
 	return sem_compass_opposite_of(direction);
 }
 
-sem_success sem_train_add_car(sem_train* train, sem_car* car) {
+void sem_train_add_car(sem_train* train, sem_car* car) {
 	train->cars++;
 	if (train->head_car == NULL) {
 		train->position = &(car->position);
@@ -112,7 +113,6 @@ sem_success sem_train_add_car(sem_train* train, sem_car* car) {
 	car->next = NULL;
 	if (train->head_car == NULL) train->head_car = car;
 	train->tail_car = car;
-	return SEM_OK;
 }
 
 bool sem_train_occupies(sem_train* train, sem_coordinate* tile) {

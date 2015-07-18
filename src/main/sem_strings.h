@@ -23,6 +23,8 @@ void sem_tokenization_init(sem_tokenization* tokenization, char* string, char* d
  */
 char* sem_tokenization_next(sem_tokenization* tokenization);
 
+uint8_t sem_parse_uint8_t(char* string);
+
 uint32_t sem_parse_uint32_t(char* string);
 
 #endif

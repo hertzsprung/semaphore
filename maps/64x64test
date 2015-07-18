@@ -4,7 +4,7 @@ multiplier 1.0
 tiles 68
 0 9 entry W-E
 1 9 track W-E
-2 9 track W-E
+2 9 signal W-E red main manual
 3 9 track W-E
 4 9 track W-E
 5 9 points W-NE W-SE W-E

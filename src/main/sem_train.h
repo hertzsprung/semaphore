@@ -17,6 +17,10 @@ typedef enum {
 	STOPPED, MOVING, CRASHED, DERAILED
 } sem_train_state;
 
+typedef enum {
+	ENTERING, ENTERED
+} sem_train_portal_state;
+
 struct sem_car {
 	sem_coordinate position;
 	sem_track* track;
@@ -29,7 +33,10 @@ struct sem_train {
 	uuid_t id;
 	char* name;
 	sem_train_state state;
+	sem_train_portal_state portal_state;
 	sem_coordinate* position; /**< position of the train's head car */
+	sem_coordinate entry_position;
+	uint8_t spawn_cars_remaining;
 	uint8_t cars;
 	sem_car* head_car;
 	sem_car* tail_car;
@@ -46,7 +53,7 @@ sem_success sem_train_move(sem_train* train, sem_train_move_outcome* outcome);
 
 void sem_train_reverse(sem_train* train);
 
-sem_success sem_train_add_car(sem_train* train, sem_car* car);
+void sem_train_add_car(sem_train* train, sem_car* car);
 
 bool sem_train_occupies(sem_train* train, sem_coordinate* tile);
 

@@ -292,7 +292,8 @@ sem_success read_car(FILE* in, sem_train* train) {
 
 	free(line);
 
-	return sem_train_add_car(train, car);
+	sem_train_add_car(train, car);
+	return SEM_OK;
 }
 
 sem_success read_actions(FILE* in, sem_world* world) {

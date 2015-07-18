@@ -8,6 +8,7 @@
 #include "sem_dynamic_array.h"
 #include "sem_error.h"
 #include "sem_heap.h"
+#include "sem_portal.h"
 #include "sem_serialize_actions.h"
 #include "sem_train.h"
 #include "sem_world.h"
@@ -114,6 +115,10 @@ sem_success sem_move_train_action(sem_dynamic_array* heap, sem_action* action) {
 			action->write = sem_remove_train_action_write;
 			if (sem_heap_insert(heap, action) != SEM_OK) return SEM_ERROR;
 		} else if (train->state == MOVING) {
+			if (train->portal_state == ENTERING) {
+				if (sem_portal_spawn_car(train) != SEM_OK) return SEM_ERROR;
+				if (train->spawn_cars_remaining == 0) train->portal_state = ENTERED;
+			}
 			action->time += 1000L;
 			action->function = sem_move_train_action;
 			action->write = sem_move_train_action_write;

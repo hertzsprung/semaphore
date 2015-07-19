@@ -37,6 +37,7 @@ struct sem_train {
 	sem_coordinate* position; /**< position of the train's head car */
 	sem_coordinate entry_position;
 	uint8_t spawn_cars_remaining;
+	bool headless; /**< true when the head of the train has already left through an exit portal */
 	uint8_t cars;
 	sem_car* head_car;
 	sem_car* tail_car;

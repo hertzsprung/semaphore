@@ -520,4 +520,5 @@ void test_train_removes_head_car(test_train_context* test_ctx, const void* data)
 	g_assert_true(train->head_car == tail_car);
 	g_assert_cmpuint(train->position->x, ==, 0);
 	g_assert_cmpuint(train->position->y, ==, 0);
+	g_assert_true(train->headless);
 }

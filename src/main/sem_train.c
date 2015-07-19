@@ -26,6 +26,8 @@ sem_success sem_train_init(sem_train* train) {
 	train->cars = 0;
 	train->head_car = NULL;
 	train->tail_car = NULL;
+	train->headless = false;
+	train->spawn_cars_remaining = 0;
 	return SEM_OK;
 }
 
@@ -122,7 +124,9 @@ void sem_train_remove_head_car(sem_train* train) {
 	sem_car* old_head = train->head_car;
 	free(old_head);
 	train->head_car = train->head_car->next;
+	train->head_car->previous = NULL;
 	train->position = &(train->head_car->position);
+	train->headless = true;
 }
 
 bool sem_train_occupies(sem_train* train, sem_coordinate* tile) {

@@ -327,7 +327,7 @@ void render_train(sem_render_context* ctx, sem_train* train) {
 		} else {
 			cairo_set_source_rgb(ctx->cr, 1.0, 0.0, 1.0);
 		}
-		if (car == train->head_car) {
+		if (car == train->head_car && !train->headless) {
 			cairo_set_line_width(ctx->cr, 0.4);
 		} else {
 			cairo_set_line_width(ctx->cr, 0.25);

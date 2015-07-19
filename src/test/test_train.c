@@ -29,6 +29,7 @@ void test_train_moves_trailing_car_onto_track(test_train_context* test_ctx, cons
 void test_train_derails_when_need_points_switch(test_train_context* test_ctx, const void* data);
 void test_train_reverses(test_train_context* test_ctx, const void* data);
 void test_train_stops_at_buffer(test_train_context* test_ctx, const void* data);
+void test_train_removes_head_car(test_train_context* test_ctx, const void* data);
 
 void add_test_train(const char *test_name, void (*test)(test_train_context*, const void* data));
 void test_train_setup(test_train_context* test_ctx, const void* data);
@@ -50,6 +51,7 @@ void add_tests_train() {
 	add_test_train("/train/derails_when_need_points_switch", test_train_derails_when_need_points_switch);
 	add_test_train("/train/reverses", test_train_reverses);
 	add_test_train("/train/stops_at_buffer", test_train_stops_at_buffer);
+	add_test_train("/train/removes_head_car", test_train_removes_head_car);
 }
 
 void add_test_train(const char *test_name, void (*test)(test_train_context*, const void* data)) {
@@ -497,4 +499,25 @@ void test_train_stops_at_buffer(test_train_context* test_ctx, const void* data) 
 	g_assert_cmpuint(train->position->x, ==, 0);
 	g_assert_cmpuint(train->position->y, ==, 0);
 	g_assert_true(outcome.stopped_at_buffer == true);
+}
+
+void test_train_removes_head_car(test_train_context* test_ctx, const void* data) {
+	#pragma unused(data)
+
+	sem_train* train = test_ctx->train;
+
+	sem_car* tail_car = malloc(sizeof(sem_car));
+	sem_coordinate_set(&(tail_car->position), 0, 0);
+
+	sem_car* head_car = malloc(sizeof(sem_car));
+	sem_coordinate_set(&(head_car->position), 1, 0);
+
+	sem_train_add_car(train, head_car);
+	sem_train_add_car(train, tail_car);
+	sem_train_remove_head_car(train);	
+	
+	g_assert_cmpuint(train->cars, ==, 1);
+	g_assert_true(train->head_car == tail_car);
+	g_assert_cmpuint(train->position->x, ==, 0);
+	g_assert_cmpuint(train->position->y, ==, 0);
 }

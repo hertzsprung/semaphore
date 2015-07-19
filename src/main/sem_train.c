@@ -116,6 +116,15 @@ void sem_train_add_car(sem_train* train, sem_car* car) {
 	train->tail_car = car;
 }
 
+void sem_train_remove_head_car(sem_train* train) {
+	if (train->head_car == NULL) return;
+	train->cars--;
+	sem_car* old_head = train->head_car;
+	free(old_head);
+	train->head_car = train->head_car->next;
+	train->position = &(train->head_car->position);
+}
+
 bool sem_train_occupies(sem_train* train, sem_coordinate* tile) {
 	sem_car* car = train->head_car;
 	while (car != NULL) {
@@ -128,7 +137,7 @@ bool sem_train_occupies(sem_train* train, sem_coordinate* tile) {
 
 void sem_train_destroy(sem_train* train) {
 	free(train->name);
-	// TODO: free cars
+	// FIXME: free cars
 }	
 
 void train_move_trailing(sem_car* tail_car) {

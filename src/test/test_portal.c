@@ -98,10 +98,16 @@ void test_portal_train_exits_into_portal(test_portal_context* test_ctx, const vo
 	train->direction = SEM_EAST;
 	sem_world_add_train(world, train);
 
-	sem_car* car = malloc(sizeof(sem_car));
-	sem_coordinate_set(&(car->position), 2, 0);
-	car->track = sem_tile_at(world, 2, 0)->track;
-	sem_train_add_car(train, car);
+	sem_car* tail_car = malloc(sizeof(sem_car));
+	sem_coordinate_set(&(tail_car->position), 1, 0);
+	tail_car->track = sem_tile_at(world, 1, 0)->track;
+
+	sem_car* head_car = malloc(sizeof(sem_car));
+	sem_coordinate_set(&(head_car->position), 2, 0);
+	head_car->track = sem_tile_at(world, 2, 0)->track;
+
+	sem_train_add_car(train, head_car);
+	sem_train_add_car(train, tail_car);
 
 	sem_action action;
 	action.time = 2000;
@@ -114,5 +120,14 @@ void test_portal_train_exits_into_portal(test_portal_context* test_ctx, const vo
 	sem_action* move_action = sem_heap_remove_earliest(world->actions);
 	g_assert_nonnull(move_action);
 	g_assert_true(move_action->function(world->actions, move_action) == SEM_OK);
+
+	g_assert_cmpuint(train->cars, ==, 1);
+	g_assert_cmpuint(train->position->x, ==, 3);
+	g_assert_cmpuint(train->position->y, ==, 0);
+
+	move_action = sem_heap_remove_earliest(world->actions);
+	g_assert_nonnull(move_action);
+	g_assert_true(move_action->function(world->actions, move_action) == SEM_OK);
+
 	g_assert_cmpuint(world->trains->tail_idx, ==, 0);
 }

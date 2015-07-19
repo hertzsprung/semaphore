@@ -135,6 +135,7 @@ void sem_tile_acceptance_init(sem_tile_acceptance* acceptance) {
 	acceptance->track = NULL;
 	acceptance->need_points_switch = false;
 	acceptance->reached_buffer = false;
+	acceptance->exiting = false;
 	sem_signal_acceptance_init(&(acceptance->signalling));
 }
 

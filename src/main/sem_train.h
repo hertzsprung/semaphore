@@ -35,7 +35,7 @@ struct sem_train {
 	sem_train_state state;
 	sem_train_portal_state portal_state;
 	sem_coordinate* position; /**< position of the train's head car */
-	sem_coordinate entry_position;
+	sem_coordinate entry_position; /**< the position of the entry portal whence the train originated */
 	uint8_t spawn_cars_remaining;
 	bool headless; /**< true when the head of the train has already left through an exit portal */
 	uint8_t cars;

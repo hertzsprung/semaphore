@@ -4,7 +4,7 @@ multiplier 1.0
 tiles 68
 0 9 entry W-E
 1 9 track W-E
-2 9 signal W-E red main manual
+2 9 signal W-E green main auto
 3 9 track W-E
 4 9 track W-E
 5 9 points W-NE W-SE W-E
@@ -74,6 +74,10 @@ trains 3
 train 107207dc-d4de-4ee5-accf-26ae19404603
 name TRAIN-1
 state stopped
+portal_state entered
+spawn_cars_remaining 0
+entry_position 0 9
+headless false
 direction W
 cars 3
 13 9 W-E
@@ -82,6 +86,10 @@ cars 3
 train ca78820d-d3eb-4b7b-bafa-094cfb9fb9da
 name TRAIN-2
 state stopped
+portal_state entered
+spawn_cars_remaining 0
+entry_position 0 9
+headless false
 direction E
 cars 3
 2 1 W-E
@@ -90,10 +98,15 @@ cars 3
 train 81cbbfd6-43c8-4143-a345-ee9e27dd0e8b
 name TRAIN-3
 state stopped
+portal_state entered
+spawn_cars_remaining 0
+entry_position 0 9
+headless false
 direction W
 cars 3
 10 1 W-E
 11 1 W-SE
 12 2 S-NW
-actions 1
+actions 2
 3000 train_entry at 0 9 direction E cars 3
+15000 train_entry at 0 9 direction E cars 3

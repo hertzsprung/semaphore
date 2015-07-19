@@ -19,6 +19,10 @@ sem_success read_train(FILE* in, sem_world* world);
 sem_success read_train_id(FILE* in, sem_train* train);
 sem_success read_train_name(FILE* in, sem_train* train);
 sem_success read_train_state(FILE* in, sem_train* train);
+sem_success read_train_portal_state(FILE* in, sem_train* train);
+sem_success read_train_spawn_cars_remaining(FILE* in, sem_train* train);
+sem_success read_train_entry_position(FILE* in, sem_train* train);
+sem_success read_train_headless(FILE* in, sem_train* train);
 sem_success read_train_direction(FILE* in, sem_train* train);
 sem_success read_train_cars(FILE* in, sem_train* train);
 sem_success read_car(FILE* in, sem_train* train);
@@ -31,6 +35,7 @@ sem_success write_tile(FILE* out, uint32_t x, uint32_t y, sem_tile* tile);
 sem_success write_trains(FILE* out, sem_dynamic_array* trains);
 sem_success write_train(FILE* out, sem_train* train);
 sem_success write_train_state(FILE* out, sem_train_state state);
+sem_success write_train_portal_state(FILE* out, sem_train_portal_state state);
 sem_success write_car(FILE* out, sem_car* car);
 sem_success write_actions(FILE* out, sem_dynamic_array* actions);
 sem_success write_action(FILE* out, sem_action* action);
@@ -170,6 +175,10 @@ sem_success read_train(FILE* in, sem_world* world) {
 	if (read_train_id(in, train) != SEM_OK) return SEM_ERROR;
 	if (read_train_name(in, train) != SEM_OK) return SEM_ERROR;
 	if (read_train_state(in, train) != SEM_OK) return SEM_ERROR;
+	if (read_train_portal_state(in, train) != SEM_OK) return SEM_ERROR;
+	if (read_train_spawn_cars_remaining(in, train) != SEM_OK) return SEM_ERROR;
+	if (read_train_entry_position(in, train) != SEM_OK) return SEM_ERROR;
+	if (read_train_headless(in, train) != SEM_OK) return SEM_ERROR;
 	if (read_train_direction(in, train) != SEM_OK) return SEM_ERROR;
 	if (read_train_cars(in, train) != SEM_OK) return SEM_ERROR;
 
@@ -228,6 +237,80 @@ sem_success read_train_state(FILE* in, sem_train* train) {
 		free(line);
 		return sem_set_error("Unknown train state");
 	}
+
+	free(line);
+
+	return SEM_OK;
+}
+
+sem_success read_train_portal_state(FILE* in, sem_train* train) {
+	char* line = sem_read_line(in);
+	if (line == NULL) return sem_set_error("Could not read train portal_state");
+	sem_tokenization tokens;
+	sem_tokenization_init(&tokens, line, " ");
+	sem_tokenization_next(&tokens);
+	// TODO: check token is "portal_state"
+
+	char* state = sem_tokenization_next(&tokens);
+	if (strcmp(state, "entering") == 0) {
+		train->portal_state = ENTERING;
+	} else if (strcmp(state, "entered") == 0) {
+		train->portal_state = ENTERED;
+	} else if (strcmp(state, "exiting") == 0) {
+		train->portal_state = EXITING;
+	} else {
+		free(line);
+		return sem_set_error("Unknown train portal state");
+	}
+
+	free(line);
+
+	return SEM_OK;
+}
+
+sem_success read_train_spawn_cars_remaining(FILE* in, sem_train* train) {
+	char* line = sem_read_line(in);
+	if (line == NULL) return sem_set_error("Could not read spawn_cars_remaining");
+
+	sem_tokenization tokens;
+	sem_tokenization_init(&tokens, line, " ");
+	sem_tokenization_next(&tokens);
+	// TODO: check token is "spawn_cars_remaining"
+
+	train->spawn_cars_remaining = sem_parse_uint8_t(sem_tokenization_next(&tokens));
+
+	free(line);
+
+	return SEM_OK;
+}
+
+sem_success read_train_entry_position(FILE* in, sem_train* train) {
+	char* line = sem_read_line(in);
+	if (line == NULL) return sem_set_error("Could not read entry_position");
+
+	sem_tokenization tokens;
+	sem_tokenization_init(&tokens, line, " ");
+	sem_tokenization_next(&tokens);
+	// TODO: check token is "entry_position"
+
+	train->entry_position.x = sem_parse_uint32_t(sem_tokenization_next(&tokens));
+	train->entry_position.y = sem_parse_uint32_t(sem_tokenization_next(&tokens));
+
+	free(line);
+
+	return SEM_OK;
+}
+
+sem_success read_train_headless(FILE* in, sem_train* train) {
+	char* line = sem_read_line(in);
+	if (line == NULL) return sem_set_error("Could not read headless flag");
+
+	sem_tokenization tokens;
+	sem_tokenization_init(&tokens, line, " ");
+	sem_tokenization_next(&tokens);
+	// TODO: check token is "headless"
+
+	train->headless = strcmp(sem_tokenization_next(&tokens), "true") == 0;
 
 	free(line);
 
@@ -392,6 +475,10 @@ sem_success write_train(FILE* out, sem_train* train) {
 	fprintf(out, "train %s\n", id_str);
 	fprintf(out, "name %s\n", train->name);
 	if (write_train_state(out, train->state) != SEM_OK) return SEM_ERROR;
+	if (write_train_portal_state(out, train->portal_state) != SEM_OK) return SEM_ERROR;
+	fprintf(out, "spawn_cars_remaining %d\n", train->spawn_cars_remaining);
+	fprintf(out, "entry_position %d %d\n", train->entry_position.x, train->entry_position.y);
+	fprintf(out, "headless %s\n", train->headless ? "true" : "false");
 	fprintf(out, "direction ");
 	if (sem_print_endpoint(out, train->direction) != SEM_OK) return SEM_ERROR;
 	fprintf(out, "\n");
@@ -421,6 +508,23 @@ sem_success write_train_state(FILE* out, sem_train_state state) {
 		break;
 	case CRASHED:
 		fprintf(out, "crashed");
+		break;
+	}
+	fprintf(out, "\n");
+	return SEM_OK;
+}
+
+sem_success write_train_portal_state(FILE* out, sem_train_portal_state state) {
+	fprintf(out, "portal_state ");
+	switch (state) {
+	case ENTERING:
+		fprintf(out, "entering");
+		break;
+	case ENTERED:
+		fprintf(out, "entered");
+		break;
+	case EXITING:
+		fprintf(out, "exiting");
 		break;
 	}
 	fprintf(out, "\n");

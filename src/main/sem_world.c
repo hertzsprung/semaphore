@@ -77,6 +77,12 @@ sem_success sem_world_add_train(sem_world* world, sem_train* train) {
 	return SEM_OK;
 }
 
+sem_success sem_world_remove_train(sem_train* train) {
+	if (sem_dynamic_array_remove(train->world->trains, train) != SEM_OK) return SEM_ERROR;
+	sem_train_destroy(train);	
+	return SEM_OK;
+}
+
 sem_train* sem_train_by_id(sem_world* world, uuid_t id) {
 	for (uint32_t i=0; i<world->trains->tail_idx; i++) {
 		sem_train* train = world->trains->items[i];
@@ -117,6 +123,10 @@ sem_success sem_tile_accept(sem_train* train, sem_tile* tile, sem_tile_acceptanc
 		if (sem_track_accept(train, tile->track, acceptance) == SEM_OK) return SEM_OK;
 		acceptance->need_points_switch = true;
 		return sem_inactive_track_accept(train, tile, acceptance);
+	case EXIT:
+		if (sem_track_accept(train, tile->track, acceptance) != SEM_OK) return SEM_ERROR;
+		acceptance->exiting = true;	
+		return SEM_OK;
 	}
 }
 
@@ -140,6 +150,11 @@ void sem_tile_set_buffer(sem_tile* tile, sem_track* track) {
 
 void sem_tile_set_entry(sem_tile* tile, sem_track* track) {
 	tile->class = ENTRY;
+	tile->track = track;
+}
+
+void sem_tile_set_exit(sem_tile* tile, sem_track* track) {
+	tile->class = EXIT;
 	tile->track = track;
 }
 

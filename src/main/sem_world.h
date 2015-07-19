@@ -16,7 +16,7 @@ typedef struct sem_signal_acceptance sem_signal_acceptance;
 #include "sem_train.h"
 
 typedef enum {
-	BLANK, TRACK, POINTS, SIGNAL, BUFFER, ENTRY
+	BLANK, TRACK, POINTS, SIGNAL, BUFFER, ENTRY, EXIT
 } sem_tile_class;
 
 struct sem_track {
@@ -76,6 +76,11 @@ typedef struct {
 	bool reached_buffer;
 
 	sem_signal_acceptance signalling;
+
+	/**
+	 * @brief Indicates whether or not the train should begin exiting through a portal.
+	 */
+	bool exiting;
 } sem_tile_acceptance;
 
 /**
@@ -104,6 +109,8 @@ void sem_world_destroy(sem_world* world);
  * @return \ref SEM_OK on success, or \ref SEM_ERROR if there was insufficient memory to add the train to the world.
  */
 sem_success sem_world_add_train(sem_world* world, sem_train* train);
+
+sem_success sem_world_remove_train(sem_train* train);
 
 sem_train* sem_train_by_id(sem_world* world, uuid_t id);
 
@@ -140,6 +147,8 @@ void sem_tile_set_track(sem_tile* tile, sem_track* track);
 void sem_tile_set_buffer(sem_tile* tile, sem_track* track);
 
 void sem_tile_set_entry(sem_tile* tile, sem_track* track);
+
+void sem_tile_set_exit(sem_tile* tile, sem_track* track);
 
 /**
  * \brief Initialise a sem_tile with an active track, leaving the inactive tracks as NULL.

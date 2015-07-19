@@ -51,6 +51,7 @@ sem_success sem_train_move(sem_train* train, sem_train_move_outcome* outcome) {
 		train->direction = acceptance.direction;
 		train->head_car->track = acceptance.track;	
 		if (acceptance.need_points_switch) train->state = DERAILED;
+		if (acceptance.exiting) train->portal_state = EXITING;
 
 		sem_train* collided_train = train_detect_collision(train);
 		if (collided_train != NULL) {

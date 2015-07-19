@@ -24,6 +24,7 @@ void render_signal_set_aspect(sem_render_context* ctx, sem_signal_aspect aspect)
 void render_signal_circle(sem_render_context* ctx, double offset_x, double offset_y, double radius);
 void render_tile_buffer(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
 void render_tile_entry(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
+void render_tile_exit(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
 void render_train(sem_render_context* ctx, sem_train* train);
 void render_train_name(sem_render_context* ctx, sem_train* train);
 void render_track_path(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
@@ -70,6 +71,9 @@ void render_tile(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile) 
 		return;
 	case ENTRY:
 		render_tile_entry(ctx, coord, tile);
+		return;
+	case EXIT:
+		render_tile_exit(ctx, coord, tile);
 		return;
 	}
 }
@@ -299,6 +303,15 @@ void render_tile_entry(sem_render_context* ctx, sem_coordinate coord, sem_tile* 
 
 	render_track_path(ctx, coord, tile->track);
 	cairo_set_source_rgb(ctx->cr, 0.0, 0.2, 1.0);
+	cairo_set_line_width(ctx->cr, ctx->style->track_front_width);
+	cairo_stroke(ctx->cr);
+}
+
+void render_tile_exit(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile) {
+	render_track(ctx, coord, tile->track);
+
+	render_track_path(ctx, coord, tile->track);
+	cairo_set_source_rgb(ctx->cr, 1.0, 0.2, 0.0);
 	cairo_set_line_width(ctx->cr, ctx->style->track_front_width);
 	cairo_stroke(ctx->cr);
 }

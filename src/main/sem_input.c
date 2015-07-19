@@ -106,6 +106,10 @@ sem_success change_train_state(sem_dynamic_array* heap, sem_action* action) {
 sem_success sem_move_train_action(sem_dynamic_array* heap, sem_action* action) {
 	sem_train* train = (sem_train*) action->context;
 	if (train->state == MOVING) {
+		if (train->portal_state == EXITING) {
+			return sem_world_remove_train(train);	
+		}
+
 		sem_train_move_outcome outcome;
 		if (sem_train_move(train, &outcome) != SEM_OK) return SEM_ERROR;
 

@@ -18,7 +18,7 @@ typedef enum {
 } sem_train_state;
 
 typedef enum {
-	ENTERING, ENTERED
+	ENTERING, ENTERED, EXITING
 } sem_train_portal_state;
 
 struct sem_car {

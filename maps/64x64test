@@ -69,7 +69,7 @@ tiles 68
 13 7 track W-E
 14 7 track W-E
 15 7 track W-E
-16 7 buffer W-E
+16 7 exit W-E
 trains 3
 train 107207dc-d4de-4ee5-accf-26ae19404603
 name TRAIN-1

@@ -52,6 +52,8 @@ sem_success read_railpro_tile(sem_world* world, sem_tile* tile, uint8_t code) {
 		if (parse_railpro_tile(tile, "buffer NW-SE", world) != SEM_OK) return SEM_ERROR;
 	} else if (code == 0x04) {
 		if (parse_railpro_tile(tile, "buffer NE-SW", world) != SEM_OK) return SEM_ERROR;
+	} else if (code == 0x05) {
+		if (parse_railpro_tile(tile, "exit W-E", world) != SEM_OK) return SEM_ERROR;
 	} else if (code == 0x06) {
 		if (parse_railpro_tile(tile, "track W-E+N-S", world) != SEM_OK) return SEM_ERROR; // TODO: graded, N-S on top
 	} else if (code == 0x08) {
@@ -60,6 +62,8 @@ sem_success read_railpro_tile(sem_world* world, sem_tile* tile, uint8_t code) {
 		if (parse_railpro_tile(tile, "track W-E+NW-SE", world) != SEM_OK) return SEM_ERROR;
 	} else if (code == 0x0a) {
 		if (parse_railpro_tile(tile, "track W-E+NE-SW", world) != SEM_OK) return SEM_ERROR;
+	} else if (code == 0x0b || code == 0x0c || code == 0x0d || code == 0x0e) {
+		if (parse_railpro_tile(tile, "entry W-E", world) != SEM_OK) return SEM_ERROR;
 	} else if (code == 0x10) {
 		if (parse_railpro_tile(tile, "track W-E", world) != SEM_OK) return SEM_ERROR;
 	} else if (code == 0x11) {

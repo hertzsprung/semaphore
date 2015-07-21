@@ -1,7 +1,7 @@
 world 121 41
 now 0
 multiplier 1.000000
-tiles 1674
+tiles 1684
 32 2 track SW-E
 33 2 track W-E
 34 2 signal W-E green sub
@@ -86,6 +86,7 @@ tiles 1674
 115 2 signal W-E green main auto
 116 2 track W-E
 117 2 track W-E
+118 2 exit W-E
 31 3 track NE-S
 33 3 track SW-E
 34 3 signal W-E green sub
@@ -170,6 +171,7 @@ tiles 1674
 115 3 signal W-E green sub
 116 3 track W-E
 117 3 track W-E
+118 3 entry W-E
 31 4 track N-S
 32 4 track NE-S
 66 4 track NW-SE
@@ -264,6 +266,7 @@ tiles 1674
 111 6 signal W-E green main auto
 112 6 track W-E
 113 6 track W-E
+114 6 exit W-E
 31 7 signal N-S green sub
 32 7 signal N-S green sub
 34 7 track NE-S
@@ -343,6 +346,7 @@ tiles 1674
 111 7 signal W-E green sub
 112 7 track W-E
 113 7 track W-E
+114 7 entry W-E
 31 8 track N-S
 32 8 track N-S
 34 8 track N-S
@@ -410,6 +414,7 @@ tiles 1674
 113 10 signal W-E green main auto
 114 10 track W-E
 115 10 track W-E
+116 10 exit W-E
 31 11 track N-SW
 32 11 track N-S
 34 11 track N-S
@@ -445,6 +450,7 @@ tiles 1674
 113 11 signal W-E green sub
 114 11 track W-E
 115 11 track W-E
+116 11 entry W-E
 23 12 track SW-E
 24 12 track W-E
 25 12 signal W-E green sub
@@ -976,6 +982,7 @@ tiles 1674
 114 18 signal W-E green main auto
 115 18 track W-E
 116 18 track W-E
+117 18 exit W-E
 3 19 buffer W-E
 4 19 track W-E
 5 19 track W-E
@@ -1090,6 +1097,7 @@ tiles 1674
 114 19 signal W-E green sub
 115 19 track W-E
 116 19 track W-E
+117 19 entry W-E
 3 20 buffer W-E
 4 20 track W-E
 5 20 track W-E
@@ -1643,6 +1651,7 @@ tiles 1674
 115 31 signal W-E green main auto
 116 31 track W-E
 117 31 track W-E
+118 31 exit W-E
 85 32 track NW-E
 86 32 track W-E
 87 32 track W-E
@@ -1676,10 +1685,15 @@ tiles 1674
 115 32 signal W-E green sub
 116 32 track W-E
 117 32 track W-E
+118 32 entry W-E
 trains 4
 train 305211b8-799f-4ee7-afb5-303e4edcfaf9
 name TRAIN-1
 state stopped
+portal_state entered
+spawn_cars_remaining 0
+entry_position 0 0
+headless false
 direction W
 cars 3
 115 3 W-E
@@ -1688,6 +1702,10 @@ cars 3
 train 81cbbfd6-43c8-4143-a345-ee9e27dd0e8b
 name TRAIN-2
 state stopped
+portal_state entered
+spawn_cars_remaining 0
+entry_position 0 0
+headless false
 direction W
 cars 3
 111 7 W-E
@@ -1696,6 +1714,10 @@ cars 3
 train ca78820d-d3eb-4b7b-bafa-094cfb9fb9da
 name TRAIN-3
 state stopped
+portal_state entered
+spawn_cars_remaining 0
+entry_position 0 0
+headless false
 direction W
 cars 3
 113 11 W-E
@@ -1704,6 +1726,10 @@ cars 3
 train 107207dc-d4de-4ee5-accf-26ae19404603
 name TRAIN-4
 state stopped
+portal_state entered
+spawn_cars_remaining 0
+entry_position 0 0
+headless false
 direction W
 cars 3
 114 19 W-E

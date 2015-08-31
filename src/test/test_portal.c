@@ -37,7 +37,7 @@ void test_portal_setup(test_portal_context* test_ctx, const void* data) {
 
 	test_ctx->game.world.max_x = 4;
 	test_ctx->game.world.max_y = 4;
-	sem_world_init_blank(&(test_ctx->game.world));
+	sem_game_init_blank(&(test_ctx->game));
 
 	test_ctx->track = malloc(sizeof(sem_track));
 	sem_track_set(test_ctx->track, SEM_WEST, SEM_EAST);

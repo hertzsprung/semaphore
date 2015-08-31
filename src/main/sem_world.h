@@ -6,6 +6,7 @@ typedef struct sem_track sem_track;
 typedef struct sem_signal_acceptance sem_signal_acceptance;
 
 #include <uuid/uuid.h>
+#include <stdint.h>
 
 #include "sem_compass.h"
 #include "sem_dynamic_array.h"

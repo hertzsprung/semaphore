@@ -31,6 +31,13 @@ sem_success sem_train_entry_action(sem_dynamic_array* heap, sem_action* action) 
 	return SEM_OK;
 }
 
+sem_success sem_train_exit_action(sem_dynamic_array* heap, sem_action* action) {
+	#pragma unused(heap)
+	action->game->revenue.balance += 200;
+	sem_train* train = (sem_train*) action->context;
+	return sem_world_remove_train(train);	
+}
+
 sem_success sem_portal_spawn_car(sem_train* train) {
 	assert(train->spawn_cars_remaining > 0);
 

@@ -14,6 +14,7 @@ typedef struct {
 } sem_train_entry_context;
 
 sem_success sem_train_entry_action(sem_dynamic_array* heap, sem_action* action);
+sem_success sem_train_exit_action(sem_dynamic_array* heap, sem_action* action);
 
 sem_success sem_portal_spawn_car(sem_train* train);
 

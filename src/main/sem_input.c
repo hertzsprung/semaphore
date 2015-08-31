@@ -108,7 +108,8 @@ sem_success sem_move_train_action(sem_dynamic_array* heap, sem_action* action) {
 	if (train->state == MOVING) {
 		if (train->portal_state == EXITING) {
 			if (train->cars == 1) {
-				return sem_world_remove_train(train);	
+				action->function = sem_train_exit_action;
+				return sem_heap_insert(heap, action);
 			} else {
 				sem_train_remove_head_car(train);
 			}

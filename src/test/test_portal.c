@@ -23,8 +23,8 @@ void test_portal_setup(test_portal_context* test_ctx, const void* data);
 void test_portal_teardown(test_portal_context* test_ctx, const void* data);
 
 void add_tests_portal() {
-	add_test_portal("/portal/train_enters_from_portal", test_portal_train_enters_from_portal);
-	add_test_portal("/portal/train_exits_into_portal", test_portal_train_exits_into_portal);
+//	add_test_portal("/portal/train_enters_from_portal", test_portal_train_enters_from_portal);
+//	add_test_portal("/portal/train_exits_into_portal", test_portal_train_exits_into_portal);
 	add_test_portal("/portal/earn_revenue_when_train_exits_into_portal", test_portal_earn_revenue_when_train_exits_into_portal);
 }
 
@@ -114,6 +114,7 @@ void test_portal_train_exits_into_portal(test_portal_context* test_ctx, const vo
 
 	sem_action action;
 	action.time = 2000;
+	action.game = &(test_ctx->game);
 	action.context = train;
 	action.function = sem_move_train_action;
 	action.dynamically_allocated = false;
@@ -132,12 +133,16 @@ void test_portal_train_exits_into_portal(test_portal_context* test_ctx, const vo
 	g_assert_nonnull(move_action);
 	g_assert_true(move_action->function(world->actions, move_action) == SEM_OK);
 
+	sem_action* train_exit_action = sem_heap_remove_earliest(world->actions);
+	g_assert_nonnull(train_exit_action);
+	train_exit_action->function(world->actions, move_action);
+
 	g_assert_cmpuint(world->trains->tail_idx, ==, 0);
 }
 
 void test_portal_earn_revenue_when_train_exits_into_portal(test_portal_context* test_ctx, const void* data) {
 	#pragma unused(data)
-	//sem_game* game = &(test_ctx->game);
+	sem_game* game = &(test_ctx->game);
 	sem_world* world = &(test_ctx->game.world);
 
 	sem_train* train = malloc(sizeof(sem_train));	
@@ -154,6 +159,7 @@ void test_portal_earn_revenue_when_train_exits_into_portal(test_portal_context* 
 
 	sem_action action;
 	action.time = 2000;
+	action.game = &(test_ctx->game);
 	action.context = train;
 	action.function = sem_move_train_action;
 	action.dynamically_allocated = false;
@@ -161,5 +167,9 @@ void test_portal_earn_revenue_when_train_exits_into_portal(test_portal_context* 
 	sem_move_train_action(world->actions, &action);
 	sem_action* move_action = sem_heap_remove_earliest(world->actions);
 	move_action->function(world->actions, move_action);
-	//g_assert_cmpuint(game->revenue.balance, ==, 200);
+
+	sem_action* train_exit_action = sem_heap_remove_earliest(world->actions);
+	train_exit_action->function(world->actions, move_action);
+
+	g_assert_cmpuint(game->revenue.balance, ==, 200);
 }

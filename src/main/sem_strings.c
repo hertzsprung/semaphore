@@ -37,6 +37,10 @@ uint32_t sem_parse_uint32_t(char* string) {
 	return (uint32_t) strtoul(string, NULL, 10);
 }
 
+int32_t sem_parse_int32_t(char* string) {
+	return (int32_t) strtol(string, NULL, 10);
+}
+
 char* strip_newline(char* string) {
 	if (string[strlen(string)-1] == '\n') string[strlen(string)-1] = '\0';
 	return string;

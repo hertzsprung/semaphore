@@ -33,8 +33,12 @@ sem_success sem_train_entry_action(sem_dynamic_array* heap, sem_action* action) 
 
 sem_success sem_train_exit_action(sem_dynamic_array* heap, sem_action* action) {
 	#pragma unused(heap)
-	action->game->revenue.balance += 200;
 	sem_train* train = (sem_train*) action->context;
+	if (train->exit_position != NULL && sem_coordinate_equal(*(train->position), *(train->exit_position))) {
+		action->game->revenue.balance += 200;
+	} else {
+		action->game->revenue.balance -= 300;
+	}
 	return sem_world_remove_train(train);	
 }
 

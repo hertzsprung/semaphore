@@ -443,7 +443,7 @@ sem_success read_revenue(FILE* in, sem_revenue* revenue) {
 	sem_tokenization_next(&tokens);
 	// TODO: check token is "balance"
 	
-	revenue->balance = sem_parse_uint32_t(sem_tokenization_next(&tokens));
+	revenue->balance = sem_parse_int32_t(sem_tokenization_next(&tokens));
 
 	free(line);
 
@@ -589,6 +589,6 @@ sem_success write_action(FILE* out, sem_action* action) {
 
 sem_success write_revenue(FILE* out, sem_revenue* revenue) {
 	fprintf(out, "revenue\n");
-	fprintf(out, "balance %u\n", revenue->balance);
+	fprintf(out, "balance %d\n", revenue->balance);
 	return SEM_OK;
 }

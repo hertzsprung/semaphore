@@ -28,6 +28,7 @@ sem_success sem_train_init(sem_train* train) {
 	train->tail_car = NULL;
 	train->headless = false;
 	train->spawn_cars_remaining = 0;
+	train->exit_position = NULL;
 	return SEM_OK;
 }
 

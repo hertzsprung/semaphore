@@ -16,16 +16,21 @@ typedef struct {
 
 void test_portal_train_enters_from_portal(test_portal_context* test_ctx, const void* data);
 void test_portal_train_exits_into_portal(test_portal_context* test_ctx, const void* data);
-void test_portal_earn_revenue_when_train_exits_into_portal(test_portal_context* test_ctx, const void* data);
+void test_portal_earn_revenue_when_train_exits_into_correct_portal(test_portal_context* test_ctx, const void* data);
+void test_portal_earn_revenue_when_train_exits_into_wrong_portal(test_portal_context* test_ctx, const void* data);
+void test_portal_earn_revenue_when_train_exits_into_portal_unexpectedly(test_portal_context* test_ctx, const void* data);
+void test_portal_revenue_when_train_exits_portal(test_portal_context* test_ctx, sem_coordinate* exit, int32_t expected_balance);
 
 void add_test_portal(const char *test_name, void (*test)(test_portal_context*, const void* data));
 void test_portal_setup(test_portal_context* test_ctx, const void* data);
 void test_portal_teardown(test_portal_context* test_ctx, const void* data);
 
 void add_tests_portal() {
-//	add_test_portal("/portal/train_enters_from_portal", test_portal_train_enters_from_portal);
-//	add_test_portal("/portal/train_exits_into_portal", test_portal_train_exits_into_portal);
-	add_test_portal("/portal/earn_revenue_when_train_exits_into_portal", test_portal_earn_revenue_when_train_exits_into_portal);
+	add_test_portal("/portal/train_enters_from_portal", test_portal_train_enters_from_portal);
+	add_test_portal("/portal/train_exits_into_portal", test_portal_train_exits_into_portal);
+	add_test_portal("/portal/earn_revenue_when_train_exits_into_correct_portal", test_portal_earn_revenue_when_train_exits_into_correct_portal);
+	add_test_portal("/portal/earn_revenue_when_train_exits_into_wrong_portal", test_portal_earn_revenue_when_train_exits_into_wrong_portal);
+	add_test_portal("/portal/earn_revenue_when_train_exits_into_portal_unexpectedly", test_portal_earn_revenue_when_train_exits_into_portal_unexpectedly);
 }
 
 void add_test_portal(const char *test_name, void (*test)(test_portal_context*, const void* data)) {
@@ -46,6 +51,7 @@ void test_portal_setup(test_portal_context* test_ctx, const void* data) {
 	sem_tile_set_track(sem_tile_at(&(test_ctx->game.world), 1, 0), test_ctx->track);
 	sem_tile_set_track(sem_tile_at(&(test_ctx->game.world), 2, 0), test_ctx->track);
 	sem_tile_set_exit(sem_tile_at(&(test_ctx->game.world), 3, 0), test_ctx->track);
+	sem_tile_set_exit(sem_tile_at(&(test_ctx->game.world), 3, 2), test_ctx->track);
 }
 
 void test_portal_teardown(test_portal_context* test_ctx, const void* data) {
@@ -140,8 +146,26 @@ void test_portal_train_exits_into_portal(test_portal_context* test_ctx, const vo
 	g_assert_cmpuint(world->trains->tail_idx, ==, 0);
 }
 
-void test_portal_earn_revenue_when_train_exits_into_portal(test_portal_context* test_ctx, const void* data) {
+void test_portal_earn_revenue_when_train_exits_into_correct_portal(test_portal_context* test_ctx, const void* data) {
 	#pragma unused(data)
+	sem_coordinate exit;
+	sem_coordinate_set(&exit, 3, 0);
+	test_portal_revenue_when_train_exits_portal(test_ctx, &exit, 200);
+}
+
+void test_portal_earn_revenue_when_train_exits_into_wrong_portal(test_portal_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	sem_coordinate exit;
+	sem_coordinate_set(&exit, 3, 2);
+	test_portal_revenue_when_train_exits_portal(test_ctx, &exit, -300);
+}
+
+void test_portal_earn_revenue_when_train_exits_into_portal_unexpectedly(test_portal_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	test_portal_revenue_when_train_exits_portal(test_ctx, NULL, -300);
+}
+
+void test_portal_revenue_when_train_exits_portal(test_portal_context* test_ctx, sem_coordinate* exit, int32_t expected_balance) {
 	sem_game* game = &(test_ctx->game);
 	sem_world* world = &(test_ctx->game.world);
 
@@ -149,6 +173,7 @@ void test_portal_earn_revenue_when_train_exits_into_portal(test_portal_context* 
 	sem_train_init(train);
 	train->state = MOVING;
 	train->direction = SEM_EAST;
+	train->exit_position = exit;
 	sem_world_add_train(world, train);
 
 	sem_car* head_car = malloc(sizeof(sem_car));
@@ -171,5 +196,5 @@ void test_portal_earn_revenue_when_train_exits_into_portal(test_portal_context* 
 	sem_action* train_exit_action = sem_heap_remove_earliest(world->actions);
 	train_exit_action->function(world->actions, move_action);
 
-	g_assert_cmpuint(game->revenue.balance, ==, 200);
+	g_assert_cmpint(game->revenue.balance, ==, expected_balance);
 }

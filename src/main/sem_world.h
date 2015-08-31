@@ -2,6 +2,7 @@
 #define SEM_WORLD_H
 
 typedef struct sem_world sem_world;
+typedef struct sem_tile sem_tile;
 typedef struct sem_track sem_track;
 typedef struct sem_signal_acceptance sem_signal_acceptance;
 
@@ -26,12 +27,12 @@ struct sem_track {
 	sem_track* next; /**< \brief When two tracks appear on the same tile, this points to the second piece of track */
 };
 
-typedef struct {
+struct sem_tile {
 	sem_tile_class class;	
 	sem_track* track;
 	sem_track* points[3];
 	sem_signal* signal;
-} sem_tile;
+};
 
 struct sem_world {
 	sem_timer_context* timer;

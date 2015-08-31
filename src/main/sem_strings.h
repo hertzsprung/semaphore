@@ -27,4 +27,6 @@ uint8_t sem_parse_uint8_t(char* string);
 
 uint32_t sem_parse_uint32_t(char* string);
 
+int32_t sem_parse_int32_t(char* string);
+
 #endif

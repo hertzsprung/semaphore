@@ -201,7 +201,7 @@ int main(int argc, char **argv) {
 		sem_render_world(&render_ctx, &(game.world));
 
 		char buf[128] = "";
-		snprintf(buf, sizeof(buf), "%u", game.revenue.balance);
+		snprintf(buf, sizeof(buf), "%d", game.revenue.balance);
 		cairo_move_to(cr, 0, 1);
 		cairo_set_font_size(cr, 0.7);
 		cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);

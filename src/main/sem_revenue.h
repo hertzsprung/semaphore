@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 typedef struct {
-	uint32_t balance;
+	int32_t balance;
 } sem_revenue;
 
 void sem_revenue_init(sem_revenue* revenue);

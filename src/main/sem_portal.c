@@ -9,7 +9,6 @@
 
 sem_success sem_train_entry_action(sem_dynamic_array* heap, sem_action* action) {
 	sem_train_entry_context* context = (sem_train_entry_context*) action->context;
-	sem_world* world = context->world;
 	
 	sem_train* train = malloc(sizeof(sem_train));
 	if (train == NULL) return sem_set_error("Failed to allocate memory for train");
@@ -20,7 +19,7 @@ sem_success sem_train_entry_action(sem_dynamic_array* heap, sem_action* action) 
 	train->direction = context->direction;
 	train->entry_position = context->position;
 	train->spawn_cars_remaining = context->cars;
-	if (sem_world_add_train(world, train) != SEM_OK) return SEM_ERROR;
+	if (sem_world_add_train(&(action->game->world), train) != SEM_OK) return SEM_ERROR;
 	if (sem_portal_spawn_car(train) != SEM_OK) return SEM_ERROR;
 
 	action->time += 1000L;

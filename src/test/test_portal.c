@@ -60,13 +60,13 @@ void test_portal_train_enters_from_portal(test_portal_context* test_ctx, const v
 	sem_world* world = &(test_ctx->game.world);
 
 	sem_train_entry_context context;
-	context.world = world;
 	sem_coordinate_set(&(context.position), 0, 0);
 	context.direction = SEM_EAST;
 	context.cars = 2;
 
 	sem_action action;
 	action.time = 2000;
+	action.game = &(test_ctx->game);
 	action.context = &context;
 	action.dynamically_allocated = false;
 

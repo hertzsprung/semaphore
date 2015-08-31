@@ -8,7 +8,6 @@
 #include "sem_world.h"
 
 typedef struct {
-	sem_world* world;
 	sem_coordinate position;
 	unit_vector direction;
 	uint8_t cars;

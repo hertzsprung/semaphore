@@ -67,7 +67,6 @@ sem_success sem_train_entry_action_reader(sem_tokenization* tokens, sem_game* ga
 	if (context == NULL) return sem_set_error("Failed to allocate memory for train entry context");
 
 	(*action)->context = context;
-	context->world = &(game->world); // TODO: no longer needed now that we have action.game
 	sem_tokenization_next(tokens); // TODO: check "at"
 	uint32_t x = sem_parse_uint32_t(sem_tokenization_next(tokens));
 	uint32_t y = sem_parse_uint32_t(sem_tokenization_next(tokens));

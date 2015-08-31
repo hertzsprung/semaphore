@@ -19,6 +19,7 @@ void test_serialize_save_load_track_tile(void);
 void test_serialize_save_load_train(void);
 void test_serialize_save_load_timer(void);
 void test_serialize_load_remove_train_action(void);
+void test_serialize_save_load_revenue(void);
 
 void add_tests_serialize() {
 	g_test_add_func("/serialize/save_load_blank_tiles", test_serialize_save_load_blank_tiles);
@@ -26,12 +27,13 @@ void add_tests_serialize() {
 	g_test_add_func("/serialize/save_load_train", test_serialize_save_load_train);
 	g_test_add_func("/serialize/save_load_timer", test_serialize_save_load_timer);
 	g_test_add_func("/serialize/load_remove_train_action", test_serialize_load_remove_train_action);
+	g_test_add_func("/serialize/save_load_revenue", test_serialize_save_load_revenue);
 }
 
 FILE* save_and_load(char* filename, sem_game* game) {
 	FILE* file = fopen(filename, "w");
 	sem_serialize_save(file, game);
-	sem_world_destroy(&(game->world)); // TODO: use sem_game_destroy
+	sem_world_destroy(&(game->world));
 	fclose(file);
 
 	file = fopen(filename, "r");
@@ -223,3 +225,25 @@ void test_serialize_load_remove_train_action() {
 	sem_world_destroy(&(game.world));
 	fclose(file);
 }
+
+void test_serialize_save_load_revenue() {
+	sem_game game;
+	game.world.max_x = 1;
+	game.world.max_y = 1;
+	game.revenue.balance = 2948;
+	sem_game_init_blank(&game);
+
+	FILE* file = fopen("build/test/revenue", "w");
+	sem_serialize_save(file, &game);
+	sem_world_destroy(&(game.world));
+	fclose(file);
+
+	game.revenue.balance = 4911;
+
+	file = fopen("build/test/revenue", "r");
+	sem_serialize_load(file, &game);
+
+	g_assert_cmpuint(game.revenue.balance, ==, 2948);
+	fclose(file);
+}
+

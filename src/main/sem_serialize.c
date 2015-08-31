@@ -29,6 +29,7 @@ sem_success read_train_cars(FILE* in, sem_train* train);
 sem_success read_car(FILE* in, sem_train* train);
 sem_success read_actions(FILE* in, sem_world* world);
 sem_success read_action(FILE* in, sem_world* world);
+sem_success read_revenue(FILE* in, sem_revenue* revenue);
 
 sem_success write_timer(FILE* out, sem_world* world);
 sem_success write_tiles(FILE* out, sem_world* world);
@@ -40,6 +41,7 @@ sem_success write_train_portal_state(FILE* out, sem_train_portal_state state);
 sem_success write_car(FILE* out, sem_car* car);
 sem_success write_actions(FILE* out, sem_dynamic_array* actions);
 sem_success write_action(FILE* out, sem_action* action);
+sem_success write_revenue(FILE* out, sem_revenue* revenue);
 
 sem_success sem_serialize_load(FILE* in, sem_game* game) {
 	if (in == NULL) return sem_set_error("File does not exist");
@@ -51,6 +53,7 @@ sem_success sem_serialize_load(FILE* in, sem_game* game) {
 	if (read_tiles(in, world) != SEM_OK) return SEM_ERROR;
 	if (read_trains(in, world) != SEM_OK) return SEM_ERROR;
 	if (read_actions(in, world) != SEM_OK) return SEM_ERROR;
+	if (read_revenue(in, &(game->revenue)) != SEM_OK) return SEM_ERROR;
 
 	return SEM_OK;
 }
@@ -63,6 +66,7 @@ sem_success sem_serialize_save(FILE* out, sem_game* game) {
 	if (write_tiles(out, world) != SEM_OK) return SEM_ERROR;
 	if (write_trains(out, world->trains) != SEM_OK) return SEM_ERROR;
 	if (write_actions(out, world->actions) != SEM_OK) return SEM_ERROR;
+	if (write_revenue(out, &(game->revenue)) != SEM_OK) return SEM_ERROR;
 
 	return SEM_OK;
 }
@@ -425,6 +429,27 @@ sem_success read_action(FILE* in, sem_world* world) {
 	return SEM_OK;
 }
 
+sem_success read_revenue(FILE* in, sem_revenue* revenue) {
+	char* line = sem_read_line(in);
+	if (line == NULL) return sem_set_error("Could not read revenue");
+	// TODO: check line is "revenue"
+	free(line);
+
+	line = sem_read_line(in);
+	if (line == NULL) return sem_set_error("Could not read balance");
+
+	sem_tokenization tokens;
+	sem_tokenization_init(&tokens, line, " ");
+	sem_tokenization_next(&tokens);
+	// TODO: check token is "balance"
+	
+	revenue->balance = sem_parse_uint32_t(sem_tokenization_next(&tokens));
+
+	free(line);
+
+	return SEM_OK;
+}
+
 sem_success write_timer(FILE* out, sem_world* world) {
 	fprintf(out, "now %lu\nmultiplier %lf\n", world->timer->now, world->timer->multiplier);
 
@@ -559,5 +584,11 @@ sem_success write_action(FILE* out, sem_action* action) {
 		if (action->write(out, action) != SEM_OK) return SEM_ERROR;
 	}
 	fprintf(out, "\n");
+	return SEM_OK;
+}
+
+sem_success write_revenue(FILE* out, sem_revenue* revenue) {
+	fprintf(out, "revenue\n");
+	fprintf(out, "balance %u\n", revenue->balance);
 	return SEM_OK;
 }

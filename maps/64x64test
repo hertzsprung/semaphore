@@ -110,3 +110,5 @@ cars 3
 actions 2
 3000 train_entry at 0 9 direction E cars 3
 15000 train_entry at 0 9 direction E cars 3
+revenue
+balance 0

@@ -3,9 +3,9 @@
 
 #include <stdio.h>
 #include "sem_error.h"
-#include "sem_world.h"
+#include "sem_game.h"
 
-sem_success sem_serialize_load(FILE* in, sem_world* world);
-sem_success sem_serialize_save(FILE* out, sem_world* world);
+sem_success sem_serialize_load(FILE* in, sem_game* game);
+sem_success sem_serialize_save(FILE* out, sem_game* game);
 
 #endif

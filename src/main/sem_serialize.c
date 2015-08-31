@@ -5,6 +5,7 @@
 #include "sem_serialize.h"
 #include "sem_serialize_actions.h"
 #include "sem_error.h"
+#include "sem_game.h"
 #include "sem_heap.h"
 #include "sem_parser.h"
 #include "sem_strings.h"
@@ -40,9 +41,10 @@ sem_success write_car(FILE* out, sem_car* car);
 sem_success write_actions(FILE* out, sem_dynamic_array* actions);
 sem_success write_action(FILE* out, sem_action* action);
 
-sem_success sem_serialize_load(FILE* in, sem_world* world) {
+sem_success sem_serialize_load(FILE* in, sem_game* game) {
 	if (in == NULL) return sem_set_error("File does not exist");
 
+	sem_world* world = &(game->world);
 	if (read_dimensions(in, world) != SEM_OK) return SEM_ERROR;
 	if (read_now(in, world) != SEM_OK) return SEM_ERROR;
 	if (read_multiplier(in, world) != SEM_OK) return SEM_ERROR;
@@ -53,7 +55,9 @@ sem_success sem_serialize_load(FILE* in, sem_world* world) {
 	return SEM_OK;
 }
 
-sem_success sem_serialize_save(FILE* out, sem_world* world) {
+sem_success sem_serialize_save(FILE* out, sem_game* game) {
+	sem_world* world = &(game->world);
+
 	fprintf(out, "world %d %d\n", world->max_x, world->max_y); // TODO: check status of fprintf
 	if (write_timer(out, world) != SEM_OK) return SEM_ERROR;
 	if (write_tiles(out, world) != SEM_OK) return SEM_ERROR;

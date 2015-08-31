@@ -104,7 +104,7 @@ int main(int argc, char **argv) {
 	}
 
 	sem_game game;
-	if (sem_serialize_load(map, &(game.world)) != SEM_OK) return sem_fatal_error();
+	if (sem_serialize_load(map, &game) != SEM_OK) return sem_fatal_error();
 	fclose(map);
 
 	printf("\n");
@@ -127,11 +127,11 @@ int main(int argc, char **argv) {
 				} else if (e.key.keysym.sym == SDLK_l) {
 					sem_world_destroy(&(game.world));
 					FILE* load = fopen("build/main/saved_map", "r");
-					if (sem_serialize_load(load, &(game.world)) != SEM_OK) return sem_fatal_error();
+					if (sem_serialize_load(load, &game) != SEM_OK) return sem_fatal_error();
 					fclose(load);
 				} else if (e.key.keysym.sym == SDLK_s) {
 					FILE* save = fopen("build/main/saved_map", "w");
-					if (sem_serialize_save(save, &(game.world)) != SEM_OK) return sem_fatal_error();
+					if (sem_serialize_save(save, &game) != SEM_OK) return sem_fatal_error();
 					fclose(save);
 				} else if (e.key.keysym.sym == SDLK_LEFT) {
 					cairo_translate(cr, 1.0, 0.0);

@@ -9,13 +9,13 @@
 #include "sem_serialize_actions.h"
 #include "sem_world.h"
 
-sem_success sem_move_train_action_reader(sem_tokenization* tokens, sem_world* world, sem_action** action);
-sem_success sem_remove_train_action_reader(sem_tokenization* tokens, sem_world* world, sem_action** action);
-sem_success sem_reverse_train_at_buffer_action_reader(sem_tokenization* tokens, sem_world* world, sem_action** action);
-sem_success sem_train_entry_action_reader(sem_tokenization* tokens, sem_world* world, sem_action** action);
+sem_success sem_move_train_action_reader(sem_tokenization* tokens, sem_game* game, sem_action** action);
+sem_success sem_remove_train_action_reader(sem_tokenization* tokens, sem_game* game, sem_action** action);
+sem_success sem_reverse_train_at_buffer_action_reader(sem_tokenization* tokens, sem_game* game, sem_action** action);
+sem_success sem_train_entry_action_reader(sem_tokenization* tokens, sem_game* game, sem_action** action);
 
 sem_success write_train_action(FILE* out, char* tag, sem_action* action);
-sem_success set_train_context(sem_world* world, sem_tokenization* tokens, sem_action* action);
+sem_success set_train_context(sem_game* game, sem_tokenization* tokens, sem_action* action);
 
 sem_action_reader sem_action_reader_lookup(char* action_name) {
 	if (strcmp(action_name, "move_train") == 0) {
@@ -31,35 +31,35 @@ sem_action_reader sem_action_reader_lookup(char* action_name) {
 	}
 }
 
-sem_success sem_move_train_action_reader(sem_tokenization* tokens, sem_world* world, sem_action** action) {
-	*action = sem_action_new();
+sem_success sem_move_train_action_reader(sem_tokenization* tokens, sem_game* game, sem_action** action) {
+	*action = sem_action_new(game);
 	if (*action == NULL) return SEM_ERROR;
 	(*action)->function = sem_move_train_action; 
 	(*action)->write = sem_move_train_action_write;
 
-	return set_train_context(world, tokens, *action);
+	return set_train_context(game, tokens, *action);
 }
 
-sem_success sem_remove_train_action_reader(sem_tokenization* tokens, sem_world* world, sem_action** action) {
-	*action = sem_action_new();
+sem_success sem_remove_train_action_reader(sem_tokenization* tokens, sem_game* game, sem_action** action) {
+	*action = sem_action_new(game);
 	if (*action == NULL) return SEM_ERROR;
 	(*action)->function = remove_train_action; 
 	(*action)->write = sem_remove_train_action_write;
 
-	return set_train_context(world, tokens, *action);
+	return set_train_context(game, tokens, *action);
 }
 
-sem_success sem_reverse_train_at_buffer_action_reader(sem_tokenization* tokens, sem_world* world, sem_action** action) {
-	*action = sem_action_new();
+sem_success sem_reverse_train_at_buffer_action_reader(sem_tokenization* tokens, sem_game* game, sem_action** action) {
+	*action = sem_action_new(game);
 	if (*action == NULL) return SEM_ERROR;
 	(*action)->function = sem_reverse_train_at_buffer_action; 
 	(*action)->write = sem_reverse_train_at_buffer_action_write;
 
-	return set_train_context(world, tokens, *action);
+	return set_train_context(game, tokens, *action);
 }
 
-sem_success sem_train_entry_action_reader(sem_tokenization* tokens, sem_world* world, sem_action** action) {
-	*action = sem_action_new();
+sem_success sem_train_entry_action_reader(sem_tokenization* tokens, sem_game* game, sem_action** action) {
+	*action = sem_action_new(game);
 	if (*action == NULL) return SEM_ERROR;
 	(*action)->function = sem_train_entry_action;
 	(*action)->write = sem_train_entry_action_write;
@@ -67,7 +67,7 @@ sem_success sem_train_entry_action_reader(sem_tokenization* tokens, sem_world* w
 	if (context == NULL) return sem_set_error("Failed to allocate memory for train entry context");
 
 	(*action)->context = context;
-	context->world = world;
+	context->world = &(game->world); // TODO: no longer needed now that we have action.game
 	sem_tokenization_next(tokens); // TODO: check "at"
 	uint32_t x = sem_parse_uint32_t(sem_tokenization_next(tokens));
 	uint32_t y = sem_parse_uint32_t(sem_tokenization_next(tokens));
@@ -112,11 +112,11 @@ sem_success write_train_action(FILE* out, char* tag, sem_action* action) {
 	return SEM_OK;
 }
 
-sem_success set_train_context(sem_world* world, sem_tokenization* tokens, sem_action* action) {
+sem_success set_train_context(sem_game* game, sem_tokenization* tokens, sem_action* action) {
 	char* train_id_str = sem_tokenization_next(tokens);
 	uuid_t train_id;
 	uuid_parse(train_id_str, train_id);
-	sem_train* train = sem_train_by_id(world, train_id);
+	sem_train* train = sem_train_by_id(&(game->world), train_id);
 	if (train == NULL) return sem_set_error("Cannot remove train with unknown id");
 
 	action->context = train;

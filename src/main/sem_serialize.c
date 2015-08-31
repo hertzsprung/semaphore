@@ -27,8 +27,8 @@ sem_success read_train_headless(FILE* in, sem_train* train);
 sem_success read_train_direction(FILE* in, sem_train* train);
 sem_success read_train_cars(FILE* in, sem_train* train);
 sem_success read_car(FILE* in, sem_train* train);
-sem_success read_actions(FILE* in, sem_world* world);
-sem_success read_action(FILE* in, sem_world* world);
+sem_success read_actions(FILE* in, sem_game* game);
+sem_success read_action(FILE* in, sem_game* game);
 sem_success read_revenue(FILE* in, sem_revenue* revenue);
 
 sem_success write_timer(FILE* out, sem_world* world);
@@ -52,7 +52,7 @@ sem_success sem_serialize_load(FILE* in, sem_game* game) {
 	if (read_multiplier(in, world) != SEM_OK) return SEM_ERROR;
 	if (read_tiles(in, world) != SEM_OK) return SEM_ERROR;
 	if (read_trains(in, world) != SEM_OK) return SEM_ERROR;
-	if (read_actions(in, world) != SEM_OK) return SEM_ERROR;
+	if (read_actions(in, game) != SEM_OK) return SEM_ERROR;
 	if (read_revenue(in, &(game->revenue)) != SEM_OK) return SEM_ERROR;
 
 	return SEM_OK;
@@ -387,7 +387,7 @@ sem_success read_car(FILE* in, sem_train* train) {
 	return SEM_OK;
 }
 
-sem_success read_actions(FILE* in, sem_world* world) {
+sem_success read_actions(FILE* in, sem_game* game) {
 	char* line = sem_read_line(in);
 	if (line == NULL) return sem_set_error("Could not read actions count");
 
@@ -400,13 +400,13 @@ sem_success read_actions(FILE* in, sem_world* world) {
 	free(line);
 
 	for (uint32_t i=0; i < actions; i++) {
-		if (read_action(in, world) != SEM_OK) return SEM_ERROR;
+		if (read_action(in, game) != SEM_OK) return SEM_ERROR;
 	}
 
 	return SEM_OK;
 }
 
-sem_success read_action(FILE* in, sem_world* world) {
+sem_success read_action(FILE* in, sem_game* game) {
 	char* line = sem_read_line(in);
 	if (line == NULL) return sem_set_error("Could not read action");
 
@@ -420,10 +420,10 @@ sem_success read_action(FILE* in, sem_world* world) {
 	// FIXME: temporary guard because we don't serialize all types of action
 	if (read != NULL) {
 		sem_action* action;
-		if (read(&tokens, world, &action) != SEM_OK) return SEM_ERROR;
+		if (read(&tokens, game, &action) != SEM_OK) return SEM_ERROR;
 		action->time = time;
 
-		sem_heap_insert(world->actions, action);
+		sem_heap_insert(game->world.actions, action);
 	}
 
 	return SEM_OK;

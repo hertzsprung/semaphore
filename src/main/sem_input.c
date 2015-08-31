@@ -21,17 +21,17 @@ sem_success toggle_signal_aspect(sem_dynamic_array* heap, sem_action* action);
 sem_success set_signal_to_amber(sem_dynamic_array* heap, sem_action* action);
 sem_success release_any_held_train(sem_signal* signal, sem_dynamic_array* heap, sem_action* action);
 
-sem_success sem_tile_input_act_upon(sem_input_event* input, sem_world* world, sem_action** action) {
-	sem_tile* tile = sem_tile_at_coord(world, input->tile);
+sem_success sem_tile_input_act_upon(sem_input_event* input, sem_game* game, sem_action** action) {
+	sem_tile* tile = sem_tile_at_coord(&(game->world), input->tile);
 
 	if (tile->class == POINTS) {
-		*action = sem_action_new();
+		*action = sem_action_new(game);
 		if (*action == NULL) return SEM_ERROR;
 		(*action)->time = input->time;
 		(*action)->context = tile;
 		(*action)->function = switch_points_action;
 	} else if (tile->class == SIGNAL) {
-		*action = sem_action_new();
+		*action = sem_action_new(game);
 		if (*action == NULL) return SEM_ERROR;
 		(*action)->time = input->time;
 		(*action)->context = tile->signal;
@@ -55,11 +55,11 @@ sem_success switch_points_action(sem_dynamic_array* heap, sem_action* action) {
 	return SEM_OK;
 }
 
-sem_success sem_train_input_act_upon(sem_input_event* input, sem_world* world, sem_action** action) {
-	sem_train* train = train_occupying_tile(world->trains, input->tile);
+sem_success sem_train_input_act_upon(sem_input_event* input, sem_game* game, sem_action** action) {
+	sem_train* train = train_occupying_tile(game->world.trains, input->tile);
 	if (train == NULL) return SEM_OK;
 
-	*action = sem_action_new();
+	*action = sem_action_new(game);
 	if (*action == NULL) return SEM_ERROR;
 	(*action)->time = input->time;
 	(*action)->context = train;

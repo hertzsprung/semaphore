@@ -6,7 +6,7 @@
 #include "sem_strings.h"
 #include "sem_world.h"
 
-typedef sem_success (*sem_action_reader)(sem_tokenization* tokens, sem_world* world, sem_action** action);
+typedef sem_success (*sem_action_reader)(sem_tokenization* tokens, sem_game* game, sem_action** action);
 
 sem_action_reader sem_action_reader_lookup(char* action_name);
 

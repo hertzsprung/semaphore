@@ -7,6 +7,7 @@
 
 #include "sem_dynamic_array.h"
 #include "sem_error.h"
+#include "sem_game.h"
 
 typedef struct sem_action sem_action;
 
@@ -16,6 +17,7 @@ typedef sem_success (*sem_write_action_func)(FILE* out, sem_action* action);
 struct sem_action {
 	uint64_t time;
 	void* context;
+	sem_game* game;
 	sem_action_func function;
 	sem_write_action_func write;
 	bool dynamically_allocated; /**< If true, the action will be freed by sem_action_list_execute() after it is executed */

@@ -230,8 +230,8 @@ void test_serialize_save_load_revenue() {
 	sem_game game;
 	game.world.max_x = 1;
 	game.world.max_y = 1;
-	game.revenue.balance = 2948;
 	sem_game_init_blank(&game);
+	game.revenue.balance = 2948;
 
 	FILE* file = fopen("build/test/revenue", "w");
 	sem_serialize_save(file, &game);

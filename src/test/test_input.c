@@ -16,7 +16,7 @@
 
 typedef struct {
 	sem_dynamic_array heap;
-	sem_world world;
+	sem_game game;
 	sem_train* train;
 } test_input_context;
 
@@ -63,13 +63,13 @@ void add_test_input(const char *test_name, void (*test)(test_input_context*, con
 void test_input_setup(test_input_context* test_ctx, const void* data) {
 	#pragma unused(data)
 
-	test_ctx->world.max_x = 3;
-	test_ctx->world.max_y = 1;
-	sem_world_init_blank(&(test_ctx->world));
+	test_ctx->game.world.max_x = 3;
+	test_ctx->game.world.max_y = 1;
+	sem_game_init_blank(&(test_ctx->game));
 
 	test_ctx->train = malloc(sizeof(sem_train));
 	sem_train_init(test_ctx->train);
-	sem_world_add_train(&(test_ctx->world), test_ctx->train);
+	sem_world_add_train(&(test_ctx->game.world), test_ctx->train);
 
 	sem_heap_init(&(test_ctx->heap));
 }
@@ -77,7 +77,7 @@ void test_input_setup(test_input_context* test_ctx, const void* data) {
 void test_input_teardown(test_input_context* test_ctx, const void* data) {
 	#pragma unused(data)
 
-	sem_world_destroy(&(test_ctx->world));
+	sem_world_destroy(&(test_ctx->game.world));
 	sem_dynamic_array_destroy(&(test_ctx->heap));
 }
 
@@ -85,7 +85,7 @@ void test_input_null_action_for_unoccupied_coordinate(test_input_context* test_c
 	#pragma unused(data)
 
 	sem_train* train = test_ctx->train;
-	sem_world* world = &(test_ctx->world);
+	sem_game* game = &(test_ctx->game);
 
 	sem_car car;
 	sem_coordinate_set(&(car.position), 1, 4);
@@ -98,7 +98,7 @@ void test_input_null_action_for_unoccupied_coordinate(test_input_context* test_c
 
 	sem_action* action = NULL;
 
-	sem_train_input_act_upon(&input, world, &action);
+	sem_train_input_act_upon(&input, game, &action);
 
 	g_assert_null(action);
 }
@@ -106,7 +106,8 @@ void test_input_null_action_for_unoccupied_coordinate(test_input_context* test_c
 void test_input_toggles_train_state(test_input_context* test_ctx, const void* data) {
 	#pragma unused(data)
 	sem_train* train = test_ctx->train;
-	sem_world* world = &(test_ctx->world);
+	sem_game* game = &(test_ctx->game);
+	sem_world* world = &(test_ctx->game.world);
 	sem_dynamic_array* heap = &(test_ctx->heap);
 
 	sem_track trackW_E;
@@ -130,7 +131,7 @@ void test_input_toggles_train_state(test_input_context* test_ctx, const void* da
 
 	sem_action* action = NULL;
 
-	sem_train_input_act_upon(&input, world, &action);
+	sem_train_input_act_upon(&input, game, &action);
 	action->function(heap, action);
 
 	action = sem_heap_remove_earliest(heap);
@@ -146,8 +147,8 @@ void test_input_toggles_train_state(test_input_context* test_ctx, const void* da
 
 void test_input_reverses_train(test_input_context* test_ctx, const void* data) {
 	#pragma unused(data)
+	sem_game* game = &(test_ctx->game);
 	sem_train* train = test_ctx->train;
-	sem_world* world = &(test_ctx->world);
 	sem_dynamic_array* heap = &(test_ctx->heap);
 
 	sem_track track;
@@ -168,7 +169,7 @@ void test_input_reverses_train(test_input_context* test_ctx, const void* data) {
 	input.rank = SECONDARY;
 
 	sem_action* action = NULL;
-	sem_train_input_act_upon(&input, world, &action);
+	sem_train_input_act_upon(&input, game, &action);
 
 	g_assert_nonnull(action);
 	action->function(heap, action);
@@ -180,7 +181,7 @@ void test_input_removes_derailed_train(test_input_context* test_ctx, const void*
 	#pragma unused(data)
 
 	sem_train* train = test_ctx->train;
-	sem_world* world = &(test_ctx->world);
+	sem_world* world = &(test_ctx->game.world);
 	sem_dynamic_array* heap = &(test_ctx->heap);
 
 	sem_tile* tile = sem_tile_at(world, 0, 0);
@@ -222,9 +223,9 @@ void test_input_unremoves_derailed_train_after_crash(test_input_context* test_ct
 
 void test_input_null_action_on_blank_tile(test_input_context* test_ctx, const void* data) {
 	#pragma unused(data)
-	sem_world* world = &(test_ctx->world);
+	sem_game* game = &(test_ctx->game);
 
-	sem_tile* tile = sem_tile_at(world, 0, 0);
+	sem_tile* tile = sem_tile_at(&(game->world), 0, 0);
 	tile->class = BLANK;
 
 	sem_coordinate coord;
@@ -234,13 +235,13 @@ void test_input_null_action_on_blank_tile(test_input_context* test_ctx, const vo
 	input.tile = &coord;
 
 	sem_action* action = NULL;
-	sem_tile_input_act_upon(&input, world, &action);
+	sem_tile_input_act_upon(&input, game, &action);
 	g_assert_null(action);
 }
 
 void test_input_switches_points(test_input_context* test_ctx, const void* data) {
 	#pragma unused(data)
-	sem_world* world = &(test_ctx->world);
+	sem_game* game = &(test_ctx->game);
 	sem_dynamic_array* heap = &(test_ctx->heap);
 
 	sem_track trackW_NE;
@@ -249,7 +250,7 @@ void test_input_switches_points(test_input_context* test_ctx, const void* data) 
 	sem_track trackW_E;
 	sem_track_set(&trackW_E, SEM_WEST, SEM_EAST);
 
-	sem_tile* tile = sem_tile_at(world, 0, 0);
+	sem_tile* tile = sem_tile_at(&(game->world), 0, 0);
 	sem_tile_set_points(tile, &trackW_NE);
 	tile->points[0] = &trackW_E;
 	tile->points[1] = &trackW_NE;
@@ -261,7 +262,7 @@ void test_input_switches_points(test_input_context* test_ctx, const void* data) 
 	input.tile = &coord;
 
 	sem_action* action = NULL;
-	sem_tile_input_act_upon(&input, world, &action);
+	sem_tile_input_act_upon(&input, game, &action);
 	action->function(heap, action);
 	free(action);
 
@@ -271,7 +272,7 @@ void test_input_switches_points(test_input_context* test_ctx, const void* data) 
 void test_input_reverses_at_buffer(test_input_context* test_ctx, const void* data) {
 	#pragma unused(data)
 
-	sem_world* world = &(test_ctx->world);
+	sem_world* world = &(test_ctx->game.world);
 	sem_train* train = test_ctx->train;
 	sem_dynamic_array* heap = &(test_ctx->heap);
 
@@ -320,7 +321,7 @@ void test_input_signal_to_amber(test_input_context* test_ctx, const void* data) 
 }
 
 void test_input_signal_aspect(test_input_context* test_ctx, sem_signal_aspect before, sem_input_rank input_rank, sem_signal_aspect after) {
-	sem_world* world = &(test_ctx->world);
+	sem_game* game = &(test_ctx->game);
 	sem_dynamic_array* heap = &(test_ctx->heap);
 
 	sem_track track;
@@ -329,7 +330,7 @@ void test_input_signal_aspect(test_input_context* test_ctx, sem_signal_aspect be
 	sem_signal* signal = malloc(sizeof(sem_signal));
 	sem_signal_init(signal, MAIN_MANUAL, before);
 	
-	sem_tile_set_signal(sem_tile_at(world, 0, 0), &track, signal);
+	sem_tile_set_signal(sem_tile_at(&(game->world), 0, 0), &track, signal);
 
 	sem_coordinate coord;
 	sem_coordinate_set(&coord, 0, 0);
@@ -339,7 +340,7 @@ void test_input_signal_aspect(test_input_context* test_ctx, sem_signal_aspect be
 	input.rank = input_rank;
 
 	sem_action* action = NULL;
-	sem_tile_input_act_upon(&input, world, &action);
+	sem_tile_input_act_upon(&input, game, &action);
 
 	g_assert_nonnull(action);
 	action->function(heap, action);
@@ -359,7 +360,8 @@ void test_input_move_train_when_signal_goes_amber(test_input_context* test_ctx, 
 }
 
 void test_input_move_train_on_signal_aspect_change(test_input_context* test_ctx, sem_input_rank input_rank) {
-	sem_world* world = &(test_ctx->world);
+	sem_game* game = &(test_ctx->game);
+	sem_world* world = &(test_ctx->game.world);
 	sem_dynamic_array* heap = &(test_ctx->heap);
 	sem_train* train = test_ctx->train;
 
@@ -392,7 +394,7 @@ void test_input_move_train_on_signal_aspect_change(test_input_context* test_ctx,
 	input.rank = input_rank;
 
 	sem_action* action = NULL;
-	sem_tile_input_act_upon(&input, world, &action);
+	sem_tile_input_act_upon(&input, game, &action);
 
 	g_assert_nonnull(action);
 	action->function(heap, action);

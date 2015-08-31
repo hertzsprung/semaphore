@@ -180,13 +180,13 @@ int main(int argc, char **argv) {
 				sem_action* a = NULL;
 
 				// TODO: wrap up train/tile input handlers into one big input routine
-				sem_train_input_act_upon(&input, &(game.world), &a);
+				sem_train_input_act_upon(&input, &game, &a);
 
 				if (a != NULL) {
 					// TODO: should just chuck this onto the action list with "immediate" flag set
 					a->function(game.world.actions, a);
 				} else {
-					sem_tile_input_act_upon(&input, &(game.world), &a);
+					sem_tile_input_act_upon(&input, &game, &a);
 					if (a != NULL) a->function(game.world.actions, a);
 				}
 			}

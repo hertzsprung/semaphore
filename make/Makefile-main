@@ -23,6 +23,7 @@ $(eval $(call OBJ,semaphore))
 $(eval $(call OBJ,railpro2semaphore))
 
 $(eval $(call DEP_OBJ,semaphore,sem_action sem_action_list sem_compass sem_dynamic_array sem_error sem_input sem_parser sem_portal sem_render sem_serialize sem_serialize_actions sem_signal sem_strings sem_timer sem_track_cache sem_train sem_world))
+$(eval $(call DEP_HEADER,semaphore,sem_game))
 $(eval $(call DEP_OBJ,railpro2semaphore,sem_action sem_action_list sem_compass sem_dynamic_array sem_error sem_input sem_serialize sem_serialize_actions sem_serialize_railpro sem_signal sem_strings sem_timer sem_track_cache sem_train sem_world))
 $(eval $(call DEP_OBJ,sem_action,sem_heap))
 $(eval $(call DEP_OBJ,sem_action_list,sem_dynamic_array sem_error))

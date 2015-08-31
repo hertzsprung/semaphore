@@ -17,6 +17,7 @@
 #include "sem_compass.h"
 #include "sem_dynamic_array.h"
 #include "sem_error.h"
+#include "sem_game.h"
 #include "sem_heap.h"
 #include "sem_input.h"
 #include "sem_render.h"
@@ -102,8 +103,8 @@ int main(int argc, char **argv) {
 		map = fopen("maps/64x64test", "r");
 	}
 
-	sem_world world;
-	if (sem_serialize_load(map, &world) != SEM_OK) return sem_fatal_error();
+	sem_game game;
+	if (sem_serialize_load(map, &(game.world)) != SEM_OK) return sem_fatal_error();
 	fclose(map);
 
 	printf("\n");
@@ -114,7 +115,7 @@ int main(int argc, char **argv) {
 	bool quit = false;	
 	uint64_t frames = 0;
 	while (!quit) {
-		sem_timer_now(world.timer);
+		sem_timer_now(game.world.timer);
 
 		while (SDL_PollEvent(&e)){
 			if (e.type == SDL_QUIT) {
@@ -124,13 +125,13 @@ int main(int argc, char **argv) {
 				if (e.key.keysym.sym == SDLK_LCTRL || e.key.keysym.sym == SDLK_RCTRL) {
 					// ignore
 				} else if (e.key.keysym.sym == SDLK_l) {
-					sem_world_destroy(&world);
+					sem_world_destroy(&(game.world));
 					FILE* load = fopen("build/main/saved_map", "r");
-					if (sem_serialize_load(load, &world) != SEM_OK) return sem_fatal_error();
+					if (sem_serialize_load(load, &(game.world)) != SEM_OK) return sem_fatal_error();
 					fclose(load);
 				} else if (e.key.keysym.sym == SDLK_s) {
 					FILE* save = fopen("build/main/saved_map", "w");
-					if (sem_serialize_save(save, &world) != SEM_OK) return sem_fatal_error();
+					if (sem_serialize_save(save, &(game.world)) != SEM_OK) return sem_fatal_error();
 					fclose(save);
 				} else if (e.key.keysym.sym == SDLK_LEFT) {
 					cairo_translate(cr, 1.0, 0.0);
@@ -147,9 +148,9 @@ int main(int argc, char **argv) {
 			if (e.type == SDL_MOUSEWHEEL) {
 				if (SDL_GetModState() & KMOD_CTRL) {
 					if (e.wheel.y > 0) {
-						world.timer->multiplier *= 1.1 * e.wheel.y;
+						game.world.timer->multiplier *= 1.1 * e.wheel.y;
 					} else if (e.wheel.y < 0) {
-						world.timer->multiplier /= -1.1 * e.wheel.y;
+						game.world.timer->multiplier /= -1.1 * e.wheel.y;
 					}
 				} else {
 					if (e.wheel.y > 0) {
@@ -167,7 +168,7 @@ int main(int argc, char **argv) {
 				sem_coordinate coord;
 				sem_coordinate_set(&coord, (uint32_t) (floor(x)), (uint32_t) (floor(y)));
 				sem_input_event input;
-				input.time = world.timer->now;
+				input.time = game.world.timer->now;
 				input.tile = &coord;
 				
 				if (e.button.button == SDL_BUTTON_LEFT) {
@@ -179,28 +180,28 @@ int main(int argc, char **argv) {
 				sem_action* a = NULL;
 
 				// TODO: wrap up train/tile input handlers into one big input routine
-				sem_train_input_act_upon(&input, &world, &a);
+				sem_train_input_act_upon(&input, &(game.world), &a);
 
 				if (a != NULL) {
 					// TODO: should just chuck this onto the action list with "immediate" flag set
-					a->function(world.actions, a);
+					a->function(game.world.actions, a);
 				} else {
-					sem_tile_input_act_upon(&input, &world, &a);
-					if (a != NULL) a->function(world.actions, a);
+					sem_tile_input_act_upon(&input, &(game.world), &a);
+					if (a != NULL) a->function(game.world.actions, a);
 				}
 			}
 		}
 
-		if (sem_action_list_execute(world.actions, world.timer->now) != SEM_OK) {
+		if (sem_action_list_execute(game.world.actions, game.world.timer->now) != SEM_OK) {
 			return sem_fatal_error();
 		}
 
 		cairo_set_line_width(cr, 0.1);
 
-		sem_render_world(&render_ctx, &world);
+		sem_render_world(&render_ctx, &(game.world));
 
 		char buf[128] = "";
-		snprintf(buf, sizeof(buf), "frame: %ld, game time: %ld, multiplier: %f", frames, world.timer->now, world.timer->multiplier);
+		snprintf(buf, sizeof(buf), "frame: %ld, game time: %ld, multiplier: %f", frames, game.world.timer->now, game.world.timer->multiplier);
 		cairo_move_to(cr, 0, 1);
 		cairo_set_font_size(cr, 0.7);
 		cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
@@ -214,7 +215,7 @@ int main(int argc, char **argv) {
 		frames++;
 	}
 
-	sem_world_destroy(&world);
+	sem_world_destroy(&(game.world));
 	cairo_destroy(cr);
 	SDL_DestroyTexture(texture);
 	return EXIT_SUCCESS;

@@ -1,7 +1,7 @@
 world 64 64
 now 0
 multiplier 1.0
-tiles 68
+tiles 74
 0 9 entry W-E
 1 9 track W-E
 2 9 signal W-E green main auto
@@ -19,7 +19,6 @@ tiles 68
 7 11 track NW-E
 8 7 track W-E
 8 11 track W-E
-9 7 track W-SE
 9 11 track W-NE
 10 8 signal NW-SE green sub
 10 10 signal SW-NE amber main manual
@@ -62,7 +61,7 @@ tiles 68
 8 4 points N-SE W-SE
 4 4 points SW-N SW-E
 8 2 points NE-S W-NE
-9 7 points W-E W-SE
+9 7 points W-E W-SE W-NE
 10 7 track W-E
 11 7 signal W-E green main manual
 12 7 track W-E
@@ -70,6 +69,13 @@ tiles 68
 14 7 track W-E
 15 7 track W-E
 16 7 exit W-E
+10 6 track SW-E
+11 6 signal W-E green main manual
+12 6 track W-E
+13 6 track W-E
+14 6 track W-E
+15 6 track W-E
+16 6 exit W-E
 trains 3
 train 107207dc-d4de-4ee5-accf-26ae19404603
 name TRAIN-1

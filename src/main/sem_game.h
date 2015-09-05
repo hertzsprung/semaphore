@@ -6,6 +6,11 @@
 #include "sem_world.h"
 
 typedef struct {
+	sem_coordinate position;
+	char* text;
+} sem_label;
+
+typedef struct {
 	sem_world world;
 	sem_revenue revenue;
 	sem_dynamic_array* labels;

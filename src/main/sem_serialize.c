@@ -29,6 +29,7 @@ sem_success read_train_direction(FILE* in, sem_train* train);
 sem_success read_train_cars(FILE* in, sem_train* train);
 sem_success read_car(FILE* in, sem_train* train);
 sem_success read_labels(FILE* in, sem_game* game);
+sem_success read_label(FILE* in, sem_game* game);
 sem_success read_actions(FILE* in, sem_game* game);
 sem_success read_action(FILE* in, sem_game* game);
 sem_success read_revenue(FILE* in, sem_revenue* revenue);
@@ -43,6 +44,7 @@ sem_success write_train_portal_state(FILE* out, sem_train_portal_state state);
 sem_success write_train_exit_position(FILE* out, sem_train* train);
 sem_success write_car(FILE* out, sem_car* car);
 sem_success write_labels(FILE* out, sem_dynamic_array* labels);
+sem_success write_label(FILE* out, sem_label* label);
 sem_success write_actions(FILE* out, sem_dynamic_array* actions);
 sem_success write_action(FILE* out, sem_action* action);
 sem_success write_revenue(FILE* out, sem_revenue* revenue);
@@ -417,21 +419,40 @@ sem_success read_car(FILE* in, sem_train* train) {
 }
 
 sem_success read_labels(FILE* in, sem_game* game) {
-	#pragma unused(game)
 	char* line = sem_read_line(in);
 	if (line == NULL) return sem_set_error("Could not read labels count");
 
 	sem_tokenization tokens;
 	sem_tokenization_init(&tokens, line, " ");
 	sem_tokenization_next(&tokens);
-	// TODO: check token is "actions"
+	// TODO: check token is "labels"
 	
-	uint32_t label = sem_parse_uint32_t(sem_tokenization_next(&tokens));
+	uint32_t labels = sem_parse_uint32_t(sem_tokenization_next(&tokens));
 	free(line);
 
-	for (uint32_t i=0; i < label; i++) {
-		//if (read_label(in, game) != SEM_OK) return SEM_ERROR;
+	for (uint32_t i=0; i < labels; i++) {
+		if (read_label(in, game) != SEM_OK) return SEM_ERROR;
 	}
+
+	return SEM_OK;
+}
+
+sem_success read_label(FILE* in, sem_game* game) {
+	char* line = sem_read_line(in);
+	if (line == NULL) return sem_set_error("Could not read label");
+
+	sem_tokenization tokens;
+	sem_tokenization_init(&tokens, line, " ");
+
+	sem_label* label = malloc(sizeof(sem_label));
+	if (label == NULL) return sem_set_error("Failed to allocate memory for label");
+
+	label->position.x = sem_parse_uint32_t(sem_tokenization_next(&tokens));
+	label->position.y = sem_parse_uint32_t(sem_tokenization_next(&tokens));
+	label->text = strdup(sem_tokenization_next(&tokens));
+	free(line);
+
+	if (sem_dynamic_array_add(game->labels, label) != SEM_OK) return SEM_ERROR;
 
 	return SEM_OK;
 }
@@ -628,7 +649,15 @@ sem_success write_car(FILE* out, sem_car* car) {
 }
 
 sem_success write_labels(FILE* out, sem_dynamic_array* labels) {
-	fprintf(out, "labels %u\n", sem_heap_size(labels));
+	fprintf(out, "labels %u\n", labels->tail_idx);
+	for (uint32_t i=0; i < labels->tail_idx; i++) {
+		if (write_label(out, labels->items[i]) != SEM_OK) return SEM_ERROR;
+	}
+	return SEM_OK;
+}
+
+sem_success write_label(FILE* out, sem_label* label) {
+	fprintf(out, "%d %d %s\n", label->position.x, label->position.y, label->text);
 	return SEM_OK;
 }
 

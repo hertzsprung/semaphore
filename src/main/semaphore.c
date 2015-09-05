@@ -27,7 +27,7 @@
 #include "sem_world.h"
 
 int main(int argc, char **argv) {
-	int fullscreen;
+	int fullscreen = 0;
 	int c;
 	struct option long_options[] = { {"fullscreen", no_argument, &fullscreen, true}, {0,0,0,0}};
 	do {
@@ -198,7 +198,7 @@ int main(int argc, char **argv) {
 
 		cairo_set_line_width(cr, 0.1);
 
-		sem_render_world(&render_ctx, &(game.world));
+		sem_render_game(&render_ctx, &game);
 
 		char buf[128] = "";
 		snprintf(buf, sizeof(buf), "%d", game.revenue.balance);

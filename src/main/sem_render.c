@@ -28,15 +28,22 @@ void render_tile_exit(sem_render_context* ctx, sem_coordinate coord, sem_tile* t
 void render_train(sem_render_context* ctx, sem_train* train);
 void render_train_name(sem_render_context* ctx, sem_train* train);
 void render_track_path(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
+void render_label(sem_render_context* ctx, sem_label* label);
 
-void sem_render_world(sem_render_context* ctx, sem_world* world) {
+void sem_render_game(sem_render_context* ctx, sem_game* game) {
+	sem_world* world = &(game->world);
 	cairo_rectangle(ctx->cr, 0, 0, world->max_x, world->max_y);
 	cairo_set_source(ctx->cr, ctx->style->canvas);
 	cairo_fill(ctx->cr);
 
 	render_tiles(ctx, world);
+
 	for (uint32_t i=0; i < world->trains->tail_idx; i++) {
 		render_train(ctx, world->trains->items[i]);
+	}
+
+	for (uint32_t i=0; i < game->labels->tail_idx; i++) {
+		render_label(ctx, game->labels->items[i]);
 	}
 }
 
@@ -350,12 +357,18 @@ void render_train_name(sem_render_context* ctx, sem_train* train) {
 	cairo_text_extents_t extents;
 	cairo_text_extents(ctx->cr, train->name, &extents);
 	cairo_rectangle(ctx->cr, position.x, position.y-extents.height, extents.width, extents.height);
-	cairo_set_source_rgba(ctx->cr, 0.0, 0.53125, 0.26525, 0.5);
+	cairo_set_source_rgba(ctx->cr, 0.2, 0.2, 1.0, 1.0);
 	cairo_fill(ctx->cr);
 
 	cairo_move_to(ctx->cr, position.x, position.y);
-	cairo_set_source_rgb(ctx->cr, 1.0, 1.0, 1.0);
+	cairo_set_source_rgb(ctx->cr, 1.0, 1.0, 0.4667);
 	cairo_show_text(ctx->cr, train->name);
+}
+
+void render_label(sem_render_context* ctx, sem_label* label) {
+	cairo_move_to(ctx->cr, label->position.x, (label->position.y)+1);
+	cairo_set_source_rgb(ctx->cr, 1.0, 1.0, 1.0);
+	cairo_show_text(ctx->cr, label->text);
 }
 
 void render_track_path(sem_render_context* ctx, sem_coordinate coord, sem_track* track) {

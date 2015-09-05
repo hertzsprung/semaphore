@@ -78,7 +78,7 @@ tiles 74
 16 6 exit W-E
 trains 3
 train 107207dc-d4de-4ee5-accf-26ae19404603
-name TRAIN-1
+name EXB
 state stopped
 portal_state entered
 spawn_cars_remaining 0
@@ -116,7 +116,9 @@ cars 3
 10 1 W-E
 11 1 W-SE
 12 2 S-NW
-labels 0
+labels 2
+17 6 EXA
+17 7 EXB
 actions 2
 3000 train_entry at 0 9 direction E cars 3
 15000 train_entry at 0 9 direction E cars 3

@@ -79,6 +79,7 @@ tiles 74
 trains 3
 train 107207dc-d4de-4ee5-accf-26ae19404603
 name EXB
+speed fast
 state stopped
 portal_state entered
 spawn_cars_remaining 0
@@ -92,6 +93,7 @@ cars 3
 15 9 W-E
 train ca78820d-d3eb-4b7b-bafa-094cfb9fb9da
 name TRAIN-2
+speed fast
 state stopped
 portal_state entered
 spawn_cars_remaining 0
@@ -105,6 +107,7 @@ cars 3
 0 2 S-NE
 train 81cbbfd6-43c8-4143-a345-ee9e27dd0e8b
 name TRAIN-3
+speed fast
 state stopped
 portal_state entered
 spawn_cars_remaining 0

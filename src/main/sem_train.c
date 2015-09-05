@@ -20,6 +20,10 @@ unit_vector train_tail_end(sem_train* train);
 sem_success sem_train_init(sem_train* train) {
 	uuid_generate(train->id);
 	train->name = strdup("<none>");
+	train->speed = FAST;
+	train->speeds[0] = 1000;
+	train->speeds[1] = 1500;
+	train->speeds[2] = 2000;
 	train->state = STOPPED;
 	train->portal_state = ENTERED;
 	train->direction = 0;
@@ -41,6 +45,10 @@ sem_success sem_train_move(sem_train* train, sem_train_move_outcome* outcome) {
 	sem_tile* tile = sem_tile_at_coord(train->world, &new_position);
 	sem_tile_acceptance acceptance;
 	if (sem_tile_accept(train, tile, &acceptance) != SEM_OK) return SEM_ERROR;
+
+	if (acceptance.signalling.change_speed) {
+		train->speed = acceptance.signalling.speed;
+	}
 
 	if (acceptance.reached_buffer) {
 		train->state = STOPPED;

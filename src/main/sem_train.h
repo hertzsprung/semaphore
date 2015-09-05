@@ -8,6 +8,10 @@
 typedef struct sem_train sem_train;
 typedef struct sem_car sem_car;
 
+typedef enum {
+	FAST, MEDIUM, SLOW
+} sem_train_speed;
+
 #include "sem_compass.h"
 #include "sem_dynamic_array.h"
 #include "sem_error.h"
@@ -32,6 +36,8 @@ struct sem_train {
 	sem_world* world;
 	uuid_t id;
 	char* name;
+	sem_train_speed speed;
+	uint32_t speeds[3];
 	sem_train_state state;
 	sem_train_portal_state portal_state;
 	sem_coordinate* position; /**< position of the train's head car */

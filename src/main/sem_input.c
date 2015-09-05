@@ -128,7 +128,7 @@ sem_success sem_move_train_action(sem_dynamic_array* heap, sem_action* action) {
 				if (sem_portal_spawn_car(train) != SEM_OK) return SEM_ERROR;
 				if (train->spawn_cars_remaining == 0) train->portal_state = ENTERED;
 			}
-			action->time += 1000L;
+			action->time += train->speeds[train->speed];
 			action->function = sem_move_train_action;
 			action->write = sem_move_train_action_write;
 			if (sem_heap_insert(heap, action) != SEM_OK) return SEM_ERROR;

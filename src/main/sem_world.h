@@ -46,6 +46,8 @@ struct sem_world {
 
 struct sem_signal_acceptance {
 	bool stop;
+	bool change_speed;
+	sem_train_speed speed;
 };
 
 typedef struct {

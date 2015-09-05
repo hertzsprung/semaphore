@@ -3,6 +3,8 @@
 
 #include "test_signal.h"
 
+#include "sem_heap.h"
+#include "sem_input.h"
 #include "sem_world.h"
 #include "sem_train.h"
 
@@ -15,6 +17,11 @@ typedef struct {
 
 void test_signal_main_becomes_red_upon_accepting_train(test_signal_context* test_ctx, const void* data);
 void test_signal_train_stops_behind_red_main(test_signal_context* test_ctx, const void* data);
+void test_signal_train_slows_at_amber_main_manual(test_signal_context* test_ctx, const void* data);
+void test_signal_train_slows_at_amber_main_auto(test_signal_context* test_ctx, const void* data);
+void test_signal_train_medium_speed_at_amber_sub(test_signal_context* test_ctx, const void* data);
+void test_signal_train_fast_at_green(test_signal_context* test_ctx, const void* data);
+void test_signal_train_speed_change(test_signal_context* test_ctx, sem_signal_aspect aspect, sem_signal_type signal_type, sem_train_speed before, sem_train_speed after, uint64_t next_action_time);
 
 void add_test_signal(const char *test_name, void (*test)(test_signal_context*, const void* data));
 void test_signal_setup(test_signal_context* test_ctx, const void* data);
@@ -23,6 +30,10 @@ void test_signal_teardown(test_signal_context* test_ctx, const void* data);
 void add_tests_signal() {
 	add_test_signal("/signal/main_becomes_red_upon_accepting_train", test_signal_main_becomes_red_upon_accepting_train);
 	add_test_signal("/signal/train_stops_behind_red_main", test_signal_train_stops_behind_red_main);
+	add_test_signal("/signal/train_slows_at_amber_main_manual", test_signal_train_slows_at_amber_main_manual);
+	add_test_signal("/signal/train_slows_at_amber_main_auto", test_signal_train_slows_at_amber_main_auto);
+	add_test_signal("/signal/train_medium_speed_at_amber_sub", test_signal_train_medium_speed_at_amber_sub);
+	add_test_signal("/signal/train_fast_at_green", test_signal_train_fast_at_green);
 }
 
 void add_test_signal(const char *test_name, void (*test)(test_signal_context*, const void* data)) {
@@ -95,4 +106,57 @@ void test_signal_train_stops_behind_red_main(test_signal_context* test_ctx, cons
 	sem_train_move_outcome outcome;
 	g_assert_true(sem_train_move(train, &outcome) == SEM_OK);
 	g_assert_true(train->state == STOPPED);
+}
+
+void test_signal_train_slows_at_amber_main_manual(test_signal_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	test_signal_train_speed_change(test_ctx, AMBER, MAIN_MANUAL, FAST, SLOW, 4000);
+}
+
+void test_signal_train_slows_at_amber_main_auto(test_signal_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	test_signal_train_speed_change(test_ctx, AMBER, MAIN_AUTO, FAST, SLOW, 4000);
+}
+
+void test_signal_train_medium_speed_at_amber_sub(test_signal_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	test_signal_train_speed_change(test_ctx, AMBER, SUB, FAST, MEDIUM, 3500);
+}
+
+void test_signal_train_fast_at_green(test_signal_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	test_signal_train_speed_change(test_ctx, GREEN, SUB, MEDIUM, FAST, 3000);
+}
+
+void test_signal_train_speed_change(test_signal_context* test_ctx, sem_signal_aspect aspect, sem_signal_type signal_type, sem_train_speed before, sem_train_speed after, uint64_t next_action_time) {
+	sem_world* world = &(test_ctx->world);
+	sem_signal* signal = test_ctx->signal;
+	sem_train* train = test_ctx->train;
+
+	train->direction = SEM_EAST;
+	train->state = MOVING;
+	train->speeds[0] = 1000;
+	train->speeds[1] = 1500;
+	train->speeds[2] = 2000;
+	train->speed = before;
+	sem_car car;
+	sem_coordinate_set(&(car.position), 0, 0);
+	car.track = test_ctx->track;
+	sem_train_add_car(train, &car);
+
+	signal->aspect = aspect;
+	signal->type = signal_type;
+
+	sem_action action;
+	action.time = 2000;
+	action.context = train;
+	action.function = sem_move_train_action;
+	action.dynamically_allocated = false;
+
+	sem_move_train_action(world->actions, &action);
+	sem_action* move_action = sem_heap_remove_earliest(world->actions);
+	g_assert_nonnull(move_action);
+
+	g_assert_cmpuint(train->speed, ==, after);
+	g_assert_cmpuint(move_action->time, ==, next_action_time);
 }

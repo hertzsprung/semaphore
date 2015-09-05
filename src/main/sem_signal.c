@@ -14,6 +14,12 @@ sem_success sem_signal_accept(sem_train* train, sem_signal* signal, sem_signal_a
 	if (signal->aspect == RED) {
 		acceptance->stop = true;
 		signal->held_train = train;
+	} else if (signal->aspect == AMBER) {
+		acceptance->change_speed = true;
+		acceptance->speed = (signal->type == SUB ? MEDIUM : SLOW);
+	} else if (signal->aspect == GREEN) {
+		acceptance->change_speed = true;
+		acceptance->speed = FAST;
 	}
 
 	signal->aspect = RED;
@@ -22,6 +28,7 @@ sem_success sem_signal_accept(sem_train* train, sem_signal* signal, sem_signal_a
 
 void sem_signal_acceptance_init(sem_signal_acceptance* acceptance) {
 	acceptance->stop = false;
+	acceptance->change_speed = false;
 }
 
 bool sem_signal_holding_train(sem_signal* signal) {

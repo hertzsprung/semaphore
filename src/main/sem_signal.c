@@ -12,8 +12,13 @@ void sem_signal_init(sem_signal* signal, sem_signal_type type, sem_signal_aspect
 
 sem_success sem_signal_accept(sem_train* train, sem_signal* signal, sem_signal_acceptance* acceptance) {
 	if (signal->aspect == RED) {
-		acceptance->stop = true;
-		signal->held_train = train;
+		if (signal->type == SUB && train->speed == FAST) {
+			acceptance->change_speed = true;
+			acceptance->speed = SLOW;
+		} else {
+			acceptance->stop = true;
+			signal->held_train = train;
+		}
 	} else if (signal->aspect == AMBER) {
 		acceptance->change_speed = true;
 		acceptance->speed = (signal->type == SUB ? MEDIUM : SLOW);

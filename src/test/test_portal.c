@@ -173,7 +173,8 @@ void test_portal_revenue_when_train_exits_portal(test_portal_context* test_ctx, 
 	sem_train_init(train);
 	train->state = MOVING;
 	train->direction = SEM_EAST;
-	train->exit_position = exit;
+	train->has_exit_position = (exit != NULL);
+	if (train->has_exit_position) train->exit_position = *exit;
 	sem_world_add_train(world, train);
 
 	sem_car* head_car = malloc(sizeof(sem_car));

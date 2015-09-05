@@ -83,6 +83,7 @@ state stopped
 portal_state entered
 spawn_cars_remaining 0
 entry_position 0 9
+exit_position at 16 7
 headless false
 direction W
 cars 3
@@ -95,6 +96,7 @@ state stopped
 portal_state entered
 spawn_cars_remaining 0
 entry_position 0 9
+exit_position none
 headless false
 direction E
 cars 3
@@ -107,6 +109,7 @@ state stopped
 portal_state entered
 spawn_cars_remaining 0
 entry_position 0 9
+exit_position none
 headless false
 direction W
 cars 3

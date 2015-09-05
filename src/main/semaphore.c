@@ -125,7 +125,7 @@ int main(int argc, char **argv) {
 				if (e.key.keysym.sym == SDLK_LCTRL || e.key.keysym.sym == SDLK_RCTRL) {
 					// ignore
 				} else if (e.key.keysym.sym == SDLK_l) {
-					sem_world_destroy(&(game.world));
+					sem_game_destroy(&game);
 					FILE* load = fopen("build/main/saved_map", "r");
 					if (sem_serialize_load(load, &game) != SEM_OK) return sem_fatal_error();
 					fclose(load);
@@ -215,7 +215,7 @@ int main(int argc, char **argv) {
 		frames++;
 	}
 
-	sem_world_destroy(&(game.world));
+	sem_game_destroy(&game);
 	cairo_destroy(cr);
 	SDL_DestroyTexture(texture);
 	return EXIT_SUCCESS;

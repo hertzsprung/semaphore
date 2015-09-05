@@ -10,7 +10,7 @@
 #include "sem_parser.h"
 #include "sem_strings.h"
 
-sem_success read_dimensions(FILE* in, sem_world* world);
+sem_success read_dimensions(FILE* in, sem_game* game);
 sem_success read_now(FILE* in, sem_world* world);
 sem_success read_multiplier(FILE* in, sem_world* world);
 sem_success read_tiles(FILE* in, sem_world* world);
@@ -28,6 +28,7 @@ sem_success read_train_headless(FILE* in, sem_train* train);
 sem_success read_train_direction(FILE* in, sem_train* train);
 sem_success read_train_cars(FILE* in, sem_train* train);
 sem_success read_car(FILE* in, sem_train* train);
+sem_success read_labels(FILE* in, sem_game* game);
 sem_success read_actions(FILE* in, sem_game* game);
 sem_success read_action(FILE* in, sem_game* game);
 sem_success read_revenue(FILE* in, sem_revenue* revenue);
@@ -41,6 +42,7 @@ sem_success write_train_state(FILE* out, sem_train_state state);
 sem_success write_train_portal_state(FILE* out, sem_train_portal_state state);
 sem_success write_train_exit_position(FILE* out, sem_train* train);
 sem_success write_car(FILE* out, sem_car* car);
+sem_success write_labels(FILE* out, sem_dynamic_array* labels);
 sem_success write_actions(FILE* out, sem_dynamic_array* actions);
 sem_success write_action(FILE* out, sem_action* action);
 sem_success write_revenue(FILE* out, sem_revenue* revenue);
@@ -49,11 +51,12 @@ sem_success sem_serialize_load(FILE* in, sem_game* game) {
 	if (in == NULL) return sem_set_error("File does not exist");
 
 	sem_world* world = &(game->world);
-	if (read_dimensions(in, world) != SEM_OK) return SEM_ERROR;
+	if (read_dimensions(in, game) != SEM_OK) return SEM_ERROR;
 	if (read_now(in, world) != SEM_OK) return SEM_ERROR;
 	if (read_multiplier(in, world) != SEM_OK) return SEM_ERROR;
 	if (read_tiles(in, world) != SEM_OK) return SEM_ERROR;
 	if (read_trains(in, world) != SEM_OK) return SEM_ERROR;
+	if (read_labels(in, game) != SEM_OK) return SEM_ERROR;
 	if (read_actions(in, game) != SEM_OK) return SEM_ERROR;
 	if (read_revenue(in, &(game->revenue)) != SEM_OK) return SEM_ERROR;
 
@@ -67,24 +70,25 @@ sem_success sem_serialize_save(FILE* out, sem_game* game) {
 	if (write_timer(out, world) != SEM_OK) return SEM_ERROR;
 	if (write_tiles(out, world) != SEM_OK) return SEM_ERROR;
 	if (write_trains(out, world->trains) != SEM_OK) return SEM_ERROR;
+	if (write_labels(out, game->labels) != SEM_OK) return SEM_ERROR;
 	if (write_actions(out, world->actions) != SEM_OK) return SEM_ERROR;
 	if (write_revenue(out, &(game->revenue)) != SEM_OK) return SEM_ERROR;
 
 	return SEM_OK;
 }
 
-sem_success read_dimensions(FILE* in, sem_world* world) {
+sem_success read_dimensions(FILE* in, sem_game* game) {
 	char* line = sem_read_line(in);
 	if (line == NULL) return sem_set_error("Could not read world dimensions");
 	sem_tokenization tokens;
 	sem_tokenization_init(&tokens, line, " ");
 	sem_tokenization_next(&tokens); // TODO: check token is "world"
 	
-	world->max_x = sem_parse_uint32_t(sem_tokenization_next(&tokens));
-	world->max_y = sem_parse_uint32_t(sem_tokenization_next(&tokens));
+	game->world.max_x = sem_parse_uint32_t(sem_tokenization_next(&tokens));
+	game->world.max_y = sem_parse_uint32_t(sem_tokenization_next(&tokens));
 	free(line);
 
-	return sem_world_init_blank(world);
+	return sem_game_init_blank(game);
 }
 
 sem_success read_now(FILE* in, sem_world* world) {
@@ -412,6 +416,26 @@ sem_success read_car(FILE* in, sem_train* train) {
 	return SEM_OK;
 }
 
+sem_success read_labels(FILE* in, sem_game* game) {
+	#pragma unused(game)
+	char* line = sem_read_line(in);
+	if (line == NULL) return sem_set_error("Could not read labels count");
+
+	sem_tokenization tokens;
+	sem_tokenization_init(&tokens, line, " ");
+	sem_tokenization_next(&tokens);
+	// TODO: check token is "actions"
+	
+	uint32_t label = sem_parse_uint32_t(sem_tokenization_next(&tokens));
+	free(line);
+
+	for (uint32_t i=0; i < label; i++) {
+		//if (read_label(in, game) != SEM_OK) return SEM_ERROR;
+	}
+
+	return SEM_OK;
+}
+
 sem_success read_actions(FILE* in, sem_game* game) {
 	char* line = sem_read_line(in);
 	if (line == NULL) return sem_set_error("Could not read actions count");
@@ -600,6 +624,11 @@ sem_success write_car(FILE* out, sem_car* car) {
 	fprintf(out, "%d %d ", car->position.x, car->position.y);
 	sem_print_track_part(out, car->track);
 	fprintf(out, "\n");
+	return SEM_OK;
+}
+
+sem_success write_labels(FILE* out, sem_dynamic_array* labels) {
+	fprintf(out, "labels %u\n", sem_heap_size(labels));
 	return SEM_OK;
 }
 

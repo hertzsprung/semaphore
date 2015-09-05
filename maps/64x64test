@@ -116,6 +116,7 @@ cars 3
 10 1 W-E
 11 1 W-SE
 12 2 S-NW
+labels 0
 actions 2
 3000 train_entry at 0 9 direction E cars 3
 15000 train_entry at 0 9 direction E cars 3

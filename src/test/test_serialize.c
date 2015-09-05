@@ -33,7 +33,7 @@ void add_tests_serialize() {
 FILE* save_and_load(char* filename, sem_game* game) {
 	FILE* file = fopen(filename, "w");
 	sem_serialize_save(file, game);
-	sem_world_destroy(&(game->world));
+	sem_game_destroy(game);
 	fclose(file);
 
 	file = fopen(filename, "r");
@@ -52,7 +52,7 @@ void test_serialize_save_load_blank_tiles() {
 	g_assert_cmpuint(game.world.max_x, ==, 2);
 	g_assert_cmpuint(game.world.max_y, ==, 1);
 
-	sem_world_destroy(&(game.world));
+	sem_game_destroy(&game);
 	fclose(file);
 }
 
@@ -74,7 +74,7 @@ void test_serialize_save_load_track_tile() {
 	g_assert_true(tile->track->start == SEM_WEST);
 	g_assert_true(tile->track->end == SEM_EAST);
 
-	sem_world_destroy(&(game.world));
+	sem_game_destroy(&game);
 	fclose(file);
 }
 
@@ -82,7 +82,7 @@ void test_serialize_save_load_train() {
 	sem_game game;
 	game.world.max_x = 3;
 	game.world.max_y = 2;
-	sem_world_init_blank(&(game.world));
+	sem_game_init_blank(&game);
 
 	sem_tile* tile = sem_tile_at(&(game.world), 0, 1);
 	sem_track trackW_E;
@@ -142,7 +142,7 @@ void test_serialize_save_load_train() {
 	g_assert_true(train2->state == DERAILED);
 	g_assert_true(train2->direction == SEM_WEST);
 
-	sem_world_destroy(&(game.world));
+	sem_game_destroy(&game);
 	fclose(file);
 }
 
@@ -160,7 +160,7 @@ void test_serialize_save_load_timer() {
 	g_assert_cmpfloat(game.world.timer->multiplier, >, 1.59);
 	g_assert_cmpfloat(game.world.timer->multiplier, <, 1.61);
 
-	sem_world_destroy(&(game.world));
+	sem_game_destroy(&game);
 	fclose(file);
 }
 
@@ -168,7 +168,7 @@ void test_serialize_load_remove_train_action() {
 	sem_game game;
 	game.world.max_x = 3;
 	game.world.max_y = 1;
-	sem_world_init_blank(&(game.world));
+	sem_game_init_blank(&game);
 
 	sem_tile* tile = sem_tile_at(&(game.world), 0, 0);
 	sem_track trackW_E;
@@ -222,7 +222,7 @@ void test_serialize_load_remove_train_action() {
 	sem_train* remaining_train = (sem_train*) game.world.trains->items[0];
 	g_assert_true(uuid_compare(remaining_train->id, train1_id) == 0);
 
-	sem_world_destroy(&(game.world));
+	sem_game_destroy(&game);
 	fclose(file);
 }
 
@@ -235,7 +235,7 @@ void test_serialize_save_load_revenue() {
 
 	FILE* file = fopen("build/test/revenue", "w");
 	sem_serialize_save(file, &game);
-	sem_world_destroy(&(game.world));
+	sem_game_destroy(&game);
 	fclose(file);
 
 	game.revenue.balance = 4911;

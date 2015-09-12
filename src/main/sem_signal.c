@@ -41,8 +41,13 @@ sem_success sem_signal_accept(sem_train* train, sem_signal* signal, sem_signal_a
 	return SEM_OK;
 }
 
-void sem_signal_train_cleared(sem_signal* signal, sem_train* train) {
-	#pragma unused(signal)
+void sem_signal_portal_exit(sem_train* train) {
+	train->previous_signal = train->signal;
+	train->signal = NULL;
+	sem_signal_train_cleared(train);
+}
+
+void sem_signal_train_cleared(sem_train* train) {
 	if (train->previous_signal != NULL) train->previous_signal->aspect = GREEN;
 }
 

@@ -34,6 +34,7 @@ sem_success sem_train_entry_action(sem_dynamic_array* heap, sem_action* action) 
 sem_success sem_train_exit_action(sem_dynamic_array* heap, sem_action* action) {
 	#pragma unused(heap)
 	sem_train* train = (sem_train*) action->context;
+	sem_signal_portal_exit(train);
 	if (train->has_exit_position && sem_coordinate_equal(*(train->position), train->exit_position)) {
 		action->game->revenue.balance += 200;
 	} else {

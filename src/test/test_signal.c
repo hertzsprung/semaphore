@@ -23,6 +23,7 @@ void test_signal_amber_sub_becomes_amber_upon_accepting_train(test_signal_contex
 void test_signal_red_sub_remains_red_upon_accepting_train(test_signal_context* test_ctx, const void* data);
 void test_signal_clearing_sub_clears_previous_sub(test_signal_context* test_ctx, const void* data);
 void test_signal_clearing_sub_preserves_previous_manual_amber_sub(test_signal_context* test_ctx, const void* data);
+void test_signal_clearing_main_leaves_amber_sub_behind_red_main_auto(test_signal_context* test_ctx, const void* data);
 void test_signal_exiting_portal_clears_previous_sub(test_signal_context* test_ctx, const void* data);
 void test_signal_train_stops_behind_red_main(test_signal_context* test_ctx, const void* data);
 void test_signal_train_medium_to_stop_behind_red_sub(test_signal_context* test_ctx, const void* data);
@@ -48,6 +49,7 @@ void add_tests_signal() {
 	add_test_signal("/signal_red_sub_remains_red_upon_accepting_train", test_signal_red_sub_remains_red_upon_accepting_train);
 	add_test_signal("/signal/clearing_sub_clears_previous_sub", test_signal_clearing_sub_clears_previous_sub);
 	add_test_signal("/signal/clearing_sub_preserves_previous_manual_amber_sub", test_signal_clearing_sub_preserves_previous_manual_amber_sub);
+	add_test_signal("/signal/clearing_main_leaves_amber_sub_behind_red_main_auto", test_signal_clearing_main_leaves_amber_sub_behind_red_main_auto);
 	add_test_signal("/signal/exiting_portal_clears_previous_sub", test_signal_exiting_portal_clears_previous_sub);
 	add_test_signal("/signal/train_stops_behind_red_main", test_signal_train_stops_behind_red_main);
 	add_test_signal("/signal/train_medium_to_stop_behind_red_sub", test_signal_train_medium_to_stop_behind_red_sub);
@@ -170,6 +172,24 @@ void test_signal_clearing_sub_preserves_previous_manual_amber_sub(test_signal_co
 	for (uint8_t i=0; i<6; i++) g_assert_true(sem_train_move(train, &outcome) == SEM_OK);
 
 	g_assert_cmpuint(signal2->aspect, ==, AMBER);
+	g_assert_cmpuint(signal1->aspect, ==, AMBER);
+}
+
+void test_signal_clearing_main_leaves_amber_sub_behind_red_main_auto(test_signal_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	sem_signal* signal1 = test_ctx->signal1;
+	sem_signal* signal2 = test_ctx->signal2;
+	sem_train* train = test_ctx->train;
+
+	signal1->type = SUB;
+	sem_signal_set_aspect(signal1, GREEN);
+	signal2->type = MAIN_AUTO;
+	sem_signal_set_aspect(signal2, GREEN);
+
+	sem_train_move_outcome outcome;
+	for (uint8_t i=0; i<6; i++) g_assert_true(sem_train_move(train, &outcome) == SEM_OK);
+
+	g_assert_cmpuint(signal2->aspect, ==, RED);
 	g_assert_cmpuint(signal1->aspect, ==, AMBER);
 }
 

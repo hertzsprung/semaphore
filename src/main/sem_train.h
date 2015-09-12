@@ -52,6 +52,8 @@ struct sem_train {
 	unit_vector direction;
 	sem_signal* signal;
 	sem_signal* previous_signal;
+	sem_signal* main_signal;
+	sem_signal* previous_main_signal;
 };
 
 typedef struct {

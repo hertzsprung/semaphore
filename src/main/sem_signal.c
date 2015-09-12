@@ -51,6 +51,10 @@ sem_success sem_signal_accept(sem_train* train, sem_signal* signal, sem_signal_a
 	if (!acceptance->stop) {
 		train->previous_signal = train->signal;
 		train->signal = signal;
+		if (signal->type != SUB) {
+			train->previous_main_signal = train->main_signal;
+			train->main_signal = signal;
+		}
 	}
 
 	return SEM_OK;
@@ -66,8 +70,10 @@ void sem_signal_portal_exit(sem_train* train) {
 }
 
 void sem_signal_train_cleared(sem_train* train) {
-	if (train->previous_signal != NULL && train->signal->type == SUB) {
+	if (train->previous_signal != NULL && train->signal->type == SUB && train->previous_signal->type == SUB) {
 		sem_signal_set_previous_aspect(train->previous_signal);
+	} else if (train->previous_main_signal != NULL && train->signal->type != SUB) {
+		sem_signal_set_previous_aspect(train->previous_main_signal);
 	}
 }
 

@@ -35,6 +35,8 @@ sem_success sem_train_init(sem_train* train) {
 	train->has_exit_position = false;
 	train->signal = NULL;
 	train->previous_signal = NULL;
+	train->main_signal = NULL;
+	train->previous_main_signal = NULL;
 	return SEM_OK;
 }
 
@@ -134,8 +136,8 @@ void sem_train_remove_head_car(sem_train* train) {
 	if (train->head_car == NULL) return;
 	train->cars--;
 	sem_car* old_head = train->head_car;
-	free(old_head);
 	train->head_car = train->head_car->next;
+	free(old_head);
 	train->head_car->previous = NULL;
 	train->position = &(train->head_car->position);
 	train->headless = true;

@@ -14,6 +14,7 @@ typedef struct {
 	sem_signal* signal;
 	sem_signal* signal1;
 	sem_signal* signal2;
+	sem_signal* signal3;
 	sem_track* track;
 } test_signal_context;
 
@@ -24,6 +25,10 @@ void test_signal_red_sub_remains_red_upon_accepting_train(test_signal_context* t
 void test_signal_clearing_sub_clears_previous_sub(test_signal_context* test_ctx, const void* data);
 void test_signal_clearing_sub_preserves_previous_manual_amber_sub(test_signal_context* test_ctx, const void* data);
 void test_signal_clearing_main_leaves_amber_sub_behind_red_main_auto(test_signal_context* test_ctx, const void* data);
+void test_signal_clearing_sub_leaves_previous_main_red(test_signal_context* test_ctx, const void* data);
+void test_signal_clearing_main_auto_clears_previous_main_auto(test_signal_context* test_ctx, const void* data);
+void test_signal_clearing_main_manual_clears_previous_main_auto(test_signal_context* test_ctx, const void* data);
+void test_signal_clearing_main_auto_clears_previous_main_auto_with_sub_inbetween(test_signal_context* test_ctx, const void* data);
 void test_signal_exiting_portal_clears_previous_sub(test_signal_context* test_ctx, const void* data);
 void test_signal_train_stops_behind_red_main(test_signal_context* test_ctx, const void* data);
 void test_signal_train_medium_to_stop_behind_red_sub(test_signal_context* test_ctx, const void* data);
@@ -37,6 +42,15 @@ void test_signal_train_fast_at_green(test_signal_context* test_ctx, const void* 
 void test_signal_aspect_upon_accepting_train(test_signal_context* test_ctx, sem_signal_aspect before, sem_signal_type signal_type, sem_signal_aspect after);
 void test_signal_train_stop(test_signal_context* test_ctx, sem_signal_type signal_type, sem_train_speed speed);
 void test_signal_train_speed_change(test_signal_context* test_ctx, sem_signal_aspect aspect, sem_signal_type signal_type, sem_train_speed before, sem_train_speed after, uint64_t next_action_time);
+void test_signal_aspects_after_clearing_pair(test_signal_context* test_ctx,
+		sem_signal_type signal1_type, sem_signal_aspect signal1_before, 
+		sem_signal_type signal2_type, sem_signal_aspect signal2_before, 
+		sem_signal_aspect signal1_after, sem_signal_aspect signal2_after);
+void test_signal_aspects_after_clearing_triple(test_signal_context* test_ctx,
+		sem_signal_type signal1_type, sem_signal_aspect signal1_before, 
+		sem_signal_type signal2_type, sem_signal_aspect signal2_before, 
+		sem_signal_type signal3_type, sem_signal_aspect signal3_before, 
+		sem_signal_aspect signal1_after, sem_signal_aspect signal2_after, sem_signal_aspect signal3_after);
 
 void add_test_signal(const char *test_name, void (*test)(test_signal_context*, const void* data));
 void test_signal_setup(test_signal_context* test_ctx, const void* data);
@@ -50,6 +64,10 @@ void add_tests_signal() {
 	add_test_signal("/signal/clearing_sub_clears_previous_sub", test_signal_clearing_sub_clears_previous_sub);
 	add_test_signal("/signal/clearing_sub_preserves_previous_manual_amber_sub", test_signal_clearing_sub_preserves_previous_manual_amber_sub);
 	add_test_signal("/signal/clearing_main_leaves_amber_sub_behind_red_main_auto", test_signal_clearing_main_leaves_amber_sub_behind_red_main_auto);
+	add_test_signal("/signal/clearing_sub_leaves_previous_main_red", test_signal_clearing_sub_leaves_previous_main_red);
+	add_test_signal("/signal/clearing_main_auto_clears_previous_main_auto", test_signal_clearing_main_auto_clears_previous_main_auto);
+	add_test_signal("/signal/clearing_main_manual_clears_previous_main_auto", test_signal_clearing_main_manual_clears_previous_main_auto);
+	add_test_signal("/signal/clearing_main_auto_clears_previous_main_auto_with_sub_inbetween", test_signal_clearing_main_auto_clears_previous_main_auto_with_sub_inbetween);
 	add_test_signal("/signal/exiting_portal_clears_previous_sub", test_signal_exiting_portal_clears_previous_sub);
 	add_test_signal("/signal/train_stops_behind_red_main", test_signal_train_stops_behind_red_main);
 	add_test_signal("/signal/train_medium_to_stop_behind_red_sub", test_signal_train_medium_to_stop_behind_red_sub);
@@ -92,20 +110,23 @@ void test_signal_setup(test_signal_context* test_ctx, const void* data) {
 	test_ctx->track = malloc(sizeof(sem_track));
 	sem_track_set(test_ctx->track, SEM_WEST, SEM_EAST);
 
+	test_ctx->signal1 = malloc(sizeof(sem_signal));
+	test_ctx->signal2 = malloc(sizeof(sem_signal));
+	test_ctx->signal3 = malloc(sizeof(sem_signal));
+	test_ctx->signal = test_ctx->signal1;
+
 	sem_tile_set_track(sem_tile_at(&(test_ctx->game.world), 0, 0), test_ctx->track);
 	sem_tile_set_track(sem_tile_at(&(test_ctx->game.world), 1, 0), test_ctx->track);
+	sem_tile_set_signal(sem_tile_at(&(test_ctx->game.world), 2, 0), test_ctx->track, test_ctx->signal1);
 	sem_tile_set_track(sem_tile_at(&(test_ctx->game.world), 3, 0), test_ctx->track);
 	sem_tile_set_track(sem_tile_at(&(test_ctx->game.world), 4, 0), test_ctx->track);
+	sem_tile_set_signal(sem_tile_at(&(test_ctx->game.world), 5, 0), test_ctx->track, test_ctx->signal2);
 	sem_tile_set_track(sem_tile_at(&(test_ctx->game.world), 6, 0), test_ctx->track);
 	sem_tile_set_track(sem_tile_at(&(test_ctx->game.world), 7, 0), test_ctx->track);
-	sem_tile_set_exit(sem_tile_at(&(test_ctx->game.world), 8, 0), test_ctx->track);
-
-	test_ctx->signal = malloc(sizeof(sem_signal));
-	sem_tile_set_signal(sem_tile_at(&(test_ctx->game.world), 2, 0), test_ctx->track, test_ctx->signal);
-	test_ctx->signal1 = test_ctx->signal;
-
-	test_ctx->signal2 = malloc(sizeof(sem_signal));
-	sem_tile_set_signal(sem_tile_at(&(test_ctx->game.world), 5, 0), test_ctx->track, test_ctx->signal2);
+	sem_tile_set_signal(sem_tile_at(&(test_ctx->game.world), 8, 0), test_ctx->track, test_ctx->signal3);
+	sem_tile_set_track(sem_tile_at(&(test_ctx->game.world), 9, 0), test_ctx->track);
+	sem_tile_set_track(sem_tile_at(&(test_ctx->game.world), 10, 0), test_ctx->track);
+	sem_tile_set_exit(sem_tile_at(&(test_ctx->game.world), 11, 0), test_ctx->track);
 }
 
 void test_signal_teardown(test_signal_context* test_ctx, const void* data) {
@@ -141,56 +162,82 @@ void test_signal_red_sub_remains_red_upon_accepting_train(test_signal_context* t
 
 void test_signal_clearing_sub_clears_previous_sub(test_signal_context* test_ctx, const void* data) {
 	#pragma unused(data)
-	sem_signal* signal1 = test_ctx->signal1;
-	sem_signal* signal2 = test_ctx->signal2;
-	sem_train* train = test_ctx->train;
-
-	signal1->type = SUB;
-	sem_signal_set_aspect(signal1, GREEN);
-	signal2->type = SUB;
-	sem_signal_set_aspect(signal2, GREEN);
-
-	sem_train_move_outcome outcome;
-	for (uint8_t i=0; i<6; i++) g_assert_true(sem_train_move(train, &outcome) == SEM_OK);
-
-	g_assert_cmpuint(signal2->aspect, ==, AMBER);
-	g_assert_cmpuint(signal1->aspect, ==, GREEN);
+	test_signal_aspects_after_clearing_pair(test_ctx, SUB, GREEN, SUB, GREEN, GREEN, AMBER);
 }
 
 void test_signal_clearing_sub_preserves_previous_manual_amber_sub(test_signal_context* test_ctx, const void* data) {
 	#pragma unused(data)
-	sem_signal* signal1 = test_ctx->signal1;
-	sem_signal* signal2 = test_ctx->signal2;
-	sem_train* train = test_ctx->train;
-
-	signal1->type = SUB;
-	sem_signal_set_aspect(signal1, AMBER);
-	signal2->type = SUB;
-	sem_signal_set_aspect(signal2, GREEN);
-
-	sem_train_move_outcome outcome;
-	for (uint8_t i=0; i<6; i++) g_assert_true(sem_train_move(train, &outcome) == SEM_OK);
-
-	g_assert_cmpuint(signal2->aspect, ==, AMBER);
-	g_assert_cmpuint(signal1->aspect, ==, AMBER);
+	test_signal_aspects_after_clearing_pair(test_ctx, SUB, AMBER, SUB, GREEN, AMBER, AMBER);
 }
 
 void test_signal_clearing_main_leaves_amber_sub_behind_red_main_auto(test_signal_context* test_ctx, const void* data) {
 	#pragma unused(data)
+	test_signal_aspects_after_clearing_pair(test_ctx, SUB, GREEN, MAIN_AUTO, GREEN, AMBER, RED);
+}
+
+void test_signal_clearing_main_auto_clears_previous_main_auto(test_signal_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	test_signal_aspects_after_clearing_pair(test_ctx, MAIN_AUTO, GREEN, MAIN_AUTO, GREEN, GREEN, RED);
+}
+
+void test_signal_clearing_main_manual_clears_previous_main_auto(test_signal_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	test_signal_aspects_after_clearing_pair(test_ctx, MAIN_AUTO, GREEN, MAIN_MANUAL, GREEN, GREEN, RED);
+}
+
+void test_signal_clearing_sub_leaves_previous_main_red(test_signal_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	test_signal_aspects_after_clearing_pair(test_ctx, MAIN_AUTO, GREEN, SUB, GREEN, RED, AMBER);
+}
+
+void test_signal_clearing_main_auto_clears_previous_main_auto_with_sub_inbetween(test_signal_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	test_signal_aspects_after_clearing_triple(test_ctx, MAIN_AUTO, GREEN, SUB, GREEN, MAIN_AUTO, GREEN, GREEN, AMBER, RED);
+}
+
+void test_signal_aspects_after_clearing_pair(test_signal_context* test_ctx,
+		sem_signal_type signal1_type, sem_signal_aspect signal1_before, 
+		sem_signal_type signal2_type, sem_signal_aspect signal2_before, 
+		sem_signal_aspect signal1_after, sem_signal_aspect signal2_after) {
 	sem_signal* signal1 = test_ctx->signal1;
 	sem_signal* signal2 = test_ctx->signal2;
 	sem_train* train = test_ctx->train;
 
-	signal1->type = SUB;
-	sem_signal_set_aspect(signal1, GREEN);
-	signal2->type = MAIN_AUTO;
-	sem_signal_set_aspect(signal2, GREEN);
+	signal1->type = signal1_type;
+	sem_signal_set_aspect(signal1, signal1_before);
+	signal2->type = signal2_type;
+	sem_signal_set_aspect(signal2, signal2_before);
 
 	sem_train_move_outcome outcome;
 	for (uint8_t i=0; i<6; i++) g_assert_true(sem_train_move(train, &outcome) == SEM_OK);
 
-	g_assert_cmpuint(signal2->aspect, ==, RED);
-	g_assert_cmpuint(signal1->aspect, ==, AMBER);
+	g_assert_cmpuint(signal1->aspect, ==, signal1_after);
+	g_assert_cmpuint(signal2->aspect, ==, signal2_after);
+}
+
+void test_signal_aspects_after_clearing_triple(test_signal_context* test_ctx,
+		sem_signal_type signal1_type, sem_signal_aspect signal1_before, 
+		sem_signal_type signal2_type, sem_signal_aspect signal2_before, 
+		sem_signal_type signal3_type, sem_signal_aspect signal3_before, 
+		sem_signal_aspect signal1_after, sem_signal_aspect signal2_after, sem_signal_aspect signal3_after) {
+	sem_signal* signal1 = test_ctx->signal1;
+	sem_signal* signal2 = test_ctx->signal2;
+	sem_signal* signal3 = test_ctx->signal3;
+	sem_train* train = test_ctx->train;
+
+	signal1->type = signal1_type;
+	sem_signal_set_aspect(signal1, signal1_before);
+	signal2->type = signal2_type;
+	sem_signal_set_aspect(signal2, signal2_before);
+	signal3->type = signal3_type;
+	sem_signal_set_aspect(signal3, signal3_before);
+
+	sem_train_move_outcome outcome;
+	for (uint8_t i=0; i<9; i++) g_assert_true(sem_train_move(train, &outcome) == SEM_OK);
+
+	g_assert_cmpuint(signal1->aspect, ==, signal1_after);
+	g_assert_cmpuint(signal2->aspect, ==, signal2_after);
+	g_assert_cmpuint(signal3->aspect, ==, signal3_after);
 }
 
 void test_signal_exiting_portal_clears_previous_sub(test_signal_context* test_ctx, const void* data) {
@@ -199,11 +246,14 @@ void test_signal_exiting_portal_clears_previous_sub(test_signal_context* test_ct
 	sem_world* world = &(test_ctx->game.world);
 	sem_signal* signal1 = test_ctx->signal1;
 	sem_signal* signal2 = test_ctx->signal2;
+	sem_signal* signal3 = test_ctx->signal3;
 
 	signal1->type = SUB;
 	sem_signal_set_aspect(signal1, GREEN);
 	signal2->type = SUB;
 	sem_signal_set_aspect(signal2, GREEN);
+	signal3->type = SUB;
+	sem_signal_set_aspect(signal3, GREEN);
 
 	sem_action action;
 	action.time = 2000;
@@ -214,14 +264,14 @@ void test_signal_exiting_portal_clears_previous_sub(test_signal_context* test_ct
 
 	g_assert_true(sem_move_train_action(world->actions, &action) == SEM_OK);
 
-	for (uint8_t i=0; i<9; i++) {
+	for (uint8_t i=0; i<12; i++) {
 		sem_action* next_action = sem_heap_remove_earliest(world->actions);
 		g_assert_nonnull(next_action);
 		g_assert_true(next_action->function(world->actions, next_action) == SEM_OK);
 	}
 
 	g_assert_cmpuint(world->trains->tail_idx, ==, 0);
-	g_assert_cmpuint(signal2->aspect, ==, GREEN);
+	g_assert_cmpuint(signal3->aspect, ==, GREEN);
 }
 
 void test_signal_aspect_upon_accepting_train(test_signal_context* test_ctx, sem_signal_aspect before, sem_signal_type signal_type, sem_signal_aspect after) {

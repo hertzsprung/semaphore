@@ -130,6 +130,8 @@ sem_tile* sem_tile_at(sem_world* world, uint32_t x, uint32_t y);
  */
 sem_success sem_tile_accept(sem_train* train, sem_tile* tile, sem_tile_acceptance* acceptance);
 
+void sem_tile_unoccupy_tail_of(sem_train* train);
+
 /**
  * \brief Initialise a sem_tile_acceptance with default values.
  */

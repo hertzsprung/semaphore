@@ -32,7 +32,18 @@ sem_success sem_signal_accept(sem_train* train, sem_signal* signal, sem_signal_a
 	} else {
 		signal->aspect = RED;
 	}
+
+	if (!acceptance->stop) {
+		train->previous_signal = train->signal;
+		train->signal = signal;
+	}
+
 	return SEM_OK;
+}
+
+void sem_signal_train_cleared(sem_signal* signal, sem_train* train) {
+	#pragma unused(signal)
+	if (train->previous_signal != NULL) train->previous_signal->aspect = GREEN;
 }
 
 void sem_signal_acceptance_init(sem_signal_acceptance* acceptance) {

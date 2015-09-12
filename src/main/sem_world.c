@@ -130,6 +130,13 @@ sem_success sem_tile_accept(sem_train* train, sem_tile* tile, sem_tile_acceptanc
 	}
 }
 
+void sem_tile_unoccupy_tail_of(sem_train* train) {
+	sem_tile* tile = sem_tile_at_coord(train->world, &(train->tail_car->position));
+	if (tile->class == SIGNAL) {
+		sem_signal_train_cleared(tile->signal, train);
+	}
+}
+
 void sem_tile_acceptance_init(sem_tile_acceptance* acceptance) {
 	acceptance->direction = 0;
 	acceptance->track = NULL;

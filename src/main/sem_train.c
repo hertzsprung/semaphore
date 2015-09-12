@@ -33,6 +33,8 @@ sem_success sem_train_init(sem_train* train) {
 	train->headless = false;
 	train->spawn_cars_remaining = 0;
 	train->has_exit_position = false;
+	train->signal = NULL;
+	train->previous_signal = NULL;
 	return SEM_OK;
 }
 
@@ -56,6 +58,7 @@ sem_success sem_train_move(sem_train* train, sem_train_move_outcome* outcome) {
 	} else if (acceptance.signalling.stop) {
 		train->state = STOPPED;
 	} else {
+		sem_tile_unoccupy_tail_of(train);
 		train_move_trailing(train->tail_car);
 		train->position->x = new_position.x;
 		train->position->y = new_position.y;

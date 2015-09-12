@@ -12,12 +12,15 @@ typedef struct {
 	sem_world world;
 	sem_train* train;
 	sem_signal* signal;
+	sem_signal* signal1;
+	sem_signal* signal2;
 	sem_track* track;
 } test_signal_context;
 
 void test_signal_main_becomes_red_upon_accepting_train(test_signal_context* test_ctx, const void* data);
 void test_signal_green_sub_becomes_amber_upon_accepting_train(test_signal_context* test_ctx, const void* data);
 void test_signal_red_sub_remains_red_upon_accepting_train(test_signal_context* test_ctx, const void* data);
+void test_signal_clearing_sub_clears_previous_sub(test_signal_context* test_ctx, const void* data);
 void test_signal_train_stops_behind_red_main(test_signal_context* test_ctx, const void* data);
 void test_signal_train_medium_to_stop_behind_red_sub(test_signal_context* test_ctx, const void* data);
 void test_signal_train_slow_to_stop_behind_red_sub(test_signal_context* test_ctx, const void* data);
@@ -39,6 +42,7 @@ void add_tests_signal() {
 	add_test_signal("/signal/main_becomes_red_upon_accepting_train", test_signal_main_becomes_red_upon_accepting_train);
 	add_test_signal("/signal/green_sub_becomes_amber_upon_accepting_train", test_signal_green_sub_becomes_amber_upon_accepting_train);
 	add_test_signal("/signal_red_sub_remains_red_upon_accepting_train", test_signal_red_sub_remains_red_upon_accepting_train);
+	add_test_signal("/signal/clearing_sub_clears_previous_sub", test_signal_clearing_sub_clears_previous_sub);
 	add_test_signal("/signal/train_stops_behind_red_main", test_signal_train_stops_behind_red_main);
 	add_test_signal("/signal/train_medium_to_stop_behind_red_sub", test_signal_train_medium_to_stop_behind_red_sub);
 	add_test_signal("/signal/train_slow_to_stop_behind_red_sub", test_signal_train_medium_to_stop_behind_red_sub);
@@ -56,24 +60,43 @@ void add_test_signal(const char *test_name, void (*test)(test_signal_context*, c
 void test_signal_setup(test_signal_context* test_ctx, const void* data) {
 	#pragma unused(data)
 
-	test_ctx->world.max_x = 4;
+	test_ctx->world.max_x = 16;
 	test_ctx->world.max_y = 4;
 	sem_world_init_blank(&(test_ctx->world));
 
 	test_ctx->train = malloc(sizeof(sem_train));
 	sem_train_init(test_ctx->train);
+	test_ctx->train->direction = SEM_EAST;
+	test_ctx->train->state = MOVING;
+
+	sem_car* head_car = malloc(sizeof(sem_car));
+	sem_coordinate_set(&(head_car->position), 1, 0);
+	head_car->track = test_ctx->track;
+	sem_train_add_car(test_ctx->train, head_car);
+
+	sem_car* tail_car = malloc(sizeof(sem_car));
+	sem_coordinate_set(&(tail_car->position), 0, 0);
+	tail_car->track = test_ctx->track;
+	sem_train_add_car(test_ctx->train, tail_car);
 
 	sem_world_add_train(&(test_ctx->world), test_ctx->train);
 
 	test_ctx->track = malloc(sizeof(sem_track));
 	sem_track_set(test_ctx->track, SEM_WEST, SEM_EAST);
 
-	sem_tile* tile = sem_tile_at(&(test_ctx->world), 0, 0);
-	sem_tile_set_track(tile, test_ctx->track);
+	sem_tile_set_track(sem_tile_at(&(test_ctx->world), 0, 0), test_ctx->track);
+	sem_tile_set_track(sem_tile_at(&(test_ctx->world), 1, 0), test_ctx->track);
+	sem_tile_set_track(sem_tile_at(&(test_ctx->world), 3, 0), test_ctx->track);
+	sem_tile_set_track(sem_tile_at(&(test_ctx->world), 4, 0), test_ctx->track);
+	sem_tile_set_track(sem_tile_at(&(test_ctx->world), 6, 0), test_ctx->track);
+	sem_tile_set_track(sem_tile_at(&(test_ctx->world), 7, 0), test_ctx->track);
 
 	test_ctx->signal = malloc(sizeof(sem_signal));
-	tile = sem_tile_at(&(test_ctx->world), 1, 0);
-	sem_tile_set_signal(tile, test_ctx->track, test_ctx->signal);
+	sem_tile_set_signal(sem_tile_at(&(test_ctx->world), 2, 0), test_ctx->track, test_ctx->signal);
+	test_ctx->signal1 = test_ctx->signal;
+
+	test_ctx->signal2 = malloc(sizeof(sem_signal));
+	sem_tile_set_signal(sem_tile_at(&(test_ctx->world), 5, 0), test_ctx->track, test_ctx->signal2);
 }
 
 void test_signal_teardown(test_signal_context* test_ctx, const void* data) {
@@ -101,18 +124,35 @@ void test_signal_red_sub_remains_red_upon_accepting_train(test_signal_context* t
 	test_signal_aspect_upon_accepting_train(test_ctx, RED, SUB, RED);
 }
 
+void test_signal_clearing_sub_clears_previous_sub(test_signal_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	sem_signal* signal1 = test_ctx->signal1;
+	sem_signal* signal2 = test_ctx->signal2;
+	sem_train* train = test_ctx->train;
+
+	signal1->type = SUB;
+	signal1->aspect = GREEN;
+	signal2->type = SUB;
+	signal2->aspect = GREEN;
+
+	sem_train_move_outcome outcome;
+
+	for (uint8_t i=0; i<6; i++) g_assert_true(sem_train_move(train, &outcome) == SEM_OK);
+
+	g_assert_cmpuint(signal2->aspect, ==, AMBER);
+	g_assert_cmpuint(signal1->aspect, ==, GREEN);
+}
+
 void test_signal_aspect_upon_accepting_train(test_signal_context* test_ctx, sem_signal_aspect before, sem_signal_type signal_type, sem_signal_aspect after) {
 	sem_signal* signal = test_ctx->signal;
 	sem_train* train = test_ctx->train;
 	sem_world* world = &(test_ctx->world);
 
-	train->direction = SEM_EAST;
-
 	signal->aspect = before;
 	signal->type = signal_type;
 
 	sem_tile_acceptance acceptance;
-	g_assert_true(sem_tile_accept(train, sem_tile_at(world, 1, 0), &acceptance) == SEM_OK);
+	g_assert_true(sem_tile_accept(train, sem_tile_at(world, 2, 0), &acceptance) == SEM_OK);
 	g_assert_cmpuint(signal->aspect, ==, after);	
 }
 
@@ -135,13 +175,7 @@ void test_signal_train_stop(test_signal_context* test_ctx, sem_signal_type signa
 	sem_signal* signal = test_ctx->signal;
 	sem_train* train = test_ctx->train;
 
-	train->direction = SEM_EAST;
-	train->state = MOVING;
 	train->speed = speed;
-	sem_car car;
-	sem_coordinate_set(&(car.position), 0, 0);
-	car.track = test_ctx->track;
-	sem_train_add_car(train, &car);
 
 	signal->aspect = RED;
 	signal->type = signal_type;
@@ -181,16 +215,10 @@ void test_signal_train_speed_change(test_signal_context* test_ctx, sem_signal_as
 	sem_signal* signal = test_ctx->signal;
 	sem_train* train = test_ctx->train;
 
-	train->direction = SEM_EAST;
-	train->state = MOVING;
 	train->speeds[0] = 1000;
 	train->speeds[1] = 1500;
 	train->speeds[2] = 2000;
 	train->speed = before;
-	sem_car car;
-	sem_coordinate_set(&(car.position), 0, 0);
-	car.track = test_ctx->track;
-	sem_train_add_car(train, &car);
 
 	signal->aspect = aspect;
 	signal->type = signal_type;

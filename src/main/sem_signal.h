@@ -27,6 +27,7 @@ void sem_signal_acceptance_init(sem_signal_acceptance* acceptance);
 sem_success sem_signal_accept(sem_train* train, sem_signal* signal, sem_signal_acceptance* acceptance);
 bool sem_signal_holding_train(sem_signal* signal);
 sem_train* sem_signal_release_train(sem_signal* signal);
+void sem_signal_train_cleared(sem_signal* signal, sem_train* train);
 
 #endif
 

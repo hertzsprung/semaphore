@@ -13,7 +13,7 @@ tiles 74
 8 9 track W-E
 9 9 track W-E
 10 9 track W-E
-6 8 signal NE-SW amber sub
+6 8 signal NE-SW green sub
 6 10 signal SE-NW red sub
 7 7 track SW-E
 7 11 track NW-E

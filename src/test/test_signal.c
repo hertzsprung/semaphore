@@ -19,8 +19,10 @@ typedef struct {
 
 void test_signal_main_becomes_red_upon_accepting_train(test_signal_context* test_ctx, const void* data);
 void test_signal_green_sub_becomes_amber_upon_accepting_train(test_signal_context* test_ctx, const void* data);
+void test_signal_amber_sub_becomes_amber_upon_accepting_train(test_signal_context* test_ctx, const void* data);
 void test_signal_red_sub_remains_red_upon_accepting_train(test_signal_context* test_ctx, const void* data);
 void test_signal_clearing_sub_clears_previous_sub(test_signal_context* test_ctx, const void* data);
+void test_signal_clearing_sub_preserves_previous_manual_amber_sub(test_signal_context* test_ctx, const void* data);
 void test_signal_exiting_portal_clears_previous_sub(test_signal_context* test_ctx, const void* data);
 void test_signal_train_stops_behind_red_main(test_signal_context* test_ctx, const void* data);
 void test_signal_train_medium_to_stop_behind_red_sub(test_signal_context* test_ctx, const void* data);
@@ -42,8 +44,10 @@ void test_signal_teardown(test_signal_context* test_ctx, const void* data);
 void add_tests_signal() {
 	add_test_signal("/signal/main_becomes_red_upon_accepting_train", test_signal_main_becomes_red_upon_accepting_train);
 	add_test_signal("/signal/green_sub_becomes_amber_upon_accepting_train", test_signal_green_sub_becomes_amber_upon_accepting_train);
+	add_test_signal("/signal/amber_sub_becomes_amber_upon_accepting_train", test_signal_amber_sub_becomes_amber_upon_accepting_train);
 	add_test_signal("/signal_red_sub_remains_red_upon_accepting_train", test_signal_red_sub_remains_red_upon_accepting_train);
 	add_test_signal("/signal/clearing_sub_clears_previous_sub", test_signal_clearing_sub_clears_previous_sub);
+	add_test_signal("/signal/clearing_sub_preserves_previous_manual_amber_sub", test_signal_clearing_sub_preserves_previous_manual_amber_sub);
 	add_test_signal("/signal/exiting_portal_clears_previous_sub", test_signal_exiting_portal_clears_previous_sub);
 	add_test_signal("/signal/train_stops_behind_red_main", test_signal_train_stops_behind_red_main);
 	add_test_signal("/signal/train_medium_to_stop_behind_red_sub", test_signal_train_medium_to_stop_behind_red_sub);
@@ -121,6 +125,12 @@ void test_signal_green_sub_becomes_amber_upon_accepting_train(test_signal_contex
 	test_signal_aspect_upon_accepting_train(test_ctx, GREEN, SUB, AMBER);
 }
 
+void test_signal_amber_sub_becomes_amber_upon_accepting_train(test_signal_context* test_ctx, const void* data) {
+	#pragma unused(data)
+
+	test_signal_aspect_upon_accepting_train(test_ctx, AMBER, SUB, AMBER);
+}
+
 void test_signal_red_sub_remains_red_upon_accepting_train(test_signal_context* test_ctx, const void* data) {
 	#pragma unused(data)
 
@@ -134,15 +144,33 @@ void test_signal_clearing_sub_clears_previous_sub(test_signal_context* test_ctx,
 	sem_train* train = test_ctx->train;
 
 	signal1->type = SUB;
-	signal1->aspect = GREEN;
+	sem_signal_set_aspect(signal1, GREEN);
 	signal2->type = SUB;
-	signal2->aspect = GREEN;
+	sem_signal_set_aspect(signal2, GREEN);
 
 	sem_train_move_outcome outcome;
 	for (uint8_t i=0; i<6; i++) g_assert_true(sem_train_move(train, &outcome) == SEM_OK);
 
 	g_assert_cmpuint(signal2->aspect, ==, AMBER);
 	g_assert_cmpuint(signal1->aspect, ==, GREEN);
+}
+
+void test_signal_clearing_sub_preserves_previous_manual_amber_sub(test_signal_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	sem_signal* signal1 = test_ctx->signal1;
+	sem_signal* signal2 = test_ctx->signal2;
+	sem_train* train = test_ctx->train;
+
+	signal1->type = SUB;
+	sem_signal_set_aspect(signal1, AMBER);
+	signal2->type = SUB;
+	sem_signal_set_aspect(signal2, GREEN);
+
+	sem_train_move_outcome outcome;
+	for (uint8_t i=0; i<6; i++) g_assert_true(sem_train_move(train, &outcome) == SEM_OK);
+
+	g_assert_cmpuint(signal2->aspect, ==, AMBER);
+	g_assert_cmpuint(signal1->aspect, ==, AMBER);
 }
 
 void test_signal_exiting_portal_clears_previous_sub(test_signal_context* test_ctx, const void* data) {
@@ -153,9 +181,9 @@ void test_signal_exiting_portal_clears_previous_sub(test_signal_context* test_ct
 	sem_signal* signal2 = test_ctx->signal2;
 
 	signal1->type = SUB;
-	signal1->aspect = GREEN;
+	sem_signal_set_aspect(signal1, GREEN);
 	signal2->type = SUB;
-	signal2->aspect = GREEN;
+	sem_signal_set_aspect(signal2, GREEN);
 
 	sem_action action;
 	action.time = 2000;
@@ -181,7 +209,7 @@ void test_signal_aspect_upon_accepting_train(test_signal_context* test_ctx, sem_
 	sem_train* train = test_ctx->train;
 	sem_world* world = &(test_ctx->game.world);
 
-	signal->aspect = before;
+	sem_signal_set_aspect(signal, before);
 	signal->type = signal_type;
 
 	sem_tile_acceptance acceptance;
@@ -210,7 +238,7 @@ void test_signal_train_stop(test_signal_context* test_ctx, sem_signal_type signa
 
 	train->speed = speed;
 
-	signal->aspect = RED;
+	sem_signal_set_aspect(signal, RED);
 	signal->type = signal_type;
 
 	sem_train_move_outcome outcome;
@@ -253,7 +281,7 @@ void test_signal_train_speed_change(test_signal_context* test_ctx, sem_signal_as
 	train->speeds[2] = 2000;
 	train->speed = before;
 
-	signal->aspect = aspect;
+	sem_signal_set_aspect(signal, aspect);
 	signal->type = signal_type;
 
 	sem_action action;

@@ -127,8 +127,7 @@ cars 3
 labels 2
 17 6 EXA
 17 7 EXB
-actions 2
+actions 1
 3000 train_entry at 0 9 direction E cars 3
-15000 train_entry at 0 9 direction E cars 3
 revenue
 balance 0

@@ -170,7 +170,7 @@ sem_success remove_train_action(sem_dynamic_array* heap, sem_action* action) {
 
 sem_success toggle_signal_aspect(sem_dynamic_array* heap, sem_action* action) {
 	sem_signal* signal = (sem_signal*) action->context;
-	signal->aspect = (signal->aspect == GREEN) ? RED : GREEN;
+	sem_signal_force_aspect(signal, (signal->aspect == GREEN) ? RED : GREEN);
 	return release_any_held_train(signal, heap, action);
 }
 

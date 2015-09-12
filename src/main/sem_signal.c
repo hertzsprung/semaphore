@@ -7,7 +7,22 @@
 void sem_signal_init(sem_signal* signal, sem_signal_type type, sem_signal_aspect aspect) {
 	signal->type = type;
 	signal->aspect = aspect;
+	signal->previous_aspect = aspect;
 	signal->held_train = NULL;
+}
+
+void sem_signal_set_aspect(sem_signal* signal, sem_signal_aspect aspect) {
+	signal->previous_aspect = signal->aspect;
+	signal->aspect = aspect;
+}
+
+void sem_signal_force_aspect(sem_signal* signal, sem_signal_aspect aspect) {
+	signal->aspect = aspect;
+	signal->previous_aspect = aspect;
+}
+
+void sem_signal_set_previous_aspect(sem_signal* signal) {
+	sem_signal_set_aspect(signal, signal->previous_aspect);
 }
 
 sem_success sem_signal_accept(sem_train* train, sem_signal* signal, sem_signal_acceptance* acceptance) {
@@ -27,10 +42,10 @@ sem_success sem_signal_accept(sem_train* train, sem_signal* signal, sem_signal_a
 		acceptance->speed = FAST;
 	}
 
-	if (signal->type == SUB && signal->aspect == GREEN) {
-		signal->aspect = AMBER;
+	if (signal->type == SUB && signal->aspect != RED) {
+		sem_signal_set_aspect(signal, AMBER);
 	} else {
-		signal->aspect = RED;
+		sem_signal_set_aspect(signal, RED);
 	}
 
 	if (!acceptance->stop) {
@@ -48,7 +63,7 @@ void sem_signal_portal_exit(sem_train* train) {
 }
 
 void sem_signal_train_cleared(sem_train* train) {
-	if (train->previous_signal != NULL) train->previous_signal->aspect = GREEN;
+	if (train->previous_signal != NULL) sem_signal_set_previous_aspect(train->previous_signal);
 }
 
 void sem_signal_acceptance_init(sem_signal_acceptance* acceptance) {

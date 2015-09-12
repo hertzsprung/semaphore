@@ -19,11 +19,15 @@ typedef enum {
 struct sem_signal {
 	sem_signal_type type;
 	sem_signal_aspect aspect;
+	sem_signal_aspect previous_aspect;
 	sem_train* held_train;
 };
 
 void sem_signal_init(sem_signal* signal, sem_signal_type type, sem_signal_aspect aspect);
 void sem_signal_acceptance_init(sem_signal_acceptance* acceptance);
+void sem_signal_set_aspect(sem_signal* signal, sem_signal_aspect aspect);
+void sem_signal_force_aspect(sem_signal* signal, sem_signal_aspect aspect);
+void sem_signal_set_previous_aspect(sem_signal* signal);
 sem_success sem_signal_accept(sem_train* train, sem_signal* signal, sem_signal_acceptance* acceptance);
 void sem_signal_train_cleared(sem_train* train);
 void sem_signal_portal_exit(sem_train* train);

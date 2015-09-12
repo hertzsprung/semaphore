@@ -16,6 +16,8 @@ typedef struct {
 } test_signal_context;
 
 void test_signal_main_becomes_red_upon_accepting_train(test_signal_context* test_ctx, const void* data);
+void test_signal_green_sub_becomes_amber_upon_accepting_train(test_signal_context* test_ctx, const void* data);
+void test_signal_red_sub_remains_red_upon_accepting_train(test_signal_context* test_ctx, const void* data);
 void test_signal_train_stops_behind_red_main(test_signal_context* test_ctx, const void* data);
 void test_signal_train_medium_to_stop_behind_red_sub(test_signal_context* test_ctx, const void* data);
 void test_signal_train_slow_to_stop_behind_red_sub(test_signal_context* test_ctx, const void* data);
@@ -25,6 +27,7 @@ void test_signal_train_slows_at_amber_main_auto(test_signal_context* test_ctx, c
 void test_signal_train_medium_speed_at_amber_sub(test_signal_context* test_ctx, const void* data);
 void test_signal_train_fast_at_green(test_signal_context* test_ctx, const void* data);
 
+void test_signal_aspect_upon_accepting_train(test_signal_context* test_ctx, sem_signal_aspect before, sem_signal_type signal_type, sem_signal_aspect after);
 void test_signal_train_stop(test_signal_context* test_ctx, sem_signal_type signal_type, sem_train_speed speed);
 void test_signal_train_speed_change(test_signal_context* test_ctx, sem_signal_aspect aspect, sem_signal_type signal_type, sem_train_speed before, sem_train_speed after, uint64_t next_action_time);
 
@@ -34,6 +37,8 @@ void test_signal_teardown(test_signal_context* test_ctx, const void* data);
 
 void add_tests_signal() {
 	add_test_signal("/signal/main_becomes_red_upon_accepting_train", test_signal_main_becomes_red_upon_accepting_train);
+	add_test_signal("/signal/green_sub_becomes_amber_upon_accepting_train", test_signal_green_sub_becomes_amber_upon_accepting_train);
+	add_test_signal("/signal_red_sub_remains_red_upon_accepting_train", test_signal_red_sub_remains_red_upon_accepting_train);
 	add_test_signal("/signal/train_stops_behind_red_main", test_signal_train_stops_behind_red_main);
 	add_test_signal("/signal/train_medium_to_stop_behind_red_sub", test_signal_train_medium_to_stop_behind_red_sub);
 	add_test_signal("/signal/train_slow_to_stop_behind_red_sub", test_signal_train_medium_to_stop_behind_red_sub);
@@ -81,18 +86,34 @@ void test_signal_teardown(test_signal_context* test_ctx, const void* data) {
 void test_signal_main_becomes_red_upon_accepting_train(test_signal_context* test_ctx, const void* data) {
 	#pragma unused(data)
 
+	test_signal_aspect_upon_accepting_train(test_ctx, GREEN, MAIN_MANUAL, RED);
+}
+
+void test_signal_green_sub_becomes_amber_upon_accepting_train(test_signal_context* test_ctx, const void* data) {
+	#pragma unused(data)
+
+	test_signal_aspect_upon_accepting_train(test_ctx, GREEN, SUB, AMBER);
+}
+
+void test_signal_red_sub_remains_red_upon_accepting_train(test_signal_context* test_ctx, const void* data) {
+	#pragma unused(data)
+
+	test_signal_aspect_upon_accepting_train(test_ctx, RED, SUB, RED);
+}
+
+void test_signal_aspect_upon_accepting_train(test_signal_context* test_ctx, sem_signal_aspect before, sem_signal_type signal_type, sem_signal_aspect after) {
 	sem_signal* signal = test_ctx->signal;
 	sem_train* train = test_ctx->train;
 	sem_world* world = &(test_ctx->world);
 
 	train->direction = SEM_EAST;
 
-	signal->aspect = GREEN;
-	signal->type = MAIN_MANUAL;
+	signal->aspect = before;
+	signal->type = signal_type;
 
 	sem_tile_acceptance acceptance;
 	g_assert_true(sem_tile_accept(train, sem_tile_at(world, 1, 0), &acceptance) == SEM_OK);
-	g_assert_true(signal->aspect == RED);	
+	g_assert_cmpuint(signal->aspect, ==, after);	
 }
 
 void test_signal_train_stops_behind_red_main(test_signal_context* test_ctx, const void* data) {

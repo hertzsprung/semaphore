@@ -27,7 +27,11 @@ sem_success sem_signal_accept(sem_train* train, sem_signal* signal, sem_signal_a
 		acceptance->speed = FAST;
 	}
 
-	signal->aspect = RED;
+	if (signal->type == SUB && signal->aspect == GREEN) {
+		signal->aspect = AMBER;
+	} else {
+		signal->aspect = RED;
+	}
 	return SEM_OK;
 }
 

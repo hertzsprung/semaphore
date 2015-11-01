@@ -31,6 +31,7 @@ void render_track_path(sem_render_context* ctx, sem_coordinate coord, sem_track*
 void render_label(sem_render_context* ctx, sem_label* label);
 void render_station(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
 void render_depot(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
+void render_siding(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
 
 void sem_render_game(sem_render_context* ctx, sem_game* game) {
 	sem_world* world = &(game->world);
@@ -89,6 +90,9 @@ void render_tile(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile) 
 		return;
 	case DEPOT:
 		render_depot(ctx, coord, tile->track);
+		return;
+	case SIDING:
+		render_siding(ctx, coord, tile->track);
 		return;
 	}
 }
@@ -404,6 +408,19 @@ void render_station(sem_render_context* ctx, sem_coordinate coord, sem_track* tr
 	render_track(ctx, coord, track);
 }
 
+void render_siding(sem_render_context* ctx, sem_coordinate coord, sem_track* track) {
+	render_track_path(ctx, coord, track);
+	cairo_set_source(ctx->cr, ctx->style->siding_color);
+	cairo_set_line_width(ctx->cr, 1.0);
+	cairo_stroke_preserve(ctx->cr);
+
+	cairo_set_source(ctx->cr, ctx->style->track_front_color);
+	cairo_set_line_width(ctx->cr, ctx->style->station_front_width);
+	cairo_stroke(ctx->cr);
+
+	render_track(ctx, coord, track);
+}
+
 void render_depot(sem_render_context* ctx, sem_coordinate coord, sem_track* track) {
 	render_track_path(ctx, coord, track);
 	cairo_set_source_rgb(ctx->cr, 0.0, 0.0, 0.0);
@@ -429,6 +446,8 @@ sem_success sem_render_default_style(sem_render_style* style) {
 	style->signal_amber = cairo_pattern_create_rgb(1.0, 0.75, 0.0);
 	style->signal_green = cairo_pattern_create_rgb(0.0, 1.0, 0.0);
 	style->station_color = cairo_pattern_create_rgb(0.26667, 0.26667, 0.26667);
+	style->siding_color = cairo_pattern_create_rgb(0.2588, 0.3412, 0.4784);
+//	style->siding_color = cairo_pattern_create_rgb(0.3255, 0.4314, 0.604);
 	
 	style->track_back_width = 0.2;
 	style->track_front_width = 0.1;

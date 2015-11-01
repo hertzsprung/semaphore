@@ -376,9 +376,9 @@ tiles 1684
 70 9 track W-E
 71 9 track W-E
 72 9 signal W-E green sub
-73 9 track W-E
-74 9 track W-E
-75 9 track W-E
+73 9 station W-E
+74 9 station W-E
+75 9 station W-E
 76 9 signal W-E green main auto
 77 9 track W-E
 78 9 track W-E
@@ -387,9 +387,9 @@ tiles 1684
 81 9 track W-E
 82 9 track W-E
 83 9 signal W-E green sub
-84 9 track W-E
-85 9 track W-E
-86 9 track W-E
+84 9 station W-E
+85 9 station W-E
+86 9 station W-E
 87 9 signal W-E green main auto
 88 9 track W-E
 89 9 track W-NE
@@ -432,9 +432,9 @@ tiles 1684
 76 11 points W-E SW-E
 77 11 track W-E
 78 11 signal W-E green main manual
-79 11 track W-E
-80 11 track W-E
-81 11 track W-E
+79 11 siding W-E
+80 11 siding W-E
+81 11 siding W-E
 82 11 buffer W-E
 101 11 track NE-S
 103 11 track SW-E
@@ -465,9 +465,9 @@ tiles 1684
 46 12 track N-SW
 47 12 track SW-E
 48 12 signal W-E green main manual
-49 12 track W-E
-50 12 track W-E
-51 12 track W-E
+49 12 depot W-E
+50 12 depot W-E
+51 12 depot W-E
 52 12 buffer W-E
 63 12 track NE-SW
 66 12 track SW-E
@@ -483,9 +483,9 @@ tiles 1684
 76 12 points W-E+NW-SE W-SE NW-E
 77 12 track W-E
 78 12 signal W-E green main manual
-79 12 track W-E
-80 12 track W-E
-81 12 track W-E
+79 12 siding W-E
+80 12 siding W-E
+81 12 siding W-E
 82 12 buffer W-E
 101 12 track N-S
 102 12 track NE-S
@@ -517,9 +517,9 @@ tiles 1684
 46 13 points W-E+SW-NE SW-E W-NE
 47 13 track W-E
 48 13 signal W-E green main manual
-49 13 track W-E
-50 13 track W-E
-51 13 track W-E
+49 13 depot W-E
+50 13 depot W-E
+51 13 depot W-E
 52 13 buffer W-E
 56 13 track SW-E
 57 13 signal W-E green main auto
@@ -534,16 +534,16 @@ tiles 1684
 76 13 track NW-SE
 77 13 track NW-E
 78 13 signal W-E green main manual
-79 13 track W-E
-80 13 track W-E
-81 13 track W-E
+79 13 siding W-E
+80 13 siding W-E
+81 13 siding W-E
 82 13 buffer W-E
 101 13 signal N-S green main auto
 102 13 points N-S N-SW
 3 14 buffer W-E
-4 14 track W-E
-5 14 track W-E
-6 14 track W-E
+4 14 station W-E
+5 14 station W-E
+6 14 station W-E
 7 14 signal W-E red main manual
 8 14 track W-E
 9 14 points W-E W-NE
@@ -585,9 +585,9 @@ tiles 1684
 46 14 track W-E
 47 14 track W-E
 48 14 signal W-E green main manual
-49 14 track W-E
-50 14 track W-E
-51 14 track W-E
+49 14 depot W-E
+50 14 depot W-E
+51 14 depot W-E
 52 14 buffer W-E
 55 14 track NE-SW
 56 14 track SW-E
@@ -601,16 +601,16 @@ tiles 1684
 72 14 track NE-SW
 77 14 track NW-E
 78 14 signal W-E green main manual
-79 14 track W-E
-80 14 track W-E
-81 14 track W-E
+79 14 siding W-E
+80 14 siding W-E
+81 14 siding W-E
 82 14 buffer W-E
 101 14 points N-S NE-S
 102 14 signal N-S green sub
 3 15 buffer W-E
-4 15 track W-E
-5 15 track W-E
-6 15 track W-E
+4 15 station W-E
+5 15 station W-E
+6 15 station W-E
 7 15 signal W-E red main manual
 8 15 track W-E
 9 15 points W-E W-NE
@@ -671,9 +671,9 @@ tiles 1684
 101 15 track N-SW
 102 15 track N-S
 3 16 buffer W-E
-4 16 track W-E
-5 16 track W-E
-6 16 track W-E
+4 16 station W-E
+5 16 station W-E
+6 16 station W-E
 7 16 signal W-E red main manual
 8 16 points W-E W-SE
 9 16 track W-E
@@ -757,9 +757,9 @@ tiles 1684
 87 16 track W-E
 88 16 track W-E
 89 16 signal W-E green sub
-90 16 track W-E
-91 16 track W-E
-92 16 track W-E
+90 16 station W-E
+91 16 station W-E
+92 16 station W-E
 93 16 signal W-E green main auto
 94 16 points W-E W-SE
 95 16 points W-E SW-E
@@ -770,9 +770,9 @@ tiles 1684
 100 16 track W-NE
 102 16 track N-SW
 3 17 buffer W-E
-4 17 track W-E
-5 17 track W-E
-6 17 track W-E
+4 17 station W-E
+5 17 station W-E
+6 17 station W-E
 7 17 signal W-E red main manual
 8 17 track W-E
 9 17 points W-E+NW-SE W-SE NW-E
@@ -856,9 +856,9 @@ tiles 1684
 87 17 track W-E
 88 17 track W-E
 89 17 signal W-E green main auto
-90 17 track W-E
-91 17 track W-E
-92 17 track W-E
+90 17 station W-E
+91 17 station W-E
+92 17 station W-E
 93 17 signal W-E green sub
 94 17 points W-E W-NE
 95 17 points W-E NW-E
@@ -869,9 +869,9 @@ tiles 1684
 100 17 track W-E
 101 17 track W-NE
 3 18 buffer W-E
-4 18 track W-E
-5 18 track W-E
-6 18 track W-E
+4 18 station W-E
+5 18 station W-E
+6 18 station W-E
 7 18 signal W-E red main manual
 8 18 track W-E
 9 18 points W-E+SW-NE SW-E W-NE
@@ -955,9 +955,9 @@ tiles 1684
 87 18 track W-E
 88 18 track W-E
 89 18 signal W-E green main auto
-90 18 track W-E
-91 18 track W-E
-92 18 track W-E
+90 18 station W-E
+91 18 station W-E
+92 18 station W-E
 93 18 signal W-E green main auto
 94 18 points W-E W-SE
 95 18 points W-E SW-E
@@ -984,9 +984,9 @@ tiles 1684
 116 18 track W-E
 117 18 exit W-E
 3 19 buffer W-E
-4 19 track W-E
-5 19 track W-E
-6 19 track W-E
+4 19 station W-E
+5 19 station W-E
+6 19 station W-E
 7 19 signal W-E red main manual
 8 19 points W-E W-NE
 9 19 track W-E
@@ -1070,9 +1070,9 @@ tiles 1684
 87 19 track W-E
 88 19 track W-E
 89 19 signal W-E green main auto
-90 19 track W-E
-91 19 track W-E
-92 19 track W-E
+90 19 station W-E
+91 19 station W-E
+92 19 station W-E
 93 19 signal W-E green sub
 94 19 points W-E W-NE
 95 19 points W-E NW-E
@@ -1099,9 +1099,9 @@ tiles 1684
 116 19 track W-E
 117 19 entry W-E
 3 20 buffer W-E
-4 20 track W-E
-5 20 track W-E
-6 20 track W-E
+4 20 station W-E
+5 20 station W-E
+6 20 station W-E
 7 20 signal W-E red main manual
 8 20 track W-E
 9 20 points W-E W-NE
@@ -1112,16 +1112,16 @@ tiles 1684
 14 20 track SW-E
 15 20 points W-E+NW-SE W-SE NW-E
 16 20 signal W-E green main manual
-17 20 track W-E
-18 20 track W-E
-19 20 track W-E
+17 20 siding W-E
+18 20 siding W-E
+19 20 siding W-E
 20 20 buffer W-E
 21 20 track SW-E
 22 20 track W-E+NW-SE
 23 20 signal W-E green main manual
-24 20 track W-E
-25 20 track W-E
-26 20 track W-E
+24 20 siding W-E
+25 20 siding W-E
+26 20 siding W-E
 27 20 buffer W-E
 28 20 track NE-SW
 29 20 points NE-SW NE-S
@@ -1145,9 +1145,9 @@ tiles 1684
 49 20 track W-E
 50 20 track W-E
 51 20 signal W-E green main manual
-52 20 track W-E
-53 20 track W-E
-54 20 track W-E
+52 20 depot W-E
+53 20 depot W-E
+54 20 depot W-E
 55 20 buffer W-E
 59 20 track SW-E
 60 20 signal W-E green main auto
@@ -1176,9 +1176,9 @@ tiles 1684
 83 20 track W-E
 84 20 track W-SE
 3 21 buffer W-E
-4 21 track W-E
-5 21 track W-E
-6 21 track W-E
+4 21 station W-E
+5 21 station W-E
+6 21 station W-E
 7 21 signal W-E red main manual
 8 21 track W-E
 9 21 points W-E W-SE
@@ -1223,9 +1223,9 @@ tiles 1684
 49 21 points W-E W-SE
 50 21 track W-E
 51 21 signal W-E green main manual
-52 21 track W-E
-53 21 track W-E
-54 21 track W-E
+52 21 depot W-E
+53 21 depot W-E
+54 21 depot W-E
 55 21 buffer W-E
 58 21 track NE-SW
 59 21 track SW-E
@@ -1255,9 +1255,9 @@ tiles 1684
 83 21 track W-SE
 85 21 track NW-S
 3 22 buffer W-E
-4 22 track W-E
-5 22 track W-E
-6 22 track W-E
+4 22 station W-E
+5 22 station W-E
+6 22 station W-E
 7 22 signal W-E red main manual
 8 22 track W-E
 9 22 points W-E+SW-NE SW-E W-NE
@@ -1299,9 +1299,9 @@ tiles 1684
 47 22 track W-NE
 50 22 track NW-E
 51 22 signal W-E green main manual
-52 22 track W-E
-53 22 track W-E
-54 22 track W-E
+52 22 depot W-E
+53 22 depot W-E
+54 22 depot W-E
 55 22 buffer W-E
 57 22 track NE-SW
 58 22 points NE-SW SW-E
@@ -1315,9 +1315,9 @@ tiles 1684
 84 22 track NW-S
 85 22 track N-S
 3 23 buffer W-E
-4 23 track W-E
-5 23 track W-E
-6 23 track W-E
+4 23 station W-E
+5 23 station W-E
+6 23 station W-E
 7 23 signal W-E red main manual
 8 23 points W-E W-NE
 9 23 track W-E
@@ -1375,9 +1375,9 @@ tiles 1684
 84 23 signal N-S green sub
 85 23 signal N-S green sub
 3 24 buffer W-E
-4 24 track W-E
-5 24 track W-E
-6 24 track W-E
+4 24 station W-E
+5 24 station W-E
+6 24 station W-E
 7 24 signal W-E green sub
 8 24 track W-E
 9 24 points W-E+SW-NE SW-E W-NE
@@ -1425,9 +1425,9 @@ tiles 1684
 84 24 track N-S
 85 24 track N-S
 3 25 buffer W-E
-4 25 track W-E
-5 25 track W-E
-6 25 track W-E
+4 25 station W-E
+5 25 station W-E
+6 25 station W-E
 7 25 signal W-E green sub
 8 25 points W-E W-NE
 9 25 track W-E
@@ -1496,10 +1496,10 @@ tiles 1684
 35 27 track W-E
 36 27 track W-E
 37 27 signal W-E amber sub
-38 27 track W-E
-39 27 track W-E
-40 27 track W-E
-41 27 track W-E
+38 27 station W-E
+39 27 station W-E
+40 27 station W-E
+41 27 station W-E
 42 27 signal W-E green sub
 43 27 track W-E
 44 27 track W-E
@@ -1513,9 +1513,9 @@ tiles 1684
 70 27 track W-E
 71 27 points W-E SW-E
 72 27 signal W-E green main manual
-73 27 track W-E
-74 27 track W-E
-75 27 track W-E
+73 27 station W-E
+74 27 station W-E
+75 27 station W-E
 76 27 buffer W-E
 84 27 track N-S
 85 27 track N-S
@@ -1562,9 +1562,9 @@ tiles 1684
 70 28 points W-E+SW-NE SW-E W-NE
 71 28 track W-E
 72 28 signal W-E green main manual
-73 28 track W-E
-74 28 track W-E
-75 28 track W-E
+73 28 station W-E
+74 28 station W-E
+75 28 station W-E
 76 28 buffer W-E
 84 28 track N-S
 85 28 track N-S
@@ -1610,9 +1610,9 @@ tiles 1684
 70 29 points W-E NW-E
 71 29 track W-E
 72 29 signal W-E green main manual
-73 29 track W-E
-74 29 track W-E
-75 29 track W-E
+73 29 station W-E
+74 29 station W-E
+75 29 station W-E
 76 29 buffer W-E
 84 29 signal N-S green main auto
 85 29 signal N-S green main auto
@@ -1628,9 +1628,9 @@ tiles 1684
 92 31 points W-E W-SE
 93 31 points W-E SW-E
 94 31 signal W-E green sub
-95 31 track W-E
-96 31 track W-E
-97 31 track W-E
+95 31 station W-E
+96 31 station W-E
+97 31 station W-E
 98 31 signal W-E green main auto
 99 31 track W-E
 100 31 track W-E
@@ -1662,9 +1662,9 @@ tiles 1684
 92 32 points W-E W-NE
 93 32 points W-E NW-E
 94 32 signal W-E green main auto
-95 32 track W-E
-96 32 track W-E
-97 32 track W-E
+95 32 station W-E
+96 32 station W-E
+97 32 station W-E
 98 32 signal W-E green sub
 99 32 track W-E
 100 32 track W-E

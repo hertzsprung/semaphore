@@ -5,16 +5,18 @@
 #include "sem_parser.h"
 #include "sem_serialize_railpro.h"
 #include "sem_strings.h"
+#include "sem_game.h"
 
 sem_success read_railpro_tile(sem_world* world, sem_tile* tile, uint8_t code);
 sem_success parse_railpro_tile(sem_tile* tile, char* tile_description, sem_world* world);
 
-sem_success sem_serialize_load_railpro(FILE* in, sem_world* world) {
+sem_success sem_serialize_load_railpro(FILE* in, sem_game* game) {
 	if (in == NULL) return sem_set_error("File does not exist");
 
+	sem_world* world = &(game->world);
 	world->max_x = 121;
 	world->max_y = 41;
-	sem_world_init_blank(world);
+	sem_game_init_blank(game);
 
 	fseek(in, -41*121*4, SEEK_END);
 
@@ -89,11 +91,11 @@ sem_success read_railpro_tile(sem_world* world, sem_tile* tile, uint8_t code) {
 	} else if (code == 0x1b) {
 		if (parse_railpro_tile(tile, "track N-SE", world) != SEM_OK) return SEM_ERROR;
 	} else if (code == 0x1d) {
-		if (parse_railpro_tile(tile, "track W-E", world) != SEM_OK) return SEM_ERROR; // TODO: station
+		if (parse_railpro_tile(tile, "station W-E", world) != SEM_OK) return SEM_ERROR;
 	} else if (code == 0x1e) {
-		if (parse_railpro_tile(tile, "track W-E", world) != SEM_OK) return SEM_ERROR; // TODO: maintenance siding
+		if (parse_railpro_tile(tile, "siding W-E", world) != SEM_OK) return SEM_ERROR;
 	} else if (code == 0x1f) {
-		if (parse_railpro_tile(tile, "track W-E", world) != SEM_OK) return SEM_ERROR; // TODO: depot siding
+		if (parse_railpro_tile(tile, "depot W-E", world) != SEM_OK) return SEM_ERROR;
 	} else if (code == 0x20) {
 		if (parse_railpro_tile(tile, "points W-E+NW-SE W-SE NW-E", world) != SEM_OK) return SEM_ERROR;
 	} else if (code == 0x21) {

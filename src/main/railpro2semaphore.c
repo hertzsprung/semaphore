@@ -6,9 +6,9 @@
 #include "sem_world.h"
 
 int main() {
-	sem_world world;
-	if (sem_serialize_load_railpro(stdin, &world) != SEM_OK) return sem_fatal_error();
-	if (sem_serialize_save(stdout, &world) != SEM_OK) return sem_fatal_error();
-	sem_world_destroy(&world);
+	sem_game game;
+	if (sem_serialize_load_railpro(stdin, &game) != SEM_OK) return sem_fatal_error();
+	if (sem_serialize_save(stdout, &game) != SEM_OK) return sem_fatal_error();
+	sem_game_destroy(&game);
 	return EXIT_SUCCESS;
 }

@@ -1,7 +1,7 @@
 world 64 64
 now 0
 multiplier 1.0
-tiles 79
+tiles 81
 0 9 entry W-E
 1 9 track W-E
 2 9 signal W-E green main auto
@@ -21,10 +21,12 @@ tiles 79
 8 11 track W-E
 9 11 points W-NE W-E
 10 11 signal W-E red sub
-11 11 track W-E
-12 11 track W-E
-13 11 track W-E
-14 11 buffer W-E
+11 11 station W-E
+12 11 station W-E
+13 11 station W-SE
+14 12 station NW-E
+15 12 station W-E
+16 12 buffer W-E
 10 8 signal NW-SE green sub
 10 10 signal SW-NE amber main manual
 11 9 points NW-E SW-E W-E

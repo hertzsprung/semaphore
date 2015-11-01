@@ -14,9 +14,11 @@ typedef struct {
 	cairo_pattern_t* signal_red;
 	cairo_pattern_t* signal_amber;
 	cairo_pattern_t* signal_green;
+	cairo_pattern_t* station_color;
 
 	double track_front_width;
 	double track_back_width;
+	double station_front_width;
 	double points_highlight_width;
 	double signal_main_radius;
 	double signal_main_offset;

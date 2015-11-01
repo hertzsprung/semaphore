@@ -112,6 +112,7 @@ sem_success sem_tile_accept(sem_train* train, sem_tile* tile, sem_tile_acceptanc
 	case TRACK:
 	case ENTRY: // FIXME: a train should not be accepted onto an entry tile, this is tantamount to a crash
 	case STATION: // TODO: station logic
+	case DEPOT:
 		return sem_track_accept(train, tile->track, acceptance);
 	case SIGNAL:
 		if (sem_track_accept(train, tile->track, acceptance) != SEM_OK) return SEM_ERROR;

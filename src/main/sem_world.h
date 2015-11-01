@@ -18,7 +18,7 @@ typedef struct sem_signal_acceptance sem_signal_acceptance;
 #include "sem_train.h"
 
 typedef enum {
-	BLANK, TRACK, POINTS, SIGNAL, BUFFER, ENTRY, EXIT, STATION
+	BLANK, TRACK, POINTS, SIGNAL, BUFFER, ENTRY, EXIT, STATION, DEPOT
 } sem_tile_class;
 
 struct sem_track {

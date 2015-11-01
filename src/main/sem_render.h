@@ -19,6 +19,8 @@ typedef struct {
 	double track_front_width;
 	double track_back_width;
 	double station_front_width;
+	double depot_back_width;
+	double depot_front_width;
 	double points_highlight_width;
 	double signal_main_radius;
 	double signal_main_offset;

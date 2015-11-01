@@ -30,6 +30,7 @@ void render_train_name(sem_render_context* ctx, sem_train* train);
 void render_track_path(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
 void render_label(sem_render_context* ctx, sem_label* label);
 void render_station(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
+void render_depot(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
 
 void sem_render_game(sem_render_context* ctx, sem_game* game) {
 	sem_world* world = &(game->world);
@@ -85,6 +86,9 @@ void render_tile(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile) 
 		return;
 	case STATION:
 		render_station(ctx, coord, tile->track);
+		return;
+	case DEPOT:
+		render_depot(ctx, coord, tile->track);
 		return;
 	}
 }
@@ -391,12 +395,27 @@ void render_station(sem_render_context* ctx, sem_coordinate coord, sem_track* tr
 	render_track_path(ctx, coord, track);
 	cairo_set_source(ctx->cr, ctx->style->station_color);
 	cairo_set_line_width(ctx->cr, 1.0);
-	cairo_stroke(ctx->cr);
+	cairo_stroke_preserve(ctx->cr);
 
-	render_track_path(ctx, coord, track);
 	cairo_set_source(ctx->cr, ctx->style->track_front_color);
 	cairo_set_line_width(ctx->cr, ctx->style->station_front_width);
 	cairo_stroke(ctx->cr);
+
+	render_track(ctx, coord, track);
+}
+
+void render_depot(sem_render_context* ctx, sem_coordinate coord, sem_track* track) {
+	render_track_path(ctx, coord, track);
+	cairo_set_source_rgb(ctx->cr, 0.0, 0.0, 0.0);
+	cairo_set_line_width(ctx->cr, ctx->style->depot_back_width);
+	cairo_stroke_preserve(ctx->cr);
+
+	cairo_set_source(ctx->cr, ctx->style->canvas);
+	cairo_set_line_width(ctx->cr, ctx->style->depot_front_width);
+	const double dash[] = {0.233, 0.1};
+	cairo_set_dash(ctx->cr, dash, 2, -0.05);
+	cairo_stroke(ctx->cr);
+	cairo_set_dash(ctx->cr, dash, 0, 0);
 
 	render_track(ctx, coord, track);
 }
@@ -414,6 +433,8 @@ sem_success sem_render_default_style(sem_render_style* style) {
 	style->track_back_width = 0.2;
 	style->track_front_width = 0.1;
 	style->station_front_width = 0.3;
+	style->depot_back_width = 0.5;
+	style->depot_front_width = 0.4;
 	style->points_highlight_width = 0.05;
 	style->signal_main_radius = 0.18;
 	style->signal_main_offset = 0.26;

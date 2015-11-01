@@ -29,6 +29,8 @@ sem_success sem_tile_parse(sem_tile* tile, sem_tokenization* tile_description, s
 		tile->class = EXIT;
 	} else if (strcmp(class, "station") == 0) {
 		tile->class = STATION;
+	} else if (strcmp(class, "depot") == 0) {
+		tile->class = DEPOT;
 	} else {
 		return sem_set_error("Unknown tile class");
 	}
@@ -180,6 +182,9 @@ sem_success sem_tile_print(FILE* out, sem_tile* tile) {
 		break;
 	case STATION:
 		fprintf(out, "station");
+		break;
+	case DEPOT:
+		fprintf(out, "depot");
 		break;
 	}
 

@@ -22,7 +22,7 @@ tiles 92
 10 13 siding W-E
 11 13 siding W-E
 12 13 buffer W-E
-8 7 track W-E
+8 7 bell W-E
 8 11 points W-E W-SE
 9 12 track NW-E
 10 12 signal W-E green main manual

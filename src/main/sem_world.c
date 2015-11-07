@@ -115,6 +115,7 @@ sem_success sem_tile_accept(sem_train* train, sem_tile* tile, sem_tile_acceptanc
 	case STATION: // TODO: station logic
 	case DEPOT:
 	case SIDING:
+	case BELL:
 		return sem_track_accept(train, tile->track, acceptance);
 	case SIGNAL:
 		if (sem_track_accept(train, tile->track, acceptance) != SEM_OK) return SEM_ERROR;

@@ -33,6 +33,8 @@ sem_success sem_tile_parse(sem_tile* tile, sem_tokenization* tile_description, s
 		tile->class = DEPOT;
 	} else if (strcmp(class, "siding") == 0) {
 		tile->class = SIDING;
+	} else if (strcmp(class, "bell") == 0) {
+		tile->class = BELL;
 	} else {
 		return sem_set_error("Unknown tile class");
 	}
@@ -190,6 +192,9 @@ sem_success sem_tile_print(FILE* out, sem_tile* tile) {
 		break;
 	case SIDING:
 		fprintf(out, "siding");
+		break;
+	case BELL:
+		fprintf(out, "bell");
 		break;
 	}
 

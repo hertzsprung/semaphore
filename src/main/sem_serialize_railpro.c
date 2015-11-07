@@ -256,19 +256,18 @@ sem_success read_railpro_tile(sem_world* world, sem_tile* tile, uint8_t code) {
 		if (parse_railpro_tile(tile, "signal N-S amber sub", world) != SEM_OK) return SEM_ERROR;
 	} else if (code == 0x85) {
 		if (parse_railpro_tile(tile, "signal N-S green sub", world) != SEM_OK) return SEM_ERROR;
-	// TODO: 0x88 and up have bell attached; bell attached to diagonals only on crossing track
 	} else if (code == 0x88) {
-		if (parse_railpro_tile(tile, "track W-E", world) != SEM_OK) return SEM_ERROR;
+		if (parse_railpro_tile(tile, "bell W-E", world) != SEM_OK) return SEM_ERROR;
 	} else if (code == 0x89) {
-		if (parse_railpro_tile(tile, "track N-S", world) != SEM_OK) return SEM_ERROR;
+		if (parse_railpro_tile(tile, "bell N-S", world) != SEM_OK) return SEM_ERROR;
 	} else if (code == 0x8a) {
-		if (parse_railpro_tile(tile, "track NW-SE", world) != SEM_OK) return SEM_ERROR;
+		if (parse_railpro_tile(tile, "bell NW-SE", world) != SEM_OK) return SEM_ERROR;
 	} else if (code == 0x8b) {
-		if (parse_railpro_tile(tile, "track NE-SW", world) != SEM_OK) return SEM_ERROR;
+		if (parse_railpro_tile(tile, "bell NE-SW", world) != SEM_OK) return SEM_ERROR;
 	} else if (code == 0x86) {
-		if (parse_railpro_tile(tile, "track W-E+NW-SE", world) != SEM_OK) return SEM_ERROR;
+		if (parse_railpro_tile(tile, "bell W-E+NW-SE", world) != SEM_OK) return SEM_ERROR;
 	} else if (code == 0x87) {
-		if (parse_railpro_tile(tile, "track W-E+NE-SW", world) != SEM_OK) return SEM_ERROR;
+		if (parse_railpro_tile(tile, "bell W-E+NE-SW", world) != SEM_OK) return SEM_ERROR;
 	}
 	return SEM_OK;
 }

@@ -155,7 +155,7 @@ tiles 1684
 99 3 track W-E
 100 3 track W-E
 101 3 signal W-E green sub
-102 3 track W-E+NE-SW
+102 3 bell W-E+NE-SW
 103 3 track W-E
 104 3 track W-E
 105 3 track W-E
@@ -178,7 +178,7 @@ tiles 1684
 67 4 track NE-SW
 68 4 track NW-SE
 69 4 track NE-SW
-71 4 track NE-SW
+71 4 bell NE-SW
 94 4 track SW-E
 95 4 track W-E
 96 4 signal W-E green main auto
@@ -368,7 +368,7 @@ tiles 1684
 32 9 track N-S
 34 9 track N-S
 35 9 track N-S
-46 9 track N-S
+46 9 bell N-S
 66 9 points SW-E NE-SW
 67 9 track W-E+N-S
 68 9 signal W-E green sub
@@ -596,7 +596,7 @@ tiles 1684
 59 14 track W-E
 60 14 track W-E
 61 14 buffer W-E
-65 14 track N-S
+65 14 bell N-S
 71 14 track NE-SW
 72 14 track NE-SW
 77 14 track NW-E
@@ -715,7 +715,7 @@ tiles 1684
 45 16 track W-E
 46 16 points W-E NW-E
 47 16 track W-E
-48 16 track W-E+NW-SE
+48 16 bell W-E+NW-SE
 49 16 points W-E W-NE
 50 16 signal W-E green sub
 51 16 track W-E
@@ -838,10 +838,10 @@ tiles 1684
 69 17 track NE-SW+W-E
 70 17 points W-E W-SE
 71 17 track W-E
-72 17 track W-E+NW-SE
+72 17 bell W-E+NW-SE
 73 17 signal W-E green sub
 74 17 track W-E
-75 17 track W-E+NE-SW
+75 17 bell W-E+NE-SW
 76 17 track W-E
 77 17 points W-E SW-E
 78 17 signal W-E green main auto
@@ -936,12 +936,12 @@ tiles 1684
 68 18 track NE-SW+W-E
 69 18 signal W-E green main auto
 70 18 track W-E
-71 18 track W-E+NW-SE
+71 18 bell W-E+NW-SE
 72 18 track W-E
 73 18 points W-E NW-E
 74 18 points W-E W-NE
 75 18 signal W-E green sub
-76 18 track W-E+NE-SW
+76 18 bell W-E+NE-SW
 77 18 track W-E
 78 18 track W-E
 79 18 track W-E
@@ -1045,7 +1045,7 @@ tiles 1684
 62 19 points W-E NW-E
 63 19 track W-E
 64 19 signal W-E green sub
-65 19 track W-E+NE-SW
+65 19 bell W-E+NE-SW
 66 19 track W-E
 67 19 track NE-SW+W-E
 68 19 track W-E
@@ -1138,7 +1138,7 @@ tiles 1684
 41 20 points W-E W-NE
 42 20 points W-E W-SE
 43 20 signal W-E green sub
-44 20 track W-E
+44 20 bell W-E
 45 20 track W-NE
 47 20 track SW-E
 48 20 track W-E
@@ -1160,7 +1160,7 @@ tiles 1684
 67 20 points W-E SW-E
 68 20 signal W-E green sub
 69 20 track W-E
-70 20 track W-E+NE-SW
+70 20 bell W-E+NE-SW
 71 20 track W-E
 72 20 track W-E
 73 20 points W-E W-SE
@@ -1288,7 +1288,7 @@ tiles 1684
 34 22 track W-E
 35 22 track W-SE
 37 22 track NW-SE
-39 22 track NW-SE
+39 22 bell NW-SE
 40 22 track NW-E
 41 22 signal W-E red sub
 42 22 track W-E
@@ -1311,7 +1311,7 @@ tiles 1684
 62 22 track W-E
 63 22 signal W-E amber sub
 64 22 track W-NE
-65 22 track NE-SW
+65 22 bell NE-SW
 84 22 track NW-S
 85 22 track N-S
 3 23 buffer W-E
@@ -1409,7 +1409,7 @@ tiles 1684
 42 24 track W-E
 43 24 track W-E
 44 24 signal W-E green sub
-45 24 track W-E+NW-SE
+45 24 bell W-E+NW-SE
 46 24 track W-E
 47 24 track W-E
 48 24 points W-E SW-E

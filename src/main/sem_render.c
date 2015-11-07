@@ -11,6 +11,7 @@ void render_tiles(sem_render_context* ctx, sem_world* world);
 void render_tile(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
 void render_tile_blank(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
 void render_tile_track(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
+void render_track_crossing(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
 void render_track(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
 void render_tile_points(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
 void render_points_highlight(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
@@ -26,13 +27,16 @@ void render_signal_circle(sem_render_context* ctx, double offset_x, double offse
 void render_tile_buffer(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
 void render_tile_entry(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
 void render_tile_exit(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
+void render_station(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
+void render_depot(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
+void render_siding(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
+void render_tile_bell(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
 void render_train(sem_render_context* ctx, sem_train* train);
 void render_train_name(sem_render_context* ctx, sem_train* train);
 void render_track_path(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
 void render_label(sem_render_context* ctx, sem_label* label);
-void render_station(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
-void render_depot(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
-void render_siding(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
+void render_tile_rotate(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
+void render_track_crossbar(sem_render_context* ctx);
 
 void sem_render_game(sem_render_context* ctx, sem_game* game) {
 	sem_world* world = &(game->world);
@@ -95,6 +99,9 @@ void render_tile(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile) 
 	case SIDING:
 		render_siding(ctx, coord, tile->track);
 		return;
+	case BELL:
+		render_tile_bell(ctx, coord, tile->track);
+		return;
 	}
 }
 
@@ -112,15 +119,20 @@ void render_tile_track(sem_render_context* ctx, sem_coordinate coord, sem_track*
 	if (track->next != NULL) {
 		sem_track* t = sem_track_part_horizontal(track);
 		if (t == NULL) t = sem_track_part_vertical(track);
-		if (t == NULL) t = track;
-		render_track_path(ctx, coord, t);
-		cairo_set_source_rgb(ctx->cr, 0.0, 0.0, 0.0);
-		cairo_set_line_width(ctx->cr, ctx->style->track_crossing_width);
-		const double dash[] = {0.2, 0.1};
-		cairo_set_dash(ctx->cr, dash, 2, -0.1);
-		cairo_stroke(ctx->cr);
-		cairo_set_dash(ctx->cr, dash, 0, 0);
+		if (t != NULL) {
+			cairo_set_source_rgb(ctx->cr, 0.0, 0.0, 0.0);
+			render_track_crossing(ctx, coord, t);
+		}
 	}
+}
+
+void render_track_crossing(sem_render_context* ctx, sem_coordinate coord, sem_track* track) {
+	render_track_path(ctx, coord, track);
+	cairo_set_line_width(ctx->cr, ctx->style->track_crossing_width);
+	const double dash[] = {0.2, 0.1};
+	cairo_set_dash(ctx->cr, dash, 2, -0.1);
+	cairo_stroke(ctx->cr);
+	cairo_set_dash(ctx->cr, dash, 0, 0);
 }
 
 void render_track(sem_render_context* ctx, sem_coordinate coord, sem_track* track) {
@@ -186,8 +198,7 @@ void render_tile_signal(sem_render_context* ctx, sem_coordinate coord, sem_tile*
 
 	cairo_save(ctx->cr);
 	cairo_set_line_width(ctx->cr, 0.05);
-	cairo_translate(ctx->cr, coord.x + 0.5, coord.y + 0.5);
-	cairo_rotate(ctx->cr, sem_compass_rotation(tile->track->start));
+	render_tile_rotate(ctx, coord, tile->track);
 
 	switch (tile->signal->type) {
 	case MAIN_AUTO:
@@ -202,8 +213,7 @@ void render_tile_signal(sem_render_context* ctx, sem_coordinate coord, sem_tile*
 		break;
 	}
 
-	cairo_move_to(ctx->cr, 0, -ctx->style->track_back_width/2.0);
-	cairo_line_to(ctx->cr, 0, ctx->style->track_back_width/2.0);
+	render_track_crossbar(ctx);
 	cairo_set_source_rgb(ctx->cr, 0.0, 0.0, 0.0);
 	cairo_stroke(ctx->cr);
 
@@ -353,6 +363,29 @@ void render_tile_exit(sem_render_context* ctx, sem_coordinate coord, sem_tile* t
 	cairo_stroke(ctx->cr);
 }
 
+void render_tile_bell(sem_render_context* ctx, sem_coordinate coord, sem_track* track) {
+	render_track(ctx, coord, track);
+
+	if (track->next == NULL) {
+		cairo_save(ctx->cr);
+
+		render_tile_rotate(ctx, coord, track);
+		render_track_crossbar(ctx);
+		cairo_set_line_width(ctx->cr, 0.05);
+		cairo_set_source_rgb(ctx->cr, 1.0, 0.2, 0.0);
+		cairo_stroke(ctx->cr);
+
+		cairo_restore(ctx->cr);
+	} else {
+		sem_track* t = sem_track_part_horizontal(track);
+		if (t == NULL) t = sem_track_part_vertical(track);
+		if (t != NULL) {
+			cairo_set_source_rgb(ctx->cr, 1.0, 0.2, 0.0);
+			render_track_crossing(ctx, coord, t);
+		}
+	}
+}
+
 void render_train(sem_render_context* ctx, sem_train* train) {
 	sem_car* car = train->head_car;
 	while (car != NULL) {
@@ -453,6 +486,16 @@ void render_depot(sem_render_context* ctx, sem_coordinate coord, sem_track* trac
 	cairo_set_dash(ctx->cr, dash, 0, 0);
 
 	render_track(ctx, coord, track);
+}
+
+void render_tile_rotate(sem_render_context* ctx, sem_coordinate coord, sem_track* track) {
+	cairo_translate(ctx->cr, coord.x + 0.5, coord.y + 0.5);
+	cairo_rotate(ctx->cr, sem_compass_rotation(track->start));
+}
+
+void render_track_crossbar(sem_render_context* ctx) {
+	cairo_move_to(ctx->cr, 0, -ctx->style->track_back_width/2.0);
+	cairo_line_to(ctx->cr, 0, ctx->style->track_back_width/2.0);
 }
 
 sem_success sem_render_default_style(sem_render_style* style) {

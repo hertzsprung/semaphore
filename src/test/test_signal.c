@@ -27,9 +27,11 @@ void test_signal_clearing_sub_preserves_previous_manual_amber_sub(test_signal_co
 void test_signal_clearing_main_leaves_amber_sub_behind_red_main_auto(test_signal_context* test_ctx, const void* data);
 void test_signal_clearing_sub_leaves_previous_main_red(test_signal_context* test_ctx, const void* data);
 void test_signal_clearing_main_auto_clears_previous_main_auto(test_signal_context* test_ctx, const void* data);
+void test_signal_clearing_main_auto_does_not_clear_previous_main_manual(test_signal_context* test_ctx, const void* data);
 void test_signal_clearing_main_manual_clears_previous_main_auto(test_signal_context* test_ctx, const void* data);
 void test_signal_clearing_main_auto_clears_previous_main_auto_with_sub_inbetween(test_signal_context* test_ctx, const void* data);
 void test_signal_clearing_main_auto_clears_sub_behind_previous_main_auto(test_signal_context* test_ctx, const void* data);
+void test_signal_clearing_main_auto_does_not_clear_sub_behind_previous_main_manual(test_signal_context* test_ctx, const void* data);
 void test_signal_exiting_portal_clears_previous_sub(test_signal_context* test_ctx, const void* data);
 void test_signal_train_stops_behind_red_main(test_signal_context* test_ctx, const void* data);
 void test_signal_train_medium_to_stop_behind_red_sub(test_signal_context* test_ctx, const void* data);
@@ -68,8 +70,10 @@ void add_tests_signal() {
 	add_test_signal("/signal/clearing_sub_leaves_previous_main_red", test_signal_clearing_sub_leaves_previous_main_red);
 	add_test_signal("/signal/clearing_main_auto_clears_previous_main_auto", test_signal_clearing_main_auto_clears_previous_main_auto);
 	add_test_signal("/signal/clearing_main_manual_clears_previous_main_auto", test_signal_clearing_main_manual_clears_previous_main_auto);
+	add_test_signal("/signal/clearing_main_auto_does_not_clear_previous_main_manual", test_signal_clearing_main_auto_does_not_clear_previous_main_manual);
 	add_test_signal("/signal/clearing_main_auto_clears_previous_main_auto_with_sub_inbetween", test_signal_clearing_main_auto_clears_previous_main_auto_with_sub_inbetween);
 	add_test_signal("/signal/clearing_main_auto_clears_sub_behind_previous_main_auto", test_signal_clearing_main_auto_clears_sub_behind_previous_main_auto);
+	add_test_signal("/signal/clearing_main_auto_does_not_clear_sub_behind_previous_main_manual", test_signal_clearing_main_auto_does_not_clear_sub_behind_previous_main_manual);
 	add_test_signal("/signal/exiting_portal_clears_previous_sub", test_signal_exiting_portal_clears_previous_sub);
 	add_test_signal("/signal/train_stops_behind_red_main", test_signal_train_stops_behind_red_main);
 	add_test_signal("/signal/train_medium_to_stop_behind_red_sub", test_signal_train_medium_to_stop_behind_red_sub);
@@ -182,6 +186,11 @@ void test_signal_clearing_main_auto_clears_previous_main_auto(test_signal_contex
 	test_signal_aspects_after_clearing_pair(test_ctx, MAIN_AUTO, GREEN, MAIN_AUTO, GREEN, GREEN, RED);
 }
 
+void test_signal_clearing_main_auto_does_not_clear_previous_main_manual(test_signal_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	test_signal_aspects_after_clearing_pair(test_ctx, MAIN_MANUAL, GREEN, MAIN_AUTO, GREEN, RED, RED);
+}
+
 void test_signal_clearing_main_manual_clears_previous_main_auto(test_signal_context* test_ctx, const void* data) {
 	#pragma unused(data)
 	test_signal_aspects_after_clearing_pair(test_ctx, MAIN_AUTO, GREEN, MAIN_MANUAL, GREEN, GREEN, RED);
@@ -200,6 +209,11 @@ void test_signal_clearing_main_auto_clears_previous_main_auto_with_sub_inbetween
 void test_signal_clearing_main_auto_clears_sub_behind_previous_main_auto(test_signal_context* test_ctx, const void* data) {
 	#pragma unused(data)
 	test_signal_aspects_after_clearing_triple(test_ctx, SUB, GREEN, MAIN_AUTO, GREEN, MAIN_AUTO, GREEN, GREEN, GREEN, RED);
+}
+
+void test_signal_clearing_main_auto_does_not_clear_sub_behind_previous_main_manual(test_signal_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	test_signal_aspects_after_clearing_triple(test_ctx, SUB, GREEN, MAIN_MANUAL, GREEN, MAIN_AUTO, GREEN, AMBER, RED, RED);
 }
 
 void test_signal_aspects_after_clearing_pair(test_signal_context* test_ctx,

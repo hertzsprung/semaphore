@@ -76,7 +76,7 @@ void sem_signal_portal_exit(sem_train* train) {
 void sem_signal_train_cleared(sem_train* train) {
 	if (train->previous_signal != NULL && train->signal->type == SUB && train->previous_signal->type == SUB) {
 		sem_signal_set_previous_aspect(train->previous_signal);
-	} else if (train->previous_main_signal != NULL && train->signal->type != SUB) {
+	} else if (train->previous_main_signal != NULL && train->signal->type != SUB && train->previous_main_signal->type == MAIN_AUTO) {
 		sem_signal_set_previous_aspect(train->previous_main_signal);
 		if (train->sub_behind_previous_main_signal != NULL) {
 			sem_signal_set_previous_aspect(train->sub_behind_previous_main_signal);

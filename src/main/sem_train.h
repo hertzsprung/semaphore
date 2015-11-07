@@ -53,7 +53,10 @@ struct sem_train {
 	sem_signal* signal;
 	sem_signal* previous_signal;
 	sem_signal* main_signal;
+    sem_signal* sub_signal;
+    sem_signal* sub_behind_main_signal;
 	sem_signal* previous_main_signal;
+    sem_signal* sub_behind_previous_main_signal;
 };
 
 typedef struct {

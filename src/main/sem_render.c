@@ -10,6 +10,7 @@
 void render_tiles(sem_render_context* ctx, sem_world* world);
 void render_tile(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
 void render_tile_blank(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
+void render_tile_track(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
 void render_track(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
 void render_tile_points(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
 void render_points_highlight(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
@@ -68,7 +69,7 @@ void render_tile(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile) 
 		render_tile_blank(ctx, coord, tile);
 		return;
 	case TRACK:
-		render_track(ctx, coord, tile->track);
+		render_tile_track(ctx, coord, tile->track);
 		return;
 	case POINTS:
 		render_tile_points(ctx, coord, tile);
@@ -103,6 +104,23 @@ void render_tile_blank(sem_render_context* ctx, sem_coordinate coord, sem_tile* 
 	cairo_set_line_width(ctx->cr, 0.01);
 	cairo_set_source_rgb(ctx->cr, 0.0, 0.45, 0.1);
 	cairo_stroke(ctx->cr);
+}
+
+void render_tile_track(sem_render_context* ctx, sem_coordinate coord, sem_track* track) {
+	render_track(ctx, coord, track);
+
+	if (track->next != NULL) {
+		sem_track* t = sem_track_part_horizontal(track);
+		if (t == NULL) t = sem_track_part_vertical(track);
+		if (t == NULL) t = track;
+		render_track_path(ctx, coord, t);
+		cairo_set_source_rgb(ctx->cr, 0.0, 0.0, 0.0);
+		cairo_set_line_width(ctx->cr, ctx->style->track_crossing_width);
+		const double dash[] = {0.2, 0.1};
+		cairo_set_dash(ctx->cr, dash, 2, -0.1);
+		cairo_stroke(ctx->cr);
+		cairo_set_dash(ctx->cr, dash, 0, 0);
+	}
 }
 
 void render_track(sem_render_context* ctx, sem_coordinate coord, sem_track* track) {
@@ -447,10 +465,10 @@ sem_success sem_render_default_style(sem_render_style* style) {
 	style->signal_green = cairo_pattern_create_rgb(0.0, 1.0, 0.0);
 	style->station_color = cairo_pattern_create_rgb(0.26667, 0.26667, 0.26667);
 	style->siding_color = cairo_pattern_create_rgb(0.2588, 0.3412, 0.4784);
-//	style->siding_color = cairo_pattern_create_rgb(0.3255, 0.4314, 0.604);
 	
 	style->track_back_width = 0.2;
 	style->track_front_width = 0.1;
+	style->track_crossing_width = 0.04;
 	style->station_front_width = 0.3;
 	style->depot_back_width = 0.5;
 	style->depot_front_width = 0.4;

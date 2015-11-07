@@ -15,6 +15,7 @@ sem_success sem_track_accept(sem_train* train, sem_track* track, sem_tile_accept
 sem_success sem_inactive_track_accept(sem_train* train, sem_tile* tile, sem_tile_acceptance* acceptance);
 void sem_destroy_signals(sem_world* world);
 void track_matching(sem_track* track, sem_track* key, sem_track** match);
+sem_track* sem_track_part_matching(sem_track* track, unit_vector start, unit_vector end);
 
 sem_success sem_world_init_blank(sem_world* world) {
 	world->timer = malloc(sizeof(sem_timer_context));
@@ -272,4 +273,25 @@ bool sem_track_straight(sem_track* track) {
 
 unit_vector sem_track_corner(sem_track* track) {
 	return sem_compass_corner_of_curve(track->start, track->end);
+}
+
+sem_track* sem_track_part_horizontal(sem_track* track) {
+	return sem_track_part_matching(track, SEM_WEST, SEM_EAST);
+}
+
+sem_track* sem_track_part_vertical(sem_track* track) {
+	return sem_track_part_matching(track, SEM_NORTH, SEM_SOUTH);
+}
+
+sem_track* sem_track_part_matching(sem_track* track, unit_vector start, unit_vector end) {
+	sem_track* t = track;
+	do {
+		if ((t->start == start && t->end == end) ||
+				(t->start == end && t->end == start)) {
+			return t;
+		}
+		t = t->next;
+	} while (t != NULL);
+
+	return NULL;
 }

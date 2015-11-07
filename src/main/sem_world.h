@@ -148,6 +148,10 @@ bool sem_track_straight(sem_track* track);
 
 unit_vector sem_track_corner(sem_track* track);
 
+sem_track* sem_track_part_horizontal(sem_track* track);
+
+sem_track* sem_track_part_vertical(sem_track* track);
+
 void sem_tile_set_track(sem_tile* tile, sem_track* track);
 
 void sem_tile_set_buffer(sem_tile* tile, sem_track* track);

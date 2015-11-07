@@ -18,6 +18,7 @@ typedef struct {
 	cairo_pattern_t* siding_color;
 
 	double track_front_width;
+	double track_crossing_width;
 	double track_back_width;
 	double station_front_width;
 	double depot_back_width;

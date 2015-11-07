@@ -15,6 +15,9 @@ void test_world_needs_points_switch_when_train_on_inactive_track(test_world_cont
 void test_world_not_needs_points_switch_when_train_on_active_track(test_world_context* test_ctx, const void* data);
 void test_world_train_not_accepted_on_unconnected_points(test_world_context* test_ctx, const void* data);
 void test_world_track_matching_inactive_points(test_world_context* test_ctx, const void* data);
+void test_world_track_part_horizontal_first(test_world_context* test_ctx, const void* data);
+void test_world_track_part_horizontal_second(test_world_context* test_ctx, const void* data);
+void test_world_track_part_vertical(test_world_context* test_ctx, const void* data);
 
 void add_test_world(const char *test_name, void (*test)(test_world_context*, const void* data));
 void test_world_setup(test_world_context* test_ctx, const void* data);
@@ -44,6 +47,9 @@ void add_tests_world() {
 	add_test_world("/world/not_needs_points_switch_when_train_on_active_track", test_world_not_needs_points_switch_when_train_on_active_track);
 	add_test_world("/world/train_not_accepted_on_unconnected_points", test_world_train_not_accepted_on_unconnected_points);
 	add_test_world("/world/track_matching_inactive_points", test_world_track_matching_inactive_points);
+	add_test_world("/world/track_part_horizontal_first", test_world_track_part_horizontal_first);
+	add_test_world("/world/track_part_horizontal_second", test_world_track_part_horizontal_second);
+	add_test_world("/world/track_part_vertical", test_world_track_part_vertical);
 }
 
 void add_test_world(const char *test_name, void (*test)(test_world_context*, const void* data)) {
@@ -169,4 +175,43 @@ void test_world_track_matching_inactive_points(test_world_context* test_ctx, con
 
 	g_assert_false(matched_track == NULL);
 	g_assert_true(matched_track == &inactive_track);
+}
+
+void test_world_track_part_horizontal_first(test_world_context* test_ctx, const void* data) {
+	#pragma unused(test_ctx)
+	#pragma unused(data)
+	sem_track trackSW_NE;
+	sem_track_set(&trackSW_NE, SEM_SOUTH | SEM_WEST, SEM_NORTH | SEM_EAST);
+
+	sem_track trackW_E;
+	sem_track_set(&trackW_E, SEM_WEST, SEM_EAST);
+	trackW_E.next = &trackSW_NE;
+
+	g_assert_true(sem_track_part_horizontal(&trackW_E) == &trackW_E);
+}
+
+void test_world_track_part_horizontal_second(test_world_context* test_ctx, const void* data) {
+	#pragma unused(test_ctx)
+	#pragma unused(data)
+	sem_track trackSW_NE;
+	sem_track_set(&trackSW_NE, SEM_SOUTH | SEM_WEST, SEM_NORTH | SEM_EAST);
+
+	sem_track trackW_E;
+	sem_track_set(&trackW_E, SEM_WEST, SEM_EAST);
+	trackSW_NE.next = &trackW_E;
+
+	g_assert_true(sem_track_part_horizontal(&trackSW_NE) == &trackW_E);
+}
+
+void test_world_track_part_vertical(test_world_context* test_ctx, const void* data) {
+	#pragma unused(test_ctx)
+	#pragma unused(data)
+	sem_track trackS_N;
+	sem_track_set(&trackS_N, SEM_SOUTH, SEM_NORTH);
+
+	sem_track trackW_E;
+	sem_track_set(&trackW_E, SEM_WEST, SEM_EAST);
+	trackW_E.next = &trackS_N;
+
+	g_assert_true(sem_track_part_vertical(&trackW_E) == &trackS_N);
 }

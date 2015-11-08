@@ -119,7 +119,7 @@ sem_success sem_world_remove_train(sem_train* train);
 
 sem_signal* sem_signal_by_id(sem_world* world, sem_signal_id id);
 
-sem_train* sem_train_by_id(sem_world* world, uuid_t id);
+sem_train* sem_train_by_id(sem_world* world, sem_train_id id);
 
 sem_tile* sem_tile_at_coord(sem_world* world, sem_coordinate* c);
 

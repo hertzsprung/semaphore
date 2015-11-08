@@ -132,7 +132,7 @@ void test_parser_three_way_points(sem_track_cache* track_cache, const void* data
 void test_parser_red_main_auto_signal(sem_track_cache* track_cache, const void* data) {
 	#pragma unused(data)
 	char signal_id_str[37] = "81cbbfd6-43c8-4143-a345-ee9e27dd0e8b";
-	uuid_t expected_id;
+	sem_signal_id expected_id;
 	uuid_parse(signal_id_str, expected_id);
 
 	char track_description[128] = "signal SW-NE red main auto 81cbbfd6-43c8-4143-a345-ee9e27dd0e8b";

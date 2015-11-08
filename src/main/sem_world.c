@@ -98,7 +98,7 @@ sem_signal* sem_signal_by_id(sem_world* world, sem_signal_id id) {
 	return NULL;
 }
 
-sem_train* sem_train_by_id(sem_world* world, uuid_t id) {
+sem_train* sem_train_by_id(sem_world* world, sem_train_id id) {
 	for (uint32_t i=0; i<world->trains->tail_idx; i++) {
 		sem_train* train = world->trains->items[i];
 		if (uuid_compare(train->id, id) == 0) return train;

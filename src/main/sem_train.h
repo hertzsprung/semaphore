@@ -7,6 +7,7 @@
 
 typedef struct sem_train sem_train;
 typedef struct sem_car sem_car;
+typedef uuid_t sem_train_id;
 
 typedef enum {
 	FAST, MEDIUM, SLOW
@@ -34,7 +35,7 @@ struct sem_car {
 
 struct sem_train {
 	sem_world* world;
-	uuid_t id;
+	sem_train_id id;
 	char* name;
 	sem_train_speed speed;
 	uint32_t speeds[3];

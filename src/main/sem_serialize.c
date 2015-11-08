@@ -572,7 +572,7 @@ sem_success read_signal_holding_train(FILE* in, sem_world* world) {
 	sem_signal* signal = sem_signal_by_id(world, signal_id);
 	if (signal == NULL) return sem_set_error("Unknown signal id");
 
-	uuid_t train_id;
+	sem_train_id train_id;
 	uuid_parse(train_id_str, train_id);
 	sem_train* train = sem_train_by_id(world, train_id);
 	if (train == NULL) return sem_set_error("Unknown train id");

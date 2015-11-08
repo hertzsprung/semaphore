@@ -182,7 +182,7 @@ void test_serialize_load_remove_train_action() {
 
 	sem_train* train1 = malloc(sizeof(sem_train));
 	sem_train_init(train1);
-	uuid_t train1_id;
+	sem_train_id train1_id;
 	uuid_copy(train1->id, train1_id);
 	train1->direction = SEM_NORTH;
 	sem_car car1;

@@ -113,7 +113,7 @@ sem_success write_train_action(FILE* out, char* tag, sem_action* action) {
 
 sem_success set_train_context(sem_game* game, sem_tokenization* tokens, sem_action* action) {
 	char* train_id_str = sem_tokenization_next(tokens);
-	uuid_t train_id;
+	sem_train_id train_id;
 	uuid_parse(train_id_str, train_id);
 	sem_train* train = sem_train_by_id(&(game->world), train_id);
 	if (train == NULL) return sem_set_error("Cannot remove train with unknown id");

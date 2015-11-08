@@ -1,7 +1,10 @@
 #ifndef SEM_SIGNAL_H
 #define SEM_SIGNAL_H
 
+#include <uuid/uuid.h>
+
 typedef struct sem_signal sem_signal;
+typedef uuid_t sem_signal_id;
 
 #include <stdbool.h>
 
@@ -15,8 +18,6 @@ typedef enum {
 typedef enum {
 	RED, AMBER, GREEN
 } sem_signal_aspect;
-
-typedef uuid_t sem_signal_id;
 
 struct sem_signal {
 	sem_signal_id id;

@@ -36,6 +36,7 @@ struct sem_tile {
 
 struct sem_world {
 	sem_timer_context* timer;
+    sem_dynamic_array* signals;
 	sem_dynamic_array* trains;
 	sem_dynamic_array* actions;
 	uint32_t max_x;
@@ -115,6 +116,8 @@ void sem_world_destroy(sem_world* world);
 sem_success sem_world_add_train(sem_world* world, sem_train* train);
 
 sem_success sem_world_remove_train(sem_train* train);
+
+sem_signal* sem_signal_by_id(sem_world* world, sem_signal_id id);
 
 sem_train* sem_train_by_id(sem_world* world, uuid_t id);
 

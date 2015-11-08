@@ -138,5 +138,7 @@ labels 2
 17 7 EXB
 actions 1
 3000 train_entry at 0 9 direction E cars 3
+signalling
+held_trains 0
 revenue
 balance 0

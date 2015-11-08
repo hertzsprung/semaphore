@@ -22,6 +22,10 @@ sem_success sem_world_init_blank(sem_world* world) {
 	if (world->timer == NULL) return sem_set_error("Could not allocate memory for timer");
 	if (sem_timer_init_default(world->timer) != SEM_OK) return SEM_ERROR;
 
+	world->signals = malloc(sizeof(sem_dynamic_array));
+	if (world->signals == NULL) return sem_set_error("Could not allocate memory for signals");
+	if (sem_dynamic_array_init(world->signals) != SEM_OK) return SEM_ERROR;
+
 	world->trains = malloc(sizeof(sem_dynamic_array));
 	if (world->trains == NULL) return sem_set_error("Could not allocate memory for trains");
 	if (sem_dynamic_array_init(world->trains) != SEM_OK) return SEM_ERROR;
@@ -53,6 +57,7 @@ void sem_world_destroy(sem_world* world) {
 		free(world->trains->items[i]);
 	}
 	sem_dynamic_array_destroy(world->trains);
+	sem_dynamic_array_destroy(world->signals);
 	sem_dynamic_array_destroy(world->actions); // TODO: we might need to free() malloc'd actions within this list before deleting the action list itself
 	sem_destroy_signals(world);
 	sem_track_cache_destroy(world->track_cache);
@@ -82,6 +87,15 @@ sem_success sem_world_remove_train(sem_train* train) {
 	if (sem_dynamic_array_remove(train->world->trains, train) != SEM_OK) return SEM_ERROR;
 	sem_train_destroy(train);	
 	return SEM_OK;
+}
+
+sem_signal* sem_signal_by_id(sem_world* world, sem_signal_id id) {
+	for (uint32_t i=0; i<world->signals->tail_idx; i++) {
+		sem_signal* signal = world->signals->items[i];
+		if (uuid_compare(signal->id, id) == 0) return signal;
+	}
+
+	return NULL;
 }
 
 sem_train* sem_train_by_id(sem_world* world, uuid_t id) {

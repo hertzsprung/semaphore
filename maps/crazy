@@ -1771,5 +1771,7 @@ labels 26
 117 20 LWL
 118 33 BTL
 actions 0
+signalling
+held_trains 0
 revenue
 balance 0

@@ -135,7 +135,7 @@ void test_parser_red_main_auto_signal(sem_track_cache* track_cache, const void* 
 	sem_signal_id expected_id;
 	uuid_parse(signal_id_str, expected_id);
 
-	char track_description[128] = "signal SW-NE red main auto 81cbbfd6-43c8-4143-a345-ee9e27dd0e8b";
+	char track_description[128] = "signal SW-NE red main auto previously green 81cbbfd6-43c8-4143-a345-ee9e27dd0e8b";
 	sem_tokenization tokens;
 	sem_tokenization_init(&tokens, track_description, " ");
 
@@ -147,6 +147,7 @@ void test_parser_red_main_auto_signal(sem_track_cache* track_cache, const void* 
 	g_assert_true(tile.track->end == (SEM_NORTH | SEM_EAST));
 	g_assert_true(uuid_compare(tile.signal->id, expected_id) == 0);
 	g_assert_true(tile.signal->aspect == RED);
+	g_assert_true(tile.signal->previous_aspect == GREEN);
 	g_assert_true(tile.signal->type == MAIN_AUTO);
 
 	free(tile.signal);

@@ -8,9 +8,11 @@
 
 sem_success sem_parse_points(sem_tile* tile, sem_tokenization* tile_description, sem_track_cache* track_cache);
 sem_success sem_parse_signal(sem_tile* tile, sem_tokenization* tile_description);
+sem_success sem_parse_signal_aspect(sem_signal_aspect* aspect, char* aspect_str);
 sem_success sem_print_track(FILE* out, sem_track* track);
 sem_success sem_print_points(FILE* out, sem_tile* tile);
 sem_success sem_print_signal(FILE* out, sem_signal* signal);
+sem_success sem_print_signal_aspect(FILE* out, sem_signal_aspect aspect);
 
 sem_success sem_tile_parse(sem_tile* tile, sem_tokenization* tile_description, sem_track_cache* track_cache) {
 	char* class = sem_tokenization_next(tile_description);
@@ -127,17 +129,7 @@ sem_success sem_parse_signal(sem_tile* tile, sem_tokenization* tile_description)
 	tile->signal = signal;
 
 	sem_signal_aspect aspect;
-	char* aspect_str = sem_tokenization_next(tile_description);
-
-	if (strcmp(aspect_str, "green") == 0) {
-		aspect = GREEN;
-	} else if (strcmp(aspect_str, "amber") == 0) {
-		aspect = AMBER;
-	} else if (strcmp(aspect_str, "red") == 0) {
-		aspect = RED;
-	} else {
-		return sem_set_error("Unknown signal aspect");
-	}
+	if (sem_parse_signal_aspect(&aspect, sem_tokenization_next(tile_description)) != SEM_OK) return SEM_ERROR;
 
 	sem_signal_type type;
 	char* primary_type = sem_tokenization_next(tile_description);
@@ -160,9 +152,30 @@ sem_success sem_parse_signal(sem_tile* tile, sem_tokenization* tile_description)
 	sem_signal_init(signal, type, aspect);
 	
 	// if a signal id is specified, use it
-	char* id_str = sem_tokenization_next(tile_description);
-	if (id_str != NULL) uuid_parse(id_str, signal->id);
+	char* token = sem_tokenization_next(tile_description);
+	if (token != NULL) {
+		if (strcmp(token, "previously") == 0) {
+			sem_parse_signal_aspect(&(signal->previous_aspect), sem_tokenization_next(tile_description));
+			token = sem_tokenization_next(tile_description);
+			if (token != NULL) uuid_parse(token, signal->id);
+		} else {
+			uuid_parse(token, signal->id);
+		}
+	}
 	
+	return SEM_OK;
+}
+
+sem_success sem_parse_signal_aspect(sem_signal_aspect* aspect, char* aspect_str) {
+	if (strcmp(aspect_str, "green") == 0) {
+		*aspect = GREEN;
+	} else if (strcmp(aspect_str, "amber") == 0) {
+		*aspect = AMBER;
+	} else if (strcmp(aspect_str, "red") == 0) {
+		*aspect = RED;
+	} else {
+		return sem_set_error("Unknown signal aspect");
+	}
 	return SEM_OK;
 }
 
@@ -263,19 +276,7 @@ sem_success sem_print_points(FILE* out, sem_tile* tile) {
 
 sem_success sem_print_signal(FILE* out, sem_signal* signal) {
 	fprintf(out, " ");
-
-	switch (signal->aspect) {
-	case RED:
-		fprintf(out, "red");
-		break;
-	case AMBER:
-		fprintf(out, "amber");
-		break;
-	case GREEN:
-		fprintf(out, "green");
-		break;
-	}
-
+	sem_print_signal_aspect(out, signal->aspect);
 	fprintf(out, " ");
 
 	switch (signal->type) {
@@ -290,11 +291,28 @@ sem_success sem_print_signal(FILE* out, sem_signal* signal) {
 		break;
 	}
 
+	fprintf(out, " previously ");
+	sem_print_signal_aspect(out, signal->previous_aspect);
 	fprintf(out, " ");
 
 	char id_str[37];
 	uuid_unparse(signal->id, id_str);
 	fprintf(out, "%s", id_str);
 
+	return SEM_OK;
+}
+
+sem_success sem_print_signal_aspect(FILE* out, sem_signal_aspect aspect) {
+	switch (aspect) {
+	case RED:
+		fprintf(out, "red");
+		break;
+	case AMBER:
+		fprintf(out, "amber");
+		break;
+	case GREEN:
+		fprintf(out, "green");
+		break;
+	}
 	return SEM_OK;
 }

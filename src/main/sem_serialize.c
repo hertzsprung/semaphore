@@ -27,6 +27,7 @@ sem_success read_train_entry_position(FILE* in, sem_train* train);
 sem_success read_train_exit_position(FILE* in, sem_train* train);
 sem_success read_train_headless(FILE* in, sem_train* train);
 sem_success read_train_direction(FILE* in, sem_train* train);
+sem_success read_train_signal(FILE* in, const char* label, sem_world* world, sem_signal** signal);
 sem_success read_train_cars(FILE* in, sem_train* train);
 sem_success read_car(FILE* in, sem_train* train);
 sem_success read_labels(FILE* in, sem_game* game);
@@ -47,6 +48,7 @@ sem_success write_train_state(FILE* out, sem_train_state state);
 sem_success write_train_portal_state(FILE* out, sem_train_portal_state state);
 sem_success write_train_exit_position(FILE* out, sem_train* train);
 sem_success write_car(FILE* out, sem_car* car);
+sem_success write_train_signal(FILE* out, const char* label, sem_signal* signal);
 sem_success write_labels(FILE* out, sem_dynamic_array* labels);
 sem_success write_label(FILE* out, sem_label* label);
 sem_success write_actions(FILE* out, sem_dynamic_array* actions);
@@ -207,6 +209,13 @@ sem_success read_train(FILE* in, sem_world* world) {
 	if (read_train_exit_position(in, train) != SEM_OK) return SEM_ERROR;
 	if (read_train_headless(in, train) != SEM_OK) return SEM_ERROR;
 	if (read_train_direction(in, train) != SEM_OK) return SEM_ERROR;
+	if (read_train_signal(in, "signal", world, &(train->signal)) != SEM_OK) return SEM_ERROR;
+	if (read_train_signal(in, "previous_signal", world, &(train->previous_signal)) != SEM_OK) return SEM_ERROR;
+	if (read_train_signal(in, "main_signal", world, &(train->main_signal)) != SEM_OK) return SEM_ERROR;
+	if (read_train_signal(in, "sub_signal", world, &(train->sub_signal)) != SEM_OK) return SEM_ERROR;
+	if (read_train_signal(in, "sub_behind_main_signal", world, &(train->sub_behind_main_signal)) != SEM_OK) return SEM_ERROR;
+	if (read_train_signal(in, "previous_main_signal", world, &(train->previous_main_signal)) != SEM_OK) return SEM_ERROR;
+	if (read_train_signal(in, "sub_behind_previous_main_signal", world, &(train->sub_behind_previous_main_signal)) != SEM_OK) return SEM_ERROR;
 	if (read_train_cars(in, train) != SEM_OK) return SEM_ERROR;
 
 	sem_dynamic_array_add(world->trains, train);
@@ -401,6 +410,32 @@ sem_success read_train_direction(FILE* in, sem_train* train) {
 
 	if (sem_parse_unit_vector(&(train->direction), sem_tokenization_next(&tokens)) != SEM_OK) return SEM_ERROR;
 	
+	free(line);
+
+	return SEM_OK;
+}
+
+sem_success read_train_signal(FILE* in, const char* label, sem_world* world, sem_signal** signal) {
+	#pragma unused(label)
+	char* line = sem_read_line(in);
+	if (line == NULL) return sem_set_error("Could not read exit_position");
+
+	sem_tokenization tokens;
+	sem_tokenization_init(&tokens, line, " ");
+	sem_tokenization_next(&tokens);
+	// TODO: check token matches label
+
+	char* signal_id_str = sem_tokenization_next(&tokens);
+	if (strcmp(signal_id_str, "none") == 0) {
+		*signal = NULL;
+	} else {
+		sem_signal_id signal_id;
+		uuid_parse(signal_id_str, signal_id);
+		sem_signal* s = sem_signal_by_id(world, signal_id);
+		if (s == NULL) return sem_set_error("Unknown signal id");
+		*signal = s;
+	}
+
 	free(line);
 
 	return SEM_OK;
@@ -669,6 +704,13 @@ sem_success write_train(FILE* out, sem_train* train) {
 	fprintf(out, "direction ");
 	if (sem_print_endpoint(out, train->direction) != SEM_OK) return SEM_ERROR;
 	fprintf(out, "\n");
+	if (write_train_signal(out, "signal", train->signal) != SEM_OK) return SEM_ERROR;
+	if (write_train_signal(out, "previous_signal", train->previous_signal) != SEM_OK) return SEM_ERROR;
+	if (write_train_signal(out, "main_signal", train->main_signal) != SEM_OK) return SEM_ERROR;
+	if (write_train_signal(out, "sub_signal", train->sub_signal) != SEM_OK) return SEM_ERROR;
+	if (write_train_signal(out, "sub_behind_main_signal", train->sub_behind_main_signal) != SEM_OK) return SEM_ERROR;
+	if (write_train_signal(out, "previous_main_signal", train->previous_main_signal) != SEM_OK) return SEM_ERROR;
+	if (write_train_signal(out, "sub_behind_previous_main_signal", train->sub_behind_previous_main_signal) != SEM_OK) return SEM_ERROR;
 
 	fprintf(out, "cars %d\n", train->cars);
 
@@ -749,6 +791,17 @@ sem_success write_car(FILE* out, sem_car* car) {
 	fprintf(out, "%d %d ", car->position.x, car->position.y);
 	sem_print_track_part(out, car->track);
 	fprintf(out, "\n");
+	return SEM_OK;
+}
+
+sem_success write_train_signal(FILE* out, const char* label, sem_signal* signal) {
+	if (signal == NULL) {
+		fprintf(out, "%s none\n", label);
+	} else {
+		char signal_id_str[37];
+		uuid_unparse(signal->id, signal_id_str);
+		fprintf(out, "%s %s\n", label, signal_id_str);
+	}
 	return SEM_OK;
 }
 

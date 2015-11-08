@@ -46,12 +46,12 @@ void sem_render_game(sem_render_context* ctx, sem_game* game) {
 
 	render_tiles(ctx, world);
 
-	for (uint32_t i=0; i < world->trains->tail_idx; i++) {
-		render_train(ctx, world->trains->items[i]);
-	}
-
 	for (uint32_t i=0; i < game->labels->tail_idx; i++) {
 		render_label(ctx, game->labels->items[i]);
+	}
+
+	for (uint32_t i=0; i < world->trains->tail_idx; i++) {
+		render_train(ctx, world->trains->items[i]);
 	}
 }
 

@@ -1697,6 +1697,13 @@ entry_position 0 0
 exit_position none
 headless false
 direction W
+signal none
+previous_signal none
+main_signal none
+sub_signal none
+sub_behind_main_signal none
+previous_main_signal none
+sub_behind_previous_main_signal none
 cars 3
 115 3 W-E
 116 3 W-E
@@ -1711,6 +1718,13 @@ entry_position 0 0
 exit_position none
 headless false
 direction W
+signal none
+previous_signal none
+main_signal none
+sub_signal none
+sub_behind_main_signal none
+previous_main_signal none
+sub_behind_previous_main_signal none
 cars 3
 111 7 W-E
 112 7 W-E
@@ -1725,6 +1739,13 @@ entry_position 0 0
 exit_position none
 headless false
 direction W
+signal none
+previous_signal none
+main_signal none
+sub_signal none
+sub_behind_main_signal none
+previous_main_signal none
+sub_behind_previous_main_signal none
 cars 3
 113 11 W-E
 114 11 W-E
@@ -1739,6 +1760,13 @@ entry_position 0 0
 exit_position none
 headless false
 direction W
+signal none
+previous_signal none
+main_signal none
+sub_signal none
+sub_behind_main_signal none
+previous_main_signal none
+sub_behind_previous_main_signal none
 cars 3
 114 19 W-E
 115 19 W-E

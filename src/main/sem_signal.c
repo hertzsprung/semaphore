@@ -69,7 +69,7 @@ void sem_signal_portal_exit(sem_train* train) {
 	train->previous_signal = train->signal;
 	train->signal = NULL;
 
-	if (train->previous_signal != NULL) {
+	if (train->previous_signal != NULL && train->previous_signal->type == SUB) {
 		sem_signal_set_previous_aspect(train->previous_signal);
 	}
 }

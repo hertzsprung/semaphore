@@ -33,6 +33,7 @@ void test_signal_clearing_main_auto_clears_previous_main_auto_with_sub_inbetween
 void test_signal_clearing_main_auto_clears_sub_behind_previous_main_auto(test_signal_context* test_ctx, const void* data);
 void test_signal_clearing_main_auto_does_not_clear_sub_behind_previous_main_manual(test_signal_context* test_ctx, const void* data);
 void test_signal_exiting_portal_clears_previous_sub(test_signal_context* test_ctx, const void* data);
+void test_signal_exiting_portal_does_not_clear_previous_main_manual(test_signal_context* test_ctx, const void* data);
 void test_signal_train_stops_behind_red_main(test_signal_context* test_ctx, const void* data);
 void test_signal_train_medium_to_stop_behind_red_sub(test_signal_context* test_ctx, const void* data);
 void test_signal_train_slow_to_stop_behind_red_sub(test_signal_context* test_ctx, const void* data);
@@ -54,6 +55,7 @@ void test_signal_aspects_after_clearing_triple(test_signal_context* test_ctx,
 		sem_signal_type signal2_type, sem_signal_aspect signal2_before, 
 		sem_signal_type signal3_type, sem_signal_aspect signal3_before, 
 		sem_signal_aspect signal1_after, sem_signal_aspect signal2_after, sem_signal_aspect signal3_after);
+void test_signal_exiting_portal(test_signal_context* test_ctx, sem_signal_type signal_type, sem_signal_aspect after);
 
 void add_test_signal(const char *test_name, void (*test)(test_signal_context*, const void* data));
 void test_signal_setup(test_signal_context* test_ctx, const void* data);
@@ -75,6 +77,7 @@ void add_tests_signal() {
 	add_test_signal("/signal/clearing_main_auto_clears_sub_behind_previous_main_auto", test_signal_clearing_main_auto_clears_sub_behind_previous_main_auto);
 	add_test_signal("/signal/clearing_main_auto_does_not_clear_sub_behind_previous_main_manual", test_signal_clearing_main_auto_does_not_clear_sub_behind_previous_main_manual);
 	add_test_signal("/signal/exiting_portal_clears_previous_sub", test_signal_exiting_portal_clears_previous_sub);
+	add_test_signal("/signal/exiting_portal_does_not_clear_previous_main_manual", test_signal_exiting_portal_does_not_clear_previous_main_manual);
 	add_test_signal("/signal/train_stops_behind_red_main", test_signal_train_stops_behind_red_main);
 	add_test_signal("/signal/train_medium_to_stop_behind_red_sub", test_signal_train_medium_to_stop_behind_red_sub);
 	add_test_signal("/signal/train_slow_to_stop_behind_red_sub", test_signal_train_medium_to_stop_behind_red_sub);
@@ -263,6 +266,15 @@ void test_signal_aspects_after_clearing_triple(test_signal_context* test_ctx,
 
 void test_signal_exiting_portal_clears_previous_sub(test_signal_context* test_ctx, const void* data) {
 	#pragma unused(data)
+	test_signal_exiting_portal(test_ctx, SUB, GREEN);
+}
+
+void test_signal_exiting_portal_does_not_clear_previous_main_manual(test_signal_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	test_signal_exiting_portal(test_ctx, MAIN_MANUAL, RED);
+}
+
+void test_signal_exiting_portal(test_signal_context* test_ctx, sem_signal_type signal_type, sem_signal_aspect after) {
 	sem_train* train = test_ctx->train;
 	sem_world* world = &(test_ctx->game.world);
 	sem_signal* signal1 = test_ctx->signal1;
@@ -273,7 +285,7 @@ void test_signal_exiting_portal_clears_previous_sub(test_signal_context* test_ct
 	sem_signal_set_aspect(signal1, GREEN);
 	signal2->type = SUB;
 	sem_signal_set_aspect(signal2, GREEN);
-	signal3->type = SUB;
+	signal3->type = signal_type;
 	sem_signal_set_aspect(signal3, GREEN);
 
 	sem_action action;
@@ -292,7 +304,7 @@ void test_signal_exiting_portal_clears_previous_sub(test_signal_context* test_ct
 	}
 
 	g_assert_cmpuint(world->trains->tail_idx, ==, 0);
-	g_assert_cmpuint(signal3->aspect, ==, GREEN);
+	g_assert_cmpuint(signal3->aspect, ==, after);
 }
 
 void test_signal_aspect_upon_accepting_train(test_signal_context* test_ctx, sem_signal_aspect before, sem_signal_type signal_type, sem_signal_aspect after) {

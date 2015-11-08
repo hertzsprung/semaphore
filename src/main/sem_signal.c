@@ -5,6 +5,7 @@
 #include "sem_signal.h"
 
 void sem_signal_init(sem_signal* signal, sem_signal_type type, sem_signal_aspect aspect) {
+	uuid_generate(signal->id);
 	signal->type = type;
 	signal->aspect = aspect;
 	signal->previous_aspect = aspect;

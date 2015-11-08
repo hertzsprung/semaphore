@@ -131,7 +131,11 @@ void test_parser_three_way_points(sem_track_cache* track_cache, const void* data
 
 void test_parser_red_main_auto_signal(sem_track_cache* track_cache, const void* data) {
 	#pragma unused(data)
-	char track_description[32] = "signal SW-NE red main auto";
+	char signal_id_str[37] = "81cbbfd6-43c8-4143-a345-ee9e27dd0e8b";
+	uuid_t expected_id;
+	uuid_parse(signal_id_str, expected_id);
+
+	char track_description[128] = "signal SW-NE red main auto 81cbbfd6-43c8-4143-a345-ee9e27dd0e8b";
 	sem_tokenization tokens;
 	sem_tokenization_init(&tokens, track_description, " ");
 
@@ -141,6 +145,7 @@ void test_parser_red_main_auto_signal(sem_track_cache* track_cache, const void* 
 	g_assert_true(tile.class == SIGNAL);
 	g_assert_true(tile.track->start == (SEM_SOUTH | SEM_WEST));
 	g_assert_true(tile.track->end == (SEM_NORTH | SEM_EAST));
+	g_assert_true(uuid_compare(tile.signal->id, expected_id) == 0);
 	g_assert_true(tile.signal->aspect == RED);
 	g_assert_true(tile.signal->type == MAIN_AUTO);
 
@@ -149,7 +154,7 @@ void test_parser_red_main_auto_signal(sem_track_cache* track_cache, const void* 
 
 void test_parser_green_main_manual_signal(sem_track_cache* track_cache, const void* data) {
 	#pragma unused(data)
-	char track_description[32] = "signal W-E green main manual";
+	char track_description[128] = "signal W-E green main manual 81cbbfd6-43c8-4143-a345-ee9e27dd0e8b";
 	sem_tokenization tokens;
 	sem_tokenization_init(&tokens, track_description, " ");
 
@@ -167,7 +172,7 @@ void test_parser_green_main_manual_signal(sem_track_cache* track_cache, const vo
 
 void test_parser_amber_sub_signal(sem_track_cache* track_cache, const void* data) {
 	#pragma unused(data)
-	char track_description[32] = "signal W-E amber sub";
+	char track_description[128] = "signal W-E amber sub";
 	sem_tokenization tokens;
 	sem_tokenization_init(&tokens, track_description, " ");
 
@@ -269,16 +274,17 @@ void test_parser_print_three_way_points() {
 }
 
 void test_parser_print_red_main_auto_signal() {
-	char expected_description[32] = "signal N-S red main auto";
-	char actual_description[32];
-	FILE* out = fmemopen(actual_description, 32*sizeof(char), "w");
+	char expected_description[128] = "signal N-S red main auto 81cbbfd6-43c8-4143-a345-ee9e27dd0e8b";
+	char actual_description[128];
+	char id_str[37] = "81cbbfd6-43c8-4143-a345-ee9e27dd0e8b";
+	FILE* out = fmemopen(actual_description, 128*sizeof(char), "w");
 
 	sem_tile tile;
 	sem_track track;
 	sem_track_set(&track, SEM_NORTH, SEM_SOUTH);
 	sem_signal signal;
-	signal.type = MAIN_AUTO;
-	signal.aspect = RED;
+	sem_signal_init(&signal, MAIN_AUTO, RED);
+	uuid_parse(id_str, signal.id);
 	sem_tile_set_signal(&tile, &track, &signal);
 
 	sem_tile_print(out, &tile);

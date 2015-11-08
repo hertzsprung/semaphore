@@ -1,10 +1,58 @@
 world 64 64
 now 0
 multiplier 1.0
-tiles 92
+tiles 88
+1 1 track SW-E
+2 1 track W-E
+3 1 track W-SE
+9 1 track SW-E
+10 1 track W-E
+11 1 track W-SE
+0 2 track S-NE
+4 2 points NW-S NW-E
+5 2 track W-SE
+7 2 track SW-E
+8 2 points NE-S W-NE
+12 2 track NW-S
+0 3 track N-S
+4 3 track N-S
+6 3 track NW-SE+NE-SW
+8 3 signal N-S red main auto 11bc59ed-05a4-4916-b855-3b0f96b44ef7
+12 3 track N-S
+0 4 track SE-N
+4 4 points SW-N SW-E
+5 4 track W-NE
+7 4 track NW-E
+8 4 points N-SE W-SE
+12 4 track SW-N
+1 5 track NW-E
+2 5 signal W-E amber main auto 4ab139ea-b09f-42de-a2d1-a14e7e68794e
+3 5 track W-NE
+9 5 track NW-E
+10 5 track W-E
+11 5 track W-NE
+10 6 track SW-E
+11 6 signal W-E green main manual d0c8b16a-19c7-49a0-af5e-9357e8fc885b
+12 6 track W-E
+13 6 track W-E
+14 6 track W-E
+15 6 track W-E
+16 6 exit W-E
+7 7 track SW-E
+8 7 bell W-E
+9 7 points W-E W-SE W-NE
+10 7 track W-E
+11 7 signal W-E green main manual 7378d9c1-7f93-4cbd-a148-f51cd39e375d
+12 7 track W-E
+13 7 track W-E
+14 7 track W-E
+15 7 track W-E
+16 7 exit W-E
+6 8 signal NE-SW green sub 4ecb104d-ff40-420f-b2b3-4e76758ab081
+10 8 signal NW-SE green sub 630a03f5-ea54-4cb6-b81b-837900ce9061
 0 9 entry W-E
 1 9 track W-E
-2 9 signal W-E green main auto
+2 9 signal W-E green main auto d938d6b3-aebd-4022-9f57-e9b43104e17c
 3 9 track W-E
 4 9 track W-E
 5 9 points W-NE W-SE W-E
@@ -13,87 +61,35 @@ tiles 92
 8 9 track W-E
 9 9 track W-E
 10 9 track W-E
-6 8 signal NE-SW green sub
-6 10 signal SE-NW green sub
-7 7 track SW-E
-7 11 points NW-E NW-SE
-8 12 signal NW-SE green main manual
-9 13 siding NW-E
-10 13 siding W-E
-11 13 siding W-E
-12 13 buffer W-E
-8 7 bell W-E
-8 11 points W-E W-SE
-9 12 track NW-E
-10 12 signal W-E green main manual
-11 12 depot W-E
-12 12 depot W-E
-13 12 depot W-SE
-14 13 buffer NW-SE
-9 11 points W-NE W-E
-10 11 signal W-E red sub
-11 11 station W-E
-12 11 station W-E
-13 11 station W-SE
-14 12 station NW-E
-15 12 station W-E
-16 12 buffer W-E
-10 8 signal NW-SE green sub
-10 10 signal SW-NE amber main manual
 11 9 points NW-E SW-E W-E
 12 9 track W-E
 13 9 track W-E
 14 9 track W-E
 15 9 track W-E
 16 9 buffer W-E
-2 1 track W-E
-2 5 signal W-E amber main auto
-10 1 track W-E
-10 5 track W-E
-0 3 track N-S
-4 3 track N-S
-8 3 signal N-S red main auto
-12 3 track N-S
-1 1 track SW-E
-3 1 track W-SE
-0 2 track S-NE
-0 4 track SE-N
-4 2 track NW-S
-4 4 track SW-N
-9 1 track SW-E
-11 1 track W-SE
-8 2 track S-NW
-8 4 track SE-N
-12 2 track NW-S
-12 4 track SW-N
-1 5 track NW-E
-3 5 track W-NE
-9 5 track NW-E
-11 5 track W-NE
-5 2 track W-SE
-7 2 track SW-E
-5 4 track W-NE
-7 4 track NW-E
-6 3 track NW-SE+NE-SW
-4 2 points NW-S NW-E
-8 4 points N-SE W-SE
-4 4 points SW-N SW-E
-8 2 points NE-S W-NE
-9 7 points W-E W-SE W-NE
-10 7 track W-E
-11 7 signal W-E green main manual
-12 7 track W-E
-13 7 track W-E
-14 7 track W-E
-15 7 track W-E
-16 7 exit W-E
-10 6 track SW-E
-11 6 signal W-E green main manual
-12 6 track W-E
-13 6 track W-E
-14 6 track W-E
-15 6 track W-E
-16 6 exit W-E
+6 10 signal SE-NW green sub d6ce110d-4431-460b-a18d-22aed0e5d0d1
+10 10 signal SW-NE amber main manual 203f8586-b68e-458e-9893-0262e4162067
+7 11 points NW-E NW-SE
+8 11 points W-E W-SE
+9 11 points W-NE W-E
+10 11 signal W-E red sub e8392a8b-103a-4aff-b2cf-496eede6e71c
+11 11 station W-E
+12 11 station W-E
+13 11 station W-SE
+8 12 signal NW-SE green main manual f815cb59-014a-4ce3-83be-5ec5e0003e56
+9 12 track NW-E
+10 12 signal W-E green main manual a664f7b9-c83f-4c6c-9864-6f9132d88a0d
+11 12 depot W-E
+12 12 depot W-E
+13 12 depot W-SE
+14 12 station NW-E
+15 12 station W-E
+16 12 buffer W-E
+9 13 siding NW-E
+10 13 siding W-E
+11 13 siding W-E
+12 13 buffer W-E
+14 13 buffer NW-SE
 trains 3
 train 107207dc-d4de-4ee5-accf-26ae19404603
 name EXB

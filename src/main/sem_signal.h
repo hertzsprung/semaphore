@@ -16,7 +16,10 @@ typedef enum {
 	RED, AMBER, GREEN
 } sem_signal_aspect;
 
+typedef uuid_t sem_signal_id;
+
 struct sem_signal {
+	sem_signal_id id;
 	sem_signal_type type;
 	sem_signal_aspect aspect;
 	sem_signal_aspect previous_aspect;

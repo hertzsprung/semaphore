@@ -4,171 +4,171 @@ multiplier 1.000000
 tiles 1684
 32 2 track SW-E
 33 2 track W-E
-34 2 signal W-E green sub
+34 2 signal W-E green sub c3ebb32d-eb45-42be-a8fb-67aa23d5fedd
 35 2 track W-E
 36 2 track W-E
 37 2 track W-E
 38 2 track W-E
 39 2 track W-E
 40 2 track W-E
-41 2 signal W-E green sub
+41 2 signal W-E green sub dd9ce77f-6706-457a-9b11-8d91fd75b5ca
 42 2 track W-E
 43 2 track W-E
 44 2 track W-E
-45 2 signal W-E green sub
+45 2 signal W-E green sub 2f22a477-3d89-4d1e-b955-a8d4dcfbf67e
 46 2 track W-E
 47 2 track W-E
 48 2 track W-E
 49 2 track W-E
-50 2 signal W-E green main auto
+50 2 signal W-E green main auto 8b9429b9-588c-4880-9888-08802f1ff8d5
 51 2 points W-E W-SE
 52 2 points W-E SW-E
 53 2 track W-E
 54 2 track W-E
 55 2 track W-E
-56 2 signal W-E green sub
+56 2 signal W-E green sub aee28cf2-3974-4f4e-8977-6f3d0ffffa07
 57 2 track W-E
 58 2 track W-E
 59 2 track W-E
 60 2 track W-E
-61 2 signal W-E green sub
+61 2 signal W-E green sub a044fc1a-47df-42ad-ae6b-88c4fbd05f1d
 62 2 track W-E
 63 2 track W-E
 64 2 track W-E
-65 2 signal W-E green sub
+65 2 signal W-E green sub 430499ff-cca5-4bd6-a12b-49dd81e0d570
 66 2 track W-SE
 69 2 track SW-E
-70 2 signal W-E green sub
+70 2 signal W-E green sub ed3e7084-7801-43db-99cb-d3d708a25785
 71 2 track W-E
 72 2 track W-E
 73 2 track W-E
-74 2 signal W-E green main auto
+74 2 signal W-E green main auto b51bacd5-daf6-406d-a5de-8337e0fcc89e
 75 2 points W-E SW-E
 76 2 points W-E W-SE
 77 2 track W-E
 78 2 track W-E
 79 2 track W-E
-80 2 signal W-E green sub
+80 2 signal W-E green sub be82cfec-f0d4-40f1-b8ac-c8c2455c7d2f
 81 2 track W-E
 82 2 track W-E
 83 2 track W-E
 84 2 track W-E
 85 2 track W-E
-86 2 signal W-E green sub
+86 2 signal W-E green sub 4bb82e26-f95d-4c79-9f22-c99eb86f440b
 87 2 track W-E
 88 2 track W-E
 89 2 track W-E
 90 2 track W-E
-91 2 signal W-E green sub
+91 2 signal W-E green sub c4772af7-da3d-4c6a-8828-5c8621b6dfad
 92 2 track W-E
 93 2 points W-E W-SE
 94 2 points W-E SW-E
 95 2 track W-E
-96 2 signal W-E green main auto
+96 2 signal W-E green main auto 21a14463-4bee-4386-8018-08dbc6d71620
 97 2 track W-E
 98 2 track W-E
 99 2 track W-E
 100 2 track W-E
-101 2 signal W-E green sub
+101 2 signal W-E green sub d46f4ae7-bfe6-4b6e-a0cb-b396aa3df176
 102 2 track W-E
 103 2 points W-E SW-E
 104 2 track W-E
 105 2 track W-E
-106 2 signal W-E green sub
+106 2 signal W-E green sub d5502841-18a8-4008-9ef8-134e2ebc71d7
 107 2 track W-E
 108 2 track W-E
 109 2 track W-E
 110 2 track W-E
-111 2 signal W-E green sub
+111 2 signal W-E green sub d35682b7-ddf5-4d4b-b0c2-f4962fc172cb
 112 2 track W-E
 113 2 points W-E W-SE
 114 2 points W-E SW-E
-115 2 signal W-E green main auto
+115 2 signal W-E green main auto 687cf06b-3e3f-421d-a0d9-1c568ec4a69b
 116 2 track W-E
 117 2 track W-E
 118 2 exit W-E
 31 3 track NE-S
 33 3 track SW-E
-34 3 signal W-E green sub
+34 3 signal W-E green sub 2f919f4a-ef7c-4635-ad07-9958abb24c67
 35 3 track W-E
 36 3 track W-E
 37 3 track W-E
 38 3 track W-E
 39 3 track W-E
 40 3 track W-E
-41 3 signal W-E green sub
+41 3 signal W-E green sub 21131417-8c45-4a52-9718-bd0de7cec2af
 42 3 track W-E
 43 3 track W-E
 44 3 track W-E
 45 3 track W-E
 46 3 track W-E
-47 3 signal W-E green sub
+47 3 signal W-E green sub 487e5540-4991-486a-a610-2d540f8ed92e
 48 3 track W-E
 49 3 track W-E
 50 3 track W-E
 51 3 points W-E W-NE
 52 3 points W-E NW-E
-53 3 signal W-E green main auto
+53 3 signal W-E green main auto e2281d55-0e5d-449d-8ae7-dcf04ed1c2ce
 54 3 track W-E
 55 3 track W-E
 56 3 track W-E
 57 3 track W-E
-58 3 signal W-E green sub
+58 3 signal W-E green sub 48ce0968-f058-4d49-92de-0904949d0b9b
 59 3 track W-E
 60 3 track W-E
 61 3 track W-E
 62 3 track W-E
-63 3 signal W-E green sub
+63 3 signal W-E green sub da4234e0-7d7b-4cc5-8116-a60ccb86b924
 64 3 track W-E
 65 3 track W-SE
 67 3 track NW-SE
 68 3 track NE-SW
 70 3 track SW-E
-71 3 signal W-E green sub
+71 3 signal W-E green sub 6c4a81f0-b8bb-4b96-aee2-311dd67f3095
 72 3 points W-E SW-E
 73 3 track W-E
 74 3 points W-E W-NE
 75 3 track W-E
-76 3 signal W-E green main auto
+76 3 signal W-E green main auto 19e9a333-74a4-418b-a292-1aea26d781c4
 77 3 points W-E NW-E
 78 3 track W-E
 79 3 track W-E
 80 3 track W-E
-81 3 signal W-E green sub
+81 3 signal W-E green sub ddabf55e-45f4-4670-ba38-2bb120f99528
 82 3 track W-E
 83 3 track W-E
 84 3 track W-E
 85 3 track W-E
-86 3 signal W-E green sub
+86 3 signal W-E green sub 8b1436f4-f646-44c2-86e4-03a72d8e945f
 87 3 track W-E
 88 3 track W-E
 89 3 track W-E
 90 3 track W-E
-91 3 signal W-E green sub
+91 3 signal W-E green sub d2b3db79-21c4-449b-945f-47123ae2ae59
 92 3 track W-E
 93 3 points W-E W-NE
 94 3 points W-E NW-E
 95 3 track W-E
-96 3 signal W-E green main auto
+96 3 signal W-E green main auto 65bff880-7d36-40b4-a8a9-50a3eb1d5efc
 97 3 track W-E
 98 3 track W-E
 99 3 track W-E
 100 3 track W-E
-101 3 signal W-E green sub
+101 3 signal W-E green sub 268a7bd3-224a-4b02-97a0-641de0ef6846
 102 3 bell W-E+NE-SW
 103 3 track W-E
 104 3 track W-E
 105 3 track W-E
-106 3 signal W-E green sub
+106 3 signal W-E green sub 9e656059-5ec1-4439-a1a1-57fede618bbd
 107 3 track W-E
 108 3 track W-E
 109 3 track W-E
 110 3 track W-E
-111 3 signal W-E green main auto
+111 3 signal W-E green main auto 607b9621-4382-46e9-a8b4-1ccffcb8dcc1
 112 3 track W-E
 113 3 points W-E W-NE
 114 3 points W-E NW-E
-115 3 signal W-E green sub
+115 3 signal W-E green sub 02ae8c34-7efb-4315-a03a-42d11490e3f1
 116 3 track W-E
 117 3 track W-E
 118 3 entry W-E
@@ -181,11 +181,11 @@ tiles 1684
 71 4 bell NE-SW
 94 4 track SW-E
 95 4 track W-E
-96 4 signal W-E green main auto
+96 4 signal W-E green main auto 4cc1aee2-0c48-4bcd-9039-b2daa7fcb9ce
 97 4 track W-E
 98 4 track W-E
 99 4 track W-E
-100 4 signal W-E red sub
+100 4 signal W-E red sub 23e6d64a-b689-4da4-8409-f0ca433c145b
 101 4 track W-NE
 31 5 track N-S
 32 5 track N-S
@@ -201,30 +201,30 @@ tiles 1684
 36 6 track W-E
 37 6 track W-E
 38 6 track W-E
-39 6 signal W-E green sub
+39 6 signal W-E green sub 4537d986-6d18-4c4a-894c-4cd1a22ada5f
 40 6 track W-E
 41 6 track W-E
 42 6 track W-E
 43 6 points W-E W-SE
 44 6 track W-E
-45 6 signal W-E green sub
+45 6 signal W-E green sub 114c41f5-d475-43f7-a06a-69c4bba7c9e9
 46 6 track W-E
 47 6 track W-E
 48 6 track W-E
 49 6 track W-E
 50 6 points W-E SW-E
-51 6 signal W-E green sub
+51 6 signal W-E green sub b34ffe54-751a-4ab6-9e5f-8437c34c069d
 52 6 track W-E
 53 6 track W-E
 54 6 track W-E
 55 6 track W-E
-56 6 signal W-E green main auto
+56 6 signal W-E green main auto f446a72a-d83e-4fe1-bb40-6816da29fe60
 57 6 track W-E
 58 6 track W-E
 59 6 track W-E
 60 6 track W-E
 61 6 track W-E
-62 6 signal W-E green sub
+62 6 signal W-E green sub 879ee940-853c-4fb4-99fd-df14d6d95969
 63 6 track W-E
 64 6 track W-E
 65 6 track W-NE
@@ -235,68 +235,68 @@ tiles 1684
 80 6 track SW-E
 81 6 track W-E
 82 6 points W-E W-SE
-83 6 signal W-E green sub
+83 6 signal W-E green sub 32fb18df-3878-47e9-96d7-d06593613889
 84 6 track W-E
 85 6 track W-E
 86 6 track W-E
-87 6 signal W-E green sub
+87 6 signal W-E green sub 34800479-89bd-4c9d-a62a-b240e809496e
 88 6 track W-E
 89 6 track W-E
 90 6 track W-E
-91 6 signal W-E green sub
+91 6 signal W-E green sub 9e59641b-e6c5-4462-a4d8-40a718194763
 92 6 track W-E+NE-SW
 93 6 points W-E W-SE
 94 6 points W-E SW-E
 95 6 track W-E
-96 6 signal W-E green main auto
+96 6 signal W-E green main auto 8baa579f-5bbc-4875-8038-da0ba618ea42
 97 6 track W-E
 98 6 points W-E W-SE
 99 6 track W-E
 100 6 track W-E
 101 6 track W-E
-102 6 signal W-E green sub
+102 6 signal W-E green sub 6d89e014-3180-4af3-8bba-9db13e5e6bc4
 103 6 track W-E
 104 6 track W-E
 105 6 track W-E
 106 6 track W-E
-107 6 signal W-E green sub
+107 6 signal W-E green sub 69e8c7ac-ab0c-4f10-a4cd-c61b4e58da59
 108 6 track W-E
 109 6 points W-E W-SE
 110 6 points W-E SW-E
-111 6 signal W-E green main auto
+111 6 signal W-E green main auto d340c3ff-d074-4322-a80a-9152dbeb7e5a
 112 6 track W-E
 113 6 track W-E
 114 6 exit W-E
-31 7 signal N-S green sub
-32 7 signal N-S green sub
+31 7 signal N-S green sub d162f3f8-71ce-4a69-8474-579d1bf3481a
+32 7 signal N-S green sub ba7d2a40-b03c-4a98-891b-64d18f136ebf
 34 7 track NE-S
 36 7 track SW-E
 37 7 track W-E
 38 7 track W-E
-39 7 signal W-E green sub
+39 7 signal W-E green sub 228883f9-7eeb-44f0-a46f-ce49be78a754
 40 7 track W-E
 41 7 track W-E
 42 7 track W-E
 43 7 track W-E
 44 7 points W-E NW-E
-45 7 signal W-E green sub
+45 7 signal W-E green sub f5306a26-f33d-437c-a5bb-687450c087f4
 46 7 track W-E
 47 7 points W-E SW-E
 48 7 track W-E
 49 7 points W-E W-NE
 50 7 track W-E
-51 7 signal W-E green main auto
+51 7 signal W-E green main auto cdd97098-a6f5-403f-afb7-4ae5949d9ece
 52 7 track W-E
 53 7 track W-E
 54 7 track W-E
 55 7 track W-E
-56 7 signal W-E green sub
+56 7 signal W-E green sub 94822c00-e17b-49be-bc6b-1077c61bc667
 57 7 track W-E
 58 7 track W-E
 59 7 track W-E
 60 7 track W-E
 61 7 track W-E
-62 7 signal W-E green sub
+62 7 signal W-E green sub c7687d8e-d6a0-441d-a5ed-5c432b3e02b7
 63 7 track W-E
 64 7 track W-E
 65 7 track W-E
@@ -304,46 +304,46 @@ tiles 1684
 68 7 track NE-SW
 69 7 track NW-SE
 71 7 track NW-E
-72 7 signal W-E green sub
+72 7 signal W-E green sub edeca66b-5e4f-45fc-ae42-302efe2cc2a4
 73 7 points W-E W-SE
 74 7 points W-E SW-E
 75 7 track W-E
 76 7 track W-E
-77 7 signal W-E green main auto
+77 7 signal W-E green main auto fb237205-7b01-44c9-b444-a6e914d5a780
 78 7 track W-E
 79 7 track W-NE
 80 7 track SW-E
-81 7 signal W-E green sub
+81 7 signal W-E green sub 18214bf1-e76f-486e-baa2-cd23a02c48c8
 82 7 track W-E
 83 7 points W-E NW-E
 84 7 track W-E
-85 7 signal W-E green sub
+85 7 signal W-E green sub 0f694db9-6311-40f5-b581-8702ce47bbf2
 86 7 track W-E
 87 7 track W-E
 88 7 track W-E
 89 7 track W-E
-90 7 signal W-E green sub
+90 7 signal W-E green sub 4829ce7e-8a9d-498d-9d3c-379dff070be9
 91 7 track W-E+NE-SW
 92 7 track W-E
 93 7 points W-E W-NE
 94 7 points W-E NW-E
 95 7 track W-E
 96 7 track W-E
-97 7 signal W-E green main auto
+97 7 signal W-E green main auto 7c0c62f1-03ca-4be1-a5e4-475797d9d19a
 98 7 track W-E
 99 7 points W-E NW-E
 100 7 track W-E
 101 7 track W-E
-102 7 signal W-E green sub
+102 7 signal W-E green sub ffa69ea1-d15b-40a4-bdff-d62a6b5ed4e0
 103 7 track W-E
 104 7 track W-E
 105 7 track W-E
 106 7 track W-E
-107 7 signal W-E green main auto
+107 7 signal W-E green main auto 50775ed1-fb6b-4f00-8261-aa9e3936fb01
 108 7 track W-E
 109 7 points W-E W-NE
 110 7 points W-E NW-E
-111 7 signal W-E green sub
+111 7 signal W-E green sub 4d2d7272-dcc9-4ab9-9108-85a4642ab178
 112 7 track W-E
 113 7 track W-E
 114 7 entry W-E
@@ -354,12 +354,12 @@ tiles 1684
 46 8 track NE-S
 67 8 points NE-S NE-SW
 70 8 track NW-E
-71 8 signal W-E green sub
+71 8 signal W-E green sub 616ff814-40c5-4f74-873e-de76f7b49324
 72 8 track W-E
 73 8 points W-E W-NE
 74 8 points W-E NW-E
 75 8 track W-E
-76 8 signal W-E green main auto
+76 8 signal W-E green main auto 437c3f57-114f-4478-80dd-25ddec86e036
 77 8 track W-E
 78 8 track W-E
 79 8 track W-NE
@@ -371,47 +371,47 @@ tiles 1684
 46 9 bell N-S
 66 9 points SW-E NE-SW
 67 9 track W-E+N-S
-68 9 signal W-E green sub
+68 9 signal W-E green sub 2b1a28cb-5984-4713-a859-9c15fcf05be2
 69 9 track W-E
 70 9 track W-E
 71 9 track W-E
-72 9 signal W-E green sub
+72 9 signal W-E green sub bcfb3c62-a9f5-4a32-9062-803830ac3a23
 73 9 station W-E
 74 9 station W-E
 75 9 station W-E
-76 9 signal W-E green main auto
+76 9 signal W-E green main auto bd7e0e2a-76ea-4d79-8026-c2646ff04524
 77 9 track W-E
 78 9 track W-E
 79 9 track W-E
 80 9 track W-E
 81 9 track W-E
 82 9 track W-E
-83 9 signal W-E green sub
+83 9 signal W-E green sub 0e1506dc-d756-40c0-81bc-db5f6b3b2f28
 84 9 station W-E
 85 9 station W-E
 86 9 station W-E
-87 9 signal W-E green main auto
+87 9 signal W-E green main auto d0addb2e-ea84-4864-887f-1df53fe1260e
 88 9 track W-E
 89 9 track W-NE
 31 10 track N-S
 32 10 track N-S
-34 10 signal N-S green sub
-35 10 signal N-S green sub
-46 10 signal N-S green sub
+34 10 signal N-S green sub eb5a4621-20a7-4cba-91de-120d4da6f35d
+35 10 signal N-S green sub 5c389cb3-3bba-4b28-b4b5-5f00b06cc379
+46 10 signal N-S green sub 02500fe5-b6e8-43a6-be2f-57fc927dbdcf
 65 10 track NE-SW
 67 10 track N-SE
 102 10 track SW-E
 103 10 track W-E
-104 10 signal W-E green sub
+104 10 signal W-E green sub f145ffe3-0dc0-48f6-9765-670be327c488
 105 10 track W-E
 106 10 track W-E
 107 10 track W-E
 108 10 track W-E
-109 10 signal W-E green sub
+109 10 signal W-E green sub f4c40a40-2190-4add-b545-5933ced91013
 110 10 track W-E
 111 10 points W-E W-SE
 112 10 points W-E SW-E
-113 10 signal W-E green main auto
+113 10 signal W-E green main auto 36d5be1e-4f65-4f98-83d0-19ff8df1a24f
 114 10 track W-E
 115 10 track W-E
 116 10 exit W-E
@@ -422,67 +422,67 @@ tiles 1684
 46 11 track N-S
 64 11 track NE-SW
 68 11 track NW-E
-69 11 signal W-E green sub
+69 11 signal W-E green sub 8a2f30b0-3c1a-4fe9-84ee-9f7a4c433039
 70 11 track W-E
 71 11 track W-E
 72 11 track W-E
-73 11 signal W-E green main auto
+73 11 signal W-E green main auto bc1522c3-3858-477d-b86f-334338303273
 74 11 points W-E SW-E
 75 11 points W-SE W-E
 76 11 points W-E SW-E
 77 11 track W-E
-78 11 signal W-E green main manual
+78 11 signal W-E green main manual df23660d-d606-49fa-b3ce-c2be4ef3a07f
 79 11 siding W-E
 80 11 siding W-E
 81 11 siding W-E
 82 11 buffer W-E
 101 11 track NE-S
 103 11 track SW-E
-104 11 signal W-E green sub
+104 11 signal W-E green sub 9d02cbd6-48a3-4638-a391-295498d3b116
 105 11 track W-E
 106 11 track W-E
 107 11 track W-E
 108 11 track W-E
-109 11 signal W-E green main auto
+109 11 signal W-E green main auto b06c1508-e1fc-415a-a435-09da6d10ff35
 110 11 track W-E
 111 11 points W-E W-NE
 112 11 points W-E NW-E
-113 11 signal W-E green sub
+113 11 signal W-E green sub 9c20987c-652d-44ce-a62e-54d6691ca43f
 114 11 track W-E
 115 11 track W-E
 116 11 entry W-E
 23 12 track SW-E
 24 12 track W-E
-25 12 signal W-E green sub
+25 12 signal W-E green sub 7afa5998-66aa-4cb0-ac90-a597b2cacf16
 26 12 track W-E
 27 12 points W-E W-SE
 28 12 points W-E SW-E
-29 12 signal W-E green main auto
+29 12 signal W-E green main auto de36a2eb-8cb9-4406-baf1-1ae133ab2c33
 30 12 track W-NE
 32 12 track N-SW
 34 12 track N-S
 35 12 track N-S
 46 12 track N-SW
 47 12 track SW-E
-48 12 signal W-E green main manual
+48 12 signal W-E green main manual 6de1f615-1684-47a8-96ad-547d1cff86f8
 49 12 depot W-E
 50 12 depot W-E
 51 12 depot W-E
 52 12 buffer W-E
 63 12 track NE-SW
 66 12 track SW-E
-67 12 signal W-E green sub
+67 12 signal W-E green sub c2af7b04-5c07-462d-b875-9a54257bb74d
 68 12 track W-E
 69 12 track W-E
 70 12 track W-E
 71 12 track W-E
-72 12 signal W-E green main auto
+72 12 signal W-E green main auto 078a94c4-a3a6-4b88-a743-be19609c7da9
 73 12 points W-E+SW-NE SW-E W-NE
 74 12 points W-E SW-E
 75 12 points W-E W-SE W-NE
 76 12 points W-E+NW-SE W-SE NW-E
 77 12 track W-E
-78 12 signal W-E green main manual
+78 12 signal W-E green main manual c712fb1b-801f-4b17-81d9-60d5c0aae2f5
 79 12 siding W-E
 80 12 siding W-E
 81 12 siding W-E
@@ -490,25 +490,25 @@ tiles 1684
 101 12 track N-S
 102 12 track NE-S
 10 13 track SW-E
-11 13 signal W-E green sub
+11 13 signal W-E green sub ed46e645-5c12-401d-9b52-6b71de2022af
 12 13 track W-E
 13 13 track W-E
 14 13 track W-E
 15 13 track W-E
-16 13 signal W-E green sub
+16 13 signal W-E green sub e8caef26-18d0-4241-9ab7-180110da01f0
 17 13 track W-E
 18 13 points W-E SW-E
 19 13 track W-E
 20 13 track W-E
-21 13 signal W-E green sub
+21 13 signal W-E green sub 446762a6-5c0a-4df0-ab37-ac262a999000
 22 13 points W-E+SW-NE SW-E W-NE
 23 13 points W-E W-SE
 24 13 points SW-E W-E
-25 13 signal W-E red main manual
+25 13 signal W-E red main manual d70c3ff3-e662-4fca-83b1-090143008255
 26 13 track W-E
 27 13 points W-E W-NE
 28 13 points W-E NW-E
-29 13 signal W-E green sub
+29 13 signal W-E green sub 54989985-412f-4862-9448-44454235bd84
 30 13 track W-E
 31 13 track W-NE
 34 13 track N-SW
@@ -516,57 +516,57 @@ tiles 1684
 45 13 points NE-SW SW-E
 46 13 points W-E+SW-NE SW-E W-NE
 47 13 track W-E
-48 13 signal W-E green main manual
+48 13 signal W-E green main manual 2b4741fd-756b-4813-9bf3-32baf6d542dd
 49 13 depot W-E
 50 13 depot W-E
 51 13 depot W-E
 52 13 buffer W-E
 56 13 track SW-E
-57 13 signal W-E green main auto
+57 13 signal W-E green main auto 96d375d1-d4e5-4782-b7e0-e5aee5094fbb
 58 13 track W-E
 59 13 track W-E
 60 13 track W-E
-61 13 signal W-E green sub
+61 13 signal W-E green sub 88592570-2697-4a1b-81e2-eb33e75d38e3
 62 13 track W-NE
 65 13 track NE-S
 72 13 track NE-SW
 73 13 track NE-SW
 76 13 track NW-SE
 77 13 track NW-E
-78 13 signal W-E green main manual
+78 13 signal W-E green main manual 2c0e161c-5e73-4929-bc88-bb62f2974913
 79 13 siding W-E
 80 13 siding W-E
 81 13 siding W-E
 82 13 buffer W-E
-101 13 signal N-S green main auto
+101 13 signal N-S green main auto 20fc3055-8ef9-471d-b5e7-81f0d7578af9
 102 13 points N-S N-SW
 3 14 buffer W-E
 4 14 station W-E
 5 14 station W-E
 6 14 station W-E
-7 14 signal W-E red main manual
+7 14 signal W-E red main manual 6ae64956-ac09-402d-9eed-e66a677cd90a
 8 14 track W-E
 9 14 points W-E W-NE
 10 14 points W-E SW-E
 11 14 track W-E
 12 14 points W-E W-SE
-13 14 signal W-E green sub
+13 14 signal W-E green sub efa22324-8604-448b-bddd-64c23af4a756
 14 14 track W-E
 15 14 track W-E
 16 14 track W-E
 17 14 track W-E+NE-SW
-18 14 signal W-E green sub
+18 14 signal W-E green sub bb3607bb-8b2a-47c4-b3e3-185b2274dfae
 19 14 track W-E
 20 14 points W-E W-SE
 21 14 points W-E+SW-NE SW-E W-NE
 22 14 track W-E
 23 14 points W-E+SW-NE SW-E W-NE
 24 14 track W-E+NW-SE
-25 14 signal W-E green sub
+25 14 signal W-E green sub e8f4edd9-ab5f-4b1b-8080-64b565da2213
 26 14 track W-E
 27 14 points W-E W-SE
 28 14 points W-E SW-E
-29 14 signal W-E green main auto
+29 14 signal W-E green main auto b99fb110-b966-43d3-a067-1f968cb9d2c8
 30 14 track W-E
 31 14 track W-E
 32 14 track W-E
@@ -576,7 +576,7 @@ tiles 1684
 37 14 track W-E
 38 14 track W-E
 39 14 track W-E
-40 14 signal W-E green main manual
+40 14 signal W-E green main manual 31d30824-17f7-4781-9b4f-7c3576cc6d8f
 41 14 points W-E W-SE
 42 14 track W-E
 43 14 track W-E
@@ -584,14 +584,14 @@ tiles 1684
 45 14 points NE-SW SW-E
 46 14 track W-E
 47 14 track W-E
-48 14 signal W-E green main manual
+48 14 signal W-E green main manual db0d0362-008f-4b9f-9a97-809e63b1510e
 49 14 depot W-E
 50 14 depot W-E
 51 14 depot W-E
 52 14 buffer W-E
 55 14 track NE-SW
 56 14 track SW-E
-57 14 signal W-E green main manual
+57 14 signal W-E green main manual 63cf9175-440c-4786-86e4-7c50b0221a8f
 58 14 track W-E
 59 14 track W-E
 60 14 track W-E
@@ -600,25 +600,25 @@ tiles 1684
 71 14 track NE-SW
 72 14 track NE-SW
 77 14 track NW-E
-78 14 signal W-E green main manual
+78 14 signal W-E green main manual fa2bc6ff-d3b6-4a87-bea6-468e01dd19b2
 79 14 siding W-E
 80 14 siding W-E
 81 14 siding W-E
 82 14 buffer W-E
 101 14 points N-S NE-S
-102 14 signal N-S green sub
+102 14 signal N-S green sub ecaf5e1b-b693-4030-85bd-f7253d2e0332
 3 15 buffer W-E
 4 15 station W-E
 5 15 station W-E
 6 15 station W-E
-7 15 signal W-E red main manual
+7 15 signal W-E red main manual dbdbc1bb-ac59-4356-84cf-7819a3d617bf
 8 15 track W-E
 9 15 points W-E W-NE
 10 15 track W-E
 11 15 points W-E SW-E
 12 15 track W-E
 13 15 points W-E+NW-SE W-SE NW-E
-14 15 signal W-E green sub
+14 15 signal W-E green sub 11c8bd41-a96b-4819-9d9d-dc1745795275
 15 15 track W-E
 16 15 points W-E W-NE
 17 15 points W-E W-SE
@@ -627,24 +627,24 @@ tiles 1684
 20 15 points W-E+SW-NE SW-E W-NE
 21 15 points W-E+NW-SE W-SE NW-E
 22 15 points W-E+SW-NE SW-E W-NE
-23 15 signal W-E green sub
+23 15 signal W-E green sub 89f8c987-a13f-44ce-930e-843801e1e628
 24 15 track W-E
 25 15 points W-E NW-E
 26 15 track W-E
 27 15 points W-E+SW-NE SW-E W-NE
 28 15 points W-E+NW-SE W-SE NW-E
-29 15 signal W-E red main manual
+29 15 signal W-E red main manual 6ce331ab-dc74-4b9f-be90-c9e4da06cab6
 30 15 track W-E
 31 15 track W-E
 32 15 track W-E
-33 15 signal W-E green sub
+33 15 signal W-E green sub c7579ded-acb1-4a93-beed-63c07c70e6e7
 34 15 track W-NE
 36 15 buffer W-E
 37 15 track W-E
 38 15 track W-E
 39 15 track W-E
 40 15 track W-E
-41 15 signal W-E green main manual
+41 15 signal W-E green main manual 0dd59e99-d38e-4882-94e5-7251d1aa85df
 42 15 points W-E NW-E
 43 15 points W-E+SW-NE SW-E W-NE
 44 15 points W-E+SW-NE SW-E W-NE
@@ -652,15 +652,15 @@ tiles 1684
 46 15 track W-E
 47 15 points W-E W-SE
 48 15 track W-E
-49 15 signal W-E green sub
+49 15 signal W-E green sub 7c32548d-2b12-4697-b986-77c506ce5e3d
 50 15 points W-E SW-E
 51 15 track W-E
 52 15 track W-E
-53 15 signal W-E green sub
+53 15 signal W-E green sub 9bcf4c41-a034-4252-8e93-0b4d3d168c15
 54 15 points W-NE W-E
 55 15 points W-E W-NE
 56 15 track W-E
-57 15 signal W-E green main manual
+57 15 signal W-E green main manual d1eb69de-eac3-4d21-9fa9-6d2fd38bda7d
 58 15 track W-E
 59 15 track W-E
 60 15 track W-E
@@ -674,13 +674,13 @@ tiles 1684
 4 16 station W-E
 5 16 station W-E
 6 16 station W-E
-7 16 signal W-E red main manual
+7 16 signal W-E red main manual 3d7af68a-50f5-4e54-9ef3-0a12570657be
 8 16 points W-E W-SE
 9 16 track W-E
 10 16 points W-E W-NE
 11 16 points W-E SW-E
 12 16 points W-E W-SE
-13 16 signal W-E green sub
+13 16 signal W-E green sub 1ce23e61-feb1-48a3-aca7-6a49f45dc684
 14 16 points W-E+NW-SE W-SE NW-E
 15 16 track W-E
 16 16 track W-E
@@ -690,41 +690,41 @@ tiles 1684
 20 16 track W-E
 21 16 points W-E+SW-NE SW-E W-NE
 22 16 points W-E+NW-SE W-SE NW-E
-23 16 signal W-E green sub
+23 16 signal W-E green sub ec323522-2b95-4442-9cb7-ecaf7f325f4d
 24 16 track W-E
 25 16 points W-E SW-E
 26 16 track W-E+NE-SW
 27 16 points W-E W-SE
 28 16 track W-E
 29 16 points W-E NW-E
-30 16 signal W-E green sub
+30 16 signal W-E green sub 90a6fbc3-2d3b-4022-8d78-299e83c42b9e
 31 16 points W-E W-SE
 32 16 track W-E
 33 16 track W-E
 34 16 track W-E
-35 16 signal W-E green main auto
+35 16 signal W-E green main auto 3e11c970-6bfa-4ae2-aa6f-4d486927b016
 36 16 track W-E
 37 16 points W-E SW-E
 38 16 track W-E
-39 16 signal W-E green sub
+39 16 signal W-E green sub 6d2f7513-b748-4a74-be12-66d217b6de63
 40 16 track W-E
 41 16 track W-E
 42 16 track NE-SW+W-E
 43 16 track NE-SW+W-E
-44 16 signal W-E green sub
+44 16 signal W-E green sub 5eee5b8e-167c-4fbf-87e7-4c6fdd5d6ebc
 45 16 track W-E
 46 16 points W-E NW-E
 47 16 track W-E
 48 16 bell W-E+NW-SE
 49 16 points W-E W-NE
-50 16 signal W-E green sub
+50 16 signal W-E green sub b65485c0-2d74-4d20-973e-52b671f0dddf
 51 16 track W-E
 52 16 track W-E
 53 16 track W-E
 54 16 track W-E
 55 16 track W-E
 56 16 track W-E
-57 16 signal W-E green sub
+57 16 signal W-E green sub 0748e7d3-0886-4e13-8bb8-da98aefb165c
 58 16 track W-E
 59 16 track W-E
 60 16 points W-E SW-E
@@ -732,40 +732,40 @@ tiles 1684
 62 16 track W-E
 63 16 track W-E
 64 16 track W-E
-65 16 signal W-E green main auto
+65 16 signal W-E green main auto c6a87c3d-3192-4036-8bec-8bdc484548dd
 66 16 track W-E+NW-SE
 67 16 track W-E
 68 16 track W-E
 69 16 track W-E+NE-SW
 70 16 track NE-SW+W-E
 71 16 points W-E W-SE
-72 16 signal W-E green sub
+72 16 signal W-E green sub 0eeec5cf-6d21-43f7-8528-51e373dacf95
 73 16 track W-E
 74 16 track W-E
 75 16 track W-E
 76 16 points W-E SW-E
-77 16 signal W-E green sub
+77 16 signal W-E green sub 8c654fd5-76cb-47f0-9c30-1ef03ec37b34
 78 16 track W-E
 79 16 track W-E
 80 16 track W-E
 81 16 track W-E
 82 16 track W-E
-83 16 signal W-E green main auto
+83 16 signal W-E green main auto 0cca1a9a-43b9-4033-9d85-a856ebdcf074
 84 16 track W-E
 85 16 points W-E W-SE
 86 16 track W-E
 87 16 track W-E
 88 16 track W-E
-89 16 signal W-E green sub
+89 16 signal W-E green sub 3f82741d-1966-4f7f-8aee-c596b48a05b4
 90 16 station W-E
 91 16 station W-E
 92 16 station W-E
-93 16 signal W-E green main auto
+93 16 signal W-E green main auto 50e66d57-3757-44b6-a277-7a301cb42246
 94 16 points W-E W-SE
 95 16 points W-E SW-E
 96 16 track W-E
 97 16 track W-E
-98 16 signal W-E green sub
+98 16 signal W-E green sub 00bf074c-b5fc-4e62-8997-0fdc54b84a36
 99 16 track W-E
 100 16 track W-NE
 102 16 track N-SW
@@ -773,112 +773,112 @@ tiles 1684
 4 17 station W-E
 5 17 station W-E
 6 17 station W-E
-7 17 signal W-E red main manual
+7 17 signal W-E red main manual 546d3c5e-6949-4d5d-b5f0-ab561aebc6a8
 8 17 track W-E
 9 17 points W-E+NW-SE W-SE NW-E
 10 17 points W-E+SW-NE SW-E W-NE
 11 17 points W-E W-SE
 12 17 track W-E
 13 17 points W-E+NW-SE W-SE NW-E
-14 17 signal W-E green sub
+14 17 signal W-E green sub b3e98029-d40c-4b8b-8f48-ecac52d9b9fb
 15 17 points W-E NW-E
 16 17 points W-E+SW-NE SW-E W-NE
-17 17 signal W-E green sub
+17 17 signal W-E green sub 8526e599-04f7-47cb-b4fa-96922670bcca
 18 17 points W-E+SW-NE SW-E W-NE
 19 17 track W-E+NW-SE
 20 17 points W-E W-NE
 21 17 points W-E W-SE
-22 17 signal W-E green sub
+22 17 signal W-E green sub eecf7b1c-32e5-4b1c-b95b-765a1c6e32c1
 23 17 points W-E NW-E
 24 17 track W-E+NE-SW
 25 17 points W-E+SW-NE SW-E W-NE
 26 17 points W-E W-SE
 27 17 track W-E
 28 17 points W-E+NW-SE W-SE NW-E
-29 17 signal W-E red main manual
+29 17 signal W-E red main manual 6f91882d-f1d5-47a9-bae5-1cc4c6c80337
 30 17 track W-E
 31 17 track W-E
 32 17 points W-E+NW-SE W-SE NW-E
-33 17 signal W-E green sub
+33 17 signal W-E green sub 385de833-6c45-414a-a43a-493000ca1098
 34 17 track W-E
 35 17 track W-E
 36 17 track W-E+NE-SW
 37 17 track W-E
 38 17 track W-E
 39 17 track W-E
-40 17 signal W-E green sub
+40 17 signal W-E green sub df637ecc-2917-49e4-9889-02200533764b
 41 17 track NE-SW+W-E
 42 17 track NE-SW+W-E
 43 17 track W-E
 44 17 track W-E
 45 17 track W-E
 46 17 track W-E
-47 17 signal W-E green sub
+47 17 signal W-E green sub 9bbd3f61-6ded-48ad-9a3e-440dab371134
 48 17 points W-E SW-E
 49 17 points W-E NW-E
 50 17 track W-E
 51 17 track W-E
-52 17 signal W-E green main auto
+52 17 signal W-E green main auto 1572af58-a6de-4fd8-b5db-5243c662c49e
 53 17 track W-E
 54 17 track W-E
 55 17 track W-E
 56 17 track W-E
-57 17 signal W-E green sub
+57 17 signal W-E green sub 5a470bac-e830-41f3-952f-b9f1afaa45e1
 58 17 points W-E W-SE
 59 17 points W-E W-NE
 60 17 track W-E
-61 17 signal W-E green sub
+61 17 signal W-E green sub 840fa607-fab7-48c5-8cf3-adc21e918bf3
 62 17 points W-E NW-E
 63 17 points W-E SW-E
 64 17 track W-E
 65 17 track W-E
-66 17 signal W-E green sub
+66 17 signal W-E green sub 589243db-9d82-4d1d-a826-bccf5b7f9b03
 67 17 points W-E NW-E
 68 17 points W-E W-NE
 69 17 track NE-SW+W-E
 70 17 points W-E W-SE
 71 17 track W-E
 72 17 bell W-E+NW-SE
-73 17 signal W-E green sub
+73 17 signal W-E green sub b4fd92b6-4a89-46aa-8c3c-b28ca39fd642
 74 17 track W-E
 75 17 bell W-E+NE-SW
 76 17 track W-E
 77 17 points W-E SW-E
-78 17 signal W-E green main auto
+78 17 signal W-E green main auto 246f6a68-fb25-41af-93e9-d36d2f5f5b5b
 79 17 track W-E
 80 17 track W-E
 81 17 track W-E
 82 17 track W-E
-83 17 signal W-E green sub
+83 17 signal W-E green sub 372aa26d-3bc8-4d21-9702-422429a2d5cf
 84 17 track W-E
 85 17 track W-E
 86 17 points W-E NW-E
 87 17 track W-E
 88 17 track W-E
-89 17 signal W-E green main auto
+89 17 signal W-E green main auto fa640e68-304d-46a9-9cf6-0f2994cb631c
 90 17 station W-E
 91 17 station W-E
 92 17 station W-E
-93 17 signal W-E green sub
+93 17 signal W-E green sub 8e7ce0a3-da5b-4004-babd-a2a4973d4875
 94 17 points W-E W-NE
 95 17 points W-E NW-E
 96 17 track W-E
 97 17 points W-E W-SE
 98 17 track W-E
-99 17 signal W-E green main auto
+99 17 signal W-E green main auto eeb4157c-c6a6-4596-ae0f-830ad87301a4
 100 17 track W-E
 101 17 track W-NE
 3 18 buffer W-E
 4 18 station W-E
 5 18 station W-E
 6 18 station W-E
-7 18 signal W-E red main manual
+7 18 signal W-E red main manual e4bc4895-2685-45fc-b371-b187c19855dc
 8 18 track W-E
 9 18 points W-E+SW-NE SW-E W-NE
 10 18 points W-E+NW-SE W-SE NW-E
 11 18 points W-E SW-E
 12 18 points W-E NW-E
-13 18 signal W-E green sub
+13 18 signal W-E green sub 58c35764-2ba0-4096-a754-9de061786fb7
 14 18 points W-E+NW-SE W-SE NW-E
 15 18 points W-E W-NE
 16 18 track W-E
@@ -886,46 +886,46 @@ tiles 1684
 18 18 track W-E
 19 18 track W-E
 20 18 track W-E+NW-SE
-21 18 signal W-E green sub
+21 18 signal W-E green sub 917eaa52-0930-47a2-912f-78f8fc52dc00
 22 18 points W-E NW-E
 23 18 points W-E+SW-NE SW-E W-NE
 24 18 track W-E+NE-SW
 25 18 track W-E
 26 18 track W-E
 27 18 points W-E+NW-SE W-SE NW-E
-28 18 signal W-E green sub
+28 18 signal W-E green sub 8b8c3d68-365d-4e47-ae4c-cac39c9b84f9
 29 18 points W-E NW-E
 30 18 track W-E
 31 18 points W-E SW-E
-32 18 signal W-E green sub
+32 18 signal W-E green sub 3e25ca3f-e880-4a06-9555-af9fdb4a2bf4
 33 18 points W-E NW-E
 34 18 track W-E
 35 18 points W-E+SW-NE SW-E W-NE
 36 18 track W-E
-37 18 signal W-E green main auto
+37 18 signal W-E green main auto 369531f0-95c5-4a4b-8526-94bd5b0103f5
 38 18 track W-E
 39 18 track W-E
 40 18 track NE-SW+W-E
 41 18 track NE-SW+W-E
 42 18 track W-E
 43 18 points W-E SW-E
-44 18 signal W-E green sub
+44 18 signal W-E green sub 8dee7ebe-585b-45ca-949c-2dcb75f9f830
 45 18 track W-E
 46 18 track W-E
 47 18 points W-E W-NE
 48 18 track W-E
 49 18 track W-E
-50 18 signal W-E green main auto
+50 18 signal W-E green main auto 392e84c6-8fdd-436e-83b7-7ead1fe49ed9
 51 18 track W-E
 52 18 track W-E
 53 18 track W-E
 54 18 track W-E
-55 18 signal W-E green sub
+55 18 signal W-E green sub d3e19232-5684-4fd2-a7dd-df2ef870a746
 56 18 track W-E
 57 18 track W-E
 58 18 track W-E
 59 18 points W-E NW-E
-60 18 signal W-E green sub
+60 18 signal W-E green sub 9facd142-d3bb-4e47-87de-05bcbdf2ad11
 61 18 points W-E W-SE
 62 18 points W-E+SW-NE SW-E W-NE
 63 18 track W-E
@@ -934,52 +934,52 @@ tiles 1684
 66 18 points W-E SW-E
 67 18 track W-E
 68 18 track NE-SW+W-E
-69 18 signal W-E green main auto
+69 18 signal W-E green main auto cc2c23cc-85a3-43be-9192-907db2d97a8c
 70 18 track W-E
 71 18 bell W-E+NW-SE
 72 18 track W-E
 73 18 points W-E NW-E
 74 18 points W-E W-NE
-75 18 signal W-E green sub
+75 18 signal W-E green sub 7f1594dc-90f2-4755-b0d7-e802eec26a59
 76 18 bell W-E+NE-SW
 77 18 track W-E
 78 18 track W-E
 79 18 track W-E
 80 18 track W-E
 81 18 track W-E
-82 18 signal W-E green sub
+82 18 signal W-E green sub d50b8de6-f23c-4df5-ba9c-2754afb1c8a2
 83 18 track W-E
 84 18 points W-E W-SE
 85 18 track W-E
 86 18 track W-E
 87 18 track W-E
 88 18 track W-E
-89 18 signal W-E green main auto
+89 18 signal W-E green main auto ff0cc0ae-ab54-480b-b52d-7f7eaa5c548c
 90 18 station W-E
 91 18 station W-E
 92 18 station W-E
-93 18 signal W-E green main auto
+93 18 signal W-E green main auto c5ee669d-f94d-4bb5-9935-c89e09c4121b
 94 18 points W-E W-SE
 95 18 points W-E SW-E
 96 18 track W-E
 97 18 track W-E
 98 18 points W-E NW-E
-99 18 signal W-E green sub
+99 18 signal W-E green sub 9a220463-e806-458e-b803-d616696dc2e6
 100 18 track W-E
 101 18 track W-E
 102 18 points W-E W-SE
 103 18 track W-E
-104 18 signal W-E green main auto
+104 18 signal W-E green main auto 86d2eff9-5c95-4af2-ab71-48a52a1679fb
 105 18 track W-E
 106 18 track W-E
 107 18 track W-E
 108 18 track W-E
 109 18 track W-E
-110 18 signal W-E green sub
+110 18 signal W-E green sub cd61639b-ece3-4246-8c24-e1cac885d8d7
 111 18 track W-E
 112 18 track W-E
 113 18 points W-E SW-E
-114 18 signal W-E green main auto
+114 18 signal W-E green main auto 9113219f-d970-4408-9aa0-490c1c199225
 115 18 track W-E
 116 18 track W-E
 117 18 exit W-E
@@ -987,7 +987,7 @@ tiles 1684
 4 19 station W-E
 5 19 station W-E
 6 19 station W-E
-7 19 signal W-E red main manual
+7 19 signal W-E red main manual 1de72648-93a1-4957-9780-386e692c8c38
 8 19 points W-E W-NE
 9 19 track W-E
 10 19 points W-E+SW-NE SW-E W-NE
@@ -999,7 +999,7 @@ tiles 1684
 16 19 points W-E W-NE
 17 19 track W-E
 18 19 track W-E
-19 19 signal W-E green sub
+19 19 signal W-E green sub 8711e5d8-c5b8-4d07-94dc-7b6ff50cb1dd
 20 19 track W-E
 21 19 points W-E+NW-SE W-SE NW-E
 22 19 points W-E W-NE
@@ -1011,90 +1011,90 @@ tiles 1684
 28 19 points W-E NW-E
 29 19 points W-E SW-E
 30 19 track W-E+NE-SW
-31 19 signal W-E red main manual
+31 19 signal W-E red main manual 927f221b-9865-4ad9-98df-e0a0cae3a397
 32 19 track W-E
 33 19 points W-E W-SE
 34 19 points W-E W-NE
-35 19 signal W-E green sub
+35 19 signal W-E green sub be4c23e8-a70a-4d5d-8458-0c1424cae3f2
 36 19 track W-E
 37 19 track W-E
 38 19 track W-E
 39 19 track NE-SW+W-E
 40 19 track NE-SW+W-E
-41 19 signal W-E green sub
+41 19 signal W-E green sub c5eed105-4780-4775-8432-8a84fe1bb574
 42 19 track W-E+NE-SW
 43 19 track W-E
 44 19 track W-E
 45 19 track W-E
 46 19 points W-E SW-E
-47 19 signal W-E green sub
+47 19 signal W-E green sub 170b4468-7617-4017-8ece-de793cee37e7
 48 19 track W-E
 49 19 track W-E
 50 19 track W-E
 51 19 track W-E
-52 19 signal W-E green main auto
+52 19 signal W-E green main auto 0df3265e-f907-45e3-9180-a6d03983c58e
 53 19 track W-E
 54 19 track W-E
 55 19 track W-E
 56 19 track W-E
-57 19 signal W-E green sub
+57 19 signal W-E green sub fe7458d5-248f-4709-8653-6c15fe616031
 58 19 track W-E
 59 19 track W-E
 60 19 track W-E
 61 19 points W-E W-NE
 62 19 points W-E NW-E
 63 19 track W-E
-64 19 signal W-E green sub
+64 19 signal W-E green sub daee836c-adc3-4b2f-960b-a9978bbf03b3
 65 19 bell W-E+NE-SW
 66 19 track W-E
 67 19 track NE-SW+W-E
 68 19 track W-E
-69 19 signal W-E green sub
+69 19 signal W-E green sub 18a3d5a9-fcbf-4e68-809c-cb01e8d5505f
 70 19 track W-E
 71 19 points W-E SW-E
 72 19 points W-E NW-E
 73 19 track W-E
-74 19 signal W-E green sub
+74 19 signal W-E green sub e5c76b34-d5ee-4729-be71-899bb81b5da3
 75 19 points W-E W-NE
 76 19 track W-E
 77 19 track W-E
-78 19 signal W-E green main auto
+78 19 signal W-E green main auto 4e891b56-8d6b-4d16-bbb0-4fd4acaca62e
 79 19 track W-E
 80 19 track W-E
 81 19 track W-E
 82 19 track W-E
-83 19 signal W-E green sub
+83 19 signal W-E green sub 61a772e4-33f0-41da-911b-5eb07ebe50ec
 84 19 track W-E
 85 19 points W-E NW-E
 86 19 track W-E
 87 19 track W-E
 88 19 track W-E
-89 19 signal W-E green main auto
+89 19 signal W-E green main auto e0046cf4-2ec2-4103-afe6-40b839524157
 90 19 station W-E
 91 19 station W-E
 92 19 station W-E
-93 19 signal W-E green sub
+93 19 signal W-E green sub 4e9dffbb-20a7-45f4-8190-9c9acd6dd870
 94 19 points W-E W-NE
 95 19 points W-E NW-E
 96 19 track W-E
 97 19 track W-E
 98 19 track W-E
-99 19 signal W-E green main auto
+99 19 signal W-E green main auto e48138ed-8d62-46b5-8e4b-1c2614320bff
 100 19 track W-E
 101 19 track W-E
 102 19 track W-E
 103 19 points W-E NW-E
-104 19 signal W-E green sub
+104 19 signal W-E green sub ff00c5bb-bb4b-4c9a-9c0b-539e6c3e3d18
 105 19 track W-E
 106 19 track W-E
 107 19 track W-E
 108 19 track W-E
 109 19 track W-E
-110 19 signal W-E green main auto
+110 19 signal W-E green main auto 92ff3a02-a888-425f-a650-9cd9dd92266a
 111 19 track W-E
 112 19 points W-E W-NE
 113 19 track W-E
-114 19 signal W-E green sub
+114 19 signal W-E green sub dd7266bb-4487-400a-9dbb-d8fbf2db6cd4
 115 19 track W-E
 116 19 track W-E
 117 19 entry W-E
@@ -1102,7 +1102,7 @@ tiles 1684
 4 20 station W-E
 5 20 station W-E
 6 20 station W-E
-7 20 signal W-E red main manual
+7 20 signal W-E red main manual cf5b359a-23ff-4b98-8479-41034ccd1a0e
 8 20 track W-E
 9 20 points W-E W-NE
 10 20 track W-E
@@ -1111,14 +1111,14 @@ tiles 1684
 13 20 points W-SE NW-SE
 14 20 track SW-E
 15 20 points W-E+NW-SE W-SE NW-E
-16 20 signal W-E green main manual
+16 20 signal W-E green main manual c4d79770-cf64-44f2-8aab-38cf803a89f8
 17 20 siding W-E
 18 20 siding W-E
 19 20 siding W-E
 20 20 buffer W-E
 21 20 track SW-E
 22 20 track W-E+NW-SE
-23 20 signal W-E green main manual
+23 20 signal W-E green main manual 98dbefa2-cc96-4c0d-bfea-1f47f875249c
 24 20 siding W-E
 25 20 siding W-E
 26 20 siding W-E
@@ -1130,27 +1130,27 @@ tiles 1684
 33 20 track W-E
 34 20 points W-E NW-E
 35 20 track W-E
-36 20 signal W-E green main manual
+36 20 signal W-E green main manual bac23737-564c-4dcf-9fc0-cb44def66d29
 37 20 points W-E W-SE
 38 20 points W-E+SW-NE SW-E W-NE
 39 20 points W-E W-NE
 40 20 track W-E
 41 20 points W-E W-NE
 42 20 points W-E W-SE
-43 20 signal W-E green sub
+43 20 signal W-E green sub 806d1432-cf94-4c9d-9e26-b3c322a05b25
 44 20 bell W-E
 45 20 track W-NE
 47 20 track SW-E
 48 20 track W-E
 49 20 track W-E
 50 20 track W-E
-51 20 signal W-E green main manual
+51 20 signal W-E green main manual 49d47c12-11aa-404b-9297-69e276a15d88
 52 20 depot W-E
 53 20 depot W-E
 54 20 depot W-E
 55 20 buffer W-E
 59 20 track SW-E
-60 20 signal W-E green main auto
+60 20 signal W-E green main auto 0712234e-5af7-4087-9240-98b9725ba359
 61 20 track W-E
 62 20 track W-E
 63 20 track W-E
@@ -1158,20 +1158,20 @@ tiles 1684
 65 20 track W-E
 66 20 track NE-SW+W-E
 67 20 points W-E SW-E
-68 20 signal W-E green sub
+68 20 signal W-E green sub 759a26d0-2707-4ed0-a002-9dc1816151e9
 69 20 track W-E
 70 20 bell W-E+NE-SW
 71 20 track W-E
 72 20 track W-E
 73 20 points W-E W-SE
 74 20 points W-E SW-E
-75 20 signal W-E green main auto
+75 20 signal W-E green main auto a691f1f7-5f38-49e7-a4a5-00a5b109789b
 76 20 track W-E
 77 20 track W-E
 78 20 track W-E
 79 20 track W-E
 80 20 track W-E
-81 20 signal W-E green sub
+81 20 signal W-E green sub aee2eb1e-f288-41c5-9070-299d68673cc1
 82 20 track W-E
 83 20 track W-E
 84 20 track W-SE
@@ -1179,7 +1179,7 @@ tiles 1684
 4 21 station W-E
 5 21 station W-E
 6 21 station W-E
-7 21 signal W-E red main manual
+7 21 signal W-E red main manual 8988f783-225b-49f7-8ebc-16ba7dc1cb0b
 8 21 track W-E
 9 21 points W-E W-SE
 10 21 points W-E SW-E
@@ -1187,18 +1187,18 @@ tiles 1684
 12 21 track W-E
 13 21 points W-E+SW-NE SW-E W-NE
 14 21 points W-E+NW-SE W-SE NW-E
-15 21 signal W-E green sub
+15 21 signal W-E green sub b7c5574c-eee5-45aa-a682-9143c946702e
 16 21 points W-E NW-E
 17 21 points W-E SW-E
-18 21 signal W-E green sub
+18 21 signal W-E green sub f18c370b-5363-46d9-95e3-5dbc56d228e7
 19 21 points W-E W-SE
 20 21 points W-E W-NE
-21 21 signal W-E green sub
+21 21 signal W-E green sub 405f9a94-d339-42d7-9f36-56b7651c425f
 22 21 track W-E
 23 21 track W-E+NW-SE
 24 21 track W-E
 25 21 track W-E
-26 21 signal W-E green sub
+26 21 signal W-E green sub 6276cdfc-2267-4f72-a357-ac23900e2063
 27 21 points W-E W-NE
 28 21 points NE-SW W-NE
 29 21 track N-S
@@ -1206,7 +1206,7 @@ tiles 1684
 32 21 track W-E
 33 21 track W-E
 34 21 track W-E
-35 21 signal W-E green main manual
+35 21 signal W-E green main manual 12b6890b-4074-48ec-97fd-7ca23977b6d4
 36 21 points W-SE W-E
 37 21 points W-E W-NE
 38 21 points W-E+NW-SE W-SE NW-E
@@ -1222,35 +1222,35 @@ tiles 1684
 48 21 points W-E SW-E
 49 21 points W-E W-SE
 50 21 track W-E
-51 21 signal W-E green main manual
+51 21 signal W-E green main manual 029afd2d-78d8-4764-8d4d-c3294130d1fb
 52 21 depot W-E
 53 21 depot W-E
 54 21 depot W-E
 55 21 buffer W-E
 58 21 track NE-SW
 59 21 track SW-E
-60 21 signal W-E green main auto
+60 21 signal W-E green main auto 395df0db-bf0b-4153-90dd-775b5f485680
 61 21 track W-E
 62 21 track W-E
 63 21 track W-E
-64 21 signal W-E green sub
+64 21 signal W-E green sub a2faec23-6cee-48f9-a0d6-d45ac089edac
 65 21 track NE-SW+W-E
 66 21 track W-E+NE-SW
 67 21 track W-E
-68 21 signal W-E green sub
+68 21 signal W-E green sub b7fff535-d356-40ae-8e08-fa98062064b6
 69 21 points W-E W-NE
 70 21 track W-E
 71 21 track W-E
-72 21 signal W-E green sub
+72 21 signal W-E green sub 1bd9df89-9a9a-4421-bc1e-142097f76808
 73 21 points W-E W-NE
 74 21 points W-E NW-E
-75 21 signal W-E green sub
+75 21 signal W-E green sub d8662691-3ce0-452d-a594-a1b3e5c1784f
 76 21 track W-E
 77 21 track W-E
 78 21 track W-E
 79 21 track W-E
 80 21 track W-E
-81 21 signal W-E green main auto
+81 21 signal W-E green main auto f993c55b-1f48-4c27-8c49-ec9a83628e1d
 82 21 track W-E
 83 21 track W-SE
 85 21 track NW-S
@@ -1258,58 +1258,58 @@ tiles 1684
 4 22 station W-E
 5 22 station W-E
 6 22 station W-E
-7 22 signal W-E red main manual
+7 22 signal W-E red main manual 2f5b4dd4-c25f-41ed-ad42-86aaa6f739ff
 8 22 track W-E
 9 22 points W-E+SW-NE SW-E W-NE
 10 22 points W-E NW-E
 11 22 track W-E
 12 22 points W-E+SW-NE SW-E W-NE
 13 22 points W-E W-SE
-14 22 signal W-E green sub
+14 22 signal W-E green sub 0e95d780-f98a-4562-8c4c-ba3f6d62cd5f
 15 22 points W-E+NW-SE W-SE NW-E
 16 22 points W-E+SW-NE SW-E W-NE
 17 22 track W-E
 18 22 track W-E
-19 22 signal W-E green sub
+19 22 signal W-E green sub c3c74193-be9f-46dc-b64b-279705c6e33b
 20 22 points W-E+NW-SE W-SE NW-E
 21 22 points W-E SW-E
 22 22 track W-E
-23 22 signal W-E green sub
+23 22 signal W-E green sub 0404ecbc-07a0-438d-9bc0-678337f40a3c
 24 22 points W-E+NW-SE W-SE NW-E
 25 22 track W-E
 26 22 track W-E
 27 22 points W-E+SW-NE SW-E W-NE
-28 22 signal W-E green sub
+28 22 signal W-E green sub ab6c24e3-7af4-44d9-9b25-917396678ca1
 29 22 track W-E+N-S
 30 22 track W-E
 31 22 track W-E
 32 22 track W-E
-33 22 signal W-E green main auto
+33 22 signal W-E green main auto 24771b18-577c-485f-aabe-eccadb5445d3
 34 22 track W-E
 35 22 track W-SE
 37 22 track NW-SE
 39 22 bell NW-SE
 40 22 track NW-E
-41 22 signal W-E red sub
+41 22 signal W-E red sub f672ebed-e82f-4efd-a268-f33674d0903b
 42 22 track W-E
 43 22 track W-E
 44 22 track W-E
 45 22 track W-E
-46 22 signal W-E red sub
+46 22 signal W-E red sub 9c4b98fc-f3a8-490d-b99c-e926562b3b61
 47 22 track W-NE
 50 22 track NW-E
-51 22 signal W-E green main manual
+51 22 signal W-E green main manual 44ba73a0-684f-4fd4-ab1c-6db64e934d59
 52 22 depot W-E
 53 22 depot W-E
 54 22 depot W-E
 55 22 buffer W-E
 57 22 track NE-SW
 58 22 points NE-SW SW-E
-59 22 signal W-E red main manual
+59 22 signal W-E red main manual 8b69a2b7-fa39-4dc9-ad54-136282f92583
 60 22 track W-E
 61 22 track W-E
 62 22 track W-E
-63 22 signal W-E amber sub
+63 22 signal W-E amber sub 99578da7-d2b2-4da9-8edd-234ec2e565b2
 64 22 track W-NE
 65 22 bell NE-SW
 84 22 track NW-S
@@ -1318,13 +1318,13 @@ tiles 1684
 4 23 station W-E
 5 23 station W-E
 6 23 station W-E
-7 23 signal W-E red main manual
+7 23 signal W-E red main manual 164da48b-fc92-4558-ac2d-e177b8f6effa
 8 23 points W-E W-NE
 9 23 track W-E
 10 23 points W-E SW-E
 11 23 points W-E W-NE
 12 23 track W-E
-13 23 signal W-E green sub
+13 23 signal W-E green sub 684d762e-2700-4444-92fe-5b1c5213b671
 14 23 points W-E NW-E
 15 23 points W-E+SW-NE SW-E W-NE
 16 23 points W-E NW-E
@@ -1333,34 +1333,34 @@ tiles 1684
 19 23 points W-E W-SE
 20 23 track W-E+NE-SW
 21 23 points W-E NW-E
-22 23 signal W-E green sub
+22 23 signal W-E green sub 303a5440-6389-4c91-a154-dca8eedf5d53
 23 23 track W-E
 24 23 track W-E
 25 23 points W-E NW-E
 26 23 track NE-SW+W-E
 27 23 track W-E
-28 23 signal W-E red main manual
+28 23 signal W-E red main manual 81919605-ca40-4036-b6a5-e4207e558f8a
 29 23 track W-E+N-S
 30 23 track W-E
 31 23 track W-E
 32 23 track W-E
-33 23 signal W-E green sub
+33 23 signal W-E green sub 7905f384-0b7d-44fa-9878-f2a782868e18
 34 23 track W-E
 35 23 track W-SE
 36 23 track NW-SE
 38 23 track NW-E
 39 23 points W-E SW-E
 40 23 points W-E+NW-SE W-SE NW-E
-41 23 signal W-E green main auto
+41 23 signal W-E green main auto 23c27322-eb03-46cc-8a82-2e967214e930
 42 23 track W-E
 43 23 track W-E
 44 23 points W-SE W-E
-45 23 signal W-E red sub
+45 23 signal W-E red sub 07f91ddd-d8c1-4ab7-ba99-eb77c93dac66
 46 23 track W-E
 47 23 track W-E
 48 23 track W-E
 49 23 track W-E
-50 23 signal W-E red sub
+50 23 signal W-E red sub 7df307c5-1401-49aa-b27c-922b74f3e85b
 51 23 track W-E
 52 23 track W-E
 53 23 track W-E
@@ -1370,19 +1370,19 @@ tiles 1684
 60 23 track SW-E
 61 23 track W-E
 62 23 track W-E
-63 23 signal W-E red main manual
+63 23 signal W-E red main manual 85ab58f0-fa79-42de-a7dd-87b43774a519
 64 23 track W-NE
-84 23 signal N-S green sub
-85 23 signal N-S green sub
+84 23 signal N-S green sub e801eaf1-5ed8-4da3-9586-c328ee761711
+85 23 signal N-S green sub a10e6575-c179-4b7e-88b0-6f612f76f2de
 3 24 buffer W-E
 4 24 station W-E
 5 24 station W-E
 6 24 station W-E
-7 24 signal W-E green sub
+7 24 signal W-E green sub 29428430-7c99-47f9-aef3-3786351ed64f
 8 24 track W-E
 9 24 points W-E+SW-NE SW-E W-NE
 10 24 track W-E
-11 24 signal W-E green sub
+11 24 signal W-E green sub c1584e84-5bac-4761-88cd-cea42e3a104b
 12 24 track W-E
 13 24 track W-E
 14 24 points W-E+SW-NE SW-E W-NE
@@ -1392,33 +1392,33 @@ tiles 1684
 18 24 track W-E
 19 24 points W-E W-NE
 20 24 points W-E+NW-SE W-SE NW-E
-21 24 signal W-E green sub
+21 24 signal W-E green sub b1e61276-5998-4b75-a976-22c820663d1b
 22 24 track W-E
 23 24 track W-E
 24 24 track W-E
 25 24 points W-E W-NE
-26 24 signal W-E green main auto
+26 24 signal W-E green main auto 3f2a0a49-4824-4e45-b433-cf7b119d73e2
 27 24 track W-SE
 29 24 track N-SE
 36 24 track NW-SE
 37 24 track NW-E
 38 24 points W-E W-NE
-39 24 signal W-E green sub
+39 24 signal W-E green sub 4f1829bf-3a7d-4be9-8904-2c0ea5695fe2
 40 24 track W-E
 41 24 points W-E NW-E
 42 24 track W-E
 43 24 track W-E
-44 24 signal W-E green sub
+44 24 signal W-E green sub 760f5bc3-82f5-4bc3-b6f0-1107b8965807
 45 24 bell W-E+NW-SE
 46 24 track W-E
 47 24 track W-E
 48 24 points W-E SW-E
-49 24 signal W-E green main auto
+49 24 signal W-E green main auto b37ac6a8-4e41-43a6-9a9a-8dcbe599b173
 50 24 track W-E
 51 24 points W-E W-SE
 52 24 track W-E
 53 24 track W-E
-54 24 signal W-E green sub
+54 24 signal W-E green sub 84d0ce43-aa14-4b91-92b6-3c42043397cc
 55 24 track W-NE
 56 24 track NE-SW
 59 24 track NE-S
@@ -1428,61 +1428,61 @@ tiles 1684
 4 25 station W-E
 5 25 station W-E
 6 25 station W-E
-7 25 signal W-E green sub
+7 25 signal W-E green sub 5c59a57b-4550-4930-b40b-efb687748e92
 8 25 points W-E W-NE
 9 25 track W-E
 10 25 track W-E
-11 25 signal W-E green sub
+11 25 signal W-E green sub b3416ae4-c90e-4468-bf60-44f50ec8e5f4
 12 25 track W-E
 13 25 points W-E W-NE
 14 25 track W-E
-15 25 signal W-E green sub
+15 25 signal W-E green sub 67ae6b09-8868-4fb6-8f55-e527f926b664
 16 25 points W-E NW-E
 17 25 track W-E
 18 25 track W-E
 19 25 track W-E
-20 25 signal W-E green sub
+20 25 signal W-E green sub 411ebd73-1665-41a8-9d0f-05101dd25f63
 21 25 points W-E NW-E
 22 25 track W-E
 23 25 track W-E
 24 25 track W-E
 25 25 track W-E
-26 25 signal W-E green main auto
+26 25 signal W-E green main auto 8bacfe06-6a68-4d98-9d73-6f9b369872f2
 27 25 track W-SE
 28 25 track NW-SE
 30 25 track NW-SE
 37 25 track NW-E
 38 25 track W-E
-39 25 signal W-E green main auto
+39 25 signal W-E green main auto cb4271a7-5f7c-42b5-9760-4190e4a40e02
 40 25 track W-E
 41 25 track W-E
 42 25 track W-E
 43 25 track W-E
-44 25 signal W-E green sub
+44 25 signal W-E green sub aed5cde7-bda3-46dd-a211-61597a08ea18
 45 25 track W-E
 46 25 points W-E NW-E
 47 25 points W-E W-NE
 48 25 track W-E
-49 25 signal W-E green main auto
+49 25 signal W-E green main auto df7c14e3-da6c-4636-94d8-b525e6af5e08
 50 25 track W-E
 51 25 track W-E
 52 25 points W-E NW-E
 53 25 track W-E
-54 25 signal W-E green sub
+54 25 signal W-E green sub 87ebdb09-6d5e-46d2-af23-847f12938d48
 55 25 track W-NE
-59 25 signal N-S green sub
+59 25 signal N-S green sub 300d9cbf-cf96-4089-8f74-7b159779c819
 84 25 track N-S
 85 25 track N-S
 28 26 track NW-SE
 29 26 track NW-SE
 31 26 track NW-SE
 50 26 track SW-E
-51 26 signal W-E green main auto
+51 26 signal W-E green main auto 4caa6a3d-e32b-4bd4-976a-342ea1e956a8
 52 26 track W-E
 53 26 track W-E
 54 26 track W-E
 55 26 track W-E
-56 26 signal W-E green sub
+56 26 signal W-E green sub a407c8d7-a52b-4f98-9f95-efb09f5a7b7c
 57 26 track W-E
 58 26 track W-SE
 59 26 track N-S
@@ -1491,28 +1491,28 @@ tiles 1684
 29 27 track NW-SE
 30 27 track NW-SE
 32 27 track NW-E
-33 27 signal W-E red main manual
+33 27 signal W-E red main manual 5f041228-947a-4a05-adaa-450d87b8896f
 34 27 track W-E
 35 27 track W-E
 36 27 track W-E
-37 27 signal W-E amber sub
+37 27 signal W-E amber sub f2c16ad5-eeb1-4edf-8d8c-640feef80236
 38 27 station W-E
 39 27 station W-E
 40 27 station W-E
 41 27 station W-E
-42 27 signal W-E green sub
+42 27 signal W-E green sub f31f06ef-6090-4b8f-8144-60f543e4811f
 43 27 track W-E
 44 27 track W-E
 45 27 track W-E
 46 27 track W-E
-47 27 signal W-E green sub
+47 27 signal W-E green sub 50777dff-3953-4580-9acd-ab58dc0dc269
 48 27 track W-E
 49 27 track W-NE
 59 27 points NW-SE N-SE
 69 27 track SW-E
 70 27 track W-E
 71 27 points W-E SW-E
-72 27 signal W-E green main manual
+72 27 signal W-E green main manual 8da26148-6a39-42ef-87a3-a0b93e9cbf5b
 73 27 station W-E
 74 27 station W-E
 75 27 station W-E
@@ -1521,47 +1521,47 @@ tiles 1684
 85 27 track N-S
 30 28 track NW-SE
 31 28 track NW-E
-32 28 signal W-E green sub
+32 28 signal W-E green sub 045de434-f426-432a-a55a-138f03120798
 33 28 track W-E
 34 28 track W-E
 35 28 track W-E
 36 28 track W-E
-37 28 signal W-E green sub
+37 28 signal W-E green sub c85f999d-6f08-479a-b42a-b4693b09f2a0
 38 28 points W-E W-SE
 39 28 points W-E SW-E
 40 28 track W-E
 41 28 track W-E
-42 28 signal W-E green main auto
+42 28 signal W-E green main auto a5420304-fdda-40f5-b164-0a3ce92390ee
 43 28 track W-E
 44 28 track W-E
 45 28 track W-E
 46 28 track W-E
-47 28 signal W-E green sub
+47 28 signal W-E green sub 2335d5b9-9b60-4fa1-91a2-1d597c4a0b96
 48 28 track W-E
 49 28 track W-E
 50 28 track W-E
 51 28 track W-E
-52 28 signal W-E green sub
+52 28 signal W-E green sub c12fa0ec-8cf4-4905-af46-9fd06652bb54
 53 28 track W-E
 54 28 track W-E
 55 28 track W-E
 56 28 track W-E
-57 28 signal W-E green sub
+57 28 signal W-E green sub 375968d9-638f-46fa-871f-a67cdaa5d236
 58 28 points W-E W-SE
 59 28 track W-E
 60 28 track W-E+NW-SE
 61 28 track W-E
-62 28 signal W-E green sub
+62 28 signal W-E green sub 17c920bb-a0b6-45e6-8b57-9eee5fbf18f3
 63 28 track W-E
 64 28 points W-E SW-E
 65 28 track W-E
 66 28 track W-E
-67 28 signal W-E green sub
+67 28 signal W-E green sub 626cf828-4f72-4b7a-9b6f-af594fdcfb79
 68 28 points W-E W-NE
 69 28 points W-E W-SE
 70 28 points W-E+SW-NE SW-E W-NE
 71 28 track W-E
-72 28 signal W-E green main manual
+72 28 signal W-E green main manual 5e5aa480-835c-43fa-ab1c-9cf6b0cfa021
 73 28 station W-E
 74 28 station W-E
 75 28 station W-E
@@ -1569,120 +1569,120 @@ tiles 1684
 84 28 track N-S
 85 28 track N-S
 31 29 track NW-E
-32 29 signal W-E green sub
+32 29 signal W-E green sub 7a9bbf9e-53eb-4dbd-b17e-c0435a26e93b
 33 29 track W-E
 34 29 track W-E
 35 29 track W-E
 36 29 track W-E
-37 29 signal W-E green sub
+37 29 signal W-E green sub cd931466-624b-4cfa-9c56-b629fcf6c93a
 38 29 points W-E W-NE
 39 29 points W-E NW-E
 40 29 track W-E
 41 29 track W-E
-42 29 signal W-E green main auto
+42 29 signal W-E green main auto f27bff30-8ac1-4413-8d67-e0350d547435
 43 29 track W-E
 44 29 track W-E
 45 29 track W-E
 46 29 track W-E
-47 29 signal W-E green sub
+47 29 signal W-E green sub 0929bb9f-61bd-4999-a90d-e3717d06d6f0
 48 29 track W-E
 49 29 track W-E
 50 29 track W-E
 51 29 track W-E
-52 29 signal W-E green sub
+52 29 signal W-E green sub f3aabd78-df45-4c31-a198-2a4b29e6a7f2
 53 29 track W-E
 54 29 track W-E
 55 29 track W-E
 56 29 track W-E
-57 29 signal W-E green sub
+57 29 signal W-E green sub 9ff09229-b189-4bc6-8d92-9a6c76f2b277
 58 29 track W-E
 59 29 points W-E NW-E
 60 29 track W-E
 61 29 points W-E NW-E
-62 29 signal W-E green sub
+62 29 signal W-E green sub ba96048c-d9e7-40f9-b3d8-0f44ce455040
 63 29 points W-E W-NE
 64 29 track W-E
 65 29 track W-E
 66 29 track W-E
-67 29 signal W-E green sub
+67 29 signal W-E green sub b1ec2c1c-5755-4cc1-9681-c0fb441a8bea
 68 29 track W-E
 69 29 points W-E W-NE
 70 29 points W-E NW-E
 71 29 track W-E
-72 29 signal W-E green main manual
+72 29 signal W-E green main manual 4ffeb86f-0473-4e29-a67a-14a0a12bffd7
 73 29 station W-E
 74 29 station W-E
 75 29 station W-E
 76 29 buffer W-E
-84 29 signal N-S green main auto
-85 29 signal N-S green main auto
+84 29 signal N-S green main auto 7e803df3-2bf0-4ada-b51f-0ac5480bd3d6
+85 29 signal N-S green main auto b5696ded-5a21-41ff-a97c-152e920330a1
 84 30 track N-S
 85 30 track N-SE
 84 31 track N-SE
 86 31 track NW-E
 87 31 track W-E
 88 31 track W-E
-89 31 signal W-E green sub
+89 31 signal W-E green sub 2208287d-beeb-48c4-b073-f221416fbd30
 90 31 track W-E
 91 31 track W-E
 92 31 points W-E W-SE
 93 31 points W-E SW-E
-94 31 signal W-E green sub
+94 31 signal W-E green sub 852e3836-f670-4978-a170-f1b13c2b0f7a
 95 31 station W-E
 96 31 station W-E
 97 31 station W-E
-98 31 signal W-E green main auto
+98 31 signal W-E green main auto 629a8131-21ce-452a-a660-081503eda6c8
 99 31 track W-E
 100 31 track W-E
 101 31 track W-E
-102 31 signal W-E green sub
+102 31 signal W-E green sub eaccf1dc-c1ee-47e7-9b42-66150e8e6474
 103 31 track W-E
 104 31 track W-E
 105 31 track W-E
-106 31 signal W-E green main auto
+106 31 signal W-E green main auto b252b99d-e25c-4c4c-8a28-375a77a3e292
 107 31 track W-E
 108 31 track W-E
-109 31 signal W-E green sub
+109 31 signal W-E green sub aced07c6-463d-4bea-9eb4-25bcead3de2e
 110 31 points W-E W-SE
 111 31 points W-E SW-E
 112 31 track W-E
 113 31 track W-E
 114 31 track W-E
-115 31 signal W-E green main auto
+115 31 signal W-E green main auto 4b081fc2-9f00-4715-ba54-3b04837d230a
 116 31 track W-E
 117 31 track W-E
 118 31 exit W-E
 85 32 track NW-E
 86 32 track W-E
 87 32 track W-E
-88 32 signal W-E green sub
+88 32 signal W-E green sub 89571fa0-f8d4-4005-bde9-d29c3b4165d4
 89 32 track W-E
 90 32 track W-E
 91 32 track W-E
 92 32 points W-E W-NE
 93 32 points W-E NW-E
-94 32 signal W-E green main auto
+94 32 signal W-E green main auto ef25ffcb-bad3-4cd7-bfc0-bbfef8c86a1d
 95 32 station W-E
 96 32 station W-E
 97 32 station W-E
-98 32 signal W-E green sub
+98 32 signal W-E green sub 6be085d6-b69f-43bb-9c24-6251c211bfab
 99 32 track W-E
 100 32 track W-E
 101 32 track W-E
 102 32 track W-E
 103 32 track W-E
-104 32 signal W-E green sub
+104 32 signal W-E green sub 7420a94a-78dc-4bdc-aaf8-157bf2f3995d
 105 32 track W-E
 106 32 track W-E
 107 32 track W-E
 108 32 track W-E
-109 32 signal W-E green main auto
+109 32 signal W-E green main auto 3f31ab3b-6eb9-44b4-8508-97acc6fb434f
 110 32 points W-E W-NE
 111 32 points W-E NW-E
 112 32 track W-E
 113 32 track W-E
 114 32 track W-E
-115 32 signal W-E green sub
+115 32 signal W-E green sub 08f8732c-dc2f-434e-8bb2-b1c7d2c5359e
 116 32 track W-E
 117 32 track W-E
 118 32 entry W-E

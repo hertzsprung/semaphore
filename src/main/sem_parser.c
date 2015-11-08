@@ -159,6 +159,10 @@ sem_success sem_parse_signal(sem_tile* tile, sem_tokenization* tile_description)
 
 	sem_signal_init(signal, type, aspect);
 	
+	// if a signal id is specified, use it
+	char* id_str = sem_tokenization_next(tile_description);
+	if (id_str != NULL) uuid_parse(id_str, signal->id);
+	
 	return SEM_OK;
 }
 
@@ -285,6 +289,12 @@ sem_success sem_print_signal(FILE* out, sem_signal* signal) {
 		fprintf(out, "sub");
 		break;
 	}
+
+	fprintf(out, " ");
+
+	char id_str[37];
+	uuid_unparse(signal->id, id_str);
+	fprintf(out, "%s", id_str);
 
 	return SEM_OK;
 }

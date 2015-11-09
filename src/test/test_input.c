@@ -33,12 +33,15 @@ void test_input_signal_not_green_to_green(test_input_context* test_ctx, const vo
 void test_input_signal_to_amber(test_input_context* test_ctx, const void* data);
 void test_input_move_train_when_signal_goes_green(test_input_context* test_ctx, const void* data);
 void test_input_move_train_when_signal_goes_amber(test_input_context* test_ctx, const void* data);
+void test_input_loses_revenue_on_emergency_stop(test_input_context* test_ctx, const void* data);
+void test_input_no_emergency_stop_at_medium_speed(test_input_context* test_ctx, const void* data);
 
 void add_test_input(const char *test_name, void (*test)(test_input_context*, const void* data));
 void test_input_setup(test_input_context* test_ctx, const void* data);
 void test_input_teardown(test_input_context* test_ctx, const void* data);
 void test_input_signal_aspect(test_input_context* test_ctx, sem_signal_aspect before, sem_input_rank input_rank, sem_signal_aspect after);
 void test_input_move_train_on_signal_aspect_change(test_input_context* test_ctx, sem_input_rank input_rank);
+void test_input_stop_at_red_signal(test_input_context* test_ctx, sem_train_speed speed, int32_t expected_balance);
 
 void add_tests_input(void) {
 	add_test_input("/input/null_action_for_unoccupied_coordinate", test_input_null_action_for_unoccupied_coordinate);
@@ -54,6 +57,8 @@ void add_tests_input(void) {
 	add_test_input("/input/signal_to_amber", test_input_signal_to_amber);
 	add_test_input("/input/move_train_when_signal_goes_green", test_input_move_train_when_signal_goes_green);
 	add_test_input("/input/move_train_when_signal_goes_amber", test_input_move_train_when_signal_goes_amber);
+	add_test_input("/input/loses_revenue_on_emergency_stop", test_input_loses_revenue_on_emergency_stop);
+	add_test_input("/input/no_emergency_stop_at_medium_speed", test_input_no_emergency_stop_at_medium_speed);
 }
 
 void add_test_input(const char *test_name, void (*test)(test_input_context*, const void* data)) {
@@ -218,7 +223,7 @@ void test_input_removes_derailed_train(test_input_context* test_ctx, const void*
 void test_input_unremoves_derailed_train_after_crash(test_input_context* test_ctx, const void* data) {
 	#pragma unused(test_ctx)
 	#pragma unused(data)
-	// TODO
+	// FIXME
 }
 
 void test_input_null_action_on_blank_tile(test_input_context* test_ctx, const void* data) {
@@ -405,4 +410,48 @@ void test_input_move_train_on_signal_aspect_change(test_input_context* test_ctx,
 	free(action);
 
 	g_assert_true(train->state == MOVING);
+}
+
+void test_input_loses_revenue_on_emergency_stop(test_input_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	test_input_stop_at_red_signal(test_ctx, FAST, -200);
+}
+
+void test_input_no_emergency_stop_at_medium_speed(test_input_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	test_input_stop_at_red_signal(test_ctx, MEDIUM, 0);
+}
+
+void test_input_stop_at_red_signal(test_input_context* test_ctx, sem_train_speed speed, int32_t expected_balance) {
+	sem_game* game = &(test_ctx->game);
+	sem_world* world = &(test_ctx->game.world);
+	sem_dynamic_array* heap = &(test_ctx->heap);
+	sem_train* train = test_ctx->train;
+
+	sem_track track;
+	sem_track_set(&track, SEM_WEST, SEM_EAST);
+	sem_tile_set_track(sem_tile_at(world, 0, 0), &track);
+
+	sem_signal* signal = malloc(sizeof(sem_signal));
+	sem_signal_init(signal, MAIN_MANUAL, RED);
+	
+	sem_tile_set_signal(sem_tile_at(world, 1, 0), &track, signal);
+
+	sem_car car;
+	sem_coordinate_set(&(car.position), 0, 0);
+	car.track = &track;
+	sem_train_add_car(train, &car);
+
+	train->direction = SEM_EAST;
+	train->state = MOVING;
+	train->speed = speed;
+
+	sem_action action;
+	action.time = 4000;
+	action.context = train;
+	action.game = game;
+	g_assert_true(sem_move_train_action(heap, &action) == SEM_OK);
+
+	g_assert_true(train->state == STOPPED);
+	g_assert_cmpint(test_ctx->game.revenue.balance, ==, expected_balance);
 }

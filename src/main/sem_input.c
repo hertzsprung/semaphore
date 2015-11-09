@@ -140,6 +140,10 @@ sem_success sem_move_train_action(sem_dynamic_array* heap, sem_action* action) {
 			action->write = sem_reverse_train_at_buffer_action_write;
 			if (sem_heap_insert(heap, action) != SEM_OK) return SEM_ERROR;
 		}
+
+		if (outcome.emergency_stop) {
+			action->game->revenue.balance -= 200;
+		}
 	}
 
 	return SEM_OK;

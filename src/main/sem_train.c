@@ -62,6 +62,7 @@ sem_success sem_train_move(sem_train* train, sem_train_move_outcome* outcome) {
 		outcome->stopped_at_buffer = true;
 	} else if (acceptance.signalling.stop) {
 		train->state = STOPPED;
+		if (train->speed == FAST) outcome->emergency_stop = true;
 	} else {
 		sem_tile_unoccupy_tail_of(train);
 		train_move_trailing(train->tail_car);
@@ -84,6 +85,7 @@ sem_success sem_train_move(sem_train* train, sem_train_move_outcome* outcome) {
 
 void sem_train_move_outcome_init(sem_train_move_outcome* outcome) {
 	outcome->stopped_at_buffer = false;
+	outcome->emergency_stop = false;
 }
 
 void sem_train_reverse(sem_train* train) {

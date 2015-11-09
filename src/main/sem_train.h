@@ -62,7 +62,7 @@ struct sem_train {
 
 typedef struct {
 	bool stopped_at_buffer;
-    bool emergency_stop;
+    sem_signal* emergency_stop; /**< NULL if the train has not performed an emergency stop */
 } sem_train_move_outcome;
 
 sem_success sem_train_init(sem_train* train);

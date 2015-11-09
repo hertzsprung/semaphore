@@ -15,7 +15,6 @@
 
 sem_train* train_occupying_tile(sem_dynamic_array* trains, sem_coordinate* tile);
 sem_success switch_points_action(sem_dynamic_array* heap, sem_action* action);
-sem_success change_train_state(sem_dynamic_array* heap, sem_action* action);
 sem_success reverse_train(sem_dynamic_array* heap, sem_action* action);
 sem_success toggle_signal_aspect(sem_dynamic_array* heap, sem_action* action);
 sem_success set_signal_to_amber(sem_dynamic_array* heap, sem_action* action);
@@ -66,7 +65,7 @@ sem_success sem_train_input_act_upon(sem_input_event* input, sem_game* game, sem
 
 	switch (input->rank) {
 	case PRIMARY:
-		(*action)->function = change_train_state;
+		(*action)->function = sem_change_train_state_action;
 		break;
 	case SECONDARY:
 		(*action)->function = reverse_train;
@@ -84,7 +83,7 @@ sem_train* train_occupying_tile(sem_dynamic_array* trains, sem_coordinate* tile)
 	return NULL;
 }
 
-sem_success change_train_state(sem_dynamic_array* heap, sem_action* action) {
+sem_success sem_change_train_state_action(sem_dynamic_array* heap, sem_action* action) {
 	sem_train* train = (sem_train*) action->context;
 
 	if (train->state == STOPPED) {
@@ -141,8 +140,17 @@ sem_success sem_move_train_action(sem_dynamic_array* heap, sem_action* action) {
 			if (sem_heap_insert(heap, action) != SEM_OK) return SEM_ERROR;
 		}
 
-		if (outcome.emergency_stop) {
+		if (outcome.emergency_stop != NULL) {
 			action->game->revenue.balance -= 200;
+			action->time += 25000;
+			action->function = sem_change_train_state_action;
+			action->write = sem_change_train_state_action_write;
+			if (sem_heap_insert(heap, action) != SEM_OK) return SEM_ERROR;
+			
+			// prevent player from restarting the train by changing signal aspect
+			sem_signal_release_train(outcome.emergency_stop);
+
+			train->speed = MEDIUM;
 		}
 	}
 
@@ -186,7 +194,7 @@ sem_success set_signal_to_amber(sem_dynamic_array* heap, sem_action* action) {
 
 sem_success release_any_held_train(sem_signal* signal, sem_dynamic_array* heap, sem_action* action) {
 	if (sem_signal_holding_train(signal)) {
-		action->function = change_train_state;
+		action->function = sem_change_train_state_action;
 		action->context = sem_signal_release_train(signal);
 		return sem_heap_insert(heap, action);
 	} else {

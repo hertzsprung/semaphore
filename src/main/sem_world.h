@@ -47,6 +47,7 @@ struct sem_world {
 
 struct sem_signal_acceptance {
 	bool stop;
+    sem_signal* signal; /**< \brief the signal at which a train is stopping, otherwise NULL */
 	bool change_speed;
 	sem_train_speed speed;
 };

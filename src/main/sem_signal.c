@@ -33,6 +33,7 @@ sem_success sem_signal_accept(sem_train* train, sem_signal* signal, sem_signal_a
 			acceptance->speed = SLOW;
 		} else {
 			acceptance->stop = true;
+			acceptance->signal = signal;
 			signal->held_train = train;
 		}
 	} else if (signal->aspect == AMBER) {
@@ -90,6 +91,7 @@ void sem_signal_train_cleared(sem_train* train) {
 
 void sem_signal_acceptance_init(sem_signal_acceptance* acceptance) {
 	acceptance->stop = false;
+	acceptance->signal = NULL;
 	acceptance->change_speed = false;
 }
 

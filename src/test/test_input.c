@@ -35,13 +35,15 @@ void test_input_move_train_when_signal_goes_green(test_input_context* test_ctx, 
 void test_input_move_train_when_signal_goes_amber(test_input_context* test_ctx, const void* data);
 void test_input_loses_revenue_on_emergency_stop(test_input_context* test_ctx, const void* data);
 void test_input_no_emergency_stop_at_medium_speed(test_input_context* test_ctx, const void* data);
+void test_input_continue_after_emergency_stop(test_input_context* test_ctx, const void* data);
+void test_input_no_repeated_emergency_stop(test_input_context* test_ctx, const void* data);
 
 void add_test_input(const char *test_name, void (*test)(test_input_context*, const void* data));
 void test_input_setup(test_input_context* test_ctx, const void* data);
 void test_input_teardown(test_input_context* test_ctx, const void* data);
 void test_input_signal_aspect(test_input_context* test_ctx, sem_signal_aspect before, sem_input_rank input_rank, sem_signal_aspect after);
 void test_input_move_train_on_signal_aspect_change(test_input_context* test_ctx, sem_input_rank input_rank);
-void test_input_stop_at_red_signal(test_input_context* test_ctx, sem_train_speed speed, int32_t expected_balance);
+sem_action* test_input_stop_at_red_signal(test_input_context* test_ctx, sem_train_speed speed, int32_t expected_balance);
 
 void add_tests_input(void) {
 	add_test_input("/input/null_action_for_unoccupied_coordinate", test_input_null_action_for_unoccupied_coordinate);
@@ -59,6 +61,9 @@ void add_tests_input(void) {
 	add_test_input("/input/move_train_when_signal_goes_amber", test_input_move_train_when_signal_goes_amber);
 	add_test_input("/input/loses_revenue_on_emergency_stop", test_input_loses_revenue_on_emergency_stop);
 	add_test_input("/input/no_emergency_stop_at_medium_speed", test_input_no_emergency_stop_at_medium_speed);
+	add_test_input("/input/continue_after_emergency_stop", test_input_continue_after_emergency_stop);
+
+	add_test_input("/input/no_repeated_emergency_stop", test_input_no_repeated_emergency_stop);
 }
 
 void add_test_input(const char *test_name, void (*test)(test_input_context*, const void* data)) {
@@ -414,15 +419,65 @@ void test_input_move_train_on_signal_aspect_change(test_input_context* test_ctx,
 
 void test_input_loses_revenue_on_emergency_stop(test_input_context* test_ctx, const void* data) {
 	#pragma unused(data)
-	test_input_stop_at_red_signal(test_ctx, FAST, -200);
+	free(test_input_stop_at_red_signal(test_ctx, FAST, -200));
 }
 
 void test_input_no_emergency_stop_at_medium_speed(test_input_context* test_ctx, const void* data) {
 	#pragma unused(data)
-	test_input_stop_at_red_signal(test_ctx, MEDIUM, 0);
+	free(test_input_stop_at_red_signal(test_ctx, MEDIUM, 0));
 }
 
-void test_input_stop_at_red_signal(test_input_context* test_ctx, sem_train_speed speed, int32_t expected_balance) {
+void test_input_continue_after_emergency_stop(test_input_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	sem_game* game = &(test_ctx->game);
+	sem_dynamic_array* heap = &(test_ctx->heap);
+	sem_train* train = test_ctx->train;
+
+	sem_action* action = test_input_stop_at_red_signal(test_ctx, FAST, -200);
+
+	sem_coordinate coord;
+	sem_coordinate_set(&coord, 1, 0);
+	sem_input_event input;
+	input.tile = &coord;
+	input.rank = PRIMARY;
+	input.time = 5000;
+
+	sem_action* toggle_signal_action = NULL;
+
+	// toggling signal should not cause train to move
+	// we verify this by checking that the action time is 25s after the time the train stopped
+	g_assert_true(sem_tile_input_act_upon(&input, game, &toggle_signal_action) == SEM_OK);
+	g_assert_nonnull(toggle_signal_action);
+	g_assert_true(toggle_signal_action->function(heap, toggle_signal_action) == SEM_OK);
+
+	sem_action* change_state_action = sem_heap_remove_earliest(heap);
+	g_assert_nonnull(change_state_action);
+	g_assert_cmpuint(change_state_action->time, ==, 29000);
+	g_assert_true(change_state_action->function(heap, change_state_action) == SEM_OK);
+	g_assert_true(train->state == MOVING);
+
+	free(action);
+}
+
+void test_input_no_repeated_emergency_stop(test_input_context* test_ctx, const void* data) {
+	#pragma unused(data)
+	sem_dynamic_array* heap = &(test_ctx->heap);
+	sem_game* game = &(test_ctx->game);
+
+	sem_action* action = test_input_stop_at_red_signal(test_ctx, FAST, -200);
+
+	sem_action* change_state_action = sem_heap_remove_earliest(heap);
+	g_assert_true(change_state_action->function(heap, change_state_action) == SEM_OK);
+
+	sem_action* move_action = sem_heap_remove_earliest(heap);
+	g_assert_true(move_action->function(heap, move_action) == SEM_OK);
+
+	g_assert_cmpint(game->revenue.balance, ==, -200);
+
+	free(action);
+}
+
+sem_action* test_input_stop_at_red_signal(test_input_context* test_ctx, sem_train_speed speed, int32_t expected_balance) {
 	sem_game* game = &(test_ctx->game);
 	sem_world* world = &(test_ctx->game.world);
 	sem_dynamic_array* heap = &(test_ctx->heap);
@@ -437,21 +492,23 @@ void test_input_stop_at_red_signal(test_input_context* test_ctx, sem_train_speed
 	
 	sem_tile_set_signal(sem_tile_at(world, 1, 0), &track, signal);
 
-	sem_car car;
-	sem_coordinate_set(&(car.position), 0, 0);
-	car.track = &track;
-	sem_train_add_car(train, &car);
+	sem_car* car = malloc(sizeof(sem_car));
+	sem_coordinate_set(&(car->position), 0, 0);
+	car->track = &track;
+	sem_train_add_car(train, car);
 
 	train->direction = SEM_EAST;
 	train->state = MOVING;
 	train->speed = speed;
 
-	sem_action action;
-	action.time = 4000;
-	action.context = train;
-	action.game = game;
-	g_assert_true(sem_move_train_action(heap, &action) == SEM_OK);
+	sem_action* action = malloc(sizeof(sem_action));
+	action->time = 4000;
+	action->context = train;
+	action->game = game;
+	g_assert_true(sem_move_train_action(heap, action) == SEM_OK);
 
 	g_assert_true(train->state == STOPPED);
-	g_assert_cmpint(test_ctx->game.revenue.balance, ==, expected_balance);
+	g_assert_cmpint(game->revenue.balance, ==, expected_balance);
+
+	return action;
 }

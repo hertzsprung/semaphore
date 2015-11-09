@@ -66,11 +66,14 @@ sem_success sem_signal_accept(sem_train* train, sem_signal* signal, sem_signal_a
 }
 
 void sem_signal_portal_exit(sem_train* train) {
-	train->previous_signal = train->signal;
-	train->signal = NULL;
-
-	if (train->previous_signal != NULL && train->previous_signal->type == SUB) {
-		sem_signal_set_previous_aspect(train->previous_signal);
+	if (train->signal != NULL && train->signal->type == SUB) {
+		sem_signal_set_previous_aspect(train->signal);
+	}
+	if (train->main_signal != NULL && train->main_signal->type == MAIN_AUTO) {
+		sem_signal_set_previous_aspect(train->main_signal);
+		if (train->sub_behind_main_signal != NULL) {
+			sem_signal_set_previous_aspect(train->sub_behind_main_signal);
+		}
 	}
 }
 

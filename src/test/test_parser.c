@@ -275,7 +275,7 @@ void test_parser_print_three_way_points() {
 }
 
 void test_parser_print_red_main_auto_signal() {
-	char expected_description[128] = "signal N-S red main auto 81cbbfd6-43c8-4143-a345-ee9e27dd0e8b";
+	char expected_description[128] = "signal N-S red main auto previously red 81cbbfd6-43c8-4143-a345-ee9e27dd0e8b";
 	char actual_description[128];
 	char id_str[37] = "81cbbfd6-43c8-4143-a345-ee9e27dd0e8b";
 	FILE* out = fmemopen(actual_description, 128*sizeof(char), "w");

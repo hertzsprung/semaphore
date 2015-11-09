@@ -1,7 +1,7 @@
 world 64 64
 now 0
 multiplier 1.0
-tiles 88
+tiles 99
 1 1 track SW-E
 2 1 track W-E
 3 1 track W-SE
@@ -49,7 +49,18 @@ tiles 88
 15 7 track W-E
 16 7 exit W-E
 6 8 signal NE-SW green sub 4ecb104d-ff40-420f-b2b3-4e76758ab081
-10 8 signal NW-SE green sub 630a03f5-ea54-4cb6-b81b-837900ce9061
+10 8 points NW-SE NW-E
+11 8 signal W-E green sub 630a03f5-ea54-4cb6-b81b-837900ce9061 
+12 8 track W-E
+13 8 track W-E
+14 8 track W-E
+15 8 signal W-E green main auto 7420a94a-78dc-4bdc-aaf8-157bf2f3995d
+16 8 track W-E
+17 8 track W-E
+18 8 signal W-E green sub 6be085d6-b69f-43bb-9c24-6251c211bfab
+19 8 track W-E
+20 8 track W-E
+21 8 exit W-E
 0 9 entry W-E
 1 9 track W-E
 2 9 signal W-E green main auto d938d6b3-aebd-4022-9f57-e9b43104e17c
@@ -154,9 +165,10 @@ cars 3
 10 1 W-E
 11 1 W-SE
 12 2 S-NW
-labels 2
+labels 3
 17 6 EXA
 17 7 EXB
+22 8 EXC
 actions 1
 3000 train_entry at 0 9 direction E cars 3
 signalling

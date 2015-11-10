@@ -134,6 +134,7 @@ sem_success sem_move_train_action(sem_dynamic_array* heap, sem_action* action) {
 		}
 
 		if (outcome.stopped_at_buffer) {
+			train->speed = MEDIUM;
 			action->time += 5000L;
 			action->function = sem_reverse_train_at_buffer_action;
 			action->write = sem_reverse_train_at_buffer_action_write;
@@ -141,16 +142,16 @@ sem_success sem_move_train_action(sem_dynamic_array* heap, sem_action* action) {
 		}
 
 		if (outcome.emergency_stop != NULL) {
+			// prevent player from restarting the train by changing signal aspect
+			sem_signal_release_train(outcome.emergency_stop);
+			train->speed = MEDIUM;
+
 			action->game->revenue.balance -= 200;
+
 			action->time += 25000;
 			action->function = sem_change_train_state_action;
 			action->write = sem_change_train_state_action_write;
 			if (sem_heap_insert(heap, action) != SEM_OK) return SEM_ERROR;
-			
-			// prevent player from restarting the train by changing signal aspect
-			sem_signal_release_train(outcome.emergency_stop);
-
-			train->speed = MEDIUM;
 		}
 	}
 

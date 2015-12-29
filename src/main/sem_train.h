@@ -51,6 +51,7 @@ struct sem_train {
 	sem_car* head_car;
 	sem_car* tail_car;
 	unit_vector direction;
+    sem_dynamic_array* signals; /**< list of cleared signals, most recently cleared signal at tail of list */
 };
 
 typedef struct {

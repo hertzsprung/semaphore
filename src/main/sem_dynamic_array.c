@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdlib.h>
 
 #include "sem_dynamic_array.h"
@@ -30,10 +31,15 @@ sem_success sem_dynamic_array_remove(sem_dynamic_array* array, void* item) {
 	}
 	if (i == array->tail_idx) return sem_set_error("Cannot remove item that is not in dynamic array");
 	
-	shift_down(array, i+1);
-	array->tail_idx--;
+	sem_dynamic_array_remove_at(array, i);
 
 	return SEM_OK;
+}
+
+void sem_dynamic_array_remove_at(sem_dynamic_array* array, uint32_t index) {
+	assert(index < array->tail_idx);
+	shift_down(array, index+1);
+	array->tail_idx--;
 }
 
 void shift_down(sem_dynamic_array* array, uint32_t index) {

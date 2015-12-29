@@ -33,6 +33,10 @@ sem_success sem_train_init(sem_train* train) {
 	train->headless = false;
 	train->spawn_cars_remaining = 0;
 	train->has_exit_position = false;
+
+	train->signals = malloc(sizeof(sem_dynamic_array));
+	if (train->signals == NULL) return sem_set_error("Could not allocate memory for signals");
+	if (sem_dynamic_array_init(train->signals) != SEM_OK) return SEM_ERROR;
 	return SEM_OK;
 }
 
@@ -153,6 +157,7 @@ bool sem_train_occupies(sem_train* train, sem_coordinate* tile) {
 
 void sem_train_destroy(sem_train* train) {
 	free(train->name);
+	sem_dynamic_array_destroy(train->signals);
 	// FIXME: free cars
 }	
 

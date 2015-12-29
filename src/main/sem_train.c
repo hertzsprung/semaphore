@@ -33,13 +33,6 @@ sem_success sem_train_init(sem_train* train) {
 	train->headless = false;
 	train->spawn_cars_remaining = 0;
 	train->has_exit_position = false;
-	train->signal = NULL;
-	train->previous_signal = NULL;
-	train->main_signal = NULL;
-	train->sub_signal = NULL;
-	train->sub_behind_main_signal = NULL;
-	train->previous_main_signal = NULL;
-	train->sub_behind_previous_main_signal = NULL;
 	return SEM_OK;
 }
 

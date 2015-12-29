@@ -516,18 +516,18 @@ sem_action* test_input_stop_at_red_signal(test_input_context* test_ctx, sem_trai
 	sem_dynamic_array* heap = &(test_ctx->heap);
 	sem_train* train = test_ctx->train;
 
-	sem_track track;
-	sem_track_set(&track, SEM_WEST, SEM_EAST);
-	sem_tile_set_track(sem_tile_at(world, 0, 0), &track);
+	sem_track* track = malloc(sizeof(sem_track));
+	sem_track_set(track, SEM_WEST, SEM_EAST);
+	sem_tile_set_track(sem_tile_at(world, 0, 0), track);
 
 	sem_signal* signal = malloc(sizeof(sem_signal));
 	sem_signal_init(signal, MAIN_MANUAL, RED);
 	
-	sem_tile_set_signal(sem_tile_at(world, 1, 0), &track, signal);
+	sem_tile_set_signal(sem_tile_at(world, 1, 0), track, signal);
 
 	sem_car* car = malloc(sizeof(sem_car));
 	sem_coordinate_set(&(car->position), 0, 0);
-	car->track = &track;
+	car->track = track;
 	sem_train_add_car(train, car);
 
 	train->direction = SEM_EAST;

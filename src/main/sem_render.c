@@ -7,6 +7,7 @@
 #include "sem_train.h"
 #include "sem_world.h"
 
+void render_world(sem_render_context* ctx, sem_game* game);
 void render_tiles(sem_render_context* ctx, sem_world* world);
 void render_tile(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
 void render_tile_blank(sem_render_context* ctx, sem_coordinate coord, sem_tile* tile);
@@ -38,7 +39,70 @@ void render_label(sem_render_context* ctx, sem_label* label);
 void render_tile_rotate(sem_render_context* ctx, sem_coordinate coord, sem_track* track);
 void render_track_crossbar(sem_render_context* ctx);
 
+void sem_render_context_init(sem_render_context* ctx, cairo_t* cr, uint32_t width, uint32_t height) {
+	ctx->cr = cr;
+	ctx->scale = 32.0;
+	ctx->x = 0.0;
+	ctx->y = 0.0;
+	ctx->width = width;
+	ctx->height = height;
+	ctx->panel_width = 0.2*width;
+}
+
+void sem_render_translate(sem_render_context* ctx, double x, double y) {
+	ctx->x += (x*ctx->scale);
+	ctx->y += (y*ctx->scale);
+}
+
+void sem_render_scale_up(sem_render_context* ctx, int32_t amount) {
+	ctx->scale *= 1.1 * amount;
+}
+
+void sem_render_scale_down(sem_render_context* ctx, int32_t amount) {
+	ctx->scale *= 1.0 / (1.1 * -amount);
+}
+
+void sem_render_device_to_coord(sem_coordinate* coord, sem_render_context* ctx, double x, double y) {
+	cairo_save(ctx->cr);
+	cairo_translate(ctx->cr, ctx->x, ctx->y);
+	cairo_scale(ctx->cr, ctx->scale, ctx->scale);
+	cairo_device_to_user(ctx->cr, &x, &y);
+	cairo_restore(ctx->cr);	
+
+	sem_coordinate_set(coord, (uint32_t) (floor(x)), (uint32_t) (floor(y)));
+}
+
 void sem_render_game(sem_render_context* ctx, sem_game* game) {
+	cairo_select_font_face(ctx->cr, "Railway", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+	cairo_rectangle(ctx->cr, 0, 0, ctx->width, ctx->height);
+	cairo_set_source_rgb(ctx->cr, 0, 0, 0);
+	cairo_fill(ctx->cr);
+
+	cairo_save(ctx->cr);
+	cairo_rectangle(ctx->cr, 0, 0, ctx->width - ctx->panel_width, ctx->height);
+	cairo_clip(ctx->cr);
+	cairo_save(ctx->cr);
+	cairo_translate(ctx->cr, ctx->x, ctx->y);
+	cairo_scale(ctx->cr, ctx->scale, ctx->scale);
+	cairo_set_line_width(ctx->cr, 0.1);
+	cairo_set_font_size(ctx->cr, 0.7);
+	cairo_set_source_rgb(ctx->cr, 1.0, 1.0, 1.0);
+	render_world(ctx, game);
+	cairo_restore(ctx->cr);	
+	cairo_restore(ctx->cr);	
+
+	cairo_save(ctx->cr);
+	cairo_translate(ctx->cr, ctx->width - ctx->panel_width, 0);
+	char buf[128] = "";
+	snprintf(buf, sizeof(buf), "%d", game->revenue.balance);
+	cairo_move_to(ctx->cr, 0, 32);
+	cairo_set_font_size(ctx->cr, 24);
+	cairo_set_source_rgb(ctx->cr, 1.0, 1.0, 1.0);
+	cairo_show_text(ctx->cr, buf);
+	cairo_restore(ctx->cr);	
+}
+
+void render_world(sem_render_context* ctx, sem_game* game) {
 	sem_world* world = &(game->world);
 	cairo_rectangle(ctx->cr, 0, 0, world->max_x, world->max_y);
 	cairo_set_source(ctx->cr, ctx->style->canvas);

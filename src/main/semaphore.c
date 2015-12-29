@@ -79,18 +79,17 @@ int main(int argc, char **argv) {
 		return sem_fatal_error();
 	}
 
-	cairo_surface_t *cairo_surface = cairo_image_surface_create_for_data(
+	cairo_surface_t* cairo_surface = cairo_image_surface_create_for_data(
 		pixels,
 		CAIRO_FORMAT_ARGB32,
 		width, height, pitch);
 
-	cairo_t *cr = cairo_create(cairo_surface);
+	cairo_t* cr = cairo_create(cairo_surface);
 
 	SDL_UnlockTexture(texture);
 
 	sem_render_context render_ctx;
-	render_ctx.cr = cr;	
-	render_ctx.scale = 32.0;
+	sem_render_context_init(&render_ctx, cr, (uint32_t) width, (uint32_t) height);
 
 	sem_render_style render_style;
 	render_ctx.style = &render_style;
@@ -106,10 +105,6 @@ int main(int argc, char **argv) {
 	sem_game game;
 	if (sem_serialize_load(map, &game) != SEM_OK) return sem_fatal_error();
 	fclose(map);
-
-	printf("\n");
-
-	cairo_scale(cr, render_ctx.scale, render_ctx.scale);
 
 	SDL_Event e;
 	bool quit = false;	
@@ -134,13 +129,13 @@ int main(int argc, char **argv) {
 					if (sem_serialize_save(save, &game) != SEM_OK) return sem_fatal_error();
 					fclose(save);
 				} else if (e.key.keysym.sym == SDLK_LEFT) {
-					cairo_translate(cr, 1.0, 0.0);
+					sem_render_translate(&render_ctx, 1.0, 0.0);
 				} else if (e.key.keysym.sym == SDLK_RIGHT) {
-					cairo_translate(cr, -1.0, 0.0);
+					sem_render_translate(&render_ctx, -1.0, 0.0);
 				} else if (e.key.keysym.sym == SDLK_UP) {
-					cairo_translate(cr, 0.0, 1.0);
+					sem_render_translate(&render_ctx, 0.0, 1.0);
 				} else if (e.key.keysym.sym == SDLK_DOWN) {
-					cairo_translate(cr, 0.0, -1.0);
+					sem_render_translate(&render_ctx, 0.0, -1.0);
 				} else {
 					quit = true;
 				}
@@ -154,19 +149,18 @@ int main(int argc, char **argv) {
 					}
 				} else {
 					if (e.wheel.y > 0) {
-						cairo_scale(cr, 1.1 * e.wheel.y, 1.1 * e.wheel.y);
+						sem_render_scale_up(&render_ctx, e.wheel.y);
 					} else if (e.wheel.y < 0) {
-						cairo_scale(cr, 1.0 / (1.1 * -e.wheel.y), 1.0 / (1.1 * -e.wheel.y));
+						sem_render_scale_down(&render_ctx, e.wheel.y);
 					}
 				}
 			}
 			if (e.type == SDL_MOUSEBUTTONUP) {
 				double x = e.button.x;
 				double y = e.button.y;
-				cairo_device_to_user(cr, &x, &y);
 
 				sem_coordinate coord;
-				sem_coordinate_set(&coord, (uint32_t) (floor(x)), (uint32_t) (floor(y)));
+				sem_render_device_to_coord(&coord, &render_ctx, x, y);
 				sem_input_event input;
 				input.time = game.world.timer->now;
 				input.tile = &coord;
@@ -196,16 +190,7 @@ int main(int argc, char **argv) {
 			return sem_fatal_error();
 		}
 
-		cairo_set_line_width(cr, 0.1);
-
 		sem_render_game(&render_ctx, &game);
-
-		char buf[128] = "";
-		snprintf(buf, sizeof(buf), "%d", game.revenue.balance);
-		cairo_move_to(cr, 0, 1);
-		cairo_set_font_size(cr, 0.7);
-		cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
-		cairo_show_text(cr, buf);
 
 		SDL_UnlockTexture(texture);
 

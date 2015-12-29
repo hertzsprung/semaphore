@@ -43,9 +43,24 @@ typedef struct {
 	cairo_t* cr;
 	sem_render_style* style;
 	double scale;
+    double x;
+    double y;
+    uint32_t width;
+    uint32_t height;
+    double panel_width;
 } sem_render_context;
 
+void sem_render_context_init(sem_render_context* ctx, cairo_t* cr, uint32_t width, uint32_t height);
+
 void sem_render_game(sem_render_context* ctx, sem_game* game);
+
+void sem_render_translate(sem_render_context* ctx, double x, double y);
+
+void sem_render_scale_up(sem_render_context* ctx, int32_t amount);
+
+void sem_render_scale_down(sem_render_context* ctx, int32_t amount);
+
+void sem_render_device_to_coord(sem_coordinate* coord, sem_render_context* ctx, double x, double y);
 
 sem_success sem_render_default_style(sem_render_style* style);
 

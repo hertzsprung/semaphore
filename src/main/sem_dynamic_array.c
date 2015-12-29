@@ -18,6 +18,10 @@ sem_success sem_dynamic_array_init(sem_dynamic_array* array) {
 	return SEM_OK;
 }
 
+void* sem_dynamic_array_tail_item(sem_dynamic_array* array) {
+	return array->items[array->tail_idx-1];
+}
+
 sem_success sem_dynamic_array_add(sem_dynamic_array* array, void* item) {
 	if (sem_dynamic_array_extend_tail(array) != SEM_OK) return SEM_ERROR;
 	array->items[array->tail_idx-1] = item;
@@ -34,6 +38,10 @@ sem_success sem_dynamic_array_remove(sem_dynamic_array* array, void* item) {
 	sem_dynamic_array_remove_at(array, i);
 
 	return SEM_OK;
+}
+
+void sem_dynamic_array_remove_all(sem_dynamic_array* array) {
+	array->tail_idx = 0;
 }
 
 void sem_dynamic_array_remove_at(sem_dynamic_array* array, uint32_t index) {

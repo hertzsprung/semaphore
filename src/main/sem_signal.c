@@ -58,12 +58,25 @@ sem_success sem_signal_accept(sem_train* train, sem_signal* signal, sem_signal_a
 }
 
 void sem_signal_portal_exit(sem_train* train) {
-	#pragma unused(train)
+	for (uint32_t i=train->signals->tail_idx; i > 0; i--) {
+		sem_signal* signal = (sem_signal*) train->signals->items[i-1];
+		sem_signal_set_previous_aspect(signal);
+	}
+	sem_dynamic_array_remove_all(train->signals);
 }
 
 void sem_signal_train_cleared(sem_train* train, sem_signal* signal) {
 	signal_update_aspects(train, signal);
-	sem_dynamic_array_add(train->signals, signal);
+	if (signal->type == MAIN_MANUAL) {
+		if (train->signals->tail_idx > 0) {
+			sem_signal* most_recently_cleared = sem_dynamic_array_tail_item(train->signals);
+			if (most_recently_cleared->type == SUB) {
+				sem_dynamic_array_remove_at(train->signals, train->signals->tail_idx-1);
+			}
+		}
+	} else {
+		sem_dynamic_array_add(train->signals, signal);
+	}
 }
 
 void signal_update_aspects(sem_train* train, sem_signal* signal) {
@@ -84,7 +97,17 @@ void signal_update_aspects_after_sub(sem_train* train) {
 }
 
 void signal_update_aspects_after_main(sem_train* train) {
-	#pragma unused(train)
+	uint32_t signals_to_dequeue = 0;
+
+	for (uint32_t i=0; i < train->signals->tail_idx; i++) {
+		sem_signal* signal = (sem_signal*) train->signals->items[i];
+		if (i == train->signals->tail_idx-1 && signal->type == SUB) break;
+		sem_signal_set_previous_aspect(signal);
+		signals_to_dequeue++;
+	}
+	for (uint32_t j=0; j < signals_to_dequeue; j++) {
+		sem_dynamic_array_remove_at(train->signals, 0);
+	}
 }
 
 void sem_signal_acceptance_init(sem_signal_acceptance* acceptance) {

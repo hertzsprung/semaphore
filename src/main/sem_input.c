@@ -142,7 +142,7 @@ sem_success sem_move_train_action(sem_dynamic_array* heap, sem_action* action) {
 		}
 
 		if (outcome.emergency_stop != NULL) {
-			// prevent player from restarting the train by changing signal aspect
+			// prevent player changing signal aspect to restart the train
 			sem_signal_release_train(outcome.emergency_stop);
 			train->speed = MEDIUM;
 
@@ -189,7 +189,7 @@ sem_success toggle_signal_aspect(sem_dynamic_array* heap, sem_action* action) {
 
 sem_success set_signal_to_amber(sem_dynamic_array* heap, sem_action* action) {
 	sem_signal* signal = (sem_signal*) action->context;
-	signal->aspect = AMBER;
+	sem_signal_force_aspect(signal, AMBER);
 	return release_any_held_train(signal, heap, action);
 }
 

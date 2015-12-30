@@ -69,7 +69,7 @@ void add_tests_signal() {
 	add_test_signal("/signal/main_becomes_red_upon_accepting_train", test_signal_main_becomes_red_upon_accepting_train);
 	add_test_signal("/signal/green_sub_becomes_amber_upon_accepting_train", test_signal_green_sub_becomes_amber_upon_accepting_train);
 	add_test_signal("/signal/amber_sub_becomes_amber_upon_accepting_train", test_signal_amber_sub_becomes_amber_upon_accepting_train);
-	add_test_signal("/signal_red_sub_remains_red_upon_accepting_train", test_signal_red_sub_remains_red_upon_accepting_train);
+	add_test_signal("/signal/red_sub_remains_red_upon_accepting_train", test_signal_red_sub_remains_red_upon_accepting_train);
 	add_test_signal("/signal/clearing_sub_clears_previous_sub", test_signal_clearing_sub_clears_previous_sub);
 	add_test_signal("/signal/clearing_sub_preserves_previous_manual_amber_sub", test_signal_clearing_sub_preserves_previous_manual_amber_sub);
 	add_test_signal("/signal/clearing_main_leaves_amber_sub_behind_red_main_auto", test_signal_clearing_main_leaves_amber_sub_behind_red_main_auto);
